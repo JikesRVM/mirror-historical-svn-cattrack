@@ -22,4 +22,11 @@ class Test::Unit::TestCase
   self.auto_validate = true
 
   fixtures ::OrderedTables
+
+  def assert_params_same(expected,actual)
+    assert_equal( expected.size, actual.size )
+    expected.each do |k, v|
+      assert_equal( actual[k], v, "Testing Key #{k}" )
+    end
+  end
 end
