@@ -36,6 +36,7 @@
             - if menu
               %td.menu= render(:partial => menu)
             %td
+              = draw_breadcrumbs(@record) if @record
               = render(:partial => '/common/flash_messages')
               = yield
       #ft= "Powered by CatTrack (Version \##{db_version})."

@@ -11,4 +11,7 @@
 #  regarding copyright ownership.
 #
 class Host < ActiveRecord::Base
+  def parent_node
+    nil
+  end
 end

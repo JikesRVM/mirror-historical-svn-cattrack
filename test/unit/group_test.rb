@@ -17,6 +17,10 @@ class GroupTest < Test::Unit::TestCase
     assert_equal( "basic", groups(:group_1).label )
   end
 
+  def test_parent_node
+    assert_parent_node(groups(:group_1),TestConfiguration,1)
+  end
+
   def test_basic_load
     group = groups(:group_1)
     assert_equal( 1, group.id )

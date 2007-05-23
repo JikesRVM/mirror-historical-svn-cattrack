@@ -36,6 +36,10 @@ class User < ActiveRecord::Base
     write_attribute('password', User.encode_password(self.salt, password))
   end
 
+  def parent_node
+    nil
+  end
+
   private
   def self.encode_password(salt, password)
     Digest::SHA1.hexdigest("--#{salt}--#{password}--")

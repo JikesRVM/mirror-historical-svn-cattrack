@@ -41,6 +41,10 @@ class TestCase < ActiveRecord::Base
     @output
   end
 
+  def parent_node
+    group
+  end
+
   private
 
   def update_output

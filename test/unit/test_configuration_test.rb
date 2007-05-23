@@ -13,6 +13,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TestConfigurationTest < Test::Unit::TestCase
+  def test_label
+    assert_equal( 'prototype', test_configurations(:tc1_1).label )
+  end
+
+  def test_parent_node
+    assert_parent_node(test_configurations(:tc1_1),TestRun,1)
+  end
+
   def test_basic_load
     tc = test_configurations(:tc1_1)
     assert_equal( 1, tc.id )

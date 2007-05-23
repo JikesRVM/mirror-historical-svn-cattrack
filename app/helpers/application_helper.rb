@@ -12,6 +12,28 @@
 #
 module ApplicationHelper
   def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show', :id => object.id})
+    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show'}.merge(gen_link_options(object)))
+  end
+
+  def draw_breadcrumbs(object)
+    bc = breadcrumbs(object).reverse
+    bc.collect {|o| "#{link_for(o)}"}.join(' &gt; ')
+  end
+
+  def gen_link_options(object)
+    options = {}
+    breadcrumbs(object).each { |o| options["#{o.class.table_name.singularize}_id".to_sym] = o.id }
+    options[:id] = object.id
+    options
+  end
+
+  def breadcrumbs(object)
+    options = []
+    o = object.parent_node
+    while o
+      options << o
+      o = o.parent_node
+    end
+    options
   end
 end

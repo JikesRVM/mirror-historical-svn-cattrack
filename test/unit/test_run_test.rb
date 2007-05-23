@@ -13,6 +13,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TestRunTest < Test::Unit::TestCase
+  def test_label
+    assert_equal('core', test_runs(:tr_1).label)
+  end
+
+  def test_parent_node
+    assert_parent_node(test_runs(:tr_1),Host,1)
+  end
+
   def test_basic_load
     tc = test_runs(:tr_1)
     assert_equal( 1, tc.id )
@@ -32,7 +40,7 @@ class TestRunTest < Test::Unit::TestCase
     assert_equal( 1, tc.build_runs[0].id )
     assert_equal( 2, tc.build_runs[1].id )
 
-    assert_equal( "core", tc.label )
+    assert_equal( 'core', tc.name )
 
     assert_equal( 13, tc.successes.size )
     assert( tc.success_ids.include?(1) )

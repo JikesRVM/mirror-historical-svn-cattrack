@@ -17,6 +17,10 @@ class HostTest < Test::Unit::TestCase
     assert_equal( "skunk", hosts(:host_skunk).label )
   end
 
+  def test_parent_node
+    assert_parent_node(hosts(:host_skunk),nil)
+  end
+
   def test_basic_load
     host = hosts(:host_skunk)
     assert_equal( 1, host.id )

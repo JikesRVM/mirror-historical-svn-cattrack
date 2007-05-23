@@ -37,6 +37,10 @@ class BuildRun < ActiveRecord::Base
     @output
   end
 
+  def parent_node
+    test_configurations[0].test_run
+  end
+
   private
 
   def update_output

@@ -43,4 +43,8 @@ class TestRun < ActiveRecord::Base
   test_case_rel :test_cases
 
   validates_positive :revision
+
+  def parent_node
+    host
+  end
 end

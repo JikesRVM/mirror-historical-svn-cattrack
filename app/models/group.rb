@@ -14,4 +14,8 @@ class Group < ActiveRecord::Base
   has_many :successes, :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
   has_many :failures, :class_name => 'TestCase', :conditions => "result = 'FAILURE'"
   has_many :excludes, :class_name => 'TestCase', :conditions => "result = 'EXCLUDE'"
+
+  def parent_node
+    test_configuration
+  end
 end

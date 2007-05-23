@@ -29,4 +29,14 @@ class Test::Unit::TestCase
       assert_equal( actual[k], v, "Testing Key #{k}" )
     end
   end
+
+  def assert_parent_node(object,type = nil,id = nil)
+    node = object.parent_node
+    if type.nil?
+      assert_nil(node)
+    else
+      assert_kind_of(type,node)
+      assert_equal(id, node.id)
+    end
+  end
 end

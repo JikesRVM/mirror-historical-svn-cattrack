@@ -12,4 +12,8 @@
 #
 class BuildConfiguration < ActiveRecord::Base
   has_params :params
+
+  def parent_node
+    nil
+  end
 end

@@ -18,6 +18,10 @@ class BuildTargetTest < Test::Unit::TestCase
     assert_equal( "ia32_linux", build_targets(:ia32_linux).label )
   end
 
+  def test_parent_node
+    assert_parent_node(build_targets(:ia32_linux),nil)
+  end
+
   def test_basic_load
     bt = build_targets(:ia32_linux)
     assert_equal( "ia32_linux", bt.name )

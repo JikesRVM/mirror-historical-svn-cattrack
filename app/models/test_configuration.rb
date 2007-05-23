@@ -33,7 +33,7 @@ class TestConfiguration < ActiveRecord::Base
   test_case_rel :excludes, "test_cases.result = 'EXCLUDE'"
   test_case_rel :test_cases
 
-  def label
-    name.blank? ? build_run.build_configuration.name : "#{build_run.build_configuration.name}_#{name}"
+  def parent_node
+    test_run
   end
 end

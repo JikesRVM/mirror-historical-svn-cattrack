@@ -17,6 +17,10 @@ class BuildRunTest < Test::Unit::TestCase
     assert_equal( 'prototype', build_runs(:b_1).label )
   end
 
+  def test_parent_node
+    assert_parent_node(build_runs(:b_1),TestRun,1)
+  end
+
   def test_basic_load
     build = build_runs(:b_1)
     assert_equal( 1, build.id )

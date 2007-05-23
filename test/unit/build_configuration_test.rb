@@ -17,6 +17,10 @@ class BuildConfigurationTest < Test::Unit::TestCase
     assert_equal( 'prototype', build_configurations(:bc1).label )
   end
 
+  def test_parent_node
+    assert_parent_node(build_configurations(:bc1),nil)
+  end
+
   def test_basic_load
     bc = build_configurations(:bc1)
     assert_equal( "prototype", bc.name )

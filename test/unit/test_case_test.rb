@@ -13,6 +13,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TestCaseTest < Test::Unit::TestCase
+  def test_label
+    assert_equal( "TestClassLoading", test_cases(:tc_1).label )
+  end
+
+  def test_parent_node
+    assert_parent_node(test_cases(:tc_1),Group,1)
+  end
+
   def test_basic_load
     tc = test_cases(:tc_1)
     assert_equal( 1, tc.id )
