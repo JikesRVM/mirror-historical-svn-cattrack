@@ -20,4 +20,6 @@ class Test::Unit::TestCase
   self.pre_loaded_fixtures = true
   self.display_invalid_content = true
   self.auto_validate = true
+
+  fixtures ::OrderedTables
 end
