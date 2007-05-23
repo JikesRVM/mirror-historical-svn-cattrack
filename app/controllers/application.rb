@@ -17,6 +17,11 @@ class ApplicationController < ActionController::Base
   self.check_environment
 
   protected
+  helper_method :menu_name
+  def menu_name
+    nil
+  end
+
   def protect?
     false
   end
