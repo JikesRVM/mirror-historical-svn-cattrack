@@ -16,6 +16,7 @@ class CreateGroups < ActiveRecord::Migration
       t.column :test_configuration_id, :integer, :null => false, :on_delete => :cascade
       t.column :name, :string, :limit => 75, :null => false
     end
+    add_index :groups, [:test_configuration_id, :name], :unique => true
     add_index :groups, [:name]
   end
 
