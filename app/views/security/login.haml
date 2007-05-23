@@ -1,0 +1,17 @@
+- @page_title = "Login"
+%h1.page-title Login
+
+%form{:action => url_for(:action => 'login'), :method => 'post'}
+  %table.details
+    %tr
+      %th
+        %label{:for => 'username'} Username
+      %td
+        %input#username{:name => 'username', :size => 20, :type => 'text'}/
+    %tr
+      %th
+        %label{:for => 'password'} Password
+      %td
+        %input#password{:name => 'password', :size => 20, :type => 'password'}/
+  .form_footer
+    %button{:type => 'submit'} Login

@@ -1,0 +1,12 @@
+- @page_title = "Login Required"
+%h1.page-title Login Required
+%p
+  You are not logged in. You cannot view this URL without
+  %a{:href => url_for(:controller => '/security', :action => 'login'), :title => 'Log on'}
+    logging
+  on.
+%p
+  If you think this message is wrong, please consult your
+  %a{:href => administrators_url(), :title => 'Administrators details'}
+    administrators
+  about getting the necessary permissions.
