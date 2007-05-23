@@ -19,10 +19,19 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'host/:host_id/test_run/:test_run_id/build_run/:id', :controller => 'build_run', :action => 'show'
   map.connect 'host/:host_id/test_run/:id', :controller => 'test_run', :action => 'show'
   map.connect 'host/:id', :controller => 'host', :action => 'show', :id => /\d/
+  map.connect 'hosts', :controller => 'host', :action => 'list'
+
+  map.connect 'build_target/:id', :controller => 'build_target', :action => 'show', :id => /\d/
+  map.connect 'build_configuration/:id', :controller => 'build_configuration', :action => 'show', :id => /\d/
+
+  map.connect 'admin', :controller => 'admin/dashboard'
+  map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show'
 
   map.administrators 'security/administrators', :controller => 'security', :action => 'administrators'
   map.connect '', :controller => 'dashboard'
 
-  map.connect ':controller/:action/:id.:format'
+  map.connect 'admin/user/:action/:id', :controller => 'admin/user'
+  map.connect 'security/:action/:id', :controller => 'security'
+
   map.connect ':controller/:action/:id'
 end
