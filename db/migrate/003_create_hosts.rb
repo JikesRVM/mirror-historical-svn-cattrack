@@ -15,6 +15,7 @@ class CreateHosts < ActiveRecord::Migration
    create_table :hosts, :force => true do |t|
       t.column :name, :string, :limit => 100, :null => false
     end
+   add_index :hosts, [:name], :unique => true
   end
 
   def self.down
