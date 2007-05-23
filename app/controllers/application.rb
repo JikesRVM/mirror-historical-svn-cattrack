@@ -16,6 +16,12 @@ class ApplicationController < ActionController::Base
 
   self.check_environment
 
+  # Load all active Records. Required here so
+  # that present before next step and occurs at every application_reset!
+  ActiveRecord::Base.preload_active_records
+  # Setup all the relationships and validations based on db schema
+  ActiveRecord::Base.init_auto_validations
+
   protected
   helper_method :menu_name
   def menu_name
