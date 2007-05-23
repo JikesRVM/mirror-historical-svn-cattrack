@@ -1,0 +1,18 @@
+- if record_pages
+  %table.pagination
+    %tr
+      %td.firstcolumn
+      %td.stats= (record_pages.item_count == 0) ? "0 to 0 of 0" : "#{record_pages.current.first_item} to #{record_pages.current.last_item} of #{record_pages.item_count}"
+      %td.actions
+        - if record_pages.current.previous
+          = link_to( image_tag('/images/icons/pagination/first-arrow.png', :alt=>'First', :class=>'image arrows first-arrow'), {:page => record_pages.first}, {:class => 'arrows first-arrow'} )
+          = link_to( image_tag('/images/icons/pagination/previous-arrow.png', :alt=>'Previous', :class=>'image arrows previous-arrow'), {:page => record_pages.current.previous}, {:class => 'arrows previous-arrow'} )
+        - else
+          = image_tag '/images/icons/pagination/first-arrow-greyed.png', :alt=>'First', :class=>'arrows first-arrow greyed'
+          = image_tag '/images/icons/pagination/previous-arrow-greyed.png', :alt=>'Previous', :class=>'arrows previous-arrow greyed'
+        - if record_pages.current.next
+          = link_to( image_tag('/images/icons/pagination/next-arrow.png', :alt=>'Next', :class=>'image arrows next-arrow'), {:page => record_pages.current.next}, {:class => 'arrows next-arrow'} )
+          = link_to( image_tag('/images/icons/pagination/last-arrow.png', :alt=>'Last', :class=>'image arrows last-arrow'), {:page => record_pages.last}, {:class => 'arrows last-arrow'} )
+        - else
+          = image_tag('/images/icons/pagination/next-arrow-greyed.png', :alt=>'Next', :class=>'image arrows next-arrow greyed')
+          = image_tag('/images/icons/pagination/last-arrow-greyed.png', :alt=>'Last', :class=>'image arrows last-arrow greyed')
