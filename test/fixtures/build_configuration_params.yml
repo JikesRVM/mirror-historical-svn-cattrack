@@ -1,0 +1,52 @@
+<%
+  prototype_configs = { 'config.name' => 'prototype',
+                        'config.runtime.compiler' => 'base',
+                        'config.bootimage.compiler' => 'base',
+                        'config.mmtk.plan' => 'org.mmtk.plan.generational.marksweep.GenMS',
+                        'config.include.aos' => '0',
+                        'config.include.opt-harness' => '0',
+                        'config.include.gcspy' => '0',
+                        'config.include.gcspy-stub' => '0',
+                        'config.include.gcspy-client' => '0',
+                        'config.include.all-classes' => '0',
+                        'config.assertions' => 'normal',
+                        'config.default-heapsize.initial' => '20',
+                        'config.default-heapsize.maximum' => '100',
+                        'config.bootimage.compiler.args' => '',
+                        'config.stress-gc' => ''
+                      }
+  prototype_opt_configs = { 'config.name' => 'prototype-opt',
+                            'config.runtime.compiler' => 'opt',
+                            'config.bootimage.compiler' => 'base',
+                            'config.mmtk.plan' => 'org.mmtk.plan.generational.marksweep.GenMS',
+                            'config.include.aos' => '0',
+                            'config.include.opt-harness' => '0',
+                            'config.include.gcspy' => '0',
+                            'config.include.gcspy-stub' => '0',
+                            'config.include.gcspy-client' => '0',
+                            'config.include.all-classes' => '0',
+                            'config.assertions' => 'normal',
+                            'config.default-heapsize.initial' => '20',
+                            'config.default-heapsize.maximum' => '100',
+                            'config.bootimage.compiler.args' => '',
+                            'config.stress-gc' => ''
+                          }
+
+  index = 0
+  prototype_configs.each do |k,v|
+    index = index + 1
+%>
+bcp_<%= index %>:
+    owner_id: 1
+    key: '<%= k %>'
+    value: '<%= v %>'
+<%
+  end
+  prototype_opt_configs.each do |k,v|
+    index = index + 1
+%>
+bcp_<%= index %>:
+    owner_id: 2
+    key: '<%= k %>'
+    value: '<%= v %>'
+<% end %>

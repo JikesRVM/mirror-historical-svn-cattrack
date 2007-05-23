@@ -1,0 +1,5 @@
+<% 1.upto(22) do |i| %>
+content_<%= i %>:
+  test_case_id: <%= i %>
+  output: '<%= i %> times around the merry go round'
+<% end %>

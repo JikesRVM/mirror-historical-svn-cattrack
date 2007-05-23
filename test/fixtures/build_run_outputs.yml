@@ -1,0 +1,12 @@
+b_1:
+  build_run_id: 1
+  output: 'Prototype build log here ...'
+b_2:
+  build_run_id: 2
+  output: 'Prototype-opt build log here ...'
+b_3:
+  build_run_id: 3
+  output: 'Prototype build log here ...'
+b_4:
+  build_run_id: 4
+  output: 'Prototype-opt build log here ... I failed!'

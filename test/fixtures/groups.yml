@@ -1,0 +1,28 @@
+<%
+  prototype_groups = ['basic','optests']
+  prototype_opt_groups = ['basic','optests','caffeinemark']
+
+  index = 0
+  [1, 2, 4].each do |tc|
+    prototype_groups.each do |v|
+      index = index + 1
+%>
+group_<%= index %>:
+  id: <%= index %>
+  test_configuration_id: <%= tc %>
+  name: <%= v %>
+<%
+    end
+  end
+  [3, 5].each do |tc|
+    prototype_opt_groups.each do |v|
+      index = index + 1
+%>
+group_<%= index %>:
+  id: <%= index %>
+  test_configuration_id: <%= tc %>
+  name: <%= v %>
+<%
+    end
+  end
+%>

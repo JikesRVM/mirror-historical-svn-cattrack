@@ -1,0 +1,12 @@
+s_environment:
+  id: 1
+  name: 'environment'
+  value: '<%= ENV['SELECTED_ENV'] || ENV['RAILS_ENV'] %>'
+s_version:
+  id: 2
+  name: 'minor.version'
+  value: '0'
+s_session_timeout:
+  id: 3
+  name: 'session.timeout'
+  value: '20'

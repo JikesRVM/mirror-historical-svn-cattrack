@@ -1,0 +1,26 @@
+tc1_1:
+  id: 1
+  name: ''
+  test_run_id: 1
+  build_run_id: 1
+tc1_2:
+  id: 2
+  name: 'V2'
+  test_run_id: 1
+  build_run_id: 1
+tc1_3:
+  id: 3
+  name: ''
+  test_run_id: 1
+  build_run_id: 2
+
+tc2_1:
+  id: 4
+  name: ''
+  test_run_id: 2
+  build_run_id: 3
+tc2_2:
+  id: 5
+  name: ''
+  test_run_id: 2
+  build_run_id: 4

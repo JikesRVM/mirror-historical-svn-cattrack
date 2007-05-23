@@ -1,0 +1,20 @@
+<%
+  target_params = { 'target.name' => 'ia32-linux',
+                        'target.arch' => 'ia32',
+                        'target.address.size' => '32',
+                        'target.os' => 'Linux',
+                        'target.bootimage.code.address' => '0x4B000000',
+                        'target.bootimage.data.address' => '0x47000000',
+                        'target.bootimage.rmap.address' => '0x4E000000',
+                        'target.max-mappable.address' => '0xb0000000'
+                      }
+
+  index = 0
+  target_params.each do |k,v|
+    index = index + 1
+%>
+btp_<%= index %>:
+    owner_id: 1
+    key: '<%= k %>'
+    value: '<%= v %>'
+<% end %>

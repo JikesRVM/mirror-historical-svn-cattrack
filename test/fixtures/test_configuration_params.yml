@@ -1,0 +1,26 @@
+<%
+  blank_params = { 'mode' => '', 'extra.args' => '' }
+  performance_params = { 'mode' => 'performance', 'extra.args' => '' }
+
+  index = 0
+  [1, 3, 4, 5].each do |tc|
+    blank_params.each do |k,v|
+      index = index + 1
+%>
+tcp_<%= index %>:
+    owner_id: <%= tc %>
+    key: '<%= k %>'
+    value: '<%= v %>'
+<%
+    end
+  end
+  performance_params.each do |k,v|
+    index = index + 1
+%>
+bcp_<%= index %>:
+    owner_id: 2
+    key: '<%= k %>'
+    value: '<%= v %>'
+<%
+  end
+%>
