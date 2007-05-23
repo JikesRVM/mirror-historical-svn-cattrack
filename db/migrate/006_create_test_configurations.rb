@@ -17,6 +17,7 @@ class CreateTestConfigurations < ActiveRecord::Migration
       t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
       t.column :build_run_id, :integer, :null => false, :on_delete => :cascade
     end
+    add_index :test_configurations, [:name, :test_run_id], :uniq => true
     add_index :test_configurations, [:name]
     add_index :test_configurations, [:test_run_id]
     add_index :test_configurations, [:build_run_id]
