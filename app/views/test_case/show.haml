@@ -1,0 +1,39 @@
+%h2= "Test Case: #{h(@record.name)}"
+
+%h3 Test Parameters
+%table.details
+  %tr
+    %th Classname
+    %td= h(@record.classname)
+  %tr
+    %th Args
+    %td= h(@record.args)
+  %tr
+    %th Working Directory
+    %td= h(@record.working_directory)
+  %tr
+    %th Command
+    %td= h(@record.command)
+  - @record.params.each_pair do |k,v|
+    %tr
+      %th= h(k.humanize)
+      %td= h(v)
+
+%h3 Test Output
+%table.details
+  %tr
+    %th Result
+    %td= "#{h(@record.result)} #{h(@record.result_explanation)}"
+  %tr
+    %th Exit Code
+    %td= h(@record.exit_code)
+  %tr
+    %th Running Time
+    %td= "#{h(@record.time)} ms"
+  - @record.statistics.each_pair do |k,v|
+    %tr
+      %th= h(k)
+      %td= h(v)
+  %tr
+    %th Output
+    %td= link_to('...', :action => 'show_output', :id => @record)

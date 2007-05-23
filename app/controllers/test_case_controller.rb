@@ -10,8 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ApplicationHelper
-  def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show', :id => object.id})
+class TestCaseController < ApplicationController
+  verify :method => :get, :only => [:show, :show_output], :redirect_to => {:action => :index}
+
+  def show
+    @record = TestCase.find(params[:id])
+  end
+
+  def show_output
+    @record = TestCase.find(params[:id])
+    headers['Content-Type'] = 'text/plain'
+    render(:text => @record.output, :layout => false)
   end
 end

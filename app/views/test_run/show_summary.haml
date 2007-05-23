@@ -1,0 +1,44 @@
+%table.details
+  %tr
+    %th Name
+    %td= h(@record.name)
+  %tr
+    %th Host
+    %td= link_to(h(@record.host.label), :controller => '/host', :action => 'show', :id => @record.host_id)
+  %tr
+    %th Target
+    %td= link_to(h(@record.build_target.label), :controller => '/build_target', :action => 'show', :id => @record.build_target_id)
+  %tr
+    %th Revision
+    %td= h(@record.revision)
+  %tr
+    %th Time
+    %td= h(@record.occured_at)
+  %tr
+    %th Success Rate
+    %td= "#{@record.successes.count}/#{@record.test_cases.count}"
+%h3 Build Runs
+%ul
+  - @record.build_runs.each do |br|
+    %li= link_to(h(br.label), :controller => '/build_run', :action => 'show', :id => br)
+- if @record.failures.size > 0
+  %h3 Failures
+  %table.list
+    %tr
+      %th Build Configuration
+      %th Test Configuration
+      %th Group
+      %th Test
+      %th Reason
+      %th Operations
+    - @record.failures.each do |t|
+      %tr
+        %td= link_to(h(t.build_configuration_name), :controller => '/build_configuration', :action => 'show', :id => t.build_configuration_id)
+        %td= link_to(h(TestConfiguration.find(t.test_configuration_id).label), :controller => '/test_configuration', :action => 'show', :id => t.test_configuration_id)
+        %td= h(t.group_name)
+        %td= h(t.name)
+        %td= h(t.result_explanation)
+        %td
+          %ul.actions
+            %li
+              %a{:href => url_for(:controller => '/test_case', :action => 'show', :id => t) } Show

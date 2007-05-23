@@ -10,8 +10,10 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ApplicationHelper
-  def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show', :id => object.id})
+class TestConfigurationController < ApplicationController
+  verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
+
+  def show
+    @record = TestConfiguration.find(params[:id])
   end
 end

@@ -1,0 +1,48 @@
+%h1.page-title Test Run
+
+%table.details
+  %tr
+    %th Name
+    %td= h(@record.name)
+  %tr
+    %th Host
+    %td= link_for(@record.host)
+  %tr
+    %th Target
+    %td= link_to(h(@record.build_target.label), :controller => '/build_target', :action => 'show', :id => @record.build_target_id)
+  %tr
+    %th Revision
+    %td= h(@record.revision)
+  %tr
+    %th Time
+    %td= h(@record.occured_at)
+  %tr
+    %th Success Rate
+    %td= "#{@record.successes.count}/#{@record.test_cases.count}"
+%ul.actions
+  %li
+    %a{:href => url_for(:action => 'show_summary', :id => @record) } Show Summary
+.clearer
+%h3 Build Runs
+%table.list
+  %tr
+    %th Build
+    %th Result
+    %th Operations
+  - @record.build_runs.each do |br|
+    %tr
+      %td= h(br.label)
+      %td= h(br.result)
+      %td= link_for(br)
+
+%h3 Test Configurations
+%table.list
+  %tr
+    %th Test
+    %th Success Rate
+    %th Operations
+  - @record.test_configurations.each do |tc|
+    %tr
+      %td= h(tc.label)
+      %td= "#{h(tc.successes.count)}/#{h(tc.test_cases.count)}"
+      %td= link_for(tc)

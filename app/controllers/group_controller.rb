@@ -10,8 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ApplicationHelper
-  def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show', :id => object.id})
+class GroupController < ApplicationController
+  def show
+    @record = Group.find(params[:id])
   end
 end

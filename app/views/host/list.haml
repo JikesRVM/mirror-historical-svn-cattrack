@@ -1,0 +1,13 @@
+%h1.page-title Host List
+%table.list
+  %tr
+    %th Name
+    %th Operations
+  - @records.each do |h|
+    %tr
+      %td= h(h.name)
+      %td
+        %ul.actions
+          %li
+            %a{:href => url_for(:action => 'show', :id => h) } Show
+= render(:partial => '/common/pagination', :locals => {:record_pages => @record_pages})

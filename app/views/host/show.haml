@@ -1,0 +1,21 @@
+%h2= "Host: #{h(@record.name)}"
+
+%table.list
+  %tr
+    %th Name
+    %th Target
+    %th Revision
+    %th Time
+    %th Operations
+  - @test_runs.each do |t|
+    %tr
+      %td= h(t.name)
+      %td= link_to(h(t.build_target.label), :controller => '/build_target', :action => 'show', :id => t.build_target_id)
+      %td= h(t.revision)
+      %td= h(t.occured_at)
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show")
+          %li
+            = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => t},{:method => :post, :confirm => 'Are you sure you want to delete the record of the test-run?'})
+= render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})

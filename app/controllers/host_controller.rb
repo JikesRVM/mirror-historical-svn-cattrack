@@ -10,8 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ApplicationHelper
-  def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show', :id => object.id})
+class HostController < ApplicationController
+  verify :method => :get, :only => [:show, :list], :redirect_to => {:action => :index}
+
+  def show
+    @record = Host.find(params[:id])
+    @test_run_pages, @test_runs =
+      paginate(:test_run, :per_page => 20, :order => 'occured_at DESC', :conditions => ['host_id = ?', @record.id])
+  end
+
+  def list
+    @record_pages, @records = paginate(:host, :per_page => 20, :order => 'name')
   end
 end
