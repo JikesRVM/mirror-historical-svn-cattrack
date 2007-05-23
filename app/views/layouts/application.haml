@@ -9,6 +9,7 @@
     %meta{ 'http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8' }/
     %link{ :rel => 'shortcut icon', :href => '/favicon.ico', :type => 'image/x-icon' }/
   %body{ :id => "#{controller.controller_name}__#{@action_name}" }
+    = render(:partial => '/common/flash_messages')
     = yield
     - if RAILS_ENV == 'development'
       %center
