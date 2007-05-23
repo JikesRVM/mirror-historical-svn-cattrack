@@ -1,6 +1,8 @@
 class Admin::BaseController < ApplicationController
   before_filter :verify_admin
 
+  self.force_no_cache
+
   protected
   def protect?
     true
