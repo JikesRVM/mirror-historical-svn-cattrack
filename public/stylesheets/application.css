@@ -1,0 +1,500 @@
+body {
+  color: black;
+  background-color: rgb(243,242,235);
+  font-family: verdana, helvetica, arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+html > body {
+  font-size: 9pt;
+}
+
+acronym, .titleTip {
+  border-bottom: 1px dotted rgb(168,140,83);
+  cursor: help;
+  margin: 0;
+  padding: 0;
+}
+
+.doNotDisplay {
+  display: none !important;
+}
+
+.smallCaps {
+  font-size: 117%;
+  font-variant: small-caps;
+}
+/* ##### Header ##### */
+
+#hd {
+  color: inherit;
+  background-color: rgb(184,38,25);
+}
+
+.headerTitle {
+  margin: 0;
+  padding: 0.25em 4mm 0.25em 4mm;
+}
+
+.headerTitle a {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+  font-size: 110%;  /* For MSIE */
+  font-weight: bold;
+  font-style: italic;
+  float: left;
+}
+
+.headerTitle > a {
+  font-size: 138%;  /* For fully standards-compliant user agents */
+}
+
+.headerTitle span {
+  color: white;
+  background-color: transparent;
+  font-weight: normal;
+}
+
+.subHeader {
+  color: white;
+  background-color: black;
+  font-size: 109%;
+  text-align: center;
+  margin: 0;
+  padding: 0.5ex 0;
+}
+
+.subHeader p {
+  margin: 0;
+  padding: 0;
+}
+
+.subHeader a {
+  color: white;
+  background-color: black;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0;
+  padding: 0 1ex;
+}
+
+.subHeader a:hover {
+  color: black;
+  background-color: white;
+}
+
+.headerUserControls {
+   background-color: transparent;
+   margin: 0;
+   height: 1.6em;
+   margin-right: 1em;
+   float: right;
+   color: white;
+   font-weight: normal;
+}
+
+.headerUserControls span {
+   margin-right: 1.3em;
+}
+
+.headerUserControls a {
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+}
+.clearer {
+   clear: both;
+   margin: 0;
+   padding: 0;
+   border: 0;
+}
+
+/* ##### Footer ##### */
+
+#ft {
+  color: black;
+  background-color: rgb(230,223,207);
+  font-size: 92%;
+  text-align: center;
+  line-height: 1.25em;
+  margin: 0;
+  padding: 0.5em 0.4em 0.5em 0.4em;
+  clear: both;
+}
+
+#ft div {
+  margin: 0;
+  padding: 0 0 1ex 0;
+}
+
+#ft a {
+  color: black;
+  background-color: transparent;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+#ft a:hover {
+  text-decoration: none;
+}
+/* ##### Body ##### */
+
+#bd {
+  color: black;
+  background-color: rgb( 243, 242, 235 );
+  text-align: justify;
+  line-height: 1.5em;
+  border-left: 1px solid rgb(216,210,195);
+}
+
+table.layout {
+  width: 100%;
+}
+
+table.layout td {
+  vertical-align: top;
+}
+
+table.layout td.menu {
+  width: 12em;
+}
+
+/* ##### Left menu ##### */
+.menu h4 {
+  color: rgb(64,64,64);
+  background-color: rgb(230,223,207);
+  font-weight: bold;
+  margin: 0;
+  padding: 0.4em 0.5em;
+}
+
+.menu ul {
+  list-style-type: none;
+  list-style-position: outside;
+  margin: 0 0 1em 0;
+  padding: 0;
+}
+
+.menu ul li {
+  margin: 0.3em;
+  padding: 0 0 0.4ex 0.25ex;
+}
+
+.menu ul li a {
+  color: rgb(166,140,83);
+  margin: 0;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.menu ul li a:hover {
+  color: rgb(64,64,64);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+/* ##### Main Copy ##### */
+
+div.main-copy {
+  border-left: 1px solid rgb(216,210,195);
+  padding-left: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  padding-right: 1em;
+  background-color: white;
+  min-height: 30em;
+}
+
+div.main-copy h1, div.main-copy h2, div.main-copy h3, div.main-copy h4 {
+   color: rgb(166,140,83);
+   background-color: transparent;
+   font-family: arial, verdana, helvetica, sans-serif;
+   font-weight: bold;
+   font-style: italic;
+   text-align: left;
+}
+
+div.main-copy h1 {
+   margin: 1em 0 0 0;
+   padding: 1em 0 0 0;
+   font-size: 175%;
+   border-top: 1px solid rgb(216,210,195);
+}
+
+div.main-copy h1.page-title {
+   margin: 1em 0 0 0;
+   border-top: none;
+   padding-top: 0;
+}
+
+div.main-copy h2 {
+   margin: 1em 0 0 0;
+   font-size: 150%;
+}
+
+div.main-copy h3 {
+   font-size: 125%;
+}
+
+/* ##### Style for standard Content ##### */
+
+a {
+  color: rgb(168,140,83);
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+p {
+  margin: 1em 0 1.5em 0;
+  padding: 0;
+}
+
+dt {
+  font-weight: bold;
+  margin: 0;
+  padding: 0 0 0.5ex 0;
+}
+
+dd {
+  margin: 0 0 1.5em 1.5em;
+  padding: 0;
+}
+
+div.sysinfo table {
+  width: 100%;
+  border: 1px solid black;
+}
+
+div.sysinfo table th {
+  width: 33%;
+  background-color: rgb( 230, 223, 207 );
+  font-weight: bold;
+}
+
+div.sysinfo table td, div.sysinfo table th {
+  padding-left: 0.6em;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  padding-right: 0.4em;
+}
+
+/* Table */
+table.list {
+   margin: 0;
+   margin-top: 1em;
+   padding: 0;
+   width: 100%;
+   border: 1px solid black;
+   clear: both;
+}
+
+/* Table :: Column Headers  */
+table.list th {
+   background-color: rgb( 230, 223, 207 );
+   text-align: left;
+   padding-left: 0.6em;
+   padding-top: 0.3em;
+   padding-bottom: 0.3em;
+   padding-right: 0.4em;
+   font: bold 11px arial, sans-serif;
+   border-bottom: 1px solid black;
+}
+
+/* Table :: Column Data */
+
+table.list td {
+   padding-top: 0.2em;
+   padding-left: 0.4em;
+   padding-bottom: 0.2em;
+}
+
+/* Table :: Pagination */
+
+div.pagination {
+   background-color: rgb( 230, 223, 207 );
+   margin: 0;
+   padding: 0;
+   border-left: 1px solid black;
+   border-right: 1px solid black;
+   border-bottom: 1px solid black;
+   width: 100%;
+   font-size: small;
+}
+
+div.pagination div {
+   width: 33%;
+   padding: 0;
+   margin: 0;
+   float: left;
+   text-align: right;
+   border-right: 1px solid black;
+}
+
+table.pagination {
+   background-color: rgb( 230, 223, 207 );
+   padding: 0;
+   border-left: 1px solid black;
+   border-right: 1px solid black;
+   border-bottom: 1px solid black;
+   width: 100%;
+   font-size: small;
+}
+
+table.pagination td.actions {
+   text-align: right;
+   width: 33%;
+}
+
+table.pagination td.firstcolumn {
+   width: 34%;
+}
+
+table.pagination td.stats {
+   text-align: center;
+   width: 33%;
+}
+
+table.pagination .arrows:hover {
+   color: #666;
+   background-color: white;
+}
+
+div.arrows .text {
+   display: none;
+}
+
+.arrows greyed {
+   color: gray;
+}
+
+.arrows {
+   background-repeat: no-repeat;
+   background-position: left;
+   font-size: small;
+   text-decoration: none;
+   height: 14px;
+   display: inline;
+}
+
+/* Table :: Forms */
+
+table.details {
+  width: 100%;
+  margin: 1em;
+}
+
+table.details td, table.details th {
+  padding-left: 0.5em;
+}
+
+table.details th {
+   font-weight: bold;
+   padding: 0.2em;
+   padding-left: 0.5em;
+   text-align: right;
+   vertical-align: top;
+   width: 8em;
+}
+
+table.details td {
+  padding-left: 0.5em;
+  padding-right: 1.5em;
+  width: 10em;
+}
+
+table.details td.help {
+  width: 16em;
+}
+
+table.details td input {border: 1px solid black;}
+table.details td.error input {border: 1px solid red;}
+
+table.details td div.field_error {
+   color: red;
+   font-style: oblique;
+   font-weight: bold;
+}
+
+table.details td.help div {
+   background:  url("/images/icons/mt/information.gif") left 50% no-repeat;
+   padding-left: 2.5em;
+   font-size: smaller;
+}
+
+table.details td.required {
+   background:  url("/images/icons/mt/required.gif") right 50% no-repeat;
+}
+
+/* Table :: Form Errors */
+
+div.form_messages {
+  color: black;
+  border: 1px solid #C00;
+  padding: 1em;
+  margin: auto;
+  width: 60%;
+  background-color: #FFCCCC;
+  margin-bottom: 1em;
+}
+
+div.form_messages h4 {
+   padding-left: 2em;
+   color: black;
+   background: transparent url("/images/icons/mt/error.gif") left 50% no-repeat;
+}
+
+div.form_messages ul {
+  list-style: square;
+  padding-left: 4em;
+}
+
+/* Actions */
+
+ul.actions {
+   list-style: none;
+   margin: 0;
+}
+ul.actions li {
+   padding-right: 1em;
+   float: left;
+}
+
+/* Flash messages */
+
+div.flash {
+  color: black;
+  padding: 1em;
+  margin: auto;
+  width: 60%;
+  margin-bottom: 1em;
+}
+
+div.flash h4 {
+  padding-left: 2em;
+  color: black;
+}
+
+div.flash.alert {
+  border: 1px solid #C00;
+  background-color: #FFCCCC;
+}
+
+div.flash.alert h4 {
+  background: transparent url( "/images/icons/mt/error.gif" ) left 50% no-repeat;
+}
+
+div.flash.notice {
+  border: 1px solid #090;
+  background-color: #DFD;
+}
+
+div.flash.notice h4 {
+  background: transparent url( "/images/icons/mt/notice.gif" ) left 50% no-repeat;
+}

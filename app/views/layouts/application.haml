@@ -20,6 +20,7 @@
             = link_to('Logout', {:controller => '/security', :action => 'logout'}, {:method => :post})
           - else
             = link_to('Login', :controller => '/security', :action => 'login')
+        .clearer
         .subHeader
           %span.doNotDisplay Quick Links:
           %p
@@ -36,9 +37,10 @@
             - if menu
               %td.menu= render(:partial => menu)
             %td
-              = draw_breadcrumbs(@record) if @record
-              = render(:partial => '/common/flash_messages')
-              = yield
+              .main-copy
+                = draw_breadcrumbs(@record) if @record
+                = render(:partial => '/common/flash_messages')
+                = yield
       #ft= "Powered by CatTrack (Version \##{db_version})."
     - if RAILS_ENV == 'development'
       %center
