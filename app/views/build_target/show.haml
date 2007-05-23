@@ -1,0 +1,8 @@
+%h2= "Build Target: #{h(@record.name)}"
+
+%h3 Target Parameters
+%table.details
+  - @record.params.each_pair do |k,v|
+    %tr
+      %th= h(k)
+      %td= h(v)

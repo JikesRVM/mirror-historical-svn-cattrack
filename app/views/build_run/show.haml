@@ -1,0 +1,16 @@
+%table.details
+  %tr
+    %th Test Configuration(s)
+    %td= @record.test_configurations.collect {|tc| link_to(h(tc.label), :controller => '/test_configuration', :action => 'show', :id => tc)}.join(', ')
+  %tr
+    %th Build Configuration
+    %td= link_to(h(@record.build_configuration.name), :controller => '/build_configuration', :action => 'show', :id => @record.build_configuration_id)
+  %tr
+    %th Result
+    %td= h(@record.result)
+  %tr
+    %th Running Time
+    %td= "#{h(@record.time)} ms"
+  %tr
+    %th Output
+    %td= link_to('...', :action => 'show_output', :id => @record)
