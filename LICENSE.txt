@@ -6,6 +6,10 @@ license.  The CPL meets the Debian Free Software Guidelines.
 Note: some code in public/javascripts is distributed under other open
 source licenses.  See the files in that tree for details.
 
+The files in scripts are part of the Ruby On Rails Framework and are
+distributed under the MIT License. See http://www.rubyonrails.org for
+further details.
+
 -------- The following is the legal text of the Common Public License ---------
 
                        Common Public License - v 1.0
