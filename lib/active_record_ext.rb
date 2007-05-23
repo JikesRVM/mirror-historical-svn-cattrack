@@ -20,6 +20,15 @@ module ActiveRecord
       self.name.humanize
     end
 
+    def self.validates_not_null(name, options={})
+      configuration = {:message => ActiveRecord::Errors.default_error_messages[:blank], :on => :save}
+      configuration.update(options)
+      validates_each([name], configuration) do |record, attr_name, value|
+        value = record.send(attr_name)
+        record.errors.add(attr_name, configuration[:message]) if value.nil?
+      end
+    end
+
     def label
       if self.respond_to?(:name)
         self.name
