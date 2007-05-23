@@ -29,6 +29,15 @@ module ActiveRecord
       end
     end
 
+    def self.validates_non_presence_of(name, options={})
+      configuration = {:message => 'must be blank.', :on => :save}
+      configuration.update(options)
+      validates_each([name], configuration) do |record, attr_name, value|
+        value = record.send(attr_name)
+        record.errors.add(attr_name, configuration[:message]) unless value.blank?
+      end
+    end
+
     def self.validates_not_null(name, options={})
       configuration = {:message => ActiveRecord::Errors.default_error_messages[:blank], :on => :save}
       configuration.update(options)
