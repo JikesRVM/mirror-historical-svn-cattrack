@@ -1,0 +1,24 @@
+user_peter:
+  id: 1
+  username: 'peter'
+  admin: true
+  salt: 'MyMostMagicSaltiness'
+  password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--retep--') %>
+user_trinity:
+  id: 2
+  username: 'trinity'
+  admin: false
+  salt: 'MyMostMagicSaltiness'
+  password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--secret--') %>
+user_neo:
+  id: 3
+  username: 'neo'
+  admin: false
+  salt: 'MyMostMagicSaltiness'
+  password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--letmein--') %>
+user_morpheus:
+  id: 4
+  username: 'morpheus'
+  admin: false
+  salt: 'MyMostMagicSaltiness'
+  password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--redpill--') %>
