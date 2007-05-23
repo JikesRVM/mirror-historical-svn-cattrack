@@ -16,4 +16,24 @@ class ApplicationController < ActionController::Base
 
   self.check_environment
 
+  protected
+  def protect?
+    false
+  end
+
+  # don't try to redirect to resource after authentication
+  def store_location?
+    false
+  end
+
+  # redirect unauthenticated user agent to login page when attempting to access resource requiring authentication
+  def access_denied!
+    if not is_authenticated?
+      @skip_quicklinks = true
+      render(:template => 'security/login_required', :status => 403)
+    else
+      render(:template => 'security/access_denied', :status => 403)
+    end
+    # TODO: should log or notify admin
+  end
 end
