@@ -70,6 +70,7 @@ end
 # Mime::Type.register "application/x-mobile", :mobile
 
 require 'digest/sha1' # used when hashing passwords
+require 'active_record_ext' # My custom extension to ar for labels etc
 
 OrderedTables = [ 'users' ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
