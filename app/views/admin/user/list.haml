@@ -1,0 +1,20 @@
+.list_header
+  %form{:method => 'get', :action => url_for(:action => 'list')}
+    %div
+      %input{:type => 'text', :name => 'q', :value => params[:q]}/
+      %button{:type => 'submit'} Search
+      %a{:href => '?q='} Reset
+%table.list
+  %tr
+    %th Username
+    %th Admin?
+    %th Operations
+  - @records.each do |q|
+    %tr
+      %td= h(q.username)
+      %td= h(q.admin?)
+      %td
+        %ul.actions
+          %li
+            %a{:href => url_for(:controller => '/admin/user', :action => 'show', :id => q) } Show
+= render(:partial => '/common/pagination', :locals => {:record_pages => @record_pages})

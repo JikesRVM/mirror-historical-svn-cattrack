@@ -1,0 +1,13 @@
+%table.details
+  %tr
+    %th Username
+    %td= h(@record.username)
+  %tr
+    %th Admin?
+    %td= h(@record.admin?)
+%ul.actions
+  %li
+    - admin_action = @record.admin? ? :disable_admin : :enable_admin
+    = link_to('Toggle Admin Status', {:controller => '/admin/user', :action => admin_action, :id => @record}, {:method => :post})
+  %li
+    = link_to('Delete User', {:controller => '/admin/user', :action => :destroy, :id => @record}, {:method => :post})
