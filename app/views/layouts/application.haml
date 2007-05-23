@@ -14,9 +14,30 @@
     #doc
       #hd
         .headerTitle= link_to( 'Jikes<span>RVM</span>', :controller => '/dashboard')
+        .headerUserControls
+          - if is_authenticated?
+            %span= "User: #{current_user.username}"
+            = link_to('Logout', {:controller => '/security', :action => 'logout'}, {:method => :post})
+          - else
+            = link_to('Login', :controller => '/security', :action => 'login')
+        .subHeader
+          %span.doNotDisplay Quick Links:
+          %p
+            = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
+            |
+            = link_to( 'Browse Hosts', :controller => '/host', :action => 'list' )
+            - if (is_authenticated? and current_user.admin?)
+              |
+              = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index' )
       #bd
-        = render(:partial => '/common/flash_messages')
-        = yield
+        %table.layout
+          %tr
+            - menu = menu_name
+            - if menu
+              %td.menu= render(:partial => menu)
+            %td
+              = render(:partial => '/common/flash_messages')
+              = yield
       #ft= "Powered by CatTrack (Version \##{db_version})."
     - if RAILS_ENV == 'development'
       %center
