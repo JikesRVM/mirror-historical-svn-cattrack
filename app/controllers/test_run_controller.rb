@@ -23,7 +23,7 @@ class TestRunController < ApplicationController
   end
 
   def destroy
-    raise AuthenticatedSystem::SecurityError unless current_user.admin?
+    raise AuthenticatedSystem::SecurityError unless (is_authenticated? and current_user.admin?)
     @record = TestRun.find(params[:id])
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
