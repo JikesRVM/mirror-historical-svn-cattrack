@@ -10,10 +10,9 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-ActionController::Routing::Routes.draw do |map|
-  map.administrators 'security/administrators', :controller => 'security', :action => 'administrators'
-  map.connect '', :controller => 'dashboard'
+class DashboardController < ApplicationController
+  verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
 
-  map.connect ':controller/:action/:id.:format'
-  map.connect ':controller/:action/:id'
+  def index
+  end
 end
