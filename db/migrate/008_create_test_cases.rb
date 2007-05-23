@@ -24,6 +24,7 @@ class CreateTestCases < ActiveRecord::Migration
       t.column :exit_code, :integer, :null => false
       t.column :time, :integer, :null => false
     end
+    add_index :test_cases, [:group_id, :name], :unique => true
     add_index :test_cases, [:name]
     add_index :test_cases, [:result]
 
