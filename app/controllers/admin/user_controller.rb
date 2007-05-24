@@ -12,7 +12,7 @@
 #
 class Admin::UserController < Admin::BaseController
   verify :method => :get, :only => [:show,:list], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:enable_admin, :disable_admin], :redirect_to => {:action => :index}
+  verify :method => :post, :only => [:enable_admin, :disable_admin, :activate, :deactivate, :add_uploader_permission, :remove_uploader_permission], :redirect_to => {:action => :index}
 
   def show
     @record = User.find(params[:id])
@@ -40,8 +40,37 @@ class Admin::UserController < Admin::BaseController
     redirect_to(:action => 'show', :id => @user)
   end
 
+  def activate
+    @user = User.find(params[:id])
+    @user.active = true
+    @user.save!
+    redirect_to(:action => 'show', :id => @user)
+  end
+
+  def deactivate
+    @user = User.find(params[:id])
+    @user.active = false
+    @user.save!
+    redirect_to(:action => 'show', :id => @user)
+  end
+
+  def add_uploader_permission
+    @user = User.find(params[:id])
+    @user.uploader = true
+    @user.save!
+    redirect_to(:action => 'show', :id => @user)
+  end
+
+  def remove_uploader_permission
+    @user = User.find(params[:id])
+    @user.uploader = false
+    @user.save!
+    redirect_to(:action => 'show', :id => @user)
+  end
+
   def destroy
     @record = User.find(params[:id])
+    # TODO: Add check that have not uploaded any test-runs
     flash[:notice] = "#{@record.username} was successfully deleted."
     @record.destroy
     redirect_to(:action => 'list')

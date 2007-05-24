@@ -92,7 +92,7 @@ class Admin::UserControllerTest < Test::Unit::TestCase
 
   def test_enable_admin
     assert(!User.find(2).admin?)
-    post(:enable_admin, {:id => 2}, {:user_id => 1})
+    post(:enable_admin, {:id => 2}, session_data)
     assert_redirected_to(:action => 'show', :id => 2)
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
@@ -101,10 +101,50 @@ class Admin::UserControllerTest < Test::Unit::TestCase
 
   def test_disable_admin
     assert(User.find(1).admin?)
-    post(:disable_admin, {:id => 1}, {:user_id => 1})
+    post(:disable_admin, {:id => 1}, session_data)
     assert_redirected_to(:action => 'show', :id => 1)
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
     assert(!User.find(1).admin?)
+  end
+
+  def test_activate
+    id = 4
+    assert(!User.find(id).active?)
+    post(:activate, {:id => id}, session_data)
+    assert_redirected_to(:action => 'show', :id => id)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
+    assert(User.find(id).active?)
+  end
+
+  def test_deactivate
+    id = 1
+    assert(User.find(id).active?)
+    post(:deactivate, {:id => id}, session_data)
+    assert_redirected_to(:action => 'show', :id => id)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
+    assert(!User.find(id).active?)
+  end
+
+  def test_add_uploader_permission
+    id = 3
+    assert(!User.find(id).uploader?)
+    post(:add_uploader_permission, {:id => id}, session_data)
+    assert_redirected_to(:action => 'show', :id => id)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
+    assert(User.find(id).uploader?)
+  end
+
+  def test_remove_uploader_permission
+    id = 1
+    assert(User.find(id).uploader?)
+    post(:remove_uploader_permission, {:id => id}, session_data)
+    assert_redirected_to(:action => 'show', :id => id)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
+    assert(!User.find(id).uploader?)
   end
 end
