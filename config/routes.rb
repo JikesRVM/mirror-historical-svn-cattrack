@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'host/:host_id/test_run/:test_run_id/build_run/:id/Result.txt', :controller => 'build_run', :action => 'show_output'
   map.connect 'host/:host_id/test_run/:test_run_id/build_run/:id', :controller => 'build_run', :action => 'show'
   map.connect 'host/:host_id/test_run/:id', :controller => 'test_run', :action => 'show'
+  map.connect 'host/:host_id/test_run/:id/Summary', :controller => 'test_run', :action => 'show_summary'
   map.connect 'host/:id', :controller => 'host', :action => 'show', :id => /\d/
   map.connect 'hosts', :controller => 'host', :action => 'list'
 
