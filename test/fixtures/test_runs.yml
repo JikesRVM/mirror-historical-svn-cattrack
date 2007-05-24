@@ -17,6 +17,8 @@ tr_1:
   revision: 1234
   name: 'core'
   occured_at: '2005-10-20 00:00:00'
+  uploader_id: 1
+  uploaded_at: '2005-10-20 00:15:35'
 tr_2:
   id: 2
   host_id: 2
@@ -24,3 +26,5 @@ tr_2:
   revision: 201
   name: 'sanity'
   occured_at: '2006-11-07 00:00:00'
+  uploader_id: 2
+  uploaded_at: '2006-11-08 00:00:00'

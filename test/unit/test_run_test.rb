@@ -26,10 +26,13 @@ class TestRunTest < Test::Unit::TestCase
     assert_equal( 1, tc.id )
     assert_equal( 1234, tc.revision )
     assert_equal( "2005-10-20T00:00:00Z", tc.occured_at.xmlschema )
+    assert_equal( "2005-10-20T00:15:35Z", tc.uploaded_at.xmlschema )
     assert_equal( 1, tc.host_id )
     assert_equal( 1, tc.host.id )
     assert_equal( 1, tc.build_target_id )
     assert_equal( 1, tc.build_target.id )
+    assert_equal( 1, tc.uploader_id )
+    assert_equal( 1, tc.uploader.id )
 
     assert_equal( 3, tc.test_configurations.size )
     assert( tc.test_configuration_ids.include?(1) )
@@ -55,7 +58,7 @@ class TestRunTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :host_id => 1, :build_target_id => 1, :revision => 123, :occured_at => Time.now}
+    {:name => 'foo', :host_id => 1, :build_target_id => 1, :revision => 123, :occured_at => Time.now, :uploaded_at => Time.now, :uploader_id => 1}
   end
   def self.non_null_attributes
     [:name, :host_id, :build_target_id, :revision, :occured_at]

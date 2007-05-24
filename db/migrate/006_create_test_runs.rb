@@ -18,6 +18,8 @@ class CreateTestRuns < ActiveRecord::Migration
       t.column :build_target_id, :integer, :null => false, :on_delete => :cascade
       t.column :revision, :integer, :null => false
       t.column :occured_at, :timestamp, :null => false
+      t.column :uploader_id, :integer, :null => false, :on_delete => :cascade, :references => :users
+      t.column :uploaded_at, :timestamp, :null => false
     end
     # TODO: Should also add some indexes on commonly searched combinations
     add_index :test_runs, [:name]
