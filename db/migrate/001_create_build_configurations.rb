@@ -23,6 +23,7 @@ class CreateBuildConfigurations < ActiveRecord::Migration
     end
     add_index :build_configuration_params, [:owner_id, :key], :unique => true
     add_index :build_configuration_params, [:owner_id]
+    add_index :build_configuration_params, [:owner_id, :key, :value]
   end
 
   def self.down

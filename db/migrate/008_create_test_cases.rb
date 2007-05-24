@@ -41,6 +41,7 @@ class CreateTestCases < ActiveRecord::Migration
     end
     add_index :test_case_params, [:owner_id, :key], :unique => true
     add_index :test_case_params, [:owner_id]
+    add_index :test_case_params, [:owner_id, :key, :value]
 
     create_table :test_case_statistics, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :test_cases
@@ -49,6 +50,7 @@ class CreateTestCases < ActiveRecord::Migration
     end
     add_index :test_case_statistics, [:owner_id, :key], :unique => true
     add_index :test_case_statistics, [:owner_id]
+    add_index :test_case_statistics, [:owner_id, :key, :value]
   end
 
   def self.down
