@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   def self.authenticate(name, password)
     user = find_by_username(name)
     return nil unless user
-    find(:first,  :conditions => ['username = ? AND password = ?', name, User.encode_password(user.salt, password)])
+    find(:first,  :conditions => ['username = ? AND password = ? AND active = ?', name, User.encode_password(user.salt, password), true])
   end
 
   def password_matches?(password)

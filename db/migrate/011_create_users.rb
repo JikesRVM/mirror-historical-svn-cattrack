@@ -17,8 +17,11 @@ class CreateUsers < ActiveRecord::Migration
       t.column :password, :string, :limit => 40, :null => false
       t.column :salt, :string, :limit => 40, :null => false
       t.column :admin, :boolean, :null => false
+      t.column :active, :boolean, :null => false
+      t.column :uploader, :boolean, :null => false
     end
     add_index :users, [:username], :unique => true
+    add_index :users, [:username, :password, :active]
   end
 
   def self.down

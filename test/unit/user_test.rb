@@ -19,9 +19,10 @@ class UserTest < Test::Unit::TestCase
     assert_equal('peter', user.username)
     assert_equal('MyMostMagicSaltiness', user.salt)
     assert_equal(true, user.admin?)
+    assert_equal(true, user.active?)
+    assert_equal(true, user.uploader?)
   end
 
-  self.add_util_functions
   self.perform_all_models_valid_test
   self.perform_fixtures_correct_size_test
 
@@ -38,6 +39,11 @@ class UserTest < Test::Unit::TestCase
 
   def test_authenticate_incorrect_password
     user = User.authenticate(users(:user_peter).username, 'bad_password')
+    assert_nil user
+  end
+
+  def test_authenticate_inactive_user
+    user = User.authenticate(users(:user_morpheus).username, 'redpill')
     assert_nil user
   end
 
