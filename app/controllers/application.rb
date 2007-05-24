@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
   ActiveRecord::Base.init_auto_validations
 
   protected
+  def find_active_user(id)
+    User.find_by_id_and_active(id,true)
+  end
+
   helper_method :menu_name
   def menu_name
     nil
