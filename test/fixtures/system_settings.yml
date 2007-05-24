@@ -22,3 +22,7 @@ s_session_timeout:
   id: 3
   name: 'session.timeout'
   value: '20'
+s_temp_directory:
+  id: 4
+  name: 'tmp.dir'
+  value: '<%= File.expand_path(RAILS_ROOT) %>/tmp/cattrack'

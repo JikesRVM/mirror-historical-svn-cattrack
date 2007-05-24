@@ -49,3 +49,8 @@
       %td
         = SystemSetting['session.timeout'].to_i
         mins
+  %h2 Application Settings
+  %table
+    %tr
+      %th Temp Directory
+      %td= SystemSetting['tmp.dir']
