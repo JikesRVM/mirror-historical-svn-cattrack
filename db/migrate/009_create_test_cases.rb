@@ -37,7 +37,7 @@ class CreateTestCases < ActiveRecord::Migration
     create_table :test_case_params, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :test_cases
       t.column :key, :string, :limit => 50, :null => false
-      t.column :value, :string, :limit => 50, :null => false
+      t.column :value, :string, :limit => 256, :null => false
     end
     add_index :test_case_params, [:owner_id, :key], :unique => true
     add_index :test_case_params, [:owner_id]
