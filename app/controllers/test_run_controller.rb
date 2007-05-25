@@ -49,8 +49,9 @@ class TestRunController < ApplicationController
   end
 
   def destroy
-    raise AuthenticatedSystem::SecurityError unless (is_authenticated? and current_user.admin?)
+    raise AuthenticatedSystem::SecurityError unless is_authenticated?
     @record = TestRun.find(params[:id])
+    raise AuthenticatedSystem::SecurityError unless (current_user.admin? or (current_user.uploader? and current_user.id == @record.uploader_id))
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
     redirect_to(:controller => '/host', :action => 'show', :id => @record.host_id)

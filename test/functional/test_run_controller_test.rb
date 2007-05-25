@@ -44,6 +44,12 @@ class TestRunControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns(:record))
   end
 
+  def test_new_get_with_non_uploader
+    assert_raise(AuthenticatedSystem::SecurityError) do
+      get(:new, {}, {:user_id => 3})
+    end
+  end
+
   def test_new_post_with_errors
     post(:new, {:record => {:host => 'foo'}}, session_data)
     assert_response(:success)
@@ -99,5 +105,25 @@ class TestRunControllerTest < Test::Unit::TestCase
     assert_equal(true, assigns(:record).frozen?)
     assert_equal("#{label} was successfully deleted.", flash[:notice])
     assert_nil(flash[:alert])
+  end
+
+  def test_destroy_by_uploader
+    id = 2
+    assert(model.exists?(id))
+    label = model.find(id).label
+    post(:destroy, {:id => id}, {:user_id => 2})
+    assert_redirected_to(:controller => 'host', :action => 'show', :id => id)
+    assert(!model.exists?(id))
+    assert_not_nil(assigns(:record))
+    assert_equal(id, assigns(:record).id)
+    assert_equal(true, assigns(:record).frozen?)
+    assert_equal("#{label} was successfully deleted.", flash[:notice])
+    assert_nil(flash[:alert])
+  end
+
+  def test_destroy_with_non_uploader_non_admin
+    assert_raise(AuthenticatedSystem::SecurityError) do
+      post(:destroy, {:id => 1}, {:user_id => 3})
+    end
   end
 end
