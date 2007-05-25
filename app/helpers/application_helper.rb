@@ -36,4 +36,12 @@ module ApplicationHelper
     end
     options
   end
+
+  def attribute_error?(record, name)
+    record.errors and record.errors[name]
+  end
+
+  def class_for_attribute(record, name, css)
+    attribute_error?(record, name) ? "#{css} error": css
+  end
 end

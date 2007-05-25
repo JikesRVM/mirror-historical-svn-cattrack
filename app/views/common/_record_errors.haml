@@ -1,0 +1,13 @@
+- if (record.errors and record.errors.count > 0)
+  .form_messages
+    %h4
+      = pluralize(record.errors.count, 'error')
+      prohibited this
+      = model.label
+      from being saved
+    - if record.errors[:base]
+      - errors = record.errors[:base]
+      - errors = errors.is_a?(Array) ? errors : [errors]
+      %ul
+        - errors.each do |e|
+          %li= h(e)

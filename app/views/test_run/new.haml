@@ -1,0 +1,20 @@
+= render(:partial => '/common/record_errors', :locals => {:record => @record, :model => TestRun})
+%form{:action => url_for(:action => 'new'), :method => 'post', 'enctype' => 'multipart/form-data'}
+  %table.details
+    %tr
+      %th Host Name
+      %td{:class => class_for_attribute(@record,:name,'required')}
+        %input.string{:type => 'text', :name => 'record[host]', :value => h(@record.host)}/
+        - if attribute_error?(@record, :host)
+          .field_error= @record.errors[:host]
+    %tr
+      %th Report File
+      %td{:class => class_for_attribute(@record,:data,'required')}
+        = file_field('record','data')
+        - if attribute_error?(@record, :data)
+          .field_error= @record.errors[:data]
+  %ul.actions
+    %li
+      %button{:type => 'submit'} Upload
+    %li
+      %a{:href => url_for(:controller => '/dashboard')} Cancel

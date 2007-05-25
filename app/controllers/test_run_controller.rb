@@ -14,6 +14,29 @@ class TestRunController < ApplicationController
   verify :method => :get, :only => [:show, :list], :redirect_to => {:action => :index}
   verify :method => :post, :only => [:destroy], :redirect_to => {:action => :index}
 
+  def new
+    raise AuthenticatedSystem::SecurityError unless (is_authenticated? and current_user.uploader?)
+    @record = TestRunUpload.new(params[:record])
+    if request.post?
+      if @record.valid?
+        tmp_dir = "#{SystemSetting['tmp.dir']}/uploads"
+        FileUtils.mkdir_p(tmp_dir) unless (File.exist?(tmp_dir) and File.directory?(tmp_dir))
+        file = Tempfile.new('upload', tmp_dir)
+        file.write(@record.data.read)
+        file.close
+        begin
+          @test_run = TestRun.create_from(@record.host, file.path, current_user, Time.now)
+        ensure
+          file.unlink
+        end
+        if @test_run
+          flash[:notice] = "#{@test_run.label} was successfully created."
+          redirect_to(:action => 'show', :id => @test_run.id)
+        end
+      end
+    end
+  end
+
   def show
     @record = TestRun.find(params[:id])
   end
