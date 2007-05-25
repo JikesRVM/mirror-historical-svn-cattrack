@@ -1,3 +1,4 @@
+%h1.page-title Upload Test Run Results
 = render(:partial => '/common/record_errors', :locals => {:record => @record, :model => TestRun})
 %form{:action => url_for(:action => 'new'), :method => 'post', 'enctype' => 'multipart/form-data'}
   %table.details
