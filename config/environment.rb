@@ -77,6 +77,6 @@ require 'active_record_ext' # My custom extension to ar for labels etc
 require 'param_helper' # For custom has_params extension
 
 OrderedTables = [ 'build_configurations', 'build_configuration_params', 'build_targets',
-'build_target_params', 'hosts', 'build_runs', 'build_run_outputs', 'users', 'test_runs', 'test_configurations',
+'build_target_params', 'hosts', 'users', 'test_runs', 'build_runs', 'build_run_outputs', 'test_configurations',
 'test_configuration_params','groups','test_cases','test_case_outputs','test_case_statistics', 'system_settings' ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
