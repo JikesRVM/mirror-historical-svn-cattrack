@@ -11,6 +11,9 @@
 #  regarding copyright ownership.
 #
 class GroupController < ApplicationController
+  verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
+  caches_action :show
+
   def show
     @record = Group.find(params[:id])
   end

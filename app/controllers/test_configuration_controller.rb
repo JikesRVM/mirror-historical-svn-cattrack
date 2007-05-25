@@ -12,6 +12,7 @@
 #
 class TestConfigurationController < ApplicationController
   verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
+  caches_action :show
 
   def show
     @record = TestConfiguration.find(params[:id])
