@@ -18,7 +18,7 @@
         .headerTitle= link_to( 'Jikes<span>RVM</span>', :controller => '/dashboard')
         .headerUserControls
           %span
-            %script{ :type => 'text/javascript' } if(is_authenticated()) document.write('User: ' + readCookie('cattrack_user'))
+            %script{ :type => 'text/javascript' } if(is_authenticated()) document.write('User: ' + get_username())
           = link_to('Logout', {:controller => '/security', :action => 'logout'}, {:method => :post, :id => 'logout'})
           = link_to('Login', {:controller => '/security', :action => 'login'}, :id => 'login')
           %script{ :type => 'text/javascript' } if(is_authenticated()) Element.hide('login'); else Element.hide('logout')

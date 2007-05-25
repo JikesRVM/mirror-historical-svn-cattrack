@@ -7,7 +7,11 @@ function is_uploader() {
 }
 
 function is_authenticated() {
-  return readCookie('cattrack_user') != null
+  return get_username() != null
+}
+
+function get_username() {
+  return readCookie('cattrack_user')
 }
 
 function readCookie(name) {
