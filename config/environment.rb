@@ -75,6 +75,8 @@ end
 require 'digest/sha1' # used when hashing passwords
 require 'active_record_ext' # My custom extension to ar for labels etc
 require 'param_helper' # For custom has_params extension
+require 'rexml/document' # For parsing uploaded xml files
+require 'tempfile' # Used when processing uploaded xml files
 
 OrderedTables = [ 'build_configurations', 'build_configuration_params', 'build_targets',
 'build_target_params', 'hosts', 'users', 'test_runs', 'build_runs', 'build_run_outputs', 'test_configurations',
