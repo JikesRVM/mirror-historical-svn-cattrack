@@ -90,7 +90,6 @@ class TestRun < ActiveRecord::Base
       build_runs ={}
       xml.elements.each('/report/builds/build') do |b_xml|
         build_run = BuildRun.new
-        build_run.test_run = test_run
         build_run.build_configuration = configs[b_xml.elements['configuration'].text]
         build_run.time = b_xml.elements['time'].text.to_i
         build_run.result = b_xml.elements['result'].text
