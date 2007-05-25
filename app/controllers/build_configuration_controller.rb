@@ -12,7 +12,7 @@
 #
 class BuildConfigurationController < ApplicationController
   verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
-  caches_action :show
+  caches_page :show
 
   def show
     @record = BuildConfiguration.find(params[:id])

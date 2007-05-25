@@ -12,7 +12,7 @@
 #
 class TestCaseController < ApplicationController
   verify :method => :get, :only => [:show, :show_output], :redirect_to => {:action => :index}
-  caches_action :show, :show_output
+  caches_page :show, :show_output
 
   def show
     @record = TestCase.find(params[:id])

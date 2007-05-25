@@ -13,7 +13,7 @@
 class TestRunController < ApplicationController
   verify :method => :get, :only => [:show, :show_summary, :list], :redirect_to => {:action => :index}
   verify :method => :post, :only => [:destroy], :redirect_to => {:action => :index}
-  caches_action :show, :show_summary
+  caches_page :show, :show_summary
 
   def new
     raise AuthenticatedSystem::SecurityError unless (is_authenticated? and current_user.uploader?)
