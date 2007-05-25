@@ -63,7 +63,7 @@ class Params
       sql = "SELECT DISTINCT key, value FROM #{@table_name} WHERE owner_id = #{@owner.id}"
       @owner.connection.select_all(sql).each do |row|
         @values[row['key']] = row['value']
-      end
+      end unless @owner.new_record?
     end
     @values
   end
@@ -74,7 +74,7 @@ class Params
       @values.each_pair do |k, v|
         sql =
         "INSERT INTO #{@table_name} (owner_id,key,value) " +
-        "VALUES (#{@owner.id},'#{ActiveRecord::Base.quote(key)}','#{ActiveRecord::Base.quote(value)}')"
+        "VALUES (#{@owner.id},#{ActiveRecord::Base.quote_value(k)},#{ActiveRecord::Base.quote_value(v)})"
         @owner.connection.execute(sql)
       end
     end
