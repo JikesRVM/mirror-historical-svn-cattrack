@@ -16,11 +16,11 @@ class CreateTestCases < ActiveRecord::Migration
       t.column :group_id, :integer, :null => false, :on_delete => :cascade
       t.column :name, :string, :limit => 75, :null => false
       t.column :classname, :string, :limit => 75, :null => false
-      t.column :args, :string, :limit => 256, :null => false
-      t.column :working_directory, :string, :limit => 75, :null => false
-      t.column :command, :string, :limit => 256, :null => false
+      t.column :args, :text, :null => false
+      t.column :working_directory, :string, :limit => 256, :null => false
+      t.column :command, :text, :null => false
       t.column :result, :string, :limit => 15, :null => false
-      t.column :result_explanation, :string, :limit => 75, :null => false
+      t.column :result_explanation, :string, :limit => 256, :null => false
       t.column :exit_code, :integer, :null => false
       t.column :time, :integer, :null => false
     end

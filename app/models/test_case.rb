@@ -16,8 +16,6 @@ class TestCase < ActiveRecord::Base
 
   auto_validations :except => [:id, :args, :result_explanation]
 
-  validates_length_of :args, :allow_nil => false, :maximum => 256
-  validates_length_of :result_explanation, :allow_nil => false, :maximum => 75
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED )
   validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
   validates_presence_of :output

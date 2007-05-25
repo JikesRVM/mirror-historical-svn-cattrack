@@ -78,13 +78,13 @@ class TestCaseTest < Test::Unit::TestCase
     }
   end
   def self.non_null_attributes
-    [:group_id, :output, :name, :classname, :args, :working_directory, :command, :result, :result_explanation, :exit_code, :time]
+    [:group_id, :output, :name, :classname, :working_directory, :command, :result, :exit_code, :time]
   end
   def self.unique_attributes
     [[:group_id, :name]]
   end
   def self.str_length_attributes
-    [[:name, 76],[:classname, 76],[:args, 257],[:working_directory, 76],[:command, 257],[:result, 16],[:result_explanation, 76]]
+    [[:name, 76],[:classname, 76],[:working_directory, 257],[:result, 16],[:result_explanation, 257]]
   end
   def self.bad_attributes
     [[:result, 'FOO'],[:time, -1]]
