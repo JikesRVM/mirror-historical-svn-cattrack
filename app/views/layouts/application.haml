@@ -27,6 +27,9 @@
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
             = link_to( 'Browse Hosts', :controller => '/host', :action => 'list' )
+            - if (is_authenticated? and current_user.uploader?)
+              |
+              = link_to( 'Upload Results', :controller => '/test_run', :action => 'new' )
             - if (is_authenticated? and current_user.admin?)
               |
               = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index' )
