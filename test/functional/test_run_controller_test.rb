@@ -92,7 +92,7 @@ class TestRunControllerTest < Test::Unit::TestCase
     assert(model.exists?(id))
     label = model.find(id).label
     post(:destroy, {:id => id}, session_data)
-    assert_redirected_to(:action => 'list')
+    assert_redirected_to(:controller => 'host', :action => 'show', :id => 1)
     assert(!model.exists?(id))
     assert_not_nil(assigns(:record))
     assert_equal(id, assigns(:record).id)
