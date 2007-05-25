@@ -13,6 +13,7 @@
 class TestCaseController < ApplicationController
   verify :method => :get, :only => [:show, :show_output], :redirect_to => {:action => :index}
   caches_page :show, :show_output
+  session :off
 
   def show
     @record = TestCase.find(params[:id])

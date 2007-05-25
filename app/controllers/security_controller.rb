@@ -17,6 +17,9 @@ class SecurityController < ApplicationController
     if request.post?
       self.current_user = User.authenticate(params[:username], params[:password])
       if self.current_user
+        cookies[:cattrack_admin] = current_user.admin?.to_s
+        cookies[:cattrack_uploader] = current_user.uploader?.to_s
+        cookies[:cattrack_user] = current_user.username
         redirect_back_or_default(:controller => 'dashboard')
       else
         flash[:alert] = 'Incorrect Login or Password.'
@@ -28,6 +31,9 @@ class SecurityController < ApplicationController
   end
 
   def logout
+    cookies.delete :cattrack_admin
+    cookies.delete :cattrack_uploader
+    cookies.delete :cattrack_user
     self.current_user = nil
     flash[:notice] = 'You have been logged out.'
     redirect_to(:action => 'login')

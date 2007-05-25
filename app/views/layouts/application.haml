@@ -10,16 +10,18 @@
     %link{ :rel => 'shortcut icon', :href => '/favicon.ico', :type => 'image/x-icon' }/
     = stylesheet_link_tag('reset-fonts-grids')
     = stylesheet_link_tag('application')
+    = javascript_include_tag('prototype')
+    = javascript_include_tag('application')
   %body{ :id => "#{controller.controller_name}__#{@action_name}" }
     #doc
       #hd
         .headerTitle= link_to( 'Jikes<span>RVM</span>', :controller => '/dashboard')
         .headerUserControls
-          - if is_authenticated?
-            %span= "User: #{current_user.username}"
-            = link_to('Logout', {:controller => '/security', :action => 'logout'}, {:method => :post})
-          - else
-            = link_to('Login', :controller => '/security', :action => 'login')
+          %span
+            %script{ :type => 'text/javascript' } if(is_authenticated()) document.write('User: ' + readCookie('cattrack_user'))
+          = link_to('Logout', {:controller => '/security', :action => 'logout'}, {:method => :post, :id => 'logout'})
+          = link_to('Login', {:controller => '/security', :action => 'login'}, :id => 'login')
+          %script{ :type => 'text/javascript' } if(is_authenticated()) Element.hide('login'); else Element.hide('logout')
         .clearer
         .subHeader
           %span.doNotDisplay Quick Links:
@@ -27,12 +29,14 @@
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
             = link_to( 'Browse Hosts', :controller => '/host', :action => 'list' )
-            - if (is_authenticated? and current_user.uploader?)
+            %span#upload_link
               |
               = link_to( 'Upload Results', :controller => '/test_run', :action => 'new' )
-            - if (is_authenticated? and current_user.admin?)
+            %script{ :type => 'text/javascript' } if(!is_uploader()) Element.hide('upload_link')
+            %span#admin_link
               |
-              = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index' )
+              = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index')
+            %script{ :type => 'text/javascript' } if(!is_admin()) Element.hide('admin_link')
       #bd
         %table.layout
           %tr

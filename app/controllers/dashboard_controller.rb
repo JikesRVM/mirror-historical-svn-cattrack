@@ -12,6 +12,7 @@
 #
 class DashboardController < ApplicationController
   verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
+  session :off
 
   def index
   end

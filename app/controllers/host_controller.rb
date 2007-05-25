@@ -12,6 +12,7 @@
 #
 class HostController < ApplicationController
   verify :method => :get, :only => [:show, :list], :redirect_to => {:action => :index}
+  session :off
 
   def show
     @record = Host.find(params[:id])
