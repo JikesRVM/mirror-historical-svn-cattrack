@@ -14,9 +14,11 @@ class CreateBuildRuns < ActiveRecord::Migration
   def self.up
     create_table :build_runs, :force => true do |t|
       t.column :build_configuration_id, :integer, :null => false, :on_delete => :cascade
+      t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
       t.column :result, :string, :limit => 15, :null => false
       t.column :time, :integer, :null => false
     end
+    add_index :build_runs, [:test_run_id,:build_configuration_id], :unique => true
 
     create_table :build_run_outputs, :id => false, :force => true do |t|
       t.column :build_run_id, :integer, :null => false, :on_delete => :cascade
