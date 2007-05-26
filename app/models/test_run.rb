@@ -57,7 +57,12 @@ class TestRun < ActiveRecord::Base
       test_run.name = xml.elements['/report/id'].text
       test_run.revision = xml.elements['/report/revision'].text.to_i
       test_run.occured_at = Time.parse(xml.elements['/report/time'].text)
-      test_run.save!
+      begin
+        test_run.save!
+      rescue => e
+        test_run.to_xml
+        raise e
+      end
 
       target_run_name = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"].value
 
@@ -67,7 +72,12 @@ class TestRun < ActiveRecord::Base
       end
       test_run.build_target = build_target
       build_target.test_run = test_run
-      build_target.save!
+      begin
+        build_target.save!
+      rescue => e
+        build_target.to_xml
+        raise e
+      end
 
       configs = {}
       xml.elements.each('/report/configuration') do |c_xml|
@@ -76,7 +86,12 @@ class TestRun < ActiveRecord::Base
         c_xml.elements.each("parameters/parameter[@key != 'config.name']") do |p_xml|
           build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
         end
-        build_configuration.save!
+        begin
+          build_configuration.save!
+        rescue => e
+          build_configuration.to_xml
+          raise e
+        end
         configs[build_configuration_name] = build_configuration
       end
 
@@ -87,7 +102,12 @@ class TestRun < ActiveRecord::Base
         build_run.time = b_xml.elements['time'].text.to_i
         build_run.result = b_xml.elements['result'].text
         build_run.output = b_xml.elements['output'].text
-        build_run.save!
+        begin
+          build_run.save!
+        rescue => e
+          build_run.to_xml
+          raise e
+        end
         build_runs[build_run.build_configuration.name] = build_run
       end
 
@@ -101,13 +121,23 @@ class TestRun < ActiveRecord::Base
           tc_xml.elements.each("parameters/parameter") do |p_xml|
             test_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
           end
-          test_configuration.save!
+          begin
+            test_configuration.save!
+          rescue => e
+            test_configuration.to_xml
+            raise e
+          end
 
           tc_xml.elements.each('test-group') do |g_xml|
             group = Group.new
             group.test_configuration = test_configuration
             group.name = g_xml.elements['id'].text
-            group.save!
+            begin
+              group.save!
+            rescue => e
+              puts group.to_xml
+              raise e
+            end
 
             g_xml.elements.each('test') do |t_xml|
               test_case = TestCase.new
@@ -134,7 +164,12 @@ class TestRun < ActiveRecord::Base
                 test_case.statistics[p_xml.attributes['key']] = p_xml.attributes['value']
               end
 
-              test_case.save!
+              begin
+                test_case.save!
+              rescue => e
+                puts test_case.to_xml
+                raise e
+              end
             end
           end
         end
