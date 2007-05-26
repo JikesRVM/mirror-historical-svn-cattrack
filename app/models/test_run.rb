@@ -14,11 +14,7 @@ class TestRun < ActiveRecord::Base
   has_many :build_runs, :through => :test_configurations, :uniq => true, :dependent => :destroy
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
-   SELECT
-     test_cases.*,
-     test_configurations.id AS test_configuration_id,
-     groups.id AS group_id,
-     build_configurations.id AS build_configuration_id
+   SELECT test_cases.*
    FROM test_runs
    LEFT OUTER JOIN test_configurations ON test_configurations.test_run_id = test_runs.id
    LEFT OUTER JOIN build_runs ON build_runs.id = test_configurations.build_run_id

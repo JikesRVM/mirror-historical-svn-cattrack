@@ -22,7 +22,6 @@
   %h3 Failures
   %table.list
     %tr
-      %th Build Configuration
       %th Test Configuration
       %th Group
       %th Test
@@ -30,9 +29,8 @@
       %th Operations
     - @record.failures.each do |t|
       %tr
-        %td= link_for(BuildConfiguration.find(t.build_configuration_id))
-        %td= link_for(TestConfiguration.find(t.test_configuration_id))
-        %td= link_for(Group.find(t.group_id))
+        %td= link_for(t.group.test_configuration)
+        %td= link_for(t.group)
         %td= h(t.name)
         %td= h(t.result_explanation)
         %td
