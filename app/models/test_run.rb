@@ -124,6 +124,7 @@ class TestRun < ActiveRecord::Base
               test_case.result_explanation = t_xml.elements['result-explanation'].text
               test_case.result_explanation = "" if test_case.result_explanation.nil?
               test_case.output = t_xml.elements['output'].text
+              test_case.output = "" if test_case.output.nil?
 
               t_xml.elements.each("rvm-parameters/parameter") do |p_xml|
                 test_case.params[p_xml.attributes['key']] = p_xml.attributes['value']
