@@ -16,7 +16,7 @@ class TestCase < ActiveRecord::Base
 
   auto_validations :except => [:id, :args, :result_explanation]
 
-  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED )
+  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
   validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
   validates_not_null :output
   validates_positive :time
