@@ -18,7 +18,7 @@ class TestCase < ActiveRecord::Base
 
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED )
   validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
-  validates_presence_of :output
+  validates_not_null :output
   validates_positive :time
 
   after_save :update_output

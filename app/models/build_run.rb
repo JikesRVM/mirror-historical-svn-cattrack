@@ -12,7 +12,7 @@
 #
 class BuildRun < ActiveRecord::Base
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED )
-  validates_presence_of :output
+  validates_not_null :output
   validates_positive :time
 
   def label
