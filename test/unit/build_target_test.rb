@@ -15,15 +15,15 @@ require File.dirname(__FILE__) + '/../test_helper'
 class BuildTargetTest < Test::Unit::TestCase
 
   def test_label
-    assert_equal( "ia32_linux", build_targets(:ia32_linux).label )
+    assert_equal( "ia32_linux", build_targets(:ia32_linux_tr_1).label )
   end
 
   def test_parent_node
-    assert_parent_node(build_targets(:ia32_linux),nil)
+    assert_parent_node(build_targets(:ia32_linux_tr_1),TestRun,1)
   end
 
   def test_basic_load
-    bt = build_targets(:ia32_linux)
+    bt = build_targets(:ia32_linux_tr_1)
     assert_equal( "ia32_linux", bt.name )
     target_params = { 'target.name' => 'ia32-linux',
                           'target.arch' => 'ia32',
@@ -38,13 +38,14 @@ class BuildTargetTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo'}
+    test_run = TestRun.create!(:name => 'foo', :host_id => 1, :revision => 123, :occured_at => Time.now, :uploaded_at => Time.now, :uploader_id => 1)
+    {:name => 'foo', :test_run_id => test_run.id}
   end
   def self.non_null_attributes
-    [:name]
+    [:name,:test_run_id]
   end
   def self.unique_attributes
-    [[:name]]
+    [[:test_run_id]]
   end
   def self.str_length_attributes
     [[:name, 76]]

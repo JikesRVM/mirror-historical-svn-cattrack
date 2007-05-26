@@ -29,4 +29,14 @@ btp_<%= index %>:
     owner_id: 1
     key: '<%= k %>'
     value: '<%= v %>'
+<% end
+
+  target_params.each do |k,v|
+    index = index + 1
+%>
+btp_<%= index %>:
+    owner_id: 2
+    key: '<%= k %>'
+    value: '<%= v %>'
 <% end %>
+

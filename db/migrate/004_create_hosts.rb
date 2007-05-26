@@ -10,10 +10,15 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class BuildConfiguration < ActiveRecord::Base
-  has_params :params
+class CreateHosts < ActiveRecord::Migration
+  def self.up
+   create_table :hosts, :force => true do |t|
+      t.column :name, :string, :limit => 100, :null => false
+    end
+   add_index :hosts, [:name], :unique => true
+  end
 
-  def parent_node
-    build_runs[0].parent_node
+  def self.down
+    drop_table :hosts
   end
 end

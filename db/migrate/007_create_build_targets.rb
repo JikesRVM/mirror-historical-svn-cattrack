@@ -14,8 +14,11 @@ class CreateBuildTargets < ActiveRecord::Migration
   def self.up
     create_table :build_targets, :force => true do |t|
       t.column :name, :string, :limit => 75, :null => false
+      t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
     end
-    add_index :build_targets, [:name], :unique => true
+    add_index :build_targets, [:test_run_id], :unique => true
+    add_index :build_targets, [:test_run_id, :name]
+    add_index :build_targets, [:name]
 
     create_table :build_target_params, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :build_targets

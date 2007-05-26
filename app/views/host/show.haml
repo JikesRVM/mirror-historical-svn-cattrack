@@ -3,14 +3,12 @@
 %table.list
   %tr
     %th Name
-    %th Target
     %th Revision
     %th Time
     %th Operations
   - @test_runs.each do |t|
     %tr
       %td= h(t.name)
-      %td= link_to(h(t.build_target.label), :controller => '/build_target', :action => 'show', :id => t.build_target_id)
       %td= h(t.revision)
       %td= h(t.occured_at)
       %td

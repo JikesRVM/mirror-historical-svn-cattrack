@@ -10,6 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-ia32_linux:
+ia32_linux_tr_1:
   id: 1
+  test_run_id: 1
+  name: 'ia32_linux'
+ia32_linux_tr_2:
+  id: 2
+  test_run_id: 2
   name: 'ia32_linux'

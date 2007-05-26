@@ -78,7 +78,16 @@ require 'param_helper' # For custom has_params extension
 require 'rexml/document' # For parsing uploaded xml files
 require 'tempfile' # Used when processing uploaded xml files
 
-OrderedTables = [ 'build_configurations', 'build_configuration_params', 'build_targets',
-'build_target_params', 'hosts', 'users', 'test_runs', 'build_runs', 'build_run_outputs', 'test_configurations',
-'test_configuration_params','groups','test_cases','test_case_outputs','test_case_statistics', 'system_settings' ]
+OrderedTables = [
+'system_settings',
+
+'users',
+'hosts',
+'test_runs',
+'build_configurations', 'build_configuration_params',
+'build_targets', 'build_target_params',
+'build_runs', 'build_run_outputs',
+'test_configurations', 'test_configuration_params',
+'groups',
+'test_cases','test_case_outputs','test_case_statistics' ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}

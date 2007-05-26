@@ -9,7 +9,7 @@
     %td= link_for(@record.host)
   %tr
     %th Target
-    %td= link_to(h(@record.build_target.label), :controller => '/build_target', :action => 'show', :id => @record.build_target_id)
+    %td= link_for(@record.build_target)
   %tr
     %th Revision
     %td= h(@record.revision)

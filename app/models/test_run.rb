@@ -16,10 +16,8 @@ class TestRun < ActiveRecord::Base
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT
      test_cases.*,
-     test_configurations.name AS test_configuration_name,
      test_configurations.id AS test_configuration_id,
-     groups.name AS group_name,
-     build_configurations.name AS build_configuration_name,
+     groups.id AS group_id,
      build_configurations.id AS build_configuration_id
    FROM test_runs
    LEFT OUTER JOIN test_configurations ON test_configurations.test_run_id = test_runs.id
@@ -63,18 +61,17 @@ class TestRun < ActiveRecord::Base
       test_run.name = xml.elements['/report/id'].text
       test_run.revision = xml.elements['/report/revision'].text.to_i
       test_run.occured_at = Time.parse(xml.elements['/report/time'].text)
+      test_run.save!
 
       target_run_name = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"].value
 
-      # TODO: Don't create a new target every time. Instead reuse existing if they match!
       build_target = BuildTarget.new(:name => target_run_name)
       xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
         build_target.params[p_xml.attributes['key']] = p_xml.attributes['value']
       end
-      build_target.save!
-
       test_run.build_target = build_target
-      test_run.save!
+      build_target.test_run = test_run
+      build_target.save!
 
       configs = {}
       xml.elements.each('/report/configuration') do |c_xml|

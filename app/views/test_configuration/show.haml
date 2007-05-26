@@ -3,7 +3,7 @@
 %table.details
   %tr
     %th Build Run
-    %td= link_to(h(@record.build_run.label), :controller => '/build_run', :action => 'show', :id => @record.build_run_id)
+    %td= link_for(@record.build_run)
 
 %h3 Configuration Parameters
 %table.details

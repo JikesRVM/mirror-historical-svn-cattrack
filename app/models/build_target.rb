@@ -12,8 +12,9 @@
 #
 class BuildTarget < ActiveRecord::Base
   has_params :params
+  relation_data :test_run_id, {:remote_relationship => :one}
 
   def parent_node
-    nil
+    test_run
   end
 end
