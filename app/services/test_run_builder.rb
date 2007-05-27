@@ -14,7 +14,7 @@
 # Utility class for building TestRun from an xml file.
 class TestRunBuilder
   def self.create_from(host_name, filename, user, upload_time)
-    # TODO: Validate xml against a schema
+    #TODO: Validate xml against a schema
     TestRun.transaction do
       test_run = TestRun.new
       test_run.host = Host.find_or_create_by_name(host_name)
