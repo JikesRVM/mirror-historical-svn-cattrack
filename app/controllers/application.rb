@@ -16,6 +16,11 @@ class ApplicationController < ActionController::Base
 
   self.check_environment
 
+  # Turn of debug window displaying all assigns.
+  # Can cause slowdown due massive tree of objects
+  # that can be rendered. 
+  self.view_debug_display_assigns = false
+
   # Load all active Records. Required here so
   # that present before next step and occurs at every application_reset!
   ActiveRecord::Base.preload_active_records
