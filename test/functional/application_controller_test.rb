@@ -43,7 +43,6 @@ class ApplicationControllerTest < Test::Unit::TestCase
     get(:raise_error, {}, {:user_id => 1})
     assert_response(403)
     assert_template('access_denied')
-    assert_nil(assigns(:skip_quicklinks))
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
   end
