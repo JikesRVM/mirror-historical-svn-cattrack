@@ -14,6 +14,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
   def self.up
     create_table :statistic_facts do |t|
       t.column :host_id, :integer, :null => false, :on_delete => :restrict, :references => :host_dimensions
+      t.column :test_configuration_id, :integer, :null => false, :on_delete => :restrict, :references => :test_configuration_dimensions
       t.column :build_configuration_id, :integer, :null => false, :on_delete => :restrict, :references => :build_configuration_dimensions
       t.column :build_target_id, :integer, :null => false, :on_delete => :restrict, :references => :build_target_dimensions
       t.column :test_case_id, :integer, :null => false, :on_delete => :restrict, :references => :test_case_dimensions
