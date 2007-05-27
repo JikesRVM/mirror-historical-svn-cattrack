@@ -28,7 +28,7 @@ class TestRunController < ApplicationController
         file.write(@record.data.read)
         file.close
         begin
-          @test_run = TestRun.create_from(@record.host, file.path, current_user, Time.now)
+          @test_run = TestRunBuilder.create_from(@record.host, file.path, current_user, Time.now)
         ensure
           file.unlink
         end
