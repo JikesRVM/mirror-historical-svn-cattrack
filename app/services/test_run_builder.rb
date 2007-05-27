@@ -17,136 +17,137 @@ class TestRunBuilder
     # TODO: de-gzip if required
     # TODO: Validate xml against a schema
     TestRun.transaction do
-      host = Host.find_or_create_by_name(host_name)
-
       test_run = TestRun.new
-      test_run.host = host
+      test_run.host = Host.find_or_create_by_name(host_name)
       test_run.uploader = user
       test_run.uploaded_at = upload_time
 
       xml = REXML::Document.new(File.open(filename))
+
       test_run.name = xml.elements['/report/id'].text
       test_run.revision = xml.elements['/report/revision'].text.to_i
       test_run.occured_at = Time.parse(xml.elements['/report/time'].text)
-      begin
-        test_run.save!
-      rescue => e
-        test_run.to_xml
-        raise e
-      end
+      save!(test_run)
 
-      target_run_name = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"].value
+      build_build_target(xml, test_run)
 
-      build_target = BuildTarget.new(:name => target_run_name)
-      xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
-        build_target.params[p_xml.attributes['key']] = p_xml.attributes['value']
-      end
-      test_run.build_target = build_target
-      build_target.test_run = test_run
-      begin
-        build_target.save!
-      rescue => e
-        build_target.to_xml
-        raise e
-      end
-
-      configs = {}
-      xml.elements.each('/report/configuration') do |c_xml|
-        build_configuration_name = c_xml.elements['id'].text
-        build_configuration = BuildConfiguration.new(:name => build_configuration_name)
-        c_xml.elements.each("parameters/parameter[@key != 'config.name']") do |p_xml|
-          build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
-        end
-        begin
-          build_configuration.save!
-        rescue => e
-          build_configuration.to_xml
-          raise e
-        end
-        configs[build_configuration_name] = build_configuration
-      end
-
-      build_runs ={}
-      xml.elements.each('/report/builds/build') do |b_xml|
-        build_run = BuildRun.new
-        build_run.build_configuration = configs[b_xml.elements['configuration'].text]
-        build_run.time = b_xml.elements['time'].text.to_i
-        build_run.result = b_xml.elements['result'].text
-        build_run.output = b_xml.elements['output'].text
-        begin
-          build_run.save!
-        rescue => e
-          build_run.to_xml
-          raise e
-        end
-        build_runs[build_run.build_configuration.name] = build_run
-      end
-
-      xml.elements.each('/report/configuration') do |c_xml|
-        build_run = build_runs[c_xml.elements['id'].text]
-        c_xml.elements.each('test-configuration') do |tc_xml|
-          test_configuration = TestConfiguration.new
-          test_configuration.test_run = test_run
-          test_configuration.build_run = build_run
-          test_configuration.name = tc_xml.elements['id'].text
-          tc_xml.elements.each("parameters/parameter") do |p_xml|
-            test_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
-          end
-          begin
-            test_configuration.save!
-          rescue => e
-            test_configuration.to_xml
-            raise e
-          end
-
-          tc_xml.elements.each('test-group') do |g_xml|
-            group = Group.new
-            group.test_configuration = test_configuration
-            group.name = g_xml.elements['id'].text
-            begin
-              group.save!
-            rescue => e
-              puts group.to_xml
-              raise e
-            end
-
-            g_xml.elements.each('test') do |t_xml|
-              test_case = TestCase.new
-              test_case.group = group
-              test_case.name = t_xml.elements['id'].text
-              test_case.classname = t_xml.elements['class'].text
-              test_case.args = t_xml.elements['args'].text
-              test_case.args = "" if test_case.args.nil?
-              test_case.working_directory = t_xml.elements['working-directory'].text
-              test_case.command = t_xml.elements['command'].text
-              test_case.exit_code = t_xml.elements['exit-code'].text.to_i
-              test_case.time = t_xml.elements['time'].text.to_i
-              test_case.result = t_xml.elements['result'].text
-              test_case.result_explanation = t_xml.elements['result-explanation'].text
-              test_case.result_explanation = "" if test_case.result_explanation.nil?
-              test_case.output = t_xml.elements['output'].text
-              test_case.output = "" if test_case.output.nil?
-
-              t_xml.elements.each("rvm-parameters/parameter") do |p_xml|
-                test_case.params[p_xml.attributes['key']] = p_xml.attributes['value']
-              end
-
-              t_xml.elements.each("statistics/statistic") do |p_xml|
-                test_case.statistics[p_xml.attributes['key']] = p_xml.attributes['value']
-              end
-
-              begin
-                test_case.save!
-              rescue => e
-                puts test_case.to_xml
-                raise e
-              end
-            end
-          end
-        end
-      end
+      configs = build_build_configurations(xml)
+      build_runs = build_build_runs(xml, configs)
+      build_test_configurations(xml, test_run, build_runs)
 
       test_run
+    end
+  end
+
+  private
+
+  def self.build_build_target(xml, test_run)
+    target_run_name = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"].value
+
+    build_target = BuildTarget.new(:name => target_run_name)
+    xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
+      build_target.params[p_xml.attributes['key']] = p_xml.attributes['value']
+    end
+    test_run.build_target = build_target
+    build_target.test_run = test_run
+    save!(build_target)
+  end
+
+  def self.build_build_configurations(xml)
+    configs = {}
+    xml.elements.each('/report/configuration') do |c_xml|
+      build_configuration_name = c_xml.elements['id'].text
+      build_configuration = BuildConfiguration.new(:name => build_configuration_name)
+      c_xml.elements.each("parameters/parameter[@key != 'config.name']") do |p_xml|
+        build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
+      end
+      save!(build_configuration)
+      configs[build_configuration_name] = build_configuration
+    end
+
+    configs
+  end
+
+  def self.build_build_runs(xml, configs)
+    build_runs = {}
+    xml.elements.each('/report/builds/build') do |b_xml|
+      build_run = BuildRun.new
+      build_run.build_configuration = configs[b_xml.elements['configuration'].text]
+      build_run.time = b_xml.elements['time'].text.to_i
+      build_run.result = b_xml.elements['result'].text
+      build_run.output = b_xml.elements['output'].text
+      save!(build_run)
+      build_runs[build_run.build_configuration.name] = build_run
+    end
+    build_runs
+  end
+
+  def self.build_test_configurations(xml, test_run, build_runs)
+    xml.elements.each('/report/configuration') do |c_xml|
+      build_run = build_runs[c_xml.elements['id'].text]
+      c_xml.elements.each('test-configuration') do |tc_xml|
+        test_configuration = TestConfiguration.new
+        test_configuration.test_run = test_run
+        test_configuration.build_run = build_run
+        test_configuration.name = tc_xml.elements['id'].text
+        tc_xml.elements.each("parameters/parameter") do |p_xml|
+          test_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
+        end
+        save!(test_configuration)
+
+        tc_xml.elements.each('test-group') do |g_xml|
+          build_group(g_xml, test_configuration)
+        end
+      end
+    end
+  end
+
+  def self.build_group(xml, test_configuration)
+    group = Group.new
+    group.test_configuration = test_configuration
+    group.name = xml.elements['id'].text
+    save!(group)
+
+    xml.elements.each('test') do |t_xml|
+      build_test_case(t_xml, group)
+    end
+  end
+
+  def self.build_test_case(xml, group)
+    test_case = TestCase.new
+    test_case.group = group
+    test_case.name = xml.elements['id'].text
+    test_case.classname = xml.elements['class'].text
+    test_case.args = xml.elements['args'].text
+    test_case.args = "" if test_case.args.nil?
+    test_case.working_directory = xml.elements['working-directory'].text
+    test_case.command = xml.elements['command'].text
+    test_case.exit_code = xml.elements['exit-code'].text.to_i
+    test_case.time = xml.elements['time'].text.to_i
+    test_case.result = xml.elements['result'].text
+    test_case.result_explanation = xml.elements['result-explanation'].text
+    test_case.result_explanation = "" if test_case.result_explanation.nil?
+    test_case.output = xml.elements['output'].text
+    test_case.output = "" if test_case.output.nil?
+
+    xml.elements.each("rvm-parameters/parameter") do |p_xml|
+      test_case.params[p_xml.attributes['key']] = p_xml.attributes['value']
+    end
+
+    xml.elements.each("statistics/statistic") do |p_xml|
+      test_case.statistics[p_xml.attributes['key']] = p_xml.attributes['value']
+    end
+
+    save!(test_case)
+  end
+
+
+  def self.save!(object)
+    begin
+      object.save!
+    rescue => e
+      object.to_xml
+      raise e
     end
   end
 end
