@@ -69,10 +69,14 @@ class Admin::UserController < Admin::BaseController
   end
 
   def destroy
-    @record = User.find(params[:id])
-    # TODO: Add check that have not uploaded any test-runs
-    flash[:notice] = "#{@record.username} was successfully deleted."
-    @record.destroy
+    @user = User.find(params[:id])
+    if @user.test_runs.size > 0
+      flash[:alert] = "#{@user.label} could not be deleted as they have uploaded #{@user.test_runs.size} test runs. Remove the test runs or deactivate the account instead."
+      redirect_to(:action => 'show', :id => @user.id)
+      return
+    end
+    flash[:notice] = "#{@user.label} was successfully deleted."
+    @user.destroy
     redirect_to(:action => 'list')
   end
 end
