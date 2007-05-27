@@ -89,5 +89,17 @@ OrderedTables = [
 'build_runs', 'build_run_outputs',
 'test_configurations', 'test_configuration_params',
 'groups',
-'test_cases','test_case_outputs','test_case_statistics' ]
+'test_cases','test_case_outputs','test_case_statistics',
+'result_dimensions',
+'host_dimensions',
+'build_configuration_dimensions',
+'build_target_dimensions',
+'test_configuration_dimensions',
+'test_case_dimensions',
+'time_dimensions',
+'revision_dimensions',
+'statistic_dimensions',
+'result_facts',
+'statistic_facts',
+]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
