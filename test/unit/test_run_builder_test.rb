@@ -13,9 +13,17 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TestRunTest < Test::Unit::TestCase
+  def test_create_from_gzipped
+    do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz")
+  end
+
   def test_create_from
+    do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml")
+  end
+
+  def do_create_from_test(filename)
     upload_time = Time.now
-    test_run = TestRunBuilder.create_from('myhostname', "#{RAILS_ROOT}/test/fixtures/data/Report.xml", User.find(1), upload_time)
+    test_run = TestRunBuilder.create_from('myhostname', filename, User.find(1), upload_time)
     assert_not_nil(test_run)
 
     assert_equal( 'tiny', test_run.name )

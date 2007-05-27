@@ -14,15 +14,16 @@
 # Utility class for building TestRun from an xml file.
 class TestRunBuilder
   def self.create_from(host_name, filename, user, upload_time)
-    # TODO: de-gzip if required
     # TODO: Validate xml against a schema
     TestRun.transaction do
       test_run = TestRun.new
       test_run.host = Host.find_or_create_by_name(host_name)
       test_run.uploader = user
       test_run.uploaded_at = upload_time
+      file = Zlib::GzipReader.open(filename) if filename =~ /\.gz$/
+      file = File.open(filename) unless file
 
-      xml = REXML::Document.new(File.open(filename))
+      xml = REXML::Document.new(file)
 
       test_run.name = xml.elements['/report/id'].text
       test_run.revision = xml.elements['/report/revision'].text.to_i
