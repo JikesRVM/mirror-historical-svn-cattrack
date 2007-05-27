@@ -24,13 +24,16 @@ class TestRunController < ApplicationController
       if @record.valid?
         tmp_dir = "#{SystemSetting['tmp.dir']}/uploads"
         FileUtils.mkdir_p(tmp_dir) unless (File.exist?(tmp_dir) and File.directory?(tmp_dir))
-        file = Tempfile.new('upload', tmp_dir)
+        base_file = @record.data.original_filename.gsub(/^.*(\\|\/)/, '').gsub(/[^\w._-]/,'')
+        filename = "#{tmp_dir}/#{Time.now.usec}_#{session.id}_#{base_file}"
+        file = File.open(filename, File::CREAT|File::TRUNC|File::RDWR)
         file.write(@record.data.read)
         file.close
         begin
-          @test_run = TestRunBuilder.create_from(@record.host, file.path, current_user, Time.now)
+          @test_run = TestRunBuilder.create_from(@record.host, filename, current_user, Time.now)
+          TestRunTransformer.build_olap_model_from(@test_run) if @test_run
         ensure
-          file.unlink
+          File.delete(filename)
         end
         if @test_run
           flash[:notice] = "#{@test_run.label} was successfully created."
