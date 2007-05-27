@@ -20,7 +20,6 @@ class CreateTestRuns < ActiveRecord::Migration
       t.column :uploader_id, :integer, :null => false, :on_delete => :cascade, :references => :users
       t.column :uploaded_at, :timestamp, :null => false
     end
-    # TODO: Should also add some indexes on commonly searched combinations
     add_index :test_runs, [:name]
     add_index :test_runs, [:host_id]
     add_index :test_runs, [:revision]
