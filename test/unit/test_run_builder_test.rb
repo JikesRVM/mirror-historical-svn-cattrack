@@ -12,7 +12,7 @@
 #
 require File.dirname(__FILE__) + '/../test_helper'
 
-class TestRunTest < Test::Unit::TestCase
+class TestRunBuilderTest < Test::Unit::TestCase
   def test_create_from_gzipped
     do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz")
   end
