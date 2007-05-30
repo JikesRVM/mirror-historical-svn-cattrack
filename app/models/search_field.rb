@@ -11,12 +11,13 @@
 #  regarding copyright ownership.
 #
 class SearchField
-  attr_reader :dimension, :name, :key, :options
+  attr_reader :dimension, :name, :key, :options, :dimension_name
 
   def initialize(dimension,name,options = {})
     @dimension = dimension
     @name = name
-    @key = "#{dimension.name[0,dimension.name.length - 9].tableize.singularize}_#{name}".to_sym
+    @dimension_name = dimension.name[0,dimension.name.length - 9]
+    @key = "#{@dimension_name.tableize.singularize}_#{name}".to_sym
     @options = {:any => true, :size => 4}
     @options.merge!(options)
   end

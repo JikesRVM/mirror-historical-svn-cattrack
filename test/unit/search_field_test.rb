@@ -15,6 +15,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 class SearchFieldTest < Test::Unit::TestCase
   def test_label
     f = SearchField.new(TestConfigurationDimension,:name, :foo => 'bar')
+    assert_equal( TestConfigurationDimension, f.dimension )
+    assert_equal( 'TestConfiguration', f.dimension_name )
     assert_equal( :name, f.name )
     assert_equal( :test_configuration_name, f.key )
     assert_equal( 3, f.options.size )
