@@ -54,6 +54,10 @@ class Search < ActiveForm
   SearchField.new(RevisionDimension, :before, :type => :integer),
   SearchField.new(RevisionDimension, :after, :type => :integer),
 
+  SearchField.new(TimeDimension, :year),
+  SearchField.new(TimeDimension, :month),
+  SearchField.new(TimeDimension, :week),
+  SearchField.new(TimeDimension, :day_of_week),
   SearchField.new(TimeDimension, :from, :type => :period),
   SearchField.new(TimeDimension, :to, :type => :period),
   SearchField.new(TimeDimension, :before, :type => :date),
@@ -105,12 +109,17 @@ class Search < ActiveForm
     AutoFields.each do |f|
       add_search_term(search, f, conditions, cond_params, joins)
     end
-    add_search_term(search, Fields.find {|f| (f.dimension == TestCaseDimension) and (f.name == :name)}, conditions, cond_params, joins)
-    add_search_term(search, Fields.find {|f| (f.dimension == TestCaseDimension) and (f.name == :group)}, conditions, cond_params, joins)
+    add_search_term(search, field(TestCaseDimension,:name), conditions, cond_params, joins)
+    add_search_term(search, field(TestCaseDimension,:group), conditions, cond_params, joins)
     add_revision_criteria(search, conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension,:year), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension,:month), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension,:week), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension,:day_of_week), conditions, cond_params, joins)
+
     add_time_based_search(search, conditions, cond_params, joins)
 
-    join_sql = joins.collect do |d|
+    join_sql = joins.uniq.collect do |d|
       "LEFT JOIN #{d.table_name} ON result_facts.#{d.table_name[0, d.table_name.singularize.size - 10]}_id = #{d.table_name}.id"
     end.join(' ')
 
@@ -119,17 +128,21 @@ class Search < ActiveForm
     return [ conditions.join(' AND '), cond_params ], join_sql
   end
 
+  def self.field(dimension,name)
+    Fields.find {|f| (f.dimension == dimension) and (f.name == name)}
+  end
+
   def self.add_search_term(search, field, conditions, cond_params, joins)
     if not search.is_empty?(field.key)
       value = search.send(field.key)
-      value = value[0] if (value.instance_of?( Array ) and value.size == 1) 
+      value = value[0] if (value.instance_of?( Array ) and value.size == 1)
       key_name = "#{field.dimension.table_name}.#{field.name}"
       if value.instance_of?( Array )
         conditions << "#{key_name} IN (:#{field.key})"
       else
         conditions << "#{key_name} = :#{field.key}"
       end
-      joins << field.dimension unless joins.include?(field.dimension)
+      joins << field.dimension
       cond_params[field.key] = value
     end
   end
@@ -162,12 +175,12 @@ class Search < ActiveForm
     if not search.is_empty?(:time_before)
       conditions << 'time_dimensions.time < :time_before'
       cond_params[:time_before] = search.time_before
-      add_join = true
+      joins << TimeDimension
     end
     if not search.is_empty?(:time_after)
       conditions << 'time_dimensions.time > :time_after'
       cond_params[:time_after] = search.time_after
-      add_join = true
+      joins << TimeDimension
     end
 
     if not search.is_empty?(:time_from)
@@ -175,7 +188,7 @@ class Search < ActiveForm
       if from_time
         conditions << 'time_dimensions.time > :time_from'
         cond_params[:time_from] = from_time.strftime(TimeFormat)
-        add_join = true
+        joins << TimeDimension
 
         if not search.is_empty?(:time_to)
           to_time = period_to_time(from_time, search.time_to)
@@ -186,7 +199,6 @@ class Search < ActiveForm
         end
       end
     end
-    joins << TimeDimension if add_join
   end
 
   def self.add_revision_criteria(search, conditions, cond_params, joins)
@@ -199,7 +211,7 @@ class Search < ActiveForm
     if not search.is_empty?(:revision_after)
       conditions << 'revision_dimensions.revision > :revision_from'
       cond_params[:revision_after] = search.revision_after
-      joins << RevisionDimension unless joins.include?(RevisionDimension)
+      joins << RevisionDimension
     end
   end
 end

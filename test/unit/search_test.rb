@@ -126,7 +126,7 @@ class SearchTest < Test::Unit::TestCase
     Search.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(2, conditions.length)
     assert_equal(['time_dimensions.time < :time_before', 'time_dimensions.time > :time_after'], conditions)
-    assert_equal([TimeDimension], joins)
+    assert_equal([TimeDimension], joins.uniq)
     assert_equal(2, cond_params.length)
     assert_equal('1979-11-07 00:00:00', cond_params[:time_before])
     assert_equal('1977-10-20 00:00:00', cond_params[:time_after])
@@ -151,8 +151,15 @@ class SearchTest < Test::Unit::TestCase
 
   def test_gen_sql
     search = Search.new
+
     search.time_before = '1979-11-07 00:00:00'
+    search.time_year = 2007
+    search.time_month = 'Oct'
+    search.time_week = 53
+    search.time_day_of_week = ['Mon', 'Tue']
+
     search.test_run_name = 'foo'
+
     search.build_target_name = ['foo', 'bar', 'baz']
     search.build_target_arch = 'ia32'
     search.build_target_address_size = 32
@@ -164,14 +171,20 @@ class SearchTest < Test::Unit::TestCase
     search.build_configuration_mmtk_plan = 'com.biz.Foo'
     search.build_configuration_assertion_level = 'normal'
     search.build_configuration_bootimage_class_inclusion_policy = 'sane'
+
     search.test_configuration_name = 'prototype'
     search.test_configuration_mode = ''
+
     search.result_name = 'SUCCESS'
 
     conditions, join_sql = search.to_sql
-    assert_equal("test_run_dimensions.name = :test_run_name AND build_target_dimensions.name IN (:build_target_name) AND build_target_dimensions.arch = :build_target_arch AND build_target_dimensions.address_size = :build_target_address_size AND build_target_dimensions.operating_system IN (:build_target_operating_system) AND build_configuration_dimensions.name = :build_configuration_name AND build_configuration_dimensions.bootimage_compiler = :build_configuration_bootimage_compiler AND build_configuration_dimensions.runtime_compiler = :build_configuration_runtime_compiler AND build_configuration_dimensions.mmtk_plan = :build_configuration_mmtk_plan AND build_configuration_dimensions.assertion_level = :build_configuration_assertion_level AND build_configuration_dimensions.bootimage_class_inclusion_policy = :build_configuration_bootimage_class_inclusion_policy AND test_configuration_dimensions.name = :test_configuration_name AND result_dimensions.name = :result_name AND time_dimensions.time < :time_before", conditions[0])
+    assert_equal("test_run_dimensions.name = :test_run_name AND build_target_dimensions.name IN (:build_target_name) AND build_target_dimensions.arch = :build_target_arch AND build_target_dimensions.address_size = :build_target_address_size AND build_target_dimensions.operating_system IN (:build_target_operating_system) AND build_configuration_dimensions.name = :build_configuration_name AND build_configuration_dimensions.bootimage_compiler = :build_configuration_bootimage_compiler AND build_configuration_dimensions.runtime_compiler = :build_configuration_runtime_compiler AND build_configuration_dimensions.mmtk_plan = :build_configuration_mmtk_plan AND build_configuration_dimensions.assertion_level = :build_configuration_assertion_level AND build_configuration_dimensions.bootimage_class_inclusion_policy = :build_configuration_bootimage_class_inclusion_policy AND test_configuration_dimensions.name = :test_configuration_name AND result_dimensions.name = :result_name AND time_dimensions.year = :time_year AND time_dimensions.month = :time_month AND time_dimensions.week = :time_week AND time_dimensions.day_of_week IN (:time_day_of_week) AND time_dimensions.time < :time_before", conditions[0])
     assert_equal( {:build_configuration_runtime_compiler=>"base",
     :time_before => "1979-11-07 00:00:00",
+    :time_year => 2007,
+    :time_month => 'Oct',
+    :time_week => 53,
+    :time_day_of_week => ["Mon", "Tue"],
     :test_configuration_name => "prototype",
     :test_run_name => "foo",
     :build_target_address_size => 32,
