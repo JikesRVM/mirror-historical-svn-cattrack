@@ -25,7 +25,7 @@ class TestRunController < ApplicationController
         tmp_dir = "#{SystemSetting['tmp.dir']}/uploads"
         FileUtils.mkdir_p(tmp_dir) unless (File.exist?(tmp_dir) and File.directory?(tmp_dir))
         base_file = @record.data.original_filename.gsub(/^.*(\\|\/)/, '').gsub(/[^\w._-]/,'')
-        filename = "#{tmp_dir}/#{Time.now.usec}_#{session.id}_#{base_file}"
+        filename = "#{tmp_dir}/#{Time.now.usec}_#{session.session_id}_#{base_file}"
         file = File.open(filename, File::CREAT|File::TRUNC|File::RDWR)
         file.write(@record.data.read)
         file.close
