@@ -28,12 +28,13 @@ class TestRunTransformer
       # TODO: Fix this to get commercial week ... this is good enough for now
       week = (t.yday./ 7) + 1
       time =
-        TimeDimension.find_or_create_by_year_and_month_and_week_and_day_of_year_and_day_of_month_and_day_of_week(t.year,
-                                                                                                                 t.month,
-                                                                                                                 week,
+        TimeDimension.find_or_create_by_year_and_month_and_week_and_day_of_year_and_day_of_month_and_day_of_week_and_time(t.year,
+                                                                                                                 t.strftime('%b'),
+                                                                                                                 t.strftime('%W').to_i,
                                                                                                                  t.yday,
                                                                                                                  t.mday,
-                                                                                                                 t.wday + 1)
+                                                                                                                 t.strftime('%a'),
+                                                                                                                 t)
       test_run.test_configurations.each do |tc|
         test_configuration = create_test_configuration(tc)
         build_configuration = create_build_configuration(tc.build_run.build_configuration)

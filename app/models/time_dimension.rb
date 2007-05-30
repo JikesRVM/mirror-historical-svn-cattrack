@@ -12,9 +12,9 @@
 #
 class TimeDimension < ActiveRecord::Base
   validates_inclusion_of :year, :in => 2000..2100
-  validates_inclusion_of :month, :in => 1..12
+  validates_inclusion_of :month, :in => %W{ Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec }
   validates_inclusion_of :week, :in => 1..52
   validates_inclusion_of :day_of_year, :in => 1..365
   validates_inclusion_of :day_of_month, :in => 1..31
-  validates_inclusion_of :day_of_week, :in => 1..7
+  validates_inclusion_of :day_of_week, :in => %w{ Mon Tue Wed Thu Fri Sat Sun }
 end

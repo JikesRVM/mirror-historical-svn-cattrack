@@ -17,21 +17,22 @@ class TimeDimensionTest < Test::Unit::TestCase
     object = TimeDimension.find(1)
     assert_equal( 1, object.id )
     assert_equal( 2007, object.year )
-    assert_equal( 1, object.month )
+    assert_equal( 'Jan', object.month )
     assert_equal( 1, object.week )
     assert_equal( 1, object.day_of_year )
     assert_equal( 1, object.day_of_month )
-    assert_equal( 1, object.day_of_week )
+    assert_equal( 'Mon', object.day_of_week )
+    assert_equal( Time.utc(2007, 1, 1, 0, 0), object.time )
   end
 
   def self.attributes_for_new
-    {:year => 2007, :month => 10, :week => 22, :day_of_year => 2, :day_of_month => 2, :day_of_week => 2}
+    {:year => 2007, :month => 'Oct', :week => 22, :day_of_year => 2, :day_of_month => 2, :day_of_week => 'Tue', :time => Time.utc(2007, 10, 2, 0, 0)}
   end
   def self.non_null_attributes
-    [:year, :month, :week, :day_of_year, :day_of_month, :day_of_week]
+    [:year, :month, :week, :day_of_year, :day_of_month, :day_of_week, :time]
   end
   def self.bad_attributes
-    [[:year, 1977],[:month, 22],[:week, -22],[:day_of_year, -1],[:day_of_month, -22],[:day_of_week, -3]]
+    [[:year, 1977],[:month, 'Foo'],[:week, -22],[:day_of_year, -1],[:day_of_month, -22],[:day_of_week, 'Bar']]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

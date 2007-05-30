@@ -14,11 +14,12 @@ class CreateTimeDimensions < ActiveRecord::Migration
   def self.up
     create_table :time_dimensions do |t|
       t.column :year, :integer, :null => false
-      t.column :month, :integer, :null => false
+      t.column :month, :string, :limit => 3, :null => false
       t.column :week, :integer, :null => false
       t.column :day_of_year, :integer, :null => false
       t.column :day_of_month, :integer, :null => false
-      t.column :day_of_week, :integer, :null => false
+      t.column :day_of_week, :string, :limit => 3, :null => false
+      t.column :time, :timestamp, :null => false
     end
     add_index :time_dimensions, [:year]
     add_index :time_dimensions, [:month]
@@ -26,6 +27,7 @@ class CreateTimeDimensions < ActiveRecord::Migration
     add_index :time_dimensions, [:day_of_year]
     add_index :time_dimensions, [:day_of_month]
     add_index :time_dimensions, [:day_of_week]
+    add_index :time_dimensions, [:time]
   end
 
   def self.down
