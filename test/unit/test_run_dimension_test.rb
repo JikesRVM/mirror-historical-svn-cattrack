@@ -10,26 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-s1:
-  id: 1
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  source_id: 1
-  value: 10243
-s2:
-  id: 2
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  value: 10
+require File.dirname(__FILE__) + '/../test_helper'
+
+class TestRunDimensionTest < Test::Unit::TestCase
+  def test_basic_load
+    object = TestRunDimension.find(1)
+    assert_equal( 1, object.id )
+    assert_equal( 1, object.source_id )
+    assert_equal( 1, object.source.id )
+  end
+
+  def self.attributes_for_new
+    {:source_id => 1}
+  end
+
+  perform_basic_model_tests(:skip => [:destroy])
+end

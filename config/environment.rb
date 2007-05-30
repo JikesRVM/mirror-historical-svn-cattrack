@@ -99,6 +99,7 @@ OrderedTables = [
 'time_dimensions',
 'revision_dimensions',
 'statistic_dimensions',
+'test_run_dimensions',
 'result_facts',
 'statistic_facts',
 ]

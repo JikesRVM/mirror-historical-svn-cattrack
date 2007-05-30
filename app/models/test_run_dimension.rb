@@ -10,26 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-s1:
-  id: 1
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  source_id: 1
-  value: 10243
-s2:
-  id: 2
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  value: 10
+class TestRunDimension < ActiveRecord::Base
+end

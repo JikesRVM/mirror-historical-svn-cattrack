@@ -10,26 +10,14 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-s1:
-  id: 1
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  source_id: 1
-  value: 10243
-s2:
-  id: 2
-  host_id: 1
-  test_run_id: 1
-  test_configuration_id: 1
-  build_configuration_id: 1
-  build_target_id: 1
-  test_case_id: 1
-  time_id: 1
-  revision_id: 1
-  value: 10
+class CreateTestRunDimensions < ActiveRecord::Migration
+  def self.up
+    create_table :test_run_dimensions do |t|
+      t.column :source_id, :integer, :null => true, :on_delete => :set_null, :references => :test_cases
+    end
+  end
+
+  def self.down
+    drop_table :test_run_dimensions
+  end
+end

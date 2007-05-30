@@ -13,6 +13,7 @@
 r1:
   id: 1
   host_id: 1
+  test_run_id: 1
   test_configuration_id: 1
   build_configuration_id: 1
   build_target_id: 1
@@ -24,6 +25,7 @@ r1:
 r2:
   id: 2
   host_id: 1
+  test_run_id: 1
   test_configuration_id: 1
   build_configuration_id: 1
   build_target_id: 1

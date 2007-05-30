@@ -10,10 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateStatisticFacts < ActiveRecord::Migration
+class CreateResultFacts < ActiveRecord::Migration
   def self.up
-    create_table :statistic_facts do |t|
+    create_table :result_facts do |t|
       t.column :host_id, :integer, :null => false, :on_delete => :restrict, :references => :host_dimensions
+      t.column :test_run_id, :integer, :null => false, :on_delete => :restrict, :references => :test_run_dimensions
       t.column :test_configuration_id, :integer, :null => false, :on_delete => :restrict, :references => :test_configuration_dimensions
       t.column :build_configuration_id, :integer, :null => false, :on_delete => :restrict, :references => :build_configuration_dimensions
       t.column :build_target_id, :integer, :null => false, :on_delete => :restrict, :references => :build_target_dimensions
@@ -22,11 +23,11 @@ class CreateStatisticFacts < ActiveRecord::Migration
       t.column :revision_id, :integer, :null => false, :on_delete => :restrict, :references => :revision_dimensions
       t.column :source_id, :integer, :null => true, :on_delete => :set_null, :references => :test_cases
 
-      t.column :value, :integer, :null => false
+      t.column :result_id, :integer, :null => false, :on_delete => :restrict, :references => :result_dimensions
     end
   end
 
   def self.down
-    drop_table :statistic_facts
+    drop_table :result_facts
   end
 end

@@ -18,6 +18,8 @@ class StatisticFactTest < Test::Unit::TestCase
     assert_equal( 1, object.id )
     assert_equal( 1, object.host_id )
     assert_equal( 1, object.host.id )
+    assert_equal( 1, object.test_run_id )
+    assert_equal( 1, object.test_run.id )
     assert_equal( 1, object.test_configuration_id )
     assert_equal( 1, object.test_configuration.id )
     assert_equal( 1, object.build_configuration_id )
@@ -36,10 +38,10 @@ class StatisticFactTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:host_id => 1, :test_configuration_id => 1, :build_configuration_id => 1, :build_target_id => 1, :test_case_id => 1, :time_id => 1, :revision_id => 1, :source_id => 1, :value => 23}
+    {:host_id => 1, :test_run_id => 1, :test_configuration_id => 1, :build_configuration_id => 1, :build_target_id => 1, :test_case_id => 1, :time_id => 1, :revision_id => 1, :source_id => 1, :value => 23}
   end
   def self.non_null_attributes
-    [:host_id, :test_configuration_id, :build_configuration_id, :build_target_id, :test_case_id, :time_id, :revision_id, :value]
+    [:host_id, :test_run_id, :test_configuration_id, :build_configuration_id, :build_target_id, :test_case_id, :time_id, :revision_id, :value]
   end
 
   perform_basic_model_tests(:skip => [:destroy])
