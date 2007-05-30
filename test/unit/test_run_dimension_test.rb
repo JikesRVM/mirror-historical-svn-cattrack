@@ -16,12 +16,19 @@ class TestRunDimensionTest < Test::Unit::TestCase
   def test_basic_load
     object = TestRunDimension.find(1)
     assert_equal( 1, object.id )
+    assert_equal( 'core', object.name )
     assert_equal( 1, object.source_id )
     assert_equal( 1, object.source.id )
   end
 
   def self.attributes_for_new
-    {:source_id => 1}
+    {:source_id => 1, :name => 'core'}
+  end
+  def self.non_null_attributes
+    [:name]
+  end
+  def self.str_length_attributes
+    [[:name, 75]]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

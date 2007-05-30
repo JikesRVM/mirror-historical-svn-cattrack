@@ -16,7 +16,7 @@ class TestRunTransformer
   def self.build_olap_model_from(test_run)
     TestRun.transaction do
       host = HostDimension.find_or_create_by_name(test_run.host.name)
-      tr = TestRunDimension.create!(:source_id => test_run.id)
+      tr = TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
       p = test_run.build_target.params
       build_target = BuildTargetDimension.
         find_or_create_by_name_and_arch_and_address_size_and_operating_system(test_run.build_target.name,

@@ -12,4 +12,5 @@
 #
 tr1:
   id: 1
+  name: core
   source_id: 1
