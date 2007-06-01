@@ -51,17 +51,18 @@ class Search < ActiveForm
   SearchField.new(TestCaseDimension, :name, :type => :string),
   SearchField.new(TestCaseDimension, :group, :type => :string),
 
-  SearchField.new(RevisionDimension, :before, :type => :integer),
-  SearchField.new(RevisionDimension, :after, :type => :integer),
+  SearchField.new(RevisionDimension, :before, :type => :integer, :synthetic => true),
+  SearchField.new(RevisionDimension, :after, :type => :integer, :synthetic => true),
+  SearchField.new(RevisionDimension, :revision, :type => :integer),
 
   SearchField.new(TimeDimension, :year),
   SearchField.new(TimeDimension, :month),
   SearchField.new(TimeDimension, :week),
   SearchField.new(TimeDimension, :day_of_week),
-  SearchField.new(TimeDimension, :from, :type => :period),
-  SearchField.new(TimeDimension, :to, :type => :period),
-  SearchField.new(TimeDimension, :before, :type => :date),
-  SearchField.new(TimeDimension, :after, :type => :date),
+  SearchField.new(TimeDimension, :from, :type => :period, :synthetic => true),
+  SearchField.new(TimeDimension, :to, :type => :period, :synthetic => true),
+  SearchField.new(TimeDimension, :before, :type => :date, :synthetic => true),
+  SearchField.new(TimeDimension, :after, :type => :date, :synthetic => true),
   ].freeze
 
   Fields.each do |field|
@@ -80,60 +81,96 @@ class Search < ActiveForm
     end
   end
 
-  def is_empty?(field_symbol)
-    value = self.send(field_symbol)
+  DimensionFields = Search::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| DimensionField.new(f)}
+  ValidDimensionFieldIds = DimensionFields.collect {|o| o.id}
+
+  FunctionFields = [
+  FunctionField.new('success_rate', 'Success Rate', "CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('non_success_rate', 'Non-success Rate', "CAST(count(case when result_dimensions.name = 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('failure_rate', 'Failure Rate', "CAST(count(case when result_dimensions.name != 'FAILURE' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('overtime_rate', 'Overtime Rate', "CAST(count(case when result_dimensions.name != 'OVERTIME' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('excluded_rate', 'Excluded Rate', "CAST(count(case when result_dimensions.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  ]
+
+  validates_inclusion_of :function, :in => FunctionFields.collect {|o| o.id}
+  validates_inclusion_of :row, :in => ValidDimensionFieldIds
+  validates_inclusion_of :column, :in => ValidDimensionFieldIds
+  validates_presence_of :row, :column, :function
+
+  validates_each(:row, :column) do |record, attr, value|
+    record.errors.add(attr, 'row and column can not be the same.') if (not record.row.nil? and record.row == record.column)
+  end
+
+  attr_accessor :function, :row, :column
+
+  def to_sql
+    conditions, joins = self.class.filter_criteria(self)
+
+    f = FunctionFields.find {|o| o.id == function}
+    f.dimensions.each{|d| joins << d unless joins.include?(d)}
+
+    row_dimension = DimensionFields.find {|o| o.id == row }.dimension
+    column_dimension = DimensionFields.find {|o| o.id == column }.dimension
+
+    joins.delete(row_dimension)
+    joins.delete(column_dimension)
+
+    join_sql = joins.uniq.collect {|d| join(d)}.join("\n ") + "\n " + join(row_dimension, 'RIGHT') + "\n " + join(column_dimension, 'RIGHT')
+
+    criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
+
+return <<END_OF_SQL
+SELECT
+ #{row} as row,
+ #{column} as column,
+ #{f.sql} as value
+FROM result_facts
+ #{join_sql}
+WHERE #{criteria}
+GROUP BY #{row}, #{column}
+ORDER BY #{row}, #{column}
+END_OF_SQL
+  end
+
+  def self.is_empty?(object, field_symbol)
+    value = object.send(field_symbol)
     value.blank? ||
     ( value.instance_of?( Array ) && ( (value.include?( nil ) && value.size == 1) || (value.size == 0)) )
   end
 
-  def is_defined?(field_symbol, value)
-    v = self.send(field_symbol)
-    if v.instance_of?( Array )
-      return v.include?(value.to_s)
-    else
-      return v == value.to_s
-    end
-  end
-
-  def to_sql
-    self.class.prepare_sql(self)
-  end
-
   protected
 
-  def self.prepare_sql(search)
+  def self.filter_criteria(search)
     conditions = []
     cond_params = {}
     joins = []
 
-    AutoFields.each do |f|
-      add_search_term(search, f, conditions, cond_params, joins)
-    end
-    add_search_term(search, field(TestCaseDimension,:name), conditions, cond_params, joins)
-    add_search_term(search, field(TestCaseDimension,:group), conditions, cond_params, joins)
+    AutoFields.each {|f| add_search_term(search, f, conditions, cond_params, joins)}
+    add_search_term(search, field(TestCaseDimension, :name), conditions, cond_params, joins)
+    add_search_term(search, field(TestCaseDimension, :group), conditions, cond_params, joins)
     add_revision_criteria(search, conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension,:year), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension,:month), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension,:week), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension,:day_of_week), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension, :year), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension, :month), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension, :week), conditions, cond_params, joins)
+    add_search_term(search, field(TimeDimension, :day_of_week), conditions, cond_params, joins)
 
     add_time_based_search(search, conditions, cond_params, joins)
 
-    join_sql = joins.uniq.collect do |d|
-      "LEFT JOIN #{d.table_name} ON result_facts.#{d.table_name[0, d.table_name.singularize.size - 10]}_id = #{d.table_name}.id"
-    end.join(' ')
+    return '1 = 1', [] if conditions.empty?
 
-    return '1 = 1' if conditions.empty?
-
-    return [ conditions.join(' AND '), cond_params ], join_sql
+    return [ conditions.join(' AND '), cond_params ], joins.uniq
   end
 
-  def self.field(dimension,name)
+  def join(dimension, type = 'LEFT')
+    "#{type} JOIN #{dimension.table_name} ON result_facts.#{dimension.table_name[0, dimension.table_name.singularize.size - 10]}_id = #{dimension.table_name}.id"
+  end
+
+  def self.field(dimension, name)
     Fields.find {|f| (f.dimension == dimension) and (f.name == name)}
   end
 
   def self.add_search_term(search, field, conditions, cond_params, joins)
-    if not search.is_empty?(field.key)
+    if not is_empty?(search, field.key)
       value = search.send(field.key)
       value = value[0] if (value.instance_of?( Array ) and value.size == 1)
       key_name = "#{field.dimension.table_name}.#{field.name}"
@@ -172,25 +209,25 @@ class Search < ActiveForm
   def self.add_time_based_search(search, conditions, cond_params, joins)
     add_join = false
 
-    if not search.is_empty?(:time_before)
+    if not is_empty?(search, :time_before)
       conditions << 'time_dimensions.time < :time_before'
       cond_params[:time_before] = search.time_before
       joins << TimeDimension
     end
-    if not search.is_empty?(:time_after)
+    if not is_empty?(search, :time_after)
       conditions << 'time_dimensions.time > :time_after'
       cond_params[:time_after] = search.time_after
       joins << TimeDimension
     end
 
-    if not search.is_empty?(:time_from)
+    if not is_empty?(search, :time_from)
       from_time = period_to_time(Time.now, search.time_from)
       if from_time
         conditions << 'time_dimensions.time > :time_from'
         cond_params[:time_from] = from_time.strftime(TimeFormat)
         joins << TimeDimension
 
-        if not search.is_empty?(:time_to)
+        if not is_empty?(search, :time_to)
           to_time = period_to_time(from_time, search.time_to)
           if to_time
             conditions << 'time_dimensions.time < :time_to'
@@ -202,13 +239,13 @@ class Search < ActiveForm
   end
 
   def self.add_revision_criteria(search, conditions, cond_params, joins)
-    if not search.is_empty?(:revision_before)
+    if not is_empty?(search, :revision_before)
       conditions << 'revision_dimensions.revision < :revision_before'
       cond_params[:revision_before] = search.revision_before
       joins << RevisionDimension
     end
 
-    if not search.is_empty?(:revision_after)
+    if not is_empty?(search, :revision_after)
       conditions << 'revision_dimensions.revision > :revision_from'
       cond_params[:revision_after] = search.revision_after
       joins << RevisionDimension

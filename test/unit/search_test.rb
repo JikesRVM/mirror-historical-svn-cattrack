@@ -11,61 +11,58 @@
 #  regarding copyright ownership.
 #
 require File.dirname(__FILE__) + '/../test_helper'
+require 'search'
+
+class Search
+  def filter_criteria
+    self.class.filter_criteria(self)
+  end
+end
 
 class SearchTest < Test::Unit::TestCase
   def test_is_empty
-    assert_equal(true, Search.new(:host_name => nil).is_empty?(:host_name))
-    assert_equal(true, Search.new(:host_name => '').is_empty?(:host_name))
-    assert_equal(true, Search.new(:host_name => []).is_empty?(:host_name))
-    assert_equal(true, Search.new(:host_name => [nil]).is_empty?(:host_name))
-    assert_equal(false, Search.new(:host_name => ['a', nil]).is_empty?(:host_name))
-    assert_equal(false, Search.new(:host_name => 'a').is_empty?(:host_name))
+    assert_equal(true, Search.is_empty?(Search.new(:host_name => nil), :host_name))
+    assert_equal(true, Search.is_empty?(Search.new(:host_name => ''), :host_name))
+    assert_equal(true, Search.is_empty?(Search.new(:host_name => []), :host_name))
+    assert_equal(true, Search.is_empty?(Search.new(:host_name => [nil]), :host_name))
+    assert_equal(false, Search.is_empty?(Search.new(:host_name => ['a', nil]), :host_name))
+    assert_equal(false, Search.is_empty?(Search.new(:host_name => 'a'), :host_name))
   end
 
-  def test_is_defined
-    assert_equal(true, Search.new(:host_name => 'a').is_defined?(:host_name, 'a'))
-    assert_equal(true, Search.new(:host_name => ['a']).is_defined?(:host_name, 'a'))
-    assert_equal(true, Search.new(:host_name => ['b', 'a']).is_defined?(:host_name, 'a'))
-    assert_equal(false, Search.new(:host_name => nil).is_defined?(:host_name, 'c'))
-    assert_equal(false, Search.new(:host_name => 'a').is_defined?(:host_name, 'c'))
-    assert_equal(false, Search.new(:host_name => ['a']).is_defined?(:host_name, 'c'))
-    assert_equal(false, Search.new(:host_name => ['b', 'a']).is_defined?(:host_name, 'c'))
-  end
-
-  def test_empty_search_to_sql
-    conditions, join_sql = Search.new.to_sql
+  def test_empty_search_filter_criteria
+    conditions, join_sql = Search.new.filter_criteria
     assert_equal('1 = 1', conditions)
-    assert_equal(nil, join_sql)
+    assert_equal([], join_sql)
   end
 
-  def test_search_to_sql_for_single_value_parameter
-    conditions, join_sql = Search.new(:host_name => 'ace').to_sql
+  def test_search_filter_criteria_for_single_value_parameter
+    conditions, join_sql = Search.new(:host_name => 'ace').filter_criteria
     assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
-    assert_equal('LEFT JOIN host_dimensions ON result_facts.host_id = host_dimensions.id', join_sql)
+    assert_equal([HostDimension], join_sql)
   end
 
-  def test_search_to_sql_for_single_value_parameter_in_array
-    conditions, join_sql = Search.new(:host_name => ['ace']).to_sql
+  def test_search_filter_criteria_for_single_value_parameter_in_array
+    conditions, join_sql = Search.new(:host_name => ['ace']).filter_criteria
     assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
-    assert_equal('LEFT JOIN host_dimensions ON result_facts.host_id = host_dimensions.id', join_sql)
+    assert_equal([HostDimension], join_sql)
   end
 
-  def test_search_to_sql_for_multi_value_parameter
-    conditions, join_sql = Search.new(:host_name => ['ace', 'baby']).to_sql
+  def test_search_filter_criteria_for_multi_value_parameter
+    conditions, join_sql = Search.new(:host_name => ['ace', 'baby']).filter_criteria
     assert_equal(["host_dimensions.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)
-    assert_equal('LEFT JOIN host_dimensions ON result_facts.host_id = host_dimensions.id', join_sql)
+    assert_equal([HostDimension], join_sql)
   end
 
-  def test_search_to_sql_for_multiple_parameters
-    conditions, join_sql = Search.new(:host_name => 'ace', :test_run_name => 'foo').to_sql
+  def test_search_filter_criteria_for_multiple_parameters
+    conditions, join_sql = Search.new(:host_name => 'ace', :test_run_name => 'foo').filter_criteria
     assert_equal(["host_dimensions.name = :host_name AND test_run_dimensions.name = :test_run_name", {:test_run_name=>"foo", :host_name=>"ace"}], conditions)
-    assert_equal('LEFT JOIN host_dimensions ON result_facts.host_id = host_dimensions.id LEFT JOIN test_run_dimensions ON result_facts.test_run_id = test_run_dimensions.id', join_sql)
+    assert_equal([HostDimension, TestRunDimension], join_sql)
   end
 
-  def test_search_to_sql_for_multiple_parameters_on_same_table
-    conditions, join_sql = Search.new(:test_case_name => 'ace', :test_case_group => 'foo').to_sql
+  def test_search_filter_criteria_for_multiple_parameters_on_same_table
+    conditions, join_sql = Search.new(:test_case_name => 'ace', :test_case_group => 'foo').filter_criteria
     assert_equal(["test_case_dimensions.name = :test_case_name AND test_case_dimensions.group = :test_case_group", {:test_case_name=>"ace", :test_case_group=>"foo"}], conditions)
-    assert_equal('LEFT JOIN test_case_dimensions ON result_facts.test_case_id = test_case_dimensions.id', join_sql)
+    assert_equal([TestCaseDimension], join_sql)
   end
 
   def test_calculate_hour_offset
@@ -105,15 +102,15 @@ class SearchTest < Test::Unit::TestCase
   end
 
   def test_before_revision
-    conditions, join_sql = Search.new(:revision_before => '1234').to_sql
+    conditions, join_sql = Search.new(:revision_before => '1234').filter_criteria
     assert_equal(["revision_dimensions.revision < :revision_before", {:revision_before=>"1234"}], conditions)
-    assert_equal('LEFT JOIN revision_dimensions ON result_facts.revision_id = revision_dimensions.id', join_sql)
+    assert_equal([RevisionDimension], join_sql)
   end
 
   def test_after_revision
-    conditions, join_sql = Search.new(:revision_after => '1234').to_sql
+    conditions, join_sql = Search.new(:revision_after => '1234').filter_criteria
     assert_equal(["revision_dimensions.revision > :revision_from", {:revision_after=>"1234"}], conditions)
-    assert_equal('LEFT JOIN revision_dimensions ON result_facts.revision_id = revision_dimensions.id', join_sql)
+    assert_equal([RevisionDimension], join_sql)
   end
 
   def test_add_time_based_search
@@ -177,7 +174,7 @@ class SearchTest < Test::Unit::TestCase
 
     search.result_name = 'SUCCESS'
 
-    conditions, join_sql = search.to_sql
+    conditions, join_sql = search.filter_criteria
     assert_equal("test_run_dimensions.name = :test_run_name AND build_target_dimensions.name IN (:build_target_name) AND build_target_dimensions.arch = :build_target_arch AND build_target_dimensions.address_size = :build_target_address_size AND build_target_dimensions.operating_system IN (:build_target_operating_system) AND build_configuration_dimensions.name = :build_configuration_name AND build_configuration_dimensions.bootimage_compiler = :build_configuration_bootimage_compiler AND build_configuration_dimensions.runtime_compiler = :build_configuration_runtime_compiler AND build_configuration_dimensions.mmtk_plan = :build_configuration_mmtk_plan AND build_configuration_dimensions.assertion_level = :build_configuration_assertion_level AND build_configuration_dimensions.bootimage_class_inclusion_policy = :build_configuration_bootimage_class_inclusion_policy AND test_configuration_dimensions.name = :test_configuration_name AND result_dimensions.name = :result_name AND time_dimensions.year = :time_year AND time_dimensions.month = :time_month AND time_dimensions.week = :time_week AND time_dimensions.day_of_week IN (:time_day_of_week) AND time_dimensions.time < :time_before", conditions[0])
     assert_equal( {:build_configuration_runtime_compiler=>"base",
     :time_before => "1979-11-07 00:00:00",
@@ -197,7 +194,150 @@ class SearchTest < Test::Unit::TestCase
     :build_target_arch => "ia32",
     :build_target_name => ["foo", "bar", "baz"],
     :build_configuration_name => "prototype"}, conditions[1])
-    assert_equal('LEFT JOIN test_run_dimensions ON result_facts.test_run_id = test_run_dimensions.id LEFT JOIN build_target_dimensions ON result_facts.build_target_id = build_target_dimensions.id LEFT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id LEFT JOIN test_configuration_dimensions ON result_facts.test_configuration_id = test_configuration_dimensions.id LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id', join_sql)
+    assert_equal([TestRunDimension, BuildTargetDimension, BuildConfigurationDimension, TestConfigurationDimension, ResultDimension, TimeDimension], join_sql)
   end
 
+  def test_to_sql_with_no_filter
+    search = Search.new
+
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE 1 = 1
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
+
+  def test_to_sql_with_non_overlapping_filter
+    search = Search.new
+
+    search.build_target_arch = 'ia32'
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN build_target_dimensions ON result_facts.build_target_id = build_target_dimensions.id
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE build_target_dimensions.arch = 'ia32'
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
+
+  def test_to_sql_with_filter_overlapping_column
+    search = Search.new
+
+    search.time_week = 2
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE time_dimensions.week = 2
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
+
+  def test_to_sql_with_filter_overlapping_row
+    search = Search.new
+
+    search.build_configuration_runtime_compiler = 'opt'
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE build_configuration_dimensions.runtime_compiler = 'opt'
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
+
+  def test_to_sql_with_filter_overlapping_column
+    search = Search.new
+
+    search.time_week = 2
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE time_dimensions.week = 2
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
+
+  def test_to_sql_with_filter_overlapping_function
+    search = Search.new
+
+    search.result_name = 'SUCCESS'
+    search.row = 'build_configuration_dimensions.name'
+    search.column = 'time_dimensions.day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    assert_equal(<<END_SQL,search.to_sql)
+SELECT
+ build_configuration_dimensions.name as row,
+ time_dimensions.day_of_week as column,
+ CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+FROM result_facts
+ LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
+ RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
+ RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+WHERE result_dimensions.name = 'SUCCESS'
+GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
+ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
+END_SQL
+  end
 end
