@@ -56,9 +56,9 @@ class Search < ActiveForm
   SearchField.new(RevisionDimension, :revision, :type => :integer),
 
   SearchField.new(TimeDimension, :year),
-  SearchField.new(TimeDimension, :month),
+  SearchField.new(TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME),
   SearchField.new(TimeDimension, :week),
-  SearchField.new(TimeDimension, :day_of_week),
+  SearchField.new(TimeDimension, :day_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME),
   SearchField.new(TimeDimension, :from, :type => :period, :synthetic => true),
   SearchField.new(TimeDimension, :to, :type => :period, :synthetic => true),
   SearchField.new(TimeDimension, :before, :type => :date, :synthetic => true),
@@ -119,7 +119,7 @@ class Search < ActiveForm
 
     criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
 
-return <<END_OF_SQL
+    return <<END_OF_SQL
 SELECT
  #{row} as row,
  #{column} as column,
