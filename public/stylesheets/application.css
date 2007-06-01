@@ -510,3 +510,69 @@ div.flash.notice {
 div.flash.notice h4 {
   background: transparent url( "/images/icons/notice.gif" ) left 50% no-repeat;
 }
+
+table.search {
+  width: 100%;
+}
+
+table.search th {
+  font-weight: bold;
+  padding: 0.2em;
+  padding-left: 0.5em;
+  text-align: right;
+  vertical-align: top;
+  width: 25%;
+}
+
+table.search td select {
+  width: 25em;
+}
+
+a.toggle_visibility {
+  display: block;
+  background: transparent url( "/images/icons/close.png" ) left 50% no-repeat;
+  padding-left: 2em;
+  width: 80%;
+}
+a.toggle_visibility.open {
+  background: transparent url( "/images/icons/open.png" ) left 50% no-repeat;
+}
+
+/* Table */
+table.report {
+   margin: 0;
+   margin-top: 1em;
+   padding: 0;
+   width: 100%;
+   border: 1px solid black;
+   clear: both;
+}
+
+table.report th {
+   background-color: rgb( 230, 223, 207 );
+   text-align: left;
+   padding-left: 0.6em;
+   padding-top: 0.3em;
+   padding-bottom: 0.3em;
+   padding-right: 0.4em;
+   font: bold 11px arial, sans-serif;
+}
+
+table.report th.pivot {
+  background-color: white;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}
+
+table.report th.column {
+   border-bottom: 1px solid black;
+}
+table.report th.row {
+   border-right: 1px solid black;
+}
+
+table.report td {
+   padding-top: 0.2em;
+   padding-left: 0.4em;
+   padding-bottom: 0.2em;
+}

@@ -1,0 +1,96 @@
+%h1.page-title Search Parameters
+%form{:action => url_for(:action => 'list'), :method => 'get'}
+  %div
+    - Search::AutoFields.collect{|f| f.dimension}.uniq.each do |d|
+      = dimension_header(d)
+      %table.search{:id => dimension_block_name(d)}
+        - Search::Fields.select{|f| f.dimension == d}.each do |f|
+          %tr
+            %th= f.name.to_s.humanize
+            %td= fk_select(f.key, f.options)
+      = dimension_footer(d)
+    = dimension_header(TestCaseDimension)
+    %table.search{:id => dimension_block_name(TestCaseDimension)}
+      %tr
+        %th Name
+        %td
+          %input{ :type => 'text', :name => 'search[test_case_name]', :value => @search.test_case_name }/
+      %tr
+        %th Group
+        %td
+          %input{ :type => 'text', :name => 'search[test_case_group]', :value => @search.test_case_group }/
+    = dimension_footer(TestCaseDimension)
+    = dimension_header(RevisionDimension)
+    %table.search{:id => dimension_block_name(RevisionDimension)}
+      %tr
+        %th After
+        %td
+          %input{ :type => 'text', :name => 'search[revision_after]', :value => @search.revision_after }/
+      %tr
+        %th Before
+        %td
+          %input{ :type => 'text', :name => 'search[revision_before]', :value => @search.revision_before }/
+    = dimension_footer(RevisionDimension)
+    = dimension_header(TimeDimension)
+    %table.search{:id => dimension_block_name(TimeDimension)}
+      %tr
+        %th Year
+        %td= fk_select(:time_year, :any => true, :size => 4, :values => ['2006','2007','2008'])
+      %tr
+        %th Month
+        %td= fk_select(:time_month, :any => true, :size => 4, :values => (1..12).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_MONTH_NAME)
+      %tr
+        %th Week
+        %td= fk_select(:time_week, :any => true, :size => 4, :values => (0..53).collect{|v|v} )
+      %tr
+        %th Day Of Week
+        %td= fk_select(:time_day_of_week, :any => true, :size => 4, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
+      %tr
+        %th From
+        %td
+          %input{ :type => 'text', :name => 'search[time_from]', :value => @search.time_from }/
+      %tr
+        %th To
+        %td
+          %input{ :type => 'text', :name => 'search[time_to]', :value => @search.time_to }/
+      %tr
+        %th Before
+        %td
+          %input{ :type => 'text', :name => 'search[time_before]', :value => @search.time_before }/
+      %tr
+        %th After
+        %td
+          %input{ :type => 'text', :name => 'search[time_after]', :value => @search.time_after }/
+    = dimension_footer(TimeDimension)
+    %h4 Group By
+    %table.search
+      %tr
+        %th Row
+        %td= fk_select(:row, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+      %tr
+        %th Column
+        %td= fk_select(:column, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+    %h4 Aggregation Function
+    %table.search
+      %tr
+        %th Function
+        %td= fk_select(:function, :values => Search::FunctionFields)
+    %ul.actions
+      %li
+        %button{:type => 'submit'} Search
+
+- if @results
+  - index, rows, columns, data = 0, @results.row_headers, @results.column_headers, @results.data
+  %h1 Results
+  %table.report
+    %tr
+      %th.pivot
+      - columns.each do |h|
+        %th.column= h
+    - 0.upto(rows.size - 1) do |r_index|
+      %tr
+        %th.row= rows[r_index]
+        - 0.upto(columns.size) do |c_index|
+          - if ((index < data.size) and (rows[r_index] == data[index]['row']) and (columns[c_index] == data[index]['column']))
+            %td= data[index]['value']
+            - index += 1
