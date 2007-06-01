@@ -17,23 +17,10 @@ class TestRunTransformer
     TestRun.transaction do
       host = HostDimension.find_or_create_by_name(test_run.host.name)
       tr = TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
-      p = test_run.build_target.params
-      build_target = BuildTargetDimension.
-        find_or_create_by_name_and_arch_and_address_size_and_operating_system(test_run.build_target.name,
-                                                                              p['target.arch'] || 'Unknown',
-                                                                              p['target.address.size'].to_i || 32,
-                                                                              p['target.os'].to_i || 'Unknown')
+      build_target = create_build_target(test_run.build_target)
       revision = RevisionDimension.find_or_create_by_revision(test_run.revision)
 
-      t = test_run.occured_at
-      time =
-        TimeDimension.find_or_create_by_year_and_month_and_week_and_day_of_year_and_day_of_month_and_day_of_week_and_time(t.year,
-                                                                                                                 t.month,
-                                                                                                                 t.strftime('%W').to_i + 1,
-                                                                                                                 t.yday,
-                                                                                                                 t.mday,
-                                                                                                                 t.wday + 1,
-                                                                                                                 t)
+      time = create_time(test_run.occured_at)
       test_run.test_configurations.each do |tc|
         test_configuration = create_test_configuration(tc)
         build_configuration = create_build_configuration(tc.build_run.build_configuration)
@@ -52,10 +39,45 @@ class TestRunTransformer
     TestConfigurationDimension.find_or_create_by_name_and_mode(tc.name,tc.params['mode'] || '')
   end
 
+  def self.create_time(t)
+    params = {}
+    params[:year] = t.year
+    params[:month] = t.month
+    params[:week] = t.strftime('%W').to_i + 1
+    params[:day_of_year] = t.yday
+    params[:day_of_month] = t.mday
+    params[:day_of_week] = t.wday + 1
+    params[:time] = t
+    find_or_create(TimeDimension,params)
+  end
+
+  def self.create_build_target(bt)
+    p = bt.params
+    params = {}
+    params[:name] = bt.name
+    params[:arch] = p['target.arch']
+    params[:address_size] = p['target.address.size'].to_i
+    params[:operating_system] = p['target.os']
+    find_or_create(BuildTargetDimension,params)
+  end
+
   def self.create_build_configuration(bc)
     p = bc.params
-    args = [bc.name, p['config.bootimage.compiler'], p['config.runtime.compiler'], p['config.mmtk.plan'], p['config.assertions'], (p['config.include.all-classes'] == 'false') ? 'minimal' : 'complete' ]
-    BuildConfigurationDimension.find_or_create_by_name_and_bootimage_compiler_and_runtime_compiler_and_mmtk_plan_and_assertion_level_and_bootimage_class_inclusion_policy(*args)
+    params = {}
+    params[:name] = bc.name
+    params[:bootimage_compiler] = p['config.bootimage.compiler']
+    params[:runtime_compiler] = p['config.runtime.compiler']
+    params[:mmtk_plan] = p['config.mmtk.plan']
+    params[:assertion_level] = p['config.assertions']
+    params[:bootimage_class_inclusion_policy] = (p['config.include.all-classes'] == 'false') ? 'minimal' : 'complete'
+    find_or_create(BuildConfigurationDimension,params)
+  end
+
+  def self.find_or_create(model,params)
+    conditions = [params.keys.collect {|k| "#{k} = :#{k}"}.join(' AND '), params]
+    object = model.find(:first,:conditions => conditions)
+    return object if object
+    model.create!(params)
   end
 
   def self.create_test(host, test_run, build_target, revision, time, test_configuration, build_configuration, group_name, t)
