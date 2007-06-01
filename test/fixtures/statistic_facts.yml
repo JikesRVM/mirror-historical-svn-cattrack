@@ -20,6 +20,7 @@ s1:
   test_case_id: 1
   time_id: 1
   revision_id: 1
+  statistic_id: 1
   source_id: 1
   value: 10243
 s2:
@@ -32,4 +33,5 @@ s2:
   test_case_id: 1
   time_id: 1
   revision_id: 1
+  statistic_id: 2
   value: 10
