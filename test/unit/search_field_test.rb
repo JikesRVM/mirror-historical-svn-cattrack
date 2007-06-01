@@ -13,7 +13,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SearchFieldTest < Test::Unit::TestCase
-  def test_label
+  def test_basic_properties
     f = SearchField.new(TestConfigurationDimension,:name, :foo => 'bar')
     assert_equal( TestConfigurationDimension, f.dimension )
     assert_equal( 'TestConfiguration', f.dimension_name )
@@ -23,5 +23,10 @@ class SearchFieldTest < Test::Unit::TestCase
     assert_equal( 4, f.options[:size] )
     assert_equal( true, f.options[:any] )
     assert_equal( 'bar', f.options[:foo] )
+  end
+
+  def test_labels
+    f = SearchField.new(TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME)
+    assert_equal( 'Jan', f.label_for(1) )
   end
 end

@@ -21,4 +21,8 @@ class SearchField
     @options = {:any => true, :size => 4}
     @options.merge!(options)
   end
+
+  def label_for(value)
+    options[:labels] ? options[:labels][value] : value
+  end
 end
