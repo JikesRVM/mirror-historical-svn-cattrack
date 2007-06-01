@@ -200,8 +200,8 @@ class SearchTest < Test::Unit::TestCase
   def test_to_sql_with_no_filter
     search = Search.new
 
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -224,8 +224,8 @@ END_SQL
     search = Search.new
 
     search.build_target_arch = 'ia32'
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -249,8 +249,8 @@ END_SQL
     search = Search.new
 
     search.time_week = 2
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -273,8 +273,8 @@ END_SQL
     search = Search.new
 
     search.build_configuration_runtime_compiler = 'opt'
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -297,8 +297,8 @@ END_SQL
     search = Search.new
 
     search.time_week = 2
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -321,8 +321,8 @@ END_SQL
     search = Search.new
 
     search.result_name = 'SUCCESS'
-    search.row = 'build_configuration_dimensions.name'
-    search.column = 'time_dimensions.day_of_week'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
     search.function = 'success_rate'
 
     assert_equal(true,search.valid?,search.errors.to_xml)
@@ -339,5 +339,27 @@ WHERE result_dimensions.name = 'SUCCESS'
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
 END_SQL
+  end
+
+  def test_perform_search
+    search = Search.new
+
+    search.result_name = 'SUCCESS'
+    search.row = 'build_configuration_name'
+    search.column = 'time_day_of_week'
+    search.function = 'success_rate'
+
+    assert_equal(true,search.valid?,search.errors.to_xml)
+    result = search.perform_search
+    assert_not_nil(result)
+    assert_not_nil(result.row)
+    assert_not_nil(result.column)
+    assert_not_nil(result.function)
+    assert_not_nil(result.data)
+    assert_equal(BuildConfigurationDimension,result.row.dimension)
+    assert_equal(:name,result.row.name)
+    assert_equal(TimeDimension,result.column.dimension)
+    assert_equal(:day_of_week,result.column.name)
+    assert_equal([ResultDimension],result.function.dimensions)
   end
 end

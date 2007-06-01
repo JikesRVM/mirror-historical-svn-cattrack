@@ -81,8 +81,10 @@ class Search < ActiveForm
     end
   end
 
-  DimensionFields = Search::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| DimensionField.new(f)}
-  ValidDimensionFieldIds = DimensionFields.collect {|o| o.id}
+  DimensionFields = Search::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| f}
+  DimensionFieldLabels = {}
+  DimensionFields.each {|o| DimensionFieldLabels[o.key.to_s] = "#{o.dimension.name.tableize.humanize}/#{o.name.to_s.humanize}"}
+  ValidDimensionFieldIds = DimensionFields.collect {|o| o.key.to_s}
 
   FunctionFields = [
   FunctionField.new('success_rate', 'Success Rate', "CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
@@ -103,22 +105,37 @@ class Search < ActiveForm
 
   attr_accessor :function, :row, :column
 
+  def row_field
+    DimensionFields.find {|o| o.key.to_s == row }
+  end
+
+  def column_field
+    DimensionFields.find {|o| o.key.to_s == column }
+  end
+
+  def aggregate_operation
+    FunctionFields.find {|o| o.id == function}
+  end
+
   def to_sql
     conditions, joins = self.class.filter_criteria(self)
 
-    f = FunctionFields.find {|o| o.id == function}
+    rf = row_field
+    cf = column_field
+    f = aggregate_operation
+    rd = rf.dimension
+    cd = cf.dimension
+
     f.dimensions.each{|d| joins << d unless joins.include?(d)}
+    joins.delete(rd)
+    joins.delete(cd)
 
-    row_dimension = DimensionFields.find {|o| o.id == row }.dimension
-    column_dimension = DimensionFields.find {|o| o.id == column }.dimension
-
-    joins.delete(row_dimension)
-    joins.delete(column_dimension)
-
-    join_sql = joins.uniq.collect {|d| join(d)}.join("\n ") + "\n " + join(row_dimension, 'RIGHT') + "\n " + join(column_dimension, 'RIGHT')
+    join_sql = joins.uniq.collect {|d| join(d)}.join("\n ") + "\n " + join(rd, 'RIGHT')
+    join_sql = join_sql + "\n " + join(cd, 'RIGHT') unless (rd == cd)
 
     criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
-
+    row = "#{rd.table_name}.#{rf.name}"
+    column = "#{cd.table_name}.#{cf.name}"
     return <<END_OF_SQL
 SELECT
  #{row} as row,
@@ -130,6 +147,13 @@ WHERE #{criteria}
 GROUP BY #{row}, #{column}
 ORDER BY #{row}, #{column}
 END_OF_SQL
+  end
+
+  def perform_search
+    if valid?
+      data = ActiveRecord::Base.connection.select_all(to_sql)
+      ReportResultData.new(row_field, column_field, aggregate_operation, data)
+    end
   end
 
   def self.is_empty?(object, field_symbol)

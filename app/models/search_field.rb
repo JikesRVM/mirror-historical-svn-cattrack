@@ -23,6 +23,6 @@ class SearchField
   end
 
   def label_for(value)
-    options[:labels] ? options[:labels][value] : value
+    options[:labels] ? options[:labels][value.to_i] : value
   end
 end
