@@ -96,6 +96,21 @@ class TestRunTransformer
     rfact.result = result
     save!(rfact)
 
+    statistic = StatisticDimension.find_or_create_by_name('rvm.real.time')
+    sfact = StatisticFact.new
+    sfact.host = host
+    sfact.test_run = test_run
+    sfact.build_configuration = build_configuration
+    sfact.test_configuration = test_configuration
+    sfact.build_target = build_target
+    sfact.test_case = tc
+    sfact.time = time
+    sfact.revision = revision
+    sfact.source = t
+    sfact.statistic = statistic
+    sfact.value = t.time
+    save!(sfact)
+
     t.statistics.each_pair do |k, v|
       next unless (v =~ /\A[+-]?\d+\Z/)
       statistic = StatisticDimension.find_or_create_by_name(k)
@@ -109,6 +124,7 @@ class TestRunTransformer
       sfact.time = time
       sfact.revision = revision
       sfact.source = t
+      sfact.statistic = statistic
       sfact.value = v.to_i
       save!(sfact)
     end
