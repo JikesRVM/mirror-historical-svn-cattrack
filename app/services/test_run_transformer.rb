@@ -28,11 +28,11 @@ class TestRunTransformer
       t = test_run.occured_at
       time =
         TimeDimension.find_or_create_by_year_and_month_and_week_and_day_of_year_and_day_of_month_and_day_of_week_and_time(t.year,
-                                                                                                                 t.strftime('%b'),
-                                                                                                                 t.strftime('%W').to_i,
+                                                                                                                 t.month,
+                                                                                                                 t.strftime('%W').to_i + 1,
                                                                                                                  t.yday,
                                                                                                                  t.mday,
-                                                                                                                 t.strftime('%a'),
+                                                                                                                 t.wday + 1,
                                                                                                                  t)
       test_run.test_configurations.each do |tc|
         test_configuration = create_test_configuration(tc)

@@ -13,18 +13,18 @@
 t1:
   id: 1
   year: 2007
-  month: Jan
+  month: 1
   week: 1
   day_of_year: 1
   day_of_month: 1
-  day_of_week: Mon
+  day_of_week: 1
   time: '2007-1-1 00:00:00'
 t2:
   id: 2
   year: 2007
-  month: Jan
+  month: 1
   week: 1
   day_of_year: 20
   day_of_month: 20
-  day_of_week: Sun
+  day_of_week: 7
   time: '2007-1-20 00:00:00'
