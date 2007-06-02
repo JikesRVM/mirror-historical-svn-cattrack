@@ -1,0 +1,7 @@
+* Update report format so that build configuration is stored with the build-run. In the current
+  setup it is impossible to store results for any test-run that had at one or build_runs fail.
+* Update report format so that build target is not extracted from test_configurations because if
+  all of them fail then there will be no data present.
+* Update report format so that it stores the hostname that test was completed on. May also be able
+  to store additional hardware information such as speed+number of CPUs or memory/disk
+  speed/capacity etc.
