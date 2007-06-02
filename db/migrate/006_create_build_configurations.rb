@@ -19,7 +19,7 @@ class CreateBuildConfigurations < ActiveRecord::Migration
     create_table :build_configuration_params, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :build_configurations
       t.column :key, :string, :limit => 50, :null => false
-      t.column :value, :string, :limit => 50, :null => false
+      t.column :value, :string, :limit => 256, :null => false
     end
     add_index :build_configuration_params, [:owner_id, :key], :unique => true
     add_index :build_configuration_params, [:owner_id]
