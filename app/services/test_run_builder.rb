@@ -10,6 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
+class BuilderException < Exception
+end
 
 # Utility class for building TestRun from an xml file.
 class TestRunBuilder
@@ -43,7 +45,9 @@ class TestRunBuilder
   private
 
   def self.build_build_target(xml, test_run)
-    target_run_name = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"].value
+    target_element = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"]
+    raise BuilderException.new("Missing target name. Likely all builds failed.") unless target_element
+    target_run_name = target_element.value
 
     build_target = BuildTarget.new(:name => target_run_name)
     xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
@@ -73,7 +77,16 @@ class TestRunBuilder
     build_runs = {}
     xml.elements.each('/report/builds/build') do |b_xml|
       build_run = BuildRun.new
-      build_run.build_configuration = configs[b_xml.elements['configuration'].text]
+      configuration_name = b_xml.elements['configuration'].text
+      if configs[configuration_name].nil?
+        #TODO: Hackity hack - build failed and our current report format does not
+        # include information regarding build configuration properties so we just
+        # look for an existing build with the same name
+        build_run.build_configuration = BuildConfiguration.find_by_name(configuration_name)
+      else
+        build_run.build_configuration = configs[configuration_name]
+      end
+      raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_run.build_configuration
       build_run.time = b_xml.elements['time'].text.to_i
       build_run.result = b_xml.elements['result'].text
       build_run.output = b_xml.elements['output'].text
