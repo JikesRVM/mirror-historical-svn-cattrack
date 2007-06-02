@@ -104,3 +104,6 @@ OrderedTables = [
 'statistic_facts',
 ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
+
+LocalConfig = File.join(File.dirname(__FILE__), 'local')
+require LocalConfig if File.exist?("#{LocalConfig}.rb")
