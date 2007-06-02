@@ -11,6 +11,9 @@
 #  regarding copyright ownership.
 #
 class CreateSystemSettings < ActiveRecord::Migration
+  class SystemSetting < ActiveRecord::Base
+  end
+
   def self.up
     create_table :system_settings do |t|
       t.column :name, :string, :null => false, :limit => 255
@@ -18,6 +21,11 @@ class CreateSystemSettings < ActiveRecord::Migration
     end
 
     add_index :system_settings, [:name], :unique => true
+
+    SystemSetting.create!(:name => 'environment', :value => ENV['SELECTED_ENV'] || ENV['RAILS_ENV'] || RAILS_ENV)
+    SystemSetting.create!(:name => 'minor.version', :value => '0')
+    SystemSetting.create!(:name => 'session.timeout', :value => '20')
+    SystemSetting.create!(:name => 'tmp.dir', :value => "#{File.expand_path(RAILS_ROOT)}/tmp/cattrack")
   end
 
   def self.down
