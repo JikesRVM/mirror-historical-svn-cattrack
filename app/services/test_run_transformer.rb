@@ -112,7 +112,11 @@ class TestRunTransformer
     save!(sfact)
 
     t.statistics.each_pair do |k, v|
-      next unless (v =~ /\A[+-]?\d+\Z/)
+      begin
+        Kernel.Float(v)
+      rescue ArgumentError, TypeError
+        next
+      end
       statistic = StatisticDimension.find_or_create_by_name(k)
       sfact = StatisticFact.new
       sfact.host = host
