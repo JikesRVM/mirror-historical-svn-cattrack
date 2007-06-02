@@ -14,10 +14,6 @@
   %tr
     %th Success Rate
     %td= "#{@record.successes.count}/#{@record.test_cases.count}"
-%h3 Build Runs
-%ul
-  - @record.build_runs.each do |br|
-    %li= link_for(br)
 - if @record.failures.size > 0
   %h3 Failures
   %table.list
