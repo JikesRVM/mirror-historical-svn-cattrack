@@ -147,7 +147,7 @@ class TestRunBuilder
     begin
       object.save!
     rescue => e
-      object.to_xml
+      puts object.to_xml
       raise e
     end
   end
