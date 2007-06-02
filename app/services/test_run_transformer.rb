@@ -129,7 +129,7 @@ class TestRunTransformer
       sfact.revision = revision
       sfact.source = t
       sfact.statistic = statistic
-      sfact.value = v.to_i
+      sfact.value = Kernel.Float(v)
       save!(sfact)
     end
   end

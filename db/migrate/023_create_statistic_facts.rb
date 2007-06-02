@@ -24,7 +24,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
       t.column :statistic_id, :integer, :null => false, :on_delete => :restrict, :references => :statistic_dimensions
       t.column :source_id, :integer, :null => true, :on_delete => :set_null, :references => :test_cases
 
-      t.column :value, :integer, :null => false
+      t.column :value, :float, :null => false
     end
   end
 
