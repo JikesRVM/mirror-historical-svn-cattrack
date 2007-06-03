@@ -129,6 +129,8 @@
           - if ((index < data.size) and (rows[r_index] == data[index]['row']) and (columns[c_index] == data[index]['column']))
             %td= h(data[index]['value'])
             - index += 1
+          - else
+            %td
   %h1 Results
   %table.report
     - data.each do |d|
