@@ -15,33 +15,55 @@ end
 
 # Utility class for building TestRun from an xml file.
 class TestRunBuilder
-  def self.create_from(host_name, filename, user, upload_time)
-    #TODO: Validate xml against a schema
-    TestRun.transaction do
-      test_run = TestRun.new
-      test_run.host = Host.find_or_create_by_name(host_name)
-      test_run.uploader = user
-      test_run.uploaded_at = upload_time
-      file = Zlib::GzipReader.open(filename) if filename =~ /\.gz$/
-      file = File.open(filename) unless file
+  cattr_accessor :logger
 
+  def self.create_from(host_name, filename)
+    logger.info("Importing test run from host '#{host_name}' defined in file #{filename}")
+
+    #TODO: Validate xml against a schema
+    test_run = TestRun.new
+    test_run.host = Host.find_or_create_by_name(host_name)
+    file = Zlib::GzipReader.open(filename) if filename =~ /\.gz$/
+    file = File.open(filename) unless file
+
+    begin
       xml = REXML::Document.new(file)
 
-      test_run.name = xml.elements['/report/id'].text
+      test_run_name = xml.elements['/report/id'].text
+      test_run.name = test_run_name
       test_run.revision = xml.elements['/report/revision'].text.to_i
       test_run.occured_at = Time.parse(xml.elements['/report/time'].text).getutc
       save!(test_run)
       test_run_id = test_run.id
+      test_run = nil
 
-      build_build_target(xml, test_run_id)
+      build_runs = nil
+      begin
+        # The next set of creations need to be in a transaction so that they can
+        # be rolled back as one. This is because they have no back-links to test-run
+        # at this time
+        TestRun.transaction do
+          configs = build_build_configurations(xml)
+          build_runs = build_build_runs(xml, configs)
+          configs = nil
+        end
+        build_build_target(xml, test_run_id)
 
-      configs = build_build_configurations(xml)
-      build_runs = build_build_runs(xml, configs)
-      build_test_configurations(xml, test_run_id, build_runs)
+        logger.debug("TestRun #{test_run_name} contains #{build_runs.size} build runs. Starting to process test configurations.")
 
+        build_test_configurations(xml, test_run_id, build_runs)
+
+        TestRun.find(test_run_id)
+      rescue Object => e
+        logger.debug("TestRun #{test_run_name} caused an error #{e.message}. Removing test run.")
+        TestRun.find(test_run_id).destroy
+        build_runs.values.each do |br|
+          BuildRun.find(br).destroy
+        end if build_runs
+        raise e
+      end
+    ensure
       file.close
-
-      TestRun.find(test_run_id)
     end
   end
 
@@ -100,12 +122,17 @@ class TestRunBuilder
 
   def self.build_test_configurations(xml, test_run_id, build_runs)
     xml.elements.each('/report/configuration') do |c_xml|
-      build_run_id = build_runs[c_xml.elements['id'].text]
+      build_run_name = c_xml.elements['id'].text
+      build_run_id = build_runs[build_run_name]
       c_xml.elements.each('test-configuration') do |tc_xml|
+
+        test_configuration_name = tc_xml.elements['id'].text
+        logger.debug("Processing test configuration for '#{test_configuration_name}' built with '#{build_run_name}'.")
+
         test_configuration = TestConfiguration.new
         test_configuration.test_run_id = test_run_id
         test_configuration.build_run_id = build_run_id
-        test_configuration.name = tc_xml.elements['id'].text
+        test_configuration.name = test_configuration_name
         tc_xml.elements.each("parameters/parameter") do |p_xml|
           test_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
         end
@@ -123,6 +150,7 @@ class TestRunBuilder
     group.test_configuration_id = test_configuration_id
     group.name = xml.elements['id'].text
     save!(group)
+    logger.debug("Processing group #{group.name}.")
 
     xml.elements.each('test') do |t_xml|
       build_test_case(t_xml, group.id)
@@ -130,9 +158,11 @@ class TestRunBuilder
   end
 
   def self.build_test_case(xml, group_id)
+    test_name = xml.elements['id'].text
+    logger.debug("Processing test #{test_name}.")
     test_case = TestCase.new
     test_case.group_id = group_id
-    test_case.name = xml.elements['id'].text
+    test_case.name = test_name
     test_case.classname = xml.elements['class'].text
     test_case.args = xml.elements['args'].text
     test_case.args = "" if test_case.args.nil?

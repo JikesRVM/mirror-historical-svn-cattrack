@@ -30,10 +30,6 @@
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
             = link_to( 'Browse Hosts', :controller => '/host', :action => 'list' )
-            %span#upload_link
-              |
-              = link_to( 'Upload Results', :controller => '/test_run', :action => 'new' )
-            %script{ :type => 'text/javascript' } if(!is_uploader()) Element.hide('upload_link')
             %span#admin_link
               |
               = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index')

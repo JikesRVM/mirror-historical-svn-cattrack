@@ -35,42 +35,6 @@ class TestRunControllerTest < Test::Unit::TestCase
     {:user_id => 1}
   end
 
-  def test_new_get
-    get(:new, {}, session_data)
-    assert_response(:success)
-    assert_template('new')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
-  end
-
-  def test_new_get_with_non_uploader
-    assert_raise(AuthenticatedSystem::SecurityError) do
-      get(:new, {}, {:user_id => 3})
-    end
-  end
-
-  def test_new_post_with_errors
-    post(:new, {:record => {:host => 'foo'}}, session_data)
-    assert_response(:success)
-    assert_template('new')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
-
-    assert_not_nil(assigns(:record).errors[:data])
-  end
-
-  def test_new_post
-    post(:new, {:record => {:host => 'foo', :data => fixture_file_upload('/data/Report.xml', 'text/xml')}}, session_data)
-    assert_not_nil(assigns(:record))
-    assert_not_nil(assigns(:test_run))
-    assert_redirected_to(:controller => 'test_run', :action => 'show', :id => assigns(:test_run).id)
-    assert_equal("#{assigns(:test_run).label} was successfully created.", flash[:notice])
-    assert_nil(flash[:alert])
-    assert_equal(1, assigns(:test_run).uploader_id)
-  end
-
   def test_show
     id = 1
     get(:show, {:id => id}, session_data)
@@ -105,25 +69,5 @@ class TestRunControllerTest < Test::Unit::TestCase
     assert_equal(true, assigns(:record).frozen?)
     assert_equal("#{label} was successfully deleted.", flash[:notice])
     assert_nil(flash[:alert])
-  end
-
-  def test_destroy_by_uploader
-    id = 2
-    assert(model.exists?(id))
-    label = model.find(id).label
-    post(:destroy, {:id => id}, {:user_id => 2})
-    assert_redirected_to(:controller => 'host', :action => 'show', :id => id)
-    assert(!model.exists?(id))
-    assert_not_nil(assigns(:record))
-    assert_equal(id, assigns(:record).id)
-    assert_equal(true, assigns(:record).frozen?)
-    assert_equal("#{label} was successfully deleted.", flash[:notice])
-    assert_nil(flash[:alert])
-  end
-
-  def test_destroy_with_non_uploader_non_admin
-    assert_raise(AuthenticatedSystem::SecurityError) do
-      post(:destroy, {:id => 1}, {:user_id => 3})
-    end
   end
 end

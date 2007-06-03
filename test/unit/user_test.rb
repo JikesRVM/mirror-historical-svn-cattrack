@@ -20,7 +20,6 @@ class UserTest < Test::Unit::TestCase
     assert_equal('MyMostMagicSaltiness', user.salt)
     assert_equal(true, user.admin?)
     assert_equal(true, user.active?)
-    assert_equal(true, user.uploader?)
   end
 
   self.perform_all_models_valid_test

@@ -17,5 +17,5 @@
           %li{ :id => "test_run_#{t.id}_delete" }
             = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => t},{:method => :post, :confirm => 'Are you sure you want to delete the record of the test-run?'})
             %script{ :type => 'text/javascript' }
-              = "<!--\n if(!is_admin() && !(is_uploader() && get_username() == '#{t.uploader.username}')) Element.hide('test_run_#{t.id}_delete') \n//-->"
+              = "<!--\n if(!is_admin()) Element.hide('test_run_#{t.id}_delete') \n//-->"
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})

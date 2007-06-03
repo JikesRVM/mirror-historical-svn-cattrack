@@ -9,14 +9,12 @@
     %th Username
     %th Login Enabled?
     %th Admin?
-    %th Uploader?
     %th Operations
   - @records.each do |q|
     %tr
       %td= h(q.username)
       %td= h(q.active?)
       %td= h(q.admin?)
-      %td= h(q.uploader?)
       %td
         %ul.actions
           %li

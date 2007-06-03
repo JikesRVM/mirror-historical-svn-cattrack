@@ -26,3 +26,8 @@ s_temp_directory:
   id: 4
   name: 'tmp.dir'
   value: '<%= File.expand_path(RAILS_ROOT) %>/tmp/cattrack'
+s_results_directory:
+  id: 5
+  name: 'results.dir'
+  value: '<%= File.expand_path(RAILS_ROOT) %>/results'
+

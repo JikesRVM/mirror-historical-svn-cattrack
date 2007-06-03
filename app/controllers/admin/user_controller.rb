@@ -12,7 +12,7 @@
 #
 class Admin::UserController < Admin::BaseController
   verify :method => :get, :only => [:show,:list], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:enable_admin, :disable_admin, :activate, :deactivate, :add_uploader_permission, :remove_uploader_permission], :redirect_to => {:action => :index}
+  verify :method => :post, :only => [:enable_admin, :disable_admin, :activate, :deactivate], :redirect_to => {:action => :index}
 
   def show
     @record = User.find(params[:id])
@@ -54,27 +54,8 @@ class Admin::UserController < Admin::BaseController
     redirect_to(:action => 'show', :id => @user)
   end
 
-  def add_uploader_permission
-    @user = User.find(params[:id])
-    @user.uploader = true
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
-  end
-
-  def remove_uploader_permission
-    @user = User.find(params[:id])
-    @user.uploader = false
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
-  end
-
   def destroy
     @user = User.find(params[:id])
-    if @user.test_runs.size > 0
-      flash[:alert] = "#{@user.label} could not be deleted as they have uploaded #{@user.test_runs.size} test runs. Remove the test runs or deactivate the account instead."
-      redirect_to(:action => 'show', :id => @user.id)
-      return
-    end
     flash[:notice] = "#{@user.label} was successfully deleted."
     @user.destroy
     redirect_to(:action => 'list')

@@ -38,7 +38,7 @@ class BuildTargetTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    test_run = TestRun.create!(:name => 'foo', :host_id => 1, :revision => 123, :occured_at => Time.now, :uploaded_at => Time.now, :uploader_id => 1)
+    test_run = TestRun.create!(:name => 'foo', :host_id => 1, :revision => 123, :occured_at => Time.now)
     {:name => 'foo', :test_run_id => test_run.id}
   end
   def self.non_null_attributes

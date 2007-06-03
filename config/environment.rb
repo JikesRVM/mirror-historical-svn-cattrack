@@ -39,7 +39,6 @@ Rails::Initializer.run do |config|
   # config.log_level = :debug
 
   # Use the database for sessions instead of the file system
-  # (create the session table with 'rake db:sessions:create')
   config.action_controller.session_store = :active_record_store
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
@@ -105,5 +104,12 @@ OrderedTables = [
 ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
 
+import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")
+import_logger.level = (RAILS_ENV == 'production') ? Logger::INFO : Logger::DEBUG
+TestRunImporter.logger = import_logger
+
+TestRunBuilder.logger = import_logger
+
 LocalConfig = File.join(File.dirname(__FILE__), 'local')
 require LocalConfig if File.exist?("#{LocalConfig}.rb")
+

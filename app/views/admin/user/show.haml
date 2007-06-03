@@ -8,9 +8,6 @@
   %tr
     %th Login Enabled?
     %td= h(@record.active?)
-  %tr
-    %th Uploader?
-    %td= h(@record.uploader?)
 %ul.actions
   %li
     - admin_action = @record.admin? ? :disable_admin : :enable_admin
@@ -19,8 +16,5 @@
     - active_action = @record.active? ? :deactivate : :activate
     - active_label = @record.active? ? 'Deactivate' : 'Activate'
     = link_to(active_label, {:controller => '/admin/user', :action => active_action, :id => @record}, {:method => :post})
-  %li
-    - active_action = @record.uploader? ? :remove_uploader_permission : :add_uploader_permission
-    = link_to('Toggle Uploader Permission', {:controller => '/admin/user', :action => active_action, :id => @record}, {:method => :post})
   %li
     = link_to('Delete User', {:controller => '/admin/user', :action => :destroy, :id => @record}, {:method => :post})

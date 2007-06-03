@@ -17,7 +17,6 @@ user_peter:
   salt: 'MyMostMagicSaltiness'
   password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--retep--') %>
   active: true
-  uploader: true
 user_trinity:
   id: 2
   username: 'trinity'
@@ -25,7 +24,6 @@ user_trinity:
   salt: 'MyMostMagicSaltiness'
   password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--secret--') %>
   active: true
-  uploader: true
 user_neo:
   id: 3
   username: 'neo'
@@ -33,7 +31,6 @@ user_neo:
   salt: 'MyMostMagicSaltiness'
   password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--letmein--') %>
   active: true
-  uploader: false
 user_morpheus:
   id: 4
   username: 'morpheus'
@@ -41,4 +38,10 @@ user_morpheus:
   salt: 'MyMostMagicSaltiness'
   password: <%= Digest::SHA1.hexdigest('--MyMostMagicSaltiness--redpill--') %>
   active: false
-  uploader: false
+user_upload_tool:
+  id: 5
+  username: 'upload_tool'
+  admin: false
+  salt: '*'
+  password: '*'
+  active: false

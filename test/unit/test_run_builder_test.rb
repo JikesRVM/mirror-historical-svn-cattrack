@@ -23,16 +23,13 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
   def do_create_from_test(filename)
     upload_time = Time.now.getutc
-    test_run = TestRunBuilder.create_from('myhostname', filename, User.find(1), upload_time)
+    test_run = TestRunBuilder.create_from('myhostname', filename)
     assert_not_nil(test_run)
 
     assert_equal( 'tiny', test_run.name )
     assert_equal( 12200, test_run.revision )
     assert_equal( "2007-05-20T10:50:50Z", test_run.occured_at.getutc.xmlschema )
-    assert_equal( upload_time.getutc.xmlschema, test_run.uploaded_at.getutc.xmlschema )
     assert_equal( 'myhostname', test_run.host.name )
-    assert_equal( 1, test_run.uploader_id )
-    assert_equal( 1, test_run.uploader.id )
 
     assert_equal( 'ia32-linux', test_run.build_target.name )
     assert_equal( 7, test_run.build_target.params.size )

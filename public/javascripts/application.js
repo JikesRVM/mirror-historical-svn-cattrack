@@ -2,10 +2,6 @@ function is_admin() {
   return readCookie('cattrack_admin') == 'true'
 }
 
-function is_uploader() {
-  return readCookie('cattrack_uploader') == 'true'
-}
-
 function is_authenticated() {
   return get_username() != null
 }

@@ -20,11 +20,8 @@
     %th Success Rate
     %td= "#{@record.successes.count}/#{@record.test_cases.count}"
   %tr
-    %th Uploader
-    %td= @record.uploader.label
-  %tr
-    %th Upload Date
-    %td= @record.uploaded_at
+    %th Import Date
+    %td= @record.created_at
 %ul.actions
   %li
     %a{:href => url_for(:action => 'show_summary', :id => @record) } Show Summary

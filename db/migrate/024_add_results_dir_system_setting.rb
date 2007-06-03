@@ -10,17 +10,15 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-tr_1:
-  id: 1
-  host_id: 1
-  revision: 1234
-  name: 'core'
-  occured_at: '2005-10-20 00:00:00'
-  created_at: '2005-10-20 00:15:35'
-tr_2:
-  id: 2
-  host_id: 2
-  revision: 201
-  name: 'sanity'
-  occured_at: '2006-11-07 00:00:00'
-  created_at: '2006-11-08 00:00:00'
+class AddResultsDirSystemSetting < ActiveRecord::Migration
+  class SystemSetting < ActiveRecord::Base
+  end
+
+  def self.up
+    SystemSetting.create!(:name => 'results.dir', :value => "#{File.expand_path(RAILS_ROOT)}/results")
+    SystemSetting.find_by_name('tmp.dir').destroy
+  end
+
+  def self.down
+  end
+end
