@@ -83,7 +83,7 @@ class Search < ActiveForm
 
   DimensionFields = Search::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| f}
   DimensionFieldLabels = {}
-  DimensionFields.each {|o| DimensionFieldLabels[o.key.to_s] = "#{o.dimension.name.tableize.humanize}/#{o.name.to_s.humanize}"}
+  DimensionFields.each {|o| DimensionFieldLabels[o.key.to_s] = "#{o.dimension_name.tableize.humanize}/#{o.name.to_s.humanize}"}
   ValidDimensionFieldIds = DimensionFields.collect {|o| o.key.to_s}
 
   FunctionFields = [
