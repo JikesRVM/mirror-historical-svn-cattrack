@@ -29,22 +29,25 @@ class TestRunBuilder
 
       test_run.name = xml.elements['/report/id'].text
       test_run.revision = xml.elements['/report/revision'].text.to_i
-      test_run.occured_at = Time.parse(xml.elements['/report/time'].text)
+      test_run.occured_at = Time.parse(xml.elements['/report/time'].text).getutc
       save!(test_run)
+      test_run_id = test_run.id
 
-      build_build_target(xml, test_run)
+      build_build_target(xml, test_run_id)
 
       configs = build_build_configurations(xml)
       build_runs = build_build_runs(xml, configs)
-      build_test_configurations(xml, test_run, build_runs)
+      build_test_configurations(xml, test_run_id, build_runs)
 
-      test_run
+      file.close
+
+      TestRun.find(test_run_id)
     end
   end
 
   private
 
-  def self.build_build_target(xml, test_run)
+  def self.build_build_target(xml, test_run_id)
     target_element = xml.elements["/report/target/parameters/parameter[@key = 'target.name']/@value"]
     raise BuilderException.new("Missing target name. Likely all builds failed.") unless target_element
     target_run_name = target_element.value
@@ -53,8 +56,7 @@ class TestRunBuilder
     xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
       build_target.params[p_xml.attributes['key']] = p_xml.attributes['value']
     end
-    test_run.build_target = build_target
-    build_target.test_run = test_run
+    build_target.test_run_id = test_run_id
     save!(build_target)
   end
 
@@ -67,7 +69,7 @@ class TestRunBuilder
         build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
       end
       save!(build_configuration)
-      configs[build_configuration_name] = build_configuration
+      configs[build_configuration_name] = build_configuration.id
     end
 
     configs
@@ -82,27 +84,27 @@ class TestRunBuilder
         #TODO: Hackity hack - build failed and our current report format does not
         # include information regarding build configuration properties so we just
         # look for an existing build with the same name
-        build_run.build_configuration = BuildConfiguration.find_by_name(configuration_name)
+        build_run.build_configuration_id = BuildConfiguration.find_by_name(configuration_name).id
       else
-        build_run.build_configuration = configs[configuration_name]
+        build_run.build_configuration_id = configs[configuration_name]
       end
       raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_run.build_configuration
       build_run.time = b_xml.elements['time'].text.to_i
       build_run.result = b_xml.elements['result'].text
       build_run.output = b_xml.elements['output'].text
       save!(build_run)
-      build_runs[build_run.build_configuration.name] = build_run
+      build_runs[build_run.build_configuration.name] = build_run.id
     end
     build_runs
   end
 
-  def self.build_test_configurations(xml, test_run, build_runs)
+  def self.build_test_configurations(xml, test_run_id, build_runs)
     xml.elements.each('/report/configuration') do |c_xml|
-      build_run = build_runs[c_xml.elements['id'].text]
+      build_run_id = build_runs[c_xml.elements['id'].text]
       c_xml.elements.each('test-configuration') do |tc_xml|
         test_configuration = TestConfiguration.new
-        test_configuration.test_run = test_run
-        test_configuration.build_run = build_run
+        test_configuration.test_run_id = test_run_id
+        test_configuration.build_run_id = build_run_id
         test_configuration.name = tc_xml.elements['id'].text
         tc_xml.elements.each("parameters/parameter") do |p_xml|
           test_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
@@ -110,26 +112,26 @@ class TestRunBuilder
         save!(test_configuration)
 
         tc_xml.elements.each('test-group') do |g_xml|
-          build_group(g_xml, test_configuration)
+          build_group(g_xml, test_configuration.id)
         end
       end
     end
   end
 
-  def self.build_group(xml, test_configuration)
+  def self.build_group(xml, test_configuration_id)
     group = Group.new
-    group.test_configuration = test_configuration
+    group.test_configuration_id = test_configuration_id
     group.name = xml.elements['id'].text
     save!(group)
 
     xml.elements.each('test') do |t_xml|
-      build_test_case(t_xml, group)
+      build_test_case(t_xml, group.id)
     end
   end
 
-  def self.build_test_case(xml, group)
+  def self.build_test_case(xml, group_id)
     test_case = TestCase.new
-    test_case.group = group
+    test_case.group_id = group_id
     test_case.name = xml.elements['id'].text
     test_case.classname = xml.elements['class'].text
     test_case.args = xml.elements['args'].text

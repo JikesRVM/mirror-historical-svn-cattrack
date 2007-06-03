@@ -22,7 +22,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
   end
 
   def do_create_from_test(filename)
-    upload_time = Time.now
+    upload_time = Time.now.getutc
     test_run = TestRunBuilder.create_from('myhostname', filename, User.find(1), upload_time)
     assert_not_nil(test_run)
 
