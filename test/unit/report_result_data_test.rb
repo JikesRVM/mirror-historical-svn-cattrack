@@ -21,7 +21,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'row' => 'prototype-opt', 'column' => '2', 'value' => '1.0' },
     ]
     d = ReportResultData.new(row,column,nil,data)
-    assert_equal( ['Sun', 'Mon'], d.column_headers )
+    assert_equal( ['1', '2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
   end
 end

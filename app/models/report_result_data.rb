@@ -28,7 +28,7 @@ class ReportResultData
       r = row['row']
       rows << r unless rows.include?(r)
     end
-    @row_headers = rows.collect{|r| @row.label_for(r)}
-    @column_headers = columns.collect{|r| @column.label_for(r)}
+    @row_headers = rows
+    @column_headers = columns
   end
 end
