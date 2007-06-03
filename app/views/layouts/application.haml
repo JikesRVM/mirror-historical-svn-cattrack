@@ -12,6 +12,7 @@
     = stylesheet_link_tag('application')
     = javascript_include_tag('prototype')
     = javascript_include_tag('application')
+    = yield :head
   %body{ :id => "#{controller.controller_name}__#{@action_name}" }
     #doc
       #hd
