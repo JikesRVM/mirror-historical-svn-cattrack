@@ -15,8 +15,6 @@ src_dir = '/home/peterd/results'
 dest_dir = '/home/peterd/result_processed'
 unprocessed_dir = '/home/peterd/result_unprocessed'
 
-FileUtils.mkdir_p dest_dir
-
 user = User.find_by_username('upload_tool')
 
 Dir.glob("#{src_dir}/*").each do |d|
