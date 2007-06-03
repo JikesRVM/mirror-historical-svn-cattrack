@@ -1,0 +1,50 @@
+Installing CatTrack
+-------------------
+
+This document assumes you know how to install a standard rails
+application and only documents the features that are unique to
+the CatTrack application.
+
+Database Setup
+--------------
+
+1. Copy "config/database.example.yml" to "config/database.yml" and edit
+   the database settings for production environment.
+2. Run "rake db:migrate RAILS_ENV=production" to initialize the database
+   structure and populate it with required values.
+3. Run "script/console -e production" and create a user that will have
+   access to the administration section of CatTrack. Simple transcript
+   follows;
+
+ > u = User.new
+ > u.username = 'myusername'
+ > u.password = 'mypass'
+ > u.active = true
+ > u.admin = true
+ > u.save!
+
+Web Setup
+---------
+
+1. Start the web app via
+
+ > cd path/to/cattrack && /var/lib/gems/1.8/bin/mongrel_rails start -e production -d
+
+2. Stop the web app via
+
+ > cd path/to/cattrack && /var/lib/gems/1.8/bin/mongrel_rails stop
+
+3. If you are not hosting cattrack at the root level of your web application
+   then you will need to create 'config/local.rb' that contains code such as
+
+   ActionController::AbstractRequest.relative_url_root = "/cattrack"
+
+4. To frontend it with apache the easiest approach is to set it up as pass through proxy.
+
+Cron Setup
+----------
+
+1. Edit crontab so that stale sessions are removed every five minutes. Add a line such
+   as following to crontab to do this.
+
+ */5 * * * * cd path/to/cattrack && rake db:sessions:remove_stale RAILS_ENV=production
