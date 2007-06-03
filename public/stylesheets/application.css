@@ -435,13 +435,13 @@ table.details td div.field_error {
 }
 
 table.details td.help div {
-   background:  url("/images/icons/information.gif") left 50% no-repeat;
+   background:  url("../images/icons/information.gif") left 50% no-repeat;
    padding-left: 2.5em;
    font-size: smaller;
 }
 
 table.details td.required {
-   background:  url("/images/icons/required.gif") right 50% no-repeat;
+   background:  url("../images/icons/required.gif") right 50% no-repeat;
 }
 
 /* Table :: Form Errors */
@@ -459,7 +459,7 @@ div.form_messages {
 div.form_messages h4 {
    padding-left: 2em;
    color: black;
-   background: transparent url("/images/icons/error.gif") left 50% no-repeat;
+   background: transparent url("../images/icons/error.gif") left 50% no-repeat;
 }
 
 div.form_messages ul {
@@ -499,7 +499,7 @@ div.flash.alert {
 }
 
 div.flash.alert h4 {
-  background: transparent url( "/images/icons/error.gif" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/error.gif" ) left 50% no-repeat;
 }
 
 div.flash.notice {
@@ -508,7 +508,7 @@ div.flash.notice {
 }
 
 div.flash.notice h4 {
-  background: transparent url( "/images/icons/notice.gif" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/notice.gif" ) left 50% no-repeat;
 }
 
 table.search {
@@ -547,12 +547,12 @@ table.search td div.explanation {
 
 a.toggle_visibility {
   display: block;
-  background: transparent url( "/images/icons/close.png" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/close.png" ) left 50% no-repeat;
   padding-left: 2em;
   width: 80%;
 }
 a.toggle_visibility.open {
-  background: transparent url( "/images/icons/open.png" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/open.png" ) left 50% no-repeat;
 }
 
 /* Table */
