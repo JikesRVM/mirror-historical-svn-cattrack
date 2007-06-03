@@ -84,11 +84,11 @@ class TestRunBuilder
         #TODO: Hackity hack - build failed and our current report format does not
         # include information regarding build configuration properties so we just
         # look for an existing build with the same name
-        build_run.build_configuration_id = BuildConfiguration.find_by_name(configuration_name).id
+        build_run.build_configuration = BuildConfiguration.find_by_name(configuration_name)
       else
         build_run.build_configuration_id = configs[configuration_name]
       end
-      raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_run.build_configuration
+      raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_run.build_configuration_id
       build_run.time = b_xml.elements['time'].text.to_i
       build_run.result = b_xml.elements['result'].text
       build_run.output = b_xml.elements['output'].text
