@@ -20,7 +20,7 @@ class ReportController < ApplicationController
     end
 
     @search = Search.new(params[:search])
-    @results = @search.perform_search
+    @results = @search.perform_search unless params[:search].nil?
   end
 
   private
