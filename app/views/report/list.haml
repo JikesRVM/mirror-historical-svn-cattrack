@@ -61,38 +61,49 @@
         %th Day Of Week
         %td= fk_select(:time_day_of_week, :any => true, :size => 4, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
       %tr
-        %th From
-        %td{:class => class_for_attribute(@search,:time_from,'')}
-          %input{ :type => 'text', :name => 'search[time_from]', :value => @search.time_from }/
-          - if attribute_error?(@search, :time_from)
-            .field_error= @search.errors[:time_from]
-      %tr
-        %th To
-        %td{:class => class_for_attribute(@search,:time_to,'')}
-          %input{ :type => 'text', :name => 'search[time_to]', :value => @search.time_to }/
-          - if attribute_error?(@search, :time_to)
-            .field_error= @search.errors[:time_to]
+        %th In Range
+        %td{:class => class_for_attribute(@search,:time_to,class_for_attribute(@search,:time_from,''))}
+          %span
+            From
+            %input{ :type => 'text', :name => 'search[time_from]', :value => @search.time_from }/
+            - if attribute_error?(@search, :time_from)
+              .field_error= @search.errors[:time_from]
+          %span
+            To
+            %input{ :type => 'text', :name => 'search[time_to]', :value => @search.time_to }/
+            - if attribute_error?(@search, :time_to)
+              .field_error= @search.errors[:time_to]
+          .explanation
+            For example, '1w 2d 5h 30m', where w = weeks, d = days, h = hours, m = minutes, If the field starts with a '-', it is treated as a time in the past, for example, '-1w 3d' is "10 days ago". An unset field denotes unbounded, so if from is blank, and to is -1d, this means "everything earlier than 1 day ago".
       %tr
         %th Before
         %td{:class => class_for_attribute(@search,:time_before,'')}
           %input{ :type => 'text', :name => 'search[time_before]', :value => @search.time_before }/
           - if attribute_error?(@search, :time_before)
             .field_error= @search.errors[:time_before]
+          .explanation YYYY-MM-DD HH:MM:SS
       %tr
         %th After
         %td{:class => class_for_attribute(@search,:time_after,'')}
           %input{ :type => 'text', :name => 'search[time_after]', :value => @search.time_after }/
           - if attribute_error?(@search, :time_after)
             .field_error= @search.errors[:time_after]
+          .explanation YYYY-MM-DD HH:MM:SS
     = dimension_footer(TimeDimension)
     %h4 Group By
     %table.search
       %tr
         %th Row
-        %td= fk_select(:row, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+        %td{:class => class_for_attribute(@search,:row,'')}
+          = fk_select(:row, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+          - if attribute_error?(@search, :row)
+            .field_error= @search.errors[:row]
       %tr
         %th Column
-        %td= fk_select(:column, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+        %td{:class => class_for_attribute(@search,:column,'')}
+          = fk_select(:column, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+          - if attribute_error?(@search, :column)
+            .field_error= @search.errors[:column]
     %h4 Aggregation Function
     %table.search
       %tr

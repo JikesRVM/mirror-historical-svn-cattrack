@@ -528,8 +528,22 @@ table.search td select {
   width: 25em;
 }
 
-table.search td input {border: 1px solid black;}
-table.search td.error input {border: 1px solid red;}
+table.search td select {
+  margin: 0.2em;
+}
+
+table.search td input, table.search td select {border: 1px solid black;}
+table.search td.error input, table.search td.error select {border: 1px solid red;}
+
+table.search .field_error {
+  color: red;
+  font-style: oblique;
+  font-weight: bold;
+}
+
+table.search td div.explanation {
+  font-size: x-small;
+}
 
 a.toggle_visibility {
   display: block;
