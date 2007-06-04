@@ -29,6 +29,8 @@ class BuildRunTest < Test::Unit::TestCase
     assert_equal( "Prototype build log here ...", build.output )
     assert_equal( 1, build.build_configuration_id )
     assert_equal( 1, build.build_configuration.id )
+    assert_equal( 1, build.test_run_id )
+    assert_equal( 1, build.test_run.id )
   end
 
   def test_new_with_output
@@ -39,10 +41,10 @@ class BuildRunTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:build_configuration_id => 3, :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
+    {:test_run_id => 1, :build_configuration_id => 3, :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
   end
   def self.non_null_attributes
-    [:build_configuration_id, :result, :time, :output]
+    [:test_run_id, :build_configuration_id, :result, :time, :output]
   end
   def self.bad_attributes
     [[:time, -1],[:result, 'Foo']]

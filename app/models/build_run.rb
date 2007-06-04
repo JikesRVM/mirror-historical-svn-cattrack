@@ -38,7 +38,7 @@ class BuildRun < ActiveRecord::Base
   end
 
   def parent_node
-    test_configurations[0].test_run
+    test_run
   end
 
   private

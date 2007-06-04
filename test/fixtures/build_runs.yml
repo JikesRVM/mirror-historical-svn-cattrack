@@ -12,21 +12,25 @@
 #
 b_1:
   id: 1
+  test_run_id: 1
   build_configuration_id: 1
   result: 'SUCCESS'
   time: 10323
 b_2:
   id: 2
+  test_run_id: 1
   build_configuration_id: 2
   result: 'SUCCESS'
   time: 10401
 b_3:
   id: 3
+  test_run_id: 2
   build_configuration_id: 1
   result: 'SUCCESS'
   time: 12623
 b_4:
   id: 4
+  test_run_id: 2
   build_configuration_id: 2
   result: 'FAILURE'
   time: 1023

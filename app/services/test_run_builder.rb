@@ -39,7 +39,7 @@ class TestRunBuilder
         test_run = nil
 
         configs = build_build_configurations(xml)
-        build_runs = build_build_runs(xml, configs)
+        build_runs = build_build_runs(xml, test_run_id, configs)
         configs = nil
         build_build_target(xml, test_run_id)
 
@@ -87,7 +87,7 @@ class TestRunBuilder
     configs
   end
 
-  def self.build_build_runs(xml, configs)
+  def self.build_build_runs(xml, test_run_id, configs)
     build_runs = {}
     xml.elements.each('/report/builds/build') do |b_xml|
       build_run = BuildRun.new
@@ -104,6 +104,7 @@ class TestRunBuilder
       build_run.time = b_xml.elements['time'].text.to_i
       build_run.result = b_xml.elements['result'].text
       build_run.output = b_xml.elements['output'].text
+      build_run.test_run_id = test_run_id
       save!(build_run)
       build_runs[build_run.build_configuration.name] = build_run.id
     end
