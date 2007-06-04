@@ -25,8 +25,12 @@ class AddTestRunColumnToBuildRun < ActiveRecord::Migration
 
     BuildRun.find(:all).each do |b|
       tc = TestConfiguration.find_by_build_run_id(b.id)
-      b.test_run_id = tc.test_run_id
-      b.save!
+      if tc
+        b.test_run_id = tc.test_run_id
+        b.save!
+      else
+        b.destroy
+      end
     end
     add_foreign_key(:build_runs, :test_run_id, :test_runs, :id, :on_delete => :cascade)
   end
