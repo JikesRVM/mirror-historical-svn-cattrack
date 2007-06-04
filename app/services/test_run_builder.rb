@@ -26,27 +26,21 @@ class TestRunBuilder
     file = Zlib::GzipReader.open(filename) if filename =~ /\.gz$/
     file = File.open(filename) unless file
 
-    begin
+    TestRun.transaction do
       xml = REXML::Document.new(file)
 
       test_run_name = xml.elements['/report/id'].text
-      test_run.name = test_run_name
-      test_run.revision = xml.elements['/report/revision'].text.to_i
-      test_run.occured_at = Time.parse(xml.elements['/report/time'].text).getutc
-      save!(test_run)
-      test_run_id = test_run.id
-      test_run = nil
-
-      build_runs = nil
       begin
-        # The next set of creations need to be in a transaction so that they can
-        # be rolled back as one. This is because they have no back-links to test-run
-        # at this time
-        TestRun.transaction do
-          configs = build_build_configurations(xml)
-          build_runs = build_build_runs(xml, configs)
-          configs = nil
-        end
+        test_run.name = test_run_name
+        test_run.revision = xml.elements['/report/revision'].text.to_i
+        test_run.occured_at = Time.parse(xml.elements['/report/time'].text).getutc
+        save!(test_run)
+        test_run_id = test_run.id
+        test_run = nil
+
+        configs = build_build_configurations(xml)
+        build_runs = build_build_runs(xml, configs)
+        configs = nil
         build_build_target(xml, test_run_id)
 
         logger.debug("TestRun #{test_run_name} contains #{build_runs.size} build runs. Starting to process test configurations.")
@@ -55,15 +49,11 @@ class TestRunBuilder
 
         TestRun.find(test_run_id)
       rescue Object => e
-        logger.debug("TestRun #{test_run_name} caused an error #{e.message}. Removing test run.")
-        TestRun.find(test_run_id).destroy
-        build_runs.values.each do |br|
-          BuildRun.find(br).destroy
-        end if build_runs
+        logger.debug("TestRun #{test_run_name} caused an error #{e.message}.")
         raise e
+      ensure
+        file.close
       end
-    ensure
-      file.close
     end
   end
 
