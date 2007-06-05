@@ -30,11 +30,13 @@ class TestRunImporter
       host = File.basename(d)
       logger.info("Processing host '#{host}' in dir #{d}")
       Dir.glob("#{d}/*.xml.gz").each do |f|
+        next unless File.exists?(f)
         logger.info("Processing file: #{f}")
+        intermediate_filename = "#{f}.processing"
         temp_filename = "#{f}.tmp"
         begin
-
-          Zlib::GzipReader.open(f) do |fin|
+          FileUtils.mv(f, intermediate_filename)
+          Zlib::GzipReader.open(intermediate_filename) do |fin|
             File.open(temp_filename, "w+") do |fout|
               fout.write(fin.read)
             end
@@ -47,11 +49,11 @@ class TestRunImporter
           TestRunTransformer.build_olap_model_from(test_run)
           logger.info("Successfully processed file: #{f}")
           FileUtils.mkdir_p "#{processed_dir}/#{host}"
-          FileUtils.mv(f, "#{processed_dir}/#{host}/#{File.basename(f)}")
+          FileUtils.mv(intermediate_filename, "#{processed_dir}/#{host}/#{File.basename(f)}")
         rescue Object => e
           logger.info("Failed to process file: #{f} due to: #{e.message}")
           FileUtils.mkdir_p "#{failed_dir}/#{host}"
-          FileUtils.mv(f, "#{failed_dir}/#{host}/#{File.basename(f)}")
+          FileUtils.mv(intermediate_filename, "#{failed_dir}/#{host}/#{File.basename(f)}")
         ensure
           FileUtils.rm_rf(temp_filename)
         end
