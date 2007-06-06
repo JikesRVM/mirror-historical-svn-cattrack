@@ -11,6 +11,7 @@
 #  regarding copyright ownership.
 #
 class TestCase < ActiveRecord::Base
+  belongs_to :group
   has_params :statistics
   has_params :params
 

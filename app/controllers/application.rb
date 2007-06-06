@@ -21,12 +21,6 @@ class ApplicationController < ActionController::Base
   # that can be rendered.
   self.view_debug_display_assigns = false
 
-  # Load all active Records. Required here so
-  # that present before next step and occurs at every application_reset!
-  ActiveRecord::Base.preload_active_records
-  # Setup all the relationships and validations based on db schema
-  ActiveRecord::Base.init_auto_validations
-
   protected
   def find_active_user(id)
     User.find_by_id_and_active(id,true)

@@ -11,6 +11,9 @@
 #  regarding copyright ownership.
 #
 class Group < ActiveRecord::Base
+  belongs_to :test_configuration
+
+  has_many :test_cases, :dependent => :destroy
   has_many :successes, :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
   has_many :failures, :class_name => 'TestCase', :conditions => "result = 'FAILURE'"
   has_many :excludes, :class_name => 'TestCase', :conditions => "result = 'EXCLUDED'"

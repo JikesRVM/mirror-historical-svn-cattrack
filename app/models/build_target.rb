@@ -11,8 +11,8 @@
 #  regarding copyright ownership.
 #
 class BuildTarget < ActiveRecord::Base
+  belongs_to :test_run
   has_params :params
-  relation_data :test_run_id, {:remote_relationship => :one}
 
   def parent_node
     test_run

@@ -11,6 +11,9 @@
 #  regarding copyright ownership.
 #
 class TestConfiguration < ActiveRecord::Base
+  belongs_to :build_run
+  belongs_to :test_run
+  has_many :groups, :dependent => :destroy
   has_params :params
 
   TESTCASE_SQL_PREFIX = <<-END_SQL

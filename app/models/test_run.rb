@@ -11,7 +11,10 @@
 #  regarding copyright ownership.
 #
 class TestRun < ActiveRecord::Base
-  has_many :build_runs, :through => :test_configurations, :uniq => true, :dependent => :destroy
+  belongs_to :host
+  has_one :build_target, :dependent => :destroy
+  has_many :build_runs, :dependent => :destroy
+  has_many :test_configurations, :through => :build_runs
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*

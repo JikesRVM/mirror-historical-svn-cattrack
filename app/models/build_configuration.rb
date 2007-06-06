@@ -11,6 +11,7 @@
 #  regarding copyright ownership.
 #
 class BuildConfiguration < ActiveRecord::Base
+  has_many :build_runs
   has_params :params
 
   def parent_node

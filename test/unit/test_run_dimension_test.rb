@@ -18,7 +18,6 @@ class TestRunDimensionTest < Test::Unit::TestCase
     assert_equal( 1, object.id )
     assert_equal( 'core', object.name )
     assert_equal( 1, object.source_id )
-    assert_equal( 1, object.source.id )
   end
 
   def self.attributes_for_new

@@ -12,10 +12,6 @@
 #
 module ActiveRecord
   class Base
-    def self.preload_active_records
-      ::ActiveRecordClassNames.collect {|t| t.constantize }
-    end
-
     def self.label
       self.name.humanize
     end

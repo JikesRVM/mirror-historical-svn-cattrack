@@ -11,6 +11,10 @@
 #  regarding copyright ownership.
 #
 class BuildRun < ActiveRecord::Base
+  belongs_to :test_run
+  belongs_to :build_configuration
+  has_many :test_configurations, :dependent => :destroy
+
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
   validates_not_null :output
   validates_positive :time

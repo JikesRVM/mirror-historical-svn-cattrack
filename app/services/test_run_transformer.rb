@@ -84,30 +84,30 @@ class TestRunTransformer
     tc = TestCaseDimension.find_or_create_by_name_and_group(t.name,group_name)
     result = ResultDimension.find_or_create_by_name(t.result)
     rfact = ResultFact.new
-    rfact.host = host
-    rfact.test_run = test_run
-    rfact.build_configuration = build_configuration
-    rfact.test_configuration = test_configuration
-    rfact.build_target = build_target
-    rfact.test_case = tc
-    rfact.time = time
-    rfact.revision = revision
-    rfact.source = t
-    rfact.result = result
+    rfact.host_id = host.id
+    rfact.test_run_id = test_run.id
+    rfact.build_configuration_id = build_configuration.id
+    rfact.test_configuration_id = test_configuration.id
+    rfact.build_target_id = build_target.id
+    rfact.test_case_id = tc.id
+    rfact.time_id = time.id
+    rfact.revision_id = revision.id
+    rfact.source_id = t.id
+    rfact.result_id = result.id
     save!(rfact)
 
     statistic = StatisticDimension.find_or_create_by_name('rvm.real.time')
     sfact = StatisticFact.new
-    sfact.host = host
-    sfact.test_run = test_run
-    sfact.build_configuration = build_configuration
-    sfact.test_configuration = test_configuration
-    sfact.build_target = build_target
-    sfact.test_case = tc
-    sfact.time = time
-    sfact.revision = revision
-    sfact.source = t
-    sfact.statistic = statistic
+    sfact.host_id = host.id
+    sfact.test_run_id = test_run.id
+    sfact.build_configuration_id = build_configuration.id
+    sfact.test_configuration_id = test_configuration.id
+    sfact.build_target_id = build_target.id
+    sfact.test_case_id = tc.id
+    sfact.time_id = time.id
+    sfact.revision_id = revision.id
+    sfact.source_id = t.id
+    sfact.statistic_id = statistic.id
     sfact.value = t.time
     save!(sfact)
 
@@ -119,16 +119,16 @@ class TestRunTransformer
       end
       statistic = StatisticDimension.find_or_create_by_name(k)
       sfact = StatisticFact.new
-      sfact.host = host
-      sfact.test_run = test_run
-      sfact.build_configuration = build_configuration
-      sfact.test_configuration = test_configuration
-      sfact.build_target = build_target
-      sfact.test_case = tc
-      sfact.time = time
-      sfact.revision = revision
-      sfact.source = t
-      sfact.statistic = statistic
+      sfact.host_id = host.id
+      sfact.test_run_id = test_run.id
+      sfact.build_configuration_id = build_configuration.id
+      sfact.test_configuration_id = test_configuration.id
+      sfact.build_target_id = build_target.id
+      sfact.test_case_id = tc.id
+      sfact.time_id = time.id
+      sfact.revision_id = revision.id
+      sfact.source_id = t.id
+      sfact.statistic_id = statistic.id
       sfact.value = Kernel.Float(v)
       save!(sfact)
     end

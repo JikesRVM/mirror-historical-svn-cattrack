@@ -22,35 +22,28 @@ class TestRunTest < Test::Unit::TestCase
   end
 
   def test_basic_load
-    tc = test_runs(:tr_1)
-    assert_equal( 1, tc.id )
-    assert_equal( 1234, tc.revision )
-    assert_equal( "2005-10-20T00:00:00Z", tc.occured_at.xmlschema )
-    assert_equal( 1, tc.host_id )
-    assert_equal( 1, tc.host.id )
-    assert_equal( 1, tc.build_target.id )
+    test_run = TestRun.find(1)
+    assert_equal( 1, test_run.id )
+    assert_equal( 1234, test_run.revision )
+    assert_equal( "2005-10-20T00:00:00Z", test_run.occured_at.xmlschema )
+    assert_equal( 'core', test_run.name )
+    assert_equal( 1, test_run.host_id )
+    assert_equal( 1, test_run.host.id )
+    assert_equal( 1, test_run.build_target.id )
 
-    assert_equal( 3, tc.test_configurations.size )
-    assert( tc.test_configuration_ids.include?(1) )
-    assert( tc.test_configuration_ids.include?(2) )
-    assert( tc.test_configuration_ids.include?(3) )
+    assert_equal( [1, 2, 3], test_run.test_configurations.collect{|tc| tc.id}.sort )
+    assert_equal( [1, 2], test_run.build_run_ids.sort )
 
-    assert_equal( 2, tc.build_runs.size )
-    assert_equal( 1, tc.build_runs[0].id )
-    assert_equal( 2, tc.build_runs[1].id )
-
-    assert_equal( 'core', tc.name )
-
-    assert_equal( 13, tc.successes.size )
-    assert( tc.success_ids.include?(1) )
-    assert_equal( 0, tc.failures.size )
-    assert_equal( 0, tc.failures.collect {|t| t.id }.size )
-    assert_equal( 0, tc.excludes.size )
-    # Next line forces use of finder sql
-    assert_equal( 0, tc.excludes.collect {|t| t.id }.size )
-
-    assert_equal( 13, tc.test_cases.size )
-    assert( tc.test_case_ids.include?(1) )
+    # force both count and finder sqls ==> size + find
+    #
+    assert_equal( 13, test_run.successes.size )
+    assert_equal( true, test_run.successes.collect {|t| t.id }.include?(1) )
+    assert_equal( 0, test_run.failures.size )
+    assert_equal( [], test_run.failures.collect {|t| t.id } )
+    assert_equal( 0, test_run.excludes.size )
+    assert_equal( [], test_run.excludes.collect {|t| t.id } )
+    assert_equal( 13, test_run.test_cases.size )
+    assert_equal( true, test_run.test_cases.collect {|t| t.id }.include?(1) )
   end
 
   def self.attributes_for_new

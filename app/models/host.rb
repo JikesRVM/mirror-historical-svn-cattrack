@@ -11,6 +11,8 @@
 #  regarding copyright ownership.
 #
 class Host < ActiveRecord::Base
+  has_many :test_runs, :dependent => :destroy
+
   def parent_node
     nil
   end

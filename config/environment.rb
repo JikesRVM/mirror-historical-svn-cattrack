@@ -104,8 +104,6 @@ OrderedTables = [
 'filters',
 'filter_params',
 ]
-ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
-
 import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")
 import_logger.level = (RAILS_ENV == 'production') ? Logger::INFO : Logger::DEBUG
 TestRunImporter.logger = import_logger

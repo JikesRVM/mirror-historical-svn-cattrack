@@ -12,11 +12,9 @@
 #
 class AddTestRunColumnToBuildRun < ActiveRecord::Migration
   class BuildRun < ActiveRecord::Base
-    auto_relations :only => []
   end
 
   class TestConfiguration < ActiveRecord::Base
-    auto_relations :only => []
   end
 
   def self.up
