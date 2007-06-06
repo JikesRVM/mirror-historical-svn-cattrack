@@ -14,13 +14,14 @@ class ReportController < ApplicationController
   verify :method => :get, :only => [:list], :redirect_to => {:action => :index}
 
   def list
-    Search::AutoFields.each do |f|
+    Filter::AutoFields.each do |f|
       value = select_values(f.dimension, f.name)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
 
+    @filter = Filter.new(params[:filter])
     @search = Search.new(params[:search])
-    @results = @search.perform_search unless params[:search].nil?
+    @results = @search.perform_search(@filter) unless params[:search].nil?
   end
 
   private

@@ -1,21 +1,21 @@
 %h1.page-title Search Parameters
-- if (@search.errors and @search.errors.count > 0)
+- if (@filter.errors and @filter.errors.count > 0)
   .form_messages
     %h4
-      = pluralize(@search.errors.count, 'error')
-      with the search parameters.
-    - if @search.errors[:base]
-      - errors = @search.errors[:base]
+      = pluralize(@filter.errors.count, 'error')
+      with the filter parameters.
+    - if @filter.errors[:base]
+      - errors = @filter.errors[:base]
       - errors = errors.is_a?(Array) ? errors : [errors]
       %ul
         - errors.each do |e|
           %li= h(e)
 %form{:action => url_for(:action => 'list'), :method => 'get'}
   %div
-    - Search::AutoFields.collect{|f| f.dimension}.uniq.each do |d|
+    - Filter::AutoFields.collect{|f| f.dimension}.uniq.each do |d|
       = dimension_header(d)
       %table.search{:id => dimension_block_name(d)}
-        - Search::Fields.select{|f| f.dimension == d}.each do |f|
+        - Filter::Fields.select{|f| f.dimension == d}.each do |f|
           %tr
             %th= f.name.to_s.humanize
             %td= fk_select(f.key, f.options)
@@ -25,26 +25,26 @@
       %tr
         %th Name
         %td
-          %input{ :type => 'text', :name => 'search[test_case_name]', :value => @search.test_case_name }/
+          %input{ :type => 'text', :name => 'filter[test_case_name]', :value => @filter.test_case_name }/
       %tr
         %th Group
         %td
-          %input{ :type => 'text', :name => 'search[test_case_group]', :value => @search.test_case_group }/
+          %input{ :type => 'text', :name => 'filter[test_case_group]', :value => @filter.test_case_group }/
     = dimension_footer(TestCaseDimension)
     = dimension_header(RevisionDimension)
     %table.search{:id => dimension_block_name(RevisionDimension)}
       %tr
         %th After
-        %td{:class => class_for_attribute(@search,:revision_after,'')}
-          %input{ :type => 'text', :name => 'search[revision_after]', :value => @search.revision_after }/
-          - if attribute_error?(@search, :revision_after)
-            .field_error= @search.errors[:revision_after]
+        %td{:class => class_for_attribute(@filter,:revision_after,'')}
+          %input{ :type => 'text', :name => 'filter[revision_after]', :value => @filter.revision_after }/
+          - if attribute_error?(@filter, :revision_after)
+            .field_error= @filter.errors[:revision_after]
       %tr
         %th Before
-        %td{:class => class_for_attribute(@search,:revision_before,'')}
-          %input{ :type => 'text', :name => 'search[revision_before]', :value => @search.revision_before }/
-          - if attribute_error?(@search, :revision_before)
-            .field_error= @search.errors[:revision_before]
+        %td{:class => class_for_attribute(@filter,:revision_before,'')}
+          %input{ :type => 'text', :name => 'filter[revision_before]', :value => @filter.revision_before }/
+          - if attribute_error?(@filter, :revision_before)
+            .field_error= @filter.errors[:revision_before]
     = dimension_footer(RevisionDimension)
     = dimension_header(TimeDimension)
     %table.search{:id => dimension_block_name(TimeDimension)}
@@ -62,32 +62,32 @@
         %td= fk_select(:time_day_of_week, :any => true, :size => 4, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
       %tr
         %th In Range
-        %td{:class => class_for_attribute(@search,:time_to,class_for_attribute(@search,:time_from,''))}
+        %td{:class => class_for_attribute(@filter,:time_to,class_for_attribute(@filter,:time_from,''))}
           %span
             From
-            %input{ :type => 'text', :name => 'search[time_from]', :value => @search.time_from }/
-            - if attribute_error?(@search, :time_from)
-              .field_error= @search.errors[:time_from]
+            %input{ :type => 'text', :name => 'filter[time_from]', :value => @filter.time_from }/
+            - if attribute_error?(@filter, :time_from)
+              .field_error= @filter.errors[:time_from]
           %span
             To
-            %input{ :type => 'text', :name => 'search[time_to]', :value => @search.time_to }/
-            - if attribute_error?(@search, :time_to)
-              .field_error= @search.errors[:time_to]
+            %input{ :type => 'text', :name => 'filter[time_to]', :value => @filter.time_to }/
+            - if attribute_error?(@filter, :time_to)
+              .field_error= @filter.errors[:time_to]
           .explanation
             For example, '1w 2d 5h 30m', where w = weeks, d = days, h = hours, m = minutes, If the field starts with a '-', it is treated as a time in the past, for example, '-1w 3d' is "10 days ago". An unset field denotes unbounded, so if from is blank, and to is -1d, this means "everything earlier than 1 day ago".
       %tr
         %th Before
-        %td{:class => class_for_attribute(@search,:time_before,'')}
-          %input{ :type => 'text', :name => 'search[time_before]', :value => @search.time_before }/
-          - if attribute_error?(@search, :time_before)
-            .field_error= @search.errors[:time_before]
+        %td{:class => class_for_attribute(@filter,:time_before,'')}
+          %input{ :type => 'text', :name => 'filter[time_before]', :value => @filter.time_before }/
+          - if attribute_error?(@filter, :time_before)
+            .field_error= @filter.errors[:time_before]
           .explanation YYYY-MM-DD HH:MM:SS
       %tr
         %th After
-        %td{:class => class_for_attribute(@search,:time_after,'')}
-          %input{ :type => 'text', :name => 'search[time_after]', :value => @search.time_after }/
-          - if attribute_error?(@search, :time_after)
-            .field_error= @search.errors[:time_after]
+        %td{:class => class_for_attribute(@filter,:time_after,'')}
+          %input{ :type => 'text', :name => 'filter[time_after]', :value => @filter.time_after }/
+          - if attribute_error?(@filter, :time_after)
+            .field_error= @filter.errors[:time_after]
           .explanation YYYY-MM-DD HH:MM:SS
     = dimension_footer(TimeDimension)
     %h4 Group By
@@ -95,20 +95,20 @@
       %tr
         %th Row
         %td{:class => class_for_attribute(@search,:row,'')}
-          = fk_select(:row, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+          = fk_select(:row, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels, :name => 'search')
           - if attribute_error?(@search, :row)
             .field_error= @search.errors[:row]
       %tr
         %th Column
         %td{:class => class_for_attribute(@search,:column,'')}
-          = fk_select(:column, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels)
+          = fk_select(:column, :any => false, :multiple => false, :size => 4, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels, :name => 'search')
           - if attribute_error?(@search, :column)
             .field_error= @search.errors[:column]
     %h4 Aggregation Function
     %table.search
       %tr
         %th Function
-        %td= fk_select(:function, :values => Search::FunctionFields)
+        %td= fk_select(:function, :values => Search::FunctionFields, :name => 'search')
     %ul.actions
       %li
         %button{:type => 'submit'} Search

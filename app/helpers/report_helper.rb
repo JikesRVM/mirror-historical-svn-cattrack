@@ -26,18 +26,18 @@ module ReportHelper
 
   def dimension_footer(dimension)
     show = false
-    Search::Fields.each do |f|
-      show = true if ((f.dimension == dimension) and not Search.is_empty?(@search, f.key))
+    Filter::Fields.each do |f|
+      show = true if ((f.dimension == dimension) and not Filter.is_empty?(@filter, f.key))
     end
 
     show ? '' : "<script type=\"text/javascript\">Element.hide('#{dimension_block_name(dimension)}')</script>"
   end
 
   def fk_select(key, options = {})
-    name = options[:name] ? options[:name] : 'search'
+    name = options[:name] ? options[:name] : 'filter'
     object = instance_variable_get("@#{name}")
 
-    selected = Search.is_empty?(object, key) ? ' selected="true"' : ''
+    selected = Filter.is_empty?(object, key) ? ' selected="true"' : ''
     is_multiple = (options[:multiple] and (options[:multiple] == true)) or (options[:multiple].nil? and options[:size])
     multiple = is_multiple ? " multiple=\"multiple\"" : ''
     name_suffix = is_multiple ? '[]' : ''
@@ -45,7 +45,7 @@ module ReportHelper
     str = "<select id=\"#{name}_#{key}\"#{multiple}#{size} name=\"#{name}[#{key}]#{name_suffix}\">"
     if options[:any]
       description = (options[:any] == true) ? 'Any' : options[:any]
-      str << draw_option('', Search.is_empty?(object, key), description)
+      str << draw_option('', Filter.is_empty?(object, key), description)
     end
     values = options[:values] ? options[:values] : instance_variable_get("@#{key.to_s.pluralize}")
     values.each do |v|
