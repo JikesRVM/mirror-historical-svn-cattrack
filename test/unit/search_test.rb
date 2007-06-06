@@ -138,11 +138,26 @@ class SearchTest < Test::Unit::TestCase
     joins = []
     Search.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(['time_dimensions.time > :time_from', 'time_dimensions.time < :time_to'], conditions)
-    assert_equal([TimeDimension], joins)
+    assert_equal([TimeDimension, TimeDimension], joins)
     assert_equal(2, cond_params.length)
     # just assert that entrys exist - too hard to verify
     # stuff already tested elsewhere
     assert(cond_params[:time_from])
+    assert(cond_params[:time_to])
+  end
+
+  def test_add_time_based_search_with_to
+    search = Search.new
+    search.time_to = '-0d'
+    conditions = []
+    cond_params = {}
+    joins = []
+    Search.add_time_based_search(search, conditions, cond_params, joins)
+    assert_equal(['time_dimensions.time < :time_to'], conditions)
+    assert_equal([TimeDimension], joins)
+    assert_equal(1, cond_params.length)
+    # just assert that entrys exist - too hard to verify
+    # stuff already tested elsewhere
     assert(cond_params[:time_to])
   end
 

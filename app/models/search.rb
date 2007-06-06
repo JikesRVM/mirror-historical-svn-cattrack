@@ -250,14 +250,15 @@ END_OF_SQL
         conditions << 'time_dimensions.time > :time_from'
         cond_params[:time_from] = from_time.strftime(TimeFormat)
         joins << TimeDimension
+      end
+    end
 
-        if not is_empty?(search, :time_to)
-          to_time = period_to_time(from_time, search.time_to)
-          if to_time
-            conditions << 'time_dimensions.time < :time_to'
-            cond_params[:time_to] = to_time.strftime(TimeFormat)
-          end
-        end
+    if not is_empty?(search, :time_to)
+      to_time = period_to_time(Time.now, search.time_to)
+      if to_time
+        conditions << 'time_dimensions.time < :time_to'
+        cond_params[:time_to] = to_time.strftime(TimeFormat)
+        joins << TimeDimension
       end
     end
   end
