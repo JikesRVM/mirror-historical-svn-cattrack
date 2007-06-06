@@ -115,25 +115,20 @@
     .clearer
 
 - if @results
-  - index, rows, columns, data = 0, @results.row_headers, @results.column_headers, @results.data
   %h1 Results
   %table.report
     %tr
       %th.pivot
-      - columns.each do |c|
+      - @results.column_headers.each do |c|
         %th.column= h(@results.column.label_for(c))
-    - 0.upto(rows.size - 1) do |r_index|
+    - @results.row_headers.each_with_index do |r,r_index|
       %tr
-        %th.row= h(@results.row.label_for(rows[r_index]))
-        - 0.upto(columns.size) do |c_index|
-          - if ((index < data.size) and (rows[r_index] == data[index]['row']) and (columns[c_index] == data[index]['column']))
-            %td= h(data[index]['value'])
-            - index += 1
-          - else
-            %td
+        %th.row= h(@results.row.label_for(r))
+        - 0.upto(@results.column_headers.size - 1) do |c_index|
+          %td= h(@results.tabular_data[r_index][c_index])
   %h1 Results
   %table.report
-    - data.each do |d|
+    - @results.data.each do |d|
       %tr
         - d.each_pair do |k,v|
           %td= h(v)

@@ -18,10 +18,40 @@ class ReportResultDataTest < Test::Unit::TestCase
     column = SearchField.new(TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
     data = [
     {'row' => 'prototype', 'column' => '1', 'value' => '1.0' },
-    {'row' => 'prototype-opt', 'column' => '2', 'value' => '1.0' },
+    {'row' => 'prototype-opt', 'column' => '2', 'value' => '2.1' },
     ]
-    d = ReportResultData.new(row,column,nil,data)
+    d = ReportResultData.new(row, column, nil, data)
     assert_equal( ['1', '2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
+    assert_equal( [['1.0', nil], [nil, '2.1']], d.tabular_data )
+  end
+
+  def test_larger_data_sets
+    row = SearchField.new(BuildConfigurationDimension, :name)
+    column = SearchField.new(TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    data = [
+    {'row' => 'prototype', 'column' => '1', 'value' => '1.0' },
+    {'row' => 'prototype', 'column' => '2', 'value' => '1.1' },
+    {'row' => 'prototype-opt', 'column' => '1', 'value' => '2.0' },
+    {'row' => 'prototype-opt', 'column' => '2', 'value' => '2.1' },
+    ]
+    d = ReportResultData.new(row, column, nil, data)
+    assert_equal( ['1', '2'], d.column_headers )
+    assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
+    assert_equal( [['1.0', '1.1'], ['2.0', '2.1']], d.tabular_data )
+
+    data = [
+    {'row' => 'prototype', 'column' => '1', 'value' => '1.0' },
+    {'row' => 'prototype', 'column' => '2', 'value' => nil },
+    {'row' => 'prototype', 'column' => '3', 'value' => nil },
+    {'row' => 'prototype', 'column' => '4', 'value' => '1.4' },
+    {'row' => 'prototype-opt', 'column' => '1', 'value' => '2.0' },
+    {'row' => 'prototype-opt', 'column' => '2', 'value' => '2.1' },
+    {'row' => 'prototype-opt', 'column' => '3', 'value' => '2.2' },
+    ]
+    d = ReportResultData.new(row, column, nil, data)
+    assert_equal( ['1', '2', '3', '4'], d.column_headers )
+    assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
+    assert_equal( [['1.0', nil, nil, '1.4'], ['2.0', '2.1', '2.2', nil]], d.tabular_data )
   end
 end

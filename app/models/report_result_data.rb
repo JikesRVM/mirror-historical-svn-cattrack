@@ -18,6 +18,25 @@ class ReportResultData
     calc_headers
   end
 
+  def tabular_data
+    unless @tabular_data
+      @tabular_data = []
+      index = 0
+      0.upto(row_headers.size - 1) do |r_index|
+        @tabular_data[r_index] = []
+        0.upto(column_headers.size - 1) do |c_index|
+          if ((index < @data.size) and (@row_headers[r_index] == @data[index]['row']) and (@column_headers[c_index] == @data[index]['column']))
+            @tabular_data[r_index][c_index] = @data[index]['value']
+            index += 1
+          else
+            @tabular_data[r_index][c_index] = nil
+          end
+        end
+      end
+    end
+    @tabular_data
+  end
+
   private
 
   def calc_headers
