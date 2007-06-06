@@ -53,6 +53,23 @@ class BuildRunTest < Test::Unit::TestCase
     assert_equal(false,BuildConfiguration.exists?(build_configuration.id))
   end
 
+  def test_remove_orphaned_build_configurations_does_not_remove_non_orphaned
+    build_configuration = BuildConfiguration.create!(:name => 'BC')
+    assert_equal(true,BuildConfiguration.exists?(build_configuration.id))
+    build_run = BuildRun.new(self.class.attributes_for_new)
+    build_run.build_configuration = build_configuration
+    build_run.save!
+
+    build_run = BuildRun.new(self.class.attributes_for_new)
+    build_run.build_configuration = build_configuration
+    build_run.save!
+
+    build_run.reload
+
+    build_run.destroy
+    assert_equal(true,BuildConfiguration.exists?(build_configuration.id))
+  end
+
   def self.attributes_for_new
     {:test_run_id => 1, :build_configuration_id => 3, :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
   end

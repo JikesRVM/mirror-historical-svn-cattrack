@@ -45,8 +45,8 @@ class BuildRun < ActiveRecord::Base
   private
 
   def remove_orphaned_build_configurations
-    build_configuration = BuildConfiguration.find(build_configuration_id)
-    build_configuration.destroy if build_configuration.build_runs.empty?
+    build_configuration = BuildConfiguration.find(:first, build_configuration_id)
+    build_configuration.destroy if (build_configuration and build_configuration.build_runs.empty?)
   end
 
   def update_output
