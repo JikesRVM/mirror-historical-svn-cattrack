@@ -20,7 +20,7 @@ class CreateFilters < ActiveRecord::Migration
 
     create_table :filter_params, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :filters
-      t.column :key, :string, :limit => 50, :null => false
+      t.column :key, :string, :limit => 75, :null => false
       t.column :value, :string, :limit => 256, :null => false
     end
     add_index :filter_params, [:owner_id, :key]
