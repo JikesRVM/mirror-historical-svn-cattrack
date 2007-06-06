@@ -12,6 +12,8 @@
 #
 class Filter < ActiveRecord::Base
   has_params :params
+  auto_validations :except => [:id, :description]
+  validates_length_of :description, :in => 0..256
 
   TimeFormat = '%Y-%m-%d %H:%M:%S'
 

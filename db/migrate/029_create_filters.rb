@@ -14,6 +14,7 @@ class CreateFilters < ActiveRecord::Migration
   def self.up
     create_table :filters do |t|
       t.column :name, :string, :limit => 75, :null => false
+      t.column :description, :string, :limit => 256, :null => false
     end
     add_index :filters, [:name], :unique => true
 

@@ -23,6 +23,7 @@ class SearchTest < Test::Unit::TestCase
   def test_to_sql2_with_no_filter
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
     search = Search.new
@@ -50,6 +51,7 @@ END_SQL
   def test_to_sql2_with_non_overlapping_filter
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.build_target_arch = 'ia32'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
@@ -78,6 +80,7 @@ END_SQL
   def test_to_sql2_with_filter_overlapping_column
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.time_week = 2
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
@@ -105,6 +108,7 @@ END_SQL
   def test_to_sql2_with_filter_overlapping_row
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.build_configuration_runtime_compiler = 'opt'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
@@ -132,6 +136,7 @@ END_SQL
   def test_to_sql2_with_filter_overlapping_column
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.time_week = 2
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
@@ -159,6 +164,7 @@ END_SQL
   def test_to_sql2_with_filter_overlapping_function
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.result_name = 'SUCCESS'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
@@ -186,6 +192,7 @@ END_SQL
   def test_perform_search
     filter = Filter.new
     filter.name = 'X'
+    filter.description = ''
     filter.result_name = 'SUCCESS'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 

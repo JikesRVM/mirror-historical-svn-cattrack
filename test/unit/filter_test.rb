@@ -21,27 +21,30 @@ class FilterTest < Test::Unit::TestCase
     filter = Filter.find(1)
     assert_equal( 1, filter.id )
     assert_equal( "Last Week", filter.name )
+    assert_equal( 'Filter out results not in last week', filter.description )
+
     assert_params_same({'time_from' => '-1w'}, filter.params)
 
     filter = Filter.find(2)
     assert_equal( 2, filter.id )
     assert_equal( "Core Configurations", filter.name )
+    assert_equal( '', filter.description )
     assert_equal(1, filter.params.size)
 
     assert_equal(["development", "production", "prototype", "prototype-opt"], filter.params['build_configuration_name'].sort)
   end
 
   def self.attributes_for_new
-    {:name => 'foo'}
+    {:name => 'foo', :description => ''}
   end
   def self.non_null_attributes
-    [:name]
+    [:name, :description]
   end
   def self.unique_attributes
     [[:name]]
   end
   def self.str_length_attributes
-    [[:name, 75]]
+    [[:name, 75],[:description,256]]
   end
 
   perform_basic_model_tests

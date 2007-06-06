@@ -13,6 +13,8 @@
 f1:
   id: 1
   name: 'Last Week'
+  description: 'Filter out results not in last week'
 f2:
   id: 2
   name: 'Core Configurations'
+  description: ''
