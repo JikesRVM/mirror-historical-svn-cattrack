@@ -18,7 +18,7 @@ class SearchField
     @name = name
     @dimension_name = dimension.name[0,dimension.name.length - 9]
     @key = "#{@dimension_name.tableize.singularize}_#{name}".to_sym
-    @options = {:any => true, :size => 4}
+    @options = {:any => true, :size => 4, :multiple => true}
     @options.merge!(options)
   end
 

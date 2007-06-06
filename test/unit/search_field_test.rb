@@ -19,9 +19,10 @@ class SearchFieldTest < Test::Unit::TestCase
     assert_equal( 'TestConfiguration', f.dimension_name )
     assert_equal( :name, f.name )
     assert_equal( :test_configuration_name, f.key )
-    assert_equal( 3, f.options.size )
+    assert_equal( 4, f.options.size )
     assert_equal( 4, f.options[:size] )
     assert_equal( true, f.options[:any] )
+    assert_equal( true, f.options[:multiple] )
     assert_equal( 'bar', f.options[:foo] )
   end
 
