@@ -32,7 +32,12 @@ class Params
   end
 
   def []=(key, value)
-    values[key] = value
+    if value.nil?
+      values.delete(key)
+    else
+      values[key] = value
+    end
+
     @modified = true
   end
 
