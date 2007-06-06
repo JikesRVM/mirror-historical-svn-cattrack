@@ -44,13 +44,32 @@
     %tr
       %th Session Count
       %td= CGI::Session::ActiveRecordStore::Session.count
+      %td.operations= link_to('Purge Stale', :action => 'purge_stale_sessions')
     %tr
       %th Session Timeout
       %td
         = SystemSetting['session.timeout'].to_i
         mins
+      %td.operations
   %h2 Application Settings
   %table
     %tr
       %th Temp Directory
       %td= SystemSetting['tmp.dir']
+  %h2 Historic Report Data
+  %table
+    %tr
+      %th Result Facts
+      %td= ResultFact.count(:conditions => 'source_id IS NULL')
+      %td.operations= link_to('Purge', :action => 'purge_historic_result_facts')
+    %tr
+      %th Statistic Facts
+      %td= StatisticFact.count(:conditions => 'source_id IS NULL')
+      %td.operations= link_to('Purge', :action => 'purge_historic_statistic_facts')
+    %tr
+      %th Orphan Dimensions
+      %td
+        %ul
+          - @orhpan_dimensions.each do |d|
+            %li= "#{d[0]}: #{d[1]}"
+      %td.operations= link_to('Purge', :action => 'purge_orphan_dimensions')

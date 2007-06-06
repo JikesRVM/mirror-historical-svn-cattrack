@@ -285,6 +285,7 @@ div.sysinfo table {
 }
 
 div.sysinfo table th {
+  vertical-align: top;
   width: 33%;
   background-color: rgb( 230, 223, 207 );
   font-weight: bold;
@@ -295,6 +296,12 @@ div.sysinfo table td, div.sysinfo table th {
   padding-top: 0.3em;
   padding-bottom: 0.3em;
   padding-right: 0.4em;
+}
+
+div.sysinfo table td.operations {
+  vertical-align: top;
+  width: 33%;
+  font-weight: bold;
 }
 
 /* Table */
