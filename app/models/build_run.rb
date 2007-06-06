@@ -20,6 +20,7 @@ class BuildRun < ActiveRecord::Base
   end
 
   after_save :update_output
+  after_destroy :remove_orphaned_build_configurations
 
   def output=(output)
     @output = output
@@ -42,6 +43,11 @@ class BuildRun < ActiveRecord::Base
   end
 
   private
+
+  def remove_orphaned_build_configurations
+    build_configuration = BuildConfiguration.find(build_configuration_id)
+    build_configuration.destroy if build_configuration.build_runs.empty?
+  end
 
   def update_output
     if @output_modified
