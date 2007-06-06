@@ -43,6 +43,8 @@ class ApplicationController < ActionController::Base
   # redirect unauthenticated user agent to login page when attempting to access resource requiring authentication
   def access_denied!
     if not is_authenticated?
+      cookies.delete :cattrack_admin
+      cookies.delete :cattrack_user
       render(:template => 'security/login_required', :status => 403)
     else
       render(:template => 'security/access_denied', :status => 403)
