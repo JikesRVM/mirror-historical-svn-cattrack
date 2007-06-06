@@ -73,6 +73,7 @@ class Filter < ActiveRecord::Base
       params[field.key.to_s]
     end
     define_method("#{field.key}=".to_sym) do |value|
+      value = nil if self.class.is_blank?(value)
       params[field.key.to_s] = value
     end
     case field.options[:type]
@@ -81,7 +82,9 @@ class Filter < ActiveRecord::Base
         record.errors.add(attr_name, 'should be properly formatted.') unless nil == value || value =~ PeriodRE
       end
     when :integer then
-      validates_numericality_of field.key, :allow_nil => true, :only_integer => true
+      validates_each field.key do |record, attr_name, value|
+        record.errors.add(attr_name, 'should be properly formatted.') unless nil == value || value =~ /\A[+-]?\d+\Z/
+      end
     when :date then
       validates_each field.key do |record, attr_name, value|
         record.errors.add(attr_name, 'should be properly formatted.') unless nil == value || value =~ DateRE
@@ -94,9 +97,12 @@ class Filter < ActiveRecord::Base
   end
 
   def self.is_empty?(object, field_symbol)
-    value = object.send(field_symbol)
+    is_blank?(object.send(field_symbol))
+  end
+
+  def self.is_blank?(value)
     value.blank? ||
-    ( value.instance_of?( Array ) && ( (value.include?( nil ) && value.size == 1) || (value.size == 0)) )
+    ( value.instance_of?( Array ) && ( (value.size == 1 and value[0].blank? ) || (value.size == 0)) )
   end
 
   protected

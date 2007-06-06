@@ -49,6 +49,18 @@ class FilterTest < Test::Unit::TestCase
 
   perform_basic_model_tests
 
+  def test_new_filter_with_blank_attributes
+    filter = Filter.new
+    filter.time_from = 'X'
+    assert_not_nil( filter.time_from )
+    filter.time_from = ''
+    assert_nil( filter.time_from )
+    filter.time_from = 'X'
+    assert_not_nil( filter.time_from )
+    filter.time_to = ['']
+    assert_nil( filter.time_to )
+  end
+
   def test_is_empty
     assert_equal(true, Filter.is_empty?(Filter.new(:host_name => nil), :host_name))
     assert_equal(true, Filter.is_empty?(Filter.new(:host_name => ''), :host_name))
