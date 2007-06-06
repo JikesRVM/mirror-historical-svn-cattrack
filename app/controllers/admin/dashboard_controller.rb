@@ -11,6 +11,7 @@
 #  regarding copyright ownership.
 #
 class Admin::DashboardController < Admin::BaseController
+  verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
   def index
   end
 end
