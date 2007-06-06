@@ -101,6 +101,8 @@ OrderedTables = [
 'test_run_dimensions',
 'result_facts',
 'statistic_facts',
+'filters',
+'filter_params',
 ]
 ActiveRecordClassNames = OrderedTables.collect {|t| t.camelize.singularize.constantize rescue nil }.compact.collect {|t| t.to_s}
 

@@ -37,7 +37,9 @@ class Params
   end
 
   def each_pair(&block)
-    values.each_pair do |k,v| block.call(k,v) end
+    values.each_pair do |k, v|
+      block.call(k, v)
+    end
   end
 
   def length
@@ -60,9 +62,17 @@ class Params
   def values(reload = false)
     if (reload or not @values)
       @values = {}
-      sql = "SELECT DISTINCT key, value FROM #{@table_name} WHERE owner_id = #{@owner.id}"
+      sql = "SELECT key, value FROM #{@table_name} WHERE owner_id = #{@owner.id}"
       @owner.connection.select_all(sql).each do |row|
-        @values[row['key']] = row['value']
+        key = row['key']
+        value = row['value']
+        if @values[key].nil?
+          @values[key] = value
+        elsif @values[key].is_a?(Array)
+          @values[key] << value
+        else
+          @values[key] = [@values[key], value]
+        end
       end unless @owner.new_record?
     end
     @values
@@ -72,10 +82,13 @@ class Params
     if @modified
       @owner.connection.execute("DELETE FROM #{@table_name} WHERE owner_id = #{@owner.id}")
       @values.each_pair do |k, v|
-        sql =
-        "INSERT INTO #{@table_name} (owner_id,key,value) " +
-        "VALUES (#{@owner.id},#{ActiveRecord::Base.quote_value(k)},#{ActiveRecord::Base.quote_value(v)})"
-        @owner.connection.execute(sql)
+        v = v.is_a?(Array) ? v : [v]
+        v.each do |value|
+          sql =
+          "INSERT INTO #{@table_name} (owner_id,key,value) " +
+          "VALUES (#{@owner.id},#{ActiveRecord::Base.quote_value(k)},#{ActiveRecord::Base.quote_value(value)})"
+          @owner.connection.execute(sql)
+        end
       end
     end
   end
