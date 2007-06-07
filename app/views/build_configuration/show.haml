@@ -1,5 +1,20 @@
 %h2= "Build Configuration: #{h(@record.name)}"
 
+%table.details
+  %tr
+    %th Test Configuration(s)
+    %td= @record.test_configurations.collect {|tc| link_for(tc)}.join(', ')
+  %tr
+    %th Result
+    %td= h(@record.result)
+  %tr
+    %th Running Time
+    %td= "#{h(@record.time)} ms"
+  %tr
+    %th Output
+    %td= link_to('...', :action => 'show_output', :id => @record)
+
+
 %h3 Configuration Parameters
 %table.details
   - @record.params.each_pair do |k,v|
