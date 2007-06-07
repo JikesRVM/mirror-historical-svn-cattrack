@@ -15,9 +15,9 @@
           %textarea{ :name => 'filter[description]', :rows => 5 , :cols => 40 }= @filter.description
           - if attribute_error?(@filter, :description)
             .field_error= @filter.errors[:description]
-    %hr
+    %hr/
     = render(:partial => 'form')
-    %hr
+    %hr/
     %ul.actions
       %li
         %button{:type => 'submit'} Save
