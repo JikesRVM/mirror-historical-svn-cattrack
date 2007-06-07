@@ -1,6 +1,7 @@
 %h1.page-title Edit Filter
 %form{:action => url_for(:action => 'edit', :id => @filter.id), :method => 'post' }
   %div
+    = render(:partial => 'errors')
     %table.search
       %tr
         %th Name

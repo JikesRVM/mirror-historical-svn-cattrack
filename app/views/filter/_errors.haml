@@ -1,0 +1,11 @@
+- if (@filter.errors and @filter.errors.count > 0)
+  .form_messages
+    %h4
+      = pluralize(@filter.errors.count, 'error')
+      with the filter parameters.
+    - if @filter.errors[:base]
+      - errors = @filter.errors[:base]
+      - errors = errors.is_a?(Array) ? errors : [errors]
+      %ul
+        - errors.each do |e|
+          %li= h(e)

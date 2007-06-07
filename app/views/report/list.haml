@@ -1,6 +1,7 @@
 %h1.page-title Search Parameters
 %form{:action => url_for(:action => 'list'), :method => 'get'}
   %div
+    = render(:partial => '/filter/errors')
     = render(:partial => '/filter/form')
     %h4 Group By
     %table.search
