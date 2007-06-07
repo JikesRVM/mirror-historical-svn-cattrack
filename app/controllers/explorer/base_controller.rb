@@ -10,6 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ReportHelper
-  include Explorer::FilterHelper
+class Explorer::BaseController < ApplicationController
+  self.force_no_cache
+
+  protected
+  def protect?
+    true
+  end
 end

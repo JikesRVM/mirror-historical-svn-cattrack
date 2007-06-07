@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module FilterHelper
+module Explorer::FilterHelper
   def dimension_name(dimension)
     dimension.name.tableize
   end

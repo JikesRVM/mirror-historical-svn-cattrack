@@ -10,20 +10,20 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
-require 'filter_controller'
+require File.dirname(__FILE__) + '/../../test_helper'
+require 'explorer/filter_controller'
 
-class FilterController
+class Explorer::FilterController
   # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
 end
 
-class FilterControllerTest < Test::Unit::TestCase
+class Explorer::FilterControllerTest < Test::Unit::TestCase
 
   def setup
-    @controller = FilterController.new
+    @controller = Explorer::FilterController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
@@ -94,24 +94,6 @@ class FilterControllerTest < Test::Unit::TestCase
     assert_equal(1, assigns(:filter).id)
     assert_equal('123', assigns(:filter).revision_after)
   end
-
-=begin
-  def test_edit
-    get :edit, :id => @first_id
-
-    assert_response :success
-    assert_template 'edit'
-
-    assert_not_nil assigns(:filter)
-    assert assigns(:filter).valid?
-  end
-
-  def test_update
-    post :update, :id => @first_id
-    assert_response :redirect
-    assert_redirected_to :action => 'show', :id => @first_id
-  end
-=end
 
   def test_destroy
     id = 1

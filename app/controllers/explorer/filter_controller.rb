@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class FilterController < ApplicationController
+class Explorer::FilterController < Explorer::BaseController
   verify :method => :get, :only => [:list], :redirect_to => {:action => :index}
   verify :method => :post, :only => [:destroy], :redirect_to => {:action => :index}
 
@@ -38,12 +38,6 @@ class FilterController < ApplicationController
     filter.destroy
     flash[:notice] = "Filter named '#{filter.name}' was successfully deleted."
     redirect_to(:action => 'list')
-  end
-
-  protected
-
-  def protect?
-    true
   end
 
   private
