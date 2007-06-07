@@ -10,15 +10,15 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class AddResultsDirSystemSetting < ActiveRecord::Migration
-  class SystemSetting < ActiveRecord::Base
-  end
-
-  def self.up
-    SystemSetting.create!(:name => 'results.dir', :value => "#{File.expand_path(RAILS_ROOT)}/results")
-    SystemSetting.find_by_name('tmp.dir').destroy
-  end
-
-  def self.down
-  end
-end
+b_1:
+  build_configuration_id: 1
+  output: 'Prototype build log here ...'
+b_2:
+  build_configuration_id: 2
+  output: 'Prototype-opt build log here ...'
+b_3:
+  build_configuration_id: 3
+  output: 'Prototype build log here ...'
+b_4:
+  build_configuration_id: 4
+  output: 'Prototype-opt build log here ... I failed!'

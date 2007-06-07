@@ -59,12 +59,12 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( '100', c.params['config.default-heapsize.maximum'])
     assert_equal( '', c.params['config.bootimage.compiler.args'])
     assert_equal( '0', c.params['config.stress-gc-interval'])
-    assert_equal( 111037, c.build_run.time )
-    assert_equal( 'SUCCESS', c.build_run.result )
-    assert_equal( true, c.build_run.output.include?('/target/prototype_ia32-linux/') )
+    assert_equal( 111037, c.time )
+    assert_equal( 'SUCCESS', c.result )
+    assert_equal( true, c.output.include?('/target/prototype_ia32-linux/') )
 
-    assert_equal( 1, c.build_run.test_configurations.size)
-    tc = c.build_run.test_configurations[0]
+    assert_equal( 1, c.test_configurations.size)
+    tc = c.test_configurations[0]
     assert_equal( 'prototype', tc.name)
     assert_equal( 2, tc.params.size)
     assert_equal( '', tc.params['mode'])
@@ -130,12 +130,12 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( '100', c.params['config.default-heapsize.maximum'])
     assert_equal( '', c.params['config.bootimage.compiler.args'])
     assert_equal( '0', c.params['config.stress-gc-interval'])
-    assert_equal( 78607, c.build_run.time )
-    assert_equal( 'SUCCESS', c.build_run.result )
-    assert_equal( true, c.build_run.output.include?('/target/prototype-opt_ia32-linux/') )
+    assert_equal( 78607, c.time )
+    assert_equal( 'SUCCESS', c.result )
+    assert_equal( true, c.output.include?('/target/prototype-opt_ia32-linux/') )
 
-    assert_equal( 1, c.build_run.test_configurations.size)
-    tc = c.build_run.test_configurations[0]
+    assert_equal( 1, c.test_configurations.size)
+    tc = c.test_configurations[0]
     assert_equal( 'prototype-opt', tc.name)
     assert_equal( 2, tc.params.size)
     assert_equal( '', tc.params['mode'])

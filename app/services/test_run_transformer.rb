@@ -23,7 +23,7 @@ class TestRunTransformer
       time = create_time(test_run.occured_at)
       test_run.build_configurations.each do |bc|
         build_configuration = create_build_configuration(bc)
-        bc.build_run.test_configurations.each do |tc|
+        bc.test_configurations.each do |tc|
           test_configuration = create_test_configuration(tc)
           tc.groups.each do |g|
             g.test_cases.each do |t|

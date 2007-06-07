@@ -14,15 +14,23 @@ bc1:
   id: 1
   test_run_id: 1
   name: prototype
+  result: 'SUCCESS'
+  time: 10323
 bc2:
   id: 2
   test_run_id: 1
   name: prototype-opt
+  result: 'SUCCESS'
+  time: 10401
 bc3:
   id: 3
   test_run_id: 2
   name: prototype
+  result: 'SUCCESS'
+  time: 12623
 bc4:
   id: 4
   test_run_id: 2
   name: prototype-opt
+  result: 'FAILURE'
+  time: 1023

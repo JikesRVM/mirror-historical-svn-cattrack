@@ -12,10 +12,42 @@
 #
 class BuildConfiguration < ActiveRecord::Base
   belongs_to :test_run
-  has_one :build_run
   has_params :params
+  has_many :test_configurations, :dependent => :destroy
+
+  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
+  validates_not_null :output
+  validates_positive :time
 
   def parent_node
     test_run
+  end
+
+  after_save :update_output
+
+  def output=(output)
+    @output = output
+    @output_modified = true
+  end
+
+  def output
+    if @output.nil?
+      if id
+      sql = "SELECT output FROM build_configuration_outputs WHERE build_configuration_id = #{self.id}"
+      @output = self.connection.select_value(sql)
+      @output_modified = false
+    end
+  end
+    @output
+  end
+
+  private
+
+  def update_output
+    if @output_modified
+      self.connection.execute("DELETE FROM build_configuration_outputs WHERE build_configuration_id = #{id}")
+      sql = "INSERT INTO build_configuration_outputs (build_configuration_id,output) VALUES (#{id},#{ActiveRecord::Base.quote_value(@output)})"
+      self.connection.execute(sql)
+    end
   end
 end

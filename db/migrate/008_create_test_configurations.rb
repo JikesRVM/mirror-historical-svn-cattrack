@@ -14,22 +14,22 @@ class CreateTestConfigurations < ActiveRecord::Migration
   def self.up
     create_table :test_configurations, :force => true do |t|
       t.column :name, :string, :limit => 75, :null => false
-      t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
-      t.column :build_run_id, :integer, :null => false, :on_delete => :cascade
+      t.column :build_configuration_id, :integer, :null => false
     end
-    add_index :test_configurations, [:name, :test_run_id], :unique => true
+    add_index :test_configurations, [:name, :build_configuration_id], :unique => true
     add_index :test_configurations, [:name]
-    add_index :test_configurations, [:test_run_id]
-    add_index :test_configurations, [:build_run_id]
+    add_index :test_configurations, [:build_configuration_id]
+    add_foreign_key :test_configurations, [:build_configuration_id], :build_configurations, [:id], :on_delete => :cascade
 
     create_table :test_configuration_params, :id => false, :force => true do |t|
-      t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :test_configurations
+      t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :string, :limit => 256, :null => false
     end
     add_index :test_configuration_params, [:owner_id, :key], :unique => true
     add_index :test_configuration_params, [:owner_id]
     add_index :test_configuration_params, [:owner_id, :key, :value]
+    add_foreign_key :test_configuration_params, [:owner_id], :test_configurations, [:id], :on_delete => :cascade
   end
 
   def self.down

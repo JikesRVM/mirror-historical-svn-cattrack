@@ -11,9 +11,6 @@
 #  regarding copyright ownership.
 #
 class CreateUsers < ActiveRecord::Migration
-  class User < ActiveRecord::Base
-  end
-
   def self.up
     create_table :users do |t|
       t.column :username, :string, :limit => 40, :null => false
@@ -21,18 +18,9 @@ class CreateUsers < ActiveRecord::Migration
       t.column :salt, :string, :limit => 40, :null => false
       t.column :admin, :boolean, :null => false
       t.column :active, :boolean, :null => false
-      t.column :uploader, :boolean, :null => false
     end
     add_index :users, [:username], :unique => true
     add_index :users, [:username, :password, :active]
-    user = User.new
-    user.username = 'upload_tool'
-    user.password = '*'
-    user.salt = '*'
-    user.admin = false
-    user.active = false
-    user.uploader = true
-    user.save!
   end
 
   def self.down

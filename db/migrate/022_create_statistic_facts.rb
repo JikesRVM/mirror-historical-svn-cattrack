@@ -26,6 +26,27 @@ class CreateStatisticFacts < ActiveRecord::Migration
 
       t.column :value, :float, :null => false
     end
+    add_index :statistic_facts, [:host_id]
+    add_index :statistic_facts, [:test_run_id]
+    add_index :statistic_facts, [:test_configuration_id]
+    add_index :statistic_facts, [:build_configuration_id]
+    add_index :statistic_facts, [:build_target_id]
+    add_index :statistic_facts, [:test_case_id]
+    add_index :statistic_facts, [:time_id]
+    add_index :statistic_facts, [:revision_id]
+    add_index :statistic_facts, [:source_id]
+    add_index :statistic_facts, [:statistic_id]
+
+    add_foreign_key :statistic_facts, [:host_id], :host_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:test_run_id], :test_run_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:test_configuration_id], :test_configuration_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:build_configuration_id], :build_configuration_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:build_target_id], :build_target_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:test_case_id], :test_case_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:time_id], :time_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:revision_id], :revision_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:statistic_id], :statistic_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:source_id], :test_cases, [:id], :on_delete => :set_null
   end
 
   def self.down

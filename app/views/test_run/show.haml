@@ -34,9 +34,9 @@
     %th Operations
   - @record.build_configurations.each do |bc|
     %tr
-      %td= h(bc.build_run.label)
-      %td= h(bc.build_run.result)
-      %td= link_to('Show', :controller => "/build_run", :action => 'show', :id => bc.build_run.id)
+      %td= h(bc.label)
+      %td= h(bc.result)
+      %td= link_to('Show', :controller => "/build_configuration", :action => 'show', :id => bc.id)
 
 %h3 Test Configurations
 %table.list
@@ -45,7 +45,7 @@
     %th Success Rate
     %th Operations
   - @record.build_configurations.each do |bc|
-    - bc.build_run.test_configurations.each do |tc|
+    - bc.test_configurations.each do |tc|
       %tr
         %td= h(tc.label)
         %td= "#{h(tc.successes.count)}/#{h(tc.test_cases.count)}"

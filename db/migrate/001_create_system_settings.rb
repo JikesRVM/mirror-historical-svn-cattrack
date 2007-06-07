@@ -25,7 +25,7 @@ class CreateSystemSettings < ActiveRecord::Migration
     SystemSetting.create!(:name => 'environment', :value => ENV['SELECTED_ENV'] || ENV['RAILS_ENV'] || RAILS_ENV)
     SystemSetting.create!(:name => 'minor.version', :value => '0')
     SystemSetting.create!(:name => 'session.timeout', :value => '20')
-    SystemSetting.create!(:name => 'tmp.dir', :value => "#{File.expand_path(RAILS_ROOT)}/tmp/cattrack")
+    SystemSetting.create!(:name => 'results.dir', :value => "#{File.expand_path(RAILS_ROOT)}/results")
   end
 
   def self.down

@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class TestConfiguration < ActiveRecord::Base
-  belongs_to :build_run
+  belongs_to :build_configuration
   has_many :groups, :dependent => :destroy
   has_params :params
 
@@ -36,6 +36,6 @@ class TestConfiguration < ActiveRecord::Base
   test_case_rel :test_cases
 
   def parent_node
-    build_run.build_configuration.test_run
+    build_configuration.test_run
   end
 end

@@ -13,11 +13,12 @@
 class CreateTestRunDimensions < ActiveRecord::Migration
   def self.up
     create_table :test_run_dimensions do |t|
-      t.column :source_id, :integer, :null => true, :on_delete => :set_null, :references => :test_cases
+      t.column :source_id, :integer, :null => true
       t.column :name, :string, :limit => 75, :null => false
     end
     add_index :test_run_dimensions, [:name]
     add_index :test_run_dimensions, [:source_id]
+    add_foreign_key :test_run_dimensions, [:source_id], :test_cases, [:id], :on_delete => :set_null
   end
 
   def self.down

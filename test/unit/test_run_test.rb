@@ -31,8 +31,7 @@ class TestRunTest < Test::Unit::TestCase
     assert_equal( 1, test_run.host.id )
     assert_equal( 1, test_run.build_target.id )
 
-    #assert_equal( [1, 2, 3], test_run.test_configurations.collect{|tc| tc.id}.sort )
-    #assert_equal( [1, 2], test_run.build_run_ids.sort )
+    assert_equal( [1, 2], test_run.build_configurations.collect{|bc| bc.id}.sort )
 
     # force both count and finder sqls ==> size + find
     #

@@ -19,6 +19,7 @@ class CreateBuildTargets < ActiveRecord::Migration
     add_index :build_targets, [:test_run_id], :unique => true
     add_index :build_targets, [:test_run_id, :name]
     add_index :build_targets, [:name]
+    add_foreign_key :build_targets, [:test_run_id], :test_runs, [:id], :on_delete => :cascade
 
     create_table :build_target_params, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :build_targets
@@ -28,6 +29,8 @@ class CreateBuildTargets < ActiveRecord::Migration
     add_index :build_target_params, [:owner_id, :key], :unique => true
     add_index :build_target_params, [:owner_id]
     add_index :build_target_params, [:owner_id, :key, :value]
+    add_foreign_key :build_target_params, [:owner_id], :build_targets, [:id], :on_delete => :cascade
+
   end
 
   def self.down

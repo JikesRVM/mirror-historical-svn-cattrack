@@ -14,16 +14,19 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class BuildConfigurationTest < Test::Unit::TestCase
   def test_label
-    assert_equal( 'prototype', build_configurations(:bc1).label )
+    assert_equal( BuildConfiguration.find(1).name, BuildConfiguration.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(build_configurations(:bc1),TestRun,1)
+    assert_parent_node(BuildConfiguration.find(1),TestRun,1)
   end
 
   def test_basic_load
-    bc = build_configurations(:bc1)
+    bc = BuildConfiguration.find(1)
     assert_equal( "prototype", bc.name )
+    assert_equal( "SUCCESS", bc.result )
+    assert_equal( 10323, bc.time )
+    assert_equal( "Prototype build log here ...", bc.output )
     prototype_params =
     {
     'config.name' => 'prototype',
@@ -46,12 +49,21 @@ class BuildConfigurationTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:test_run_id => 1, :name => 'foooish!'}
+    {:test_run_id => 1, :name => 'foooish!', :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
   end
   def self.non_null_attributes
-    [:name]
+    [:name, :result, :time, :output]
+  end
+  def self.bad_attributes
+    [[:time, -1],[:result, 'Foo']]
   end
 
   perform_basic_model_tests
 
+  def test_new_with_output
+    bc = BuildConfiguration.new(self.class.attributes_for_new)
+    bc.save!
+    bc = BuildConfiguration.find(bc.id)
+    assert_equal( 'foooish!', bc.output )
+  end
 end

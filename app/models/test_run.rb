@@ -19,8 +19,7 @@ class TestRun < ActiveRecord::Base
    SELECT test_cases.*
    FROM test_runs
    LEFT OUTER JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
-   LEFT OUTER JOIN build_runs ON build_runs.build_configuration_id = build_configurations.id
-   LEFT OUTER JOIN test_configurations ON test_configurations.build_run_id = build_runs.id
+   LEFT OUTER JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
    LEFT OUTER JOIN groups ON groups.test_configuration_id = test_configurations.id
    LEFT OUTER JOIN test_cases ON test_cases.group_id = groups.id
    WHERE test_runs.id = \#{id}

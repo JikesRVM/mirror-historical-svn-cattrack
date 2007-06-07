@@ -32,13 +32,22 @@ class BuildConfigurationControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    id = 1
-    get(:show, {:id => id}, session_data)
+    get(:show, {:id => 1}, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
     assert_not_nil(assigns(:record))
-    assert_equal(id, assigns(:record).id)
+    assert_equal(1, assigns(:record).id)
+  end
+
+  def test_show_output
+    get(:show_output, {:id => 1}, session_data)
+    assert_response(:success)
+    assert_template(nil)
+    assert_equal('text/plain; charset=utf-8', @response.headers['Content-Type'])
+    assert_equal('Prototype build log here ...', @response.body)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
   end
 end
