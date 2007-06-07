@@ -539,8 +539,8 @@ table.search td select {
   margin: 0.2em;
 }
 
-table.search td input, table.search td select {border: 1px solid black;}
-table.search td.error input, table.search td.error select {border: 1px solid red;}
+table.search td input, table.search td select, table.search td textarea {border: 1px solid black;}
+table.search td.error input, table.search td.error select, table.search td.error textarea {border: 1px solid red;}
 
 table.search .field_error {
   color: red;

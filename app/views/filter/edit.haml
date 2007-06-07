@@ -1,0 +1,22 @@
+%h1.page-title Edit Filter
+%form{:action => url_for(:action => 'edit', :id => @filter.id), :method => 'post' }
+  %div
+    %table.search
+      %tr
+        %th Name
+        %td{:class => class_for_attribute(@filter,:name,'')}
+          %input{ :type => 'text', :name => 'filter[name]', :value => @filter.name }/
+          - if attribute_error?(@filter, :name)
+            .field_error= @filter.errors[:name]
+      %tr
+        %th Description
+        %td{:class => class_for_attribute(@filter,:description,'')}
+          %textarea{ :name => 'filter[description]', :rows => 5 , :cols => 40 }= @filter.description
+          - if attribute_error?(@filter, :description)
+            .field_error= @filter.errors[:description]
+    = render(:partial => 'form')
+    %ul.actions
+      %li
+        %button{:type => 'submit'} Save
+      %li= link_to('Cancel', :action => 'list')
+    .clearer
