@@ -75,7 +75,6 @@ require 'digest/sha1' # used when hashing passwords
 require 'active_record_ext' # My custom extension to ar for labels etc
 require 'param_helper' # For custom has_params extension
 require 'rexml/document' # For parsing uploaded xml files
-require 'tempfile' # Used when processing uploaded xml files
 
 OrderedTables = [
 'system_settings',
@@ -100,13 +99,14 @@ OrderedTables = [
 'test_run_dimensions',
 'result_facts',
 'statistic_facts',
-'filters',
-'filter_params',
+'filters', 'filter_params',
+'summarizers',
 ]
+
 import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")
 import_logger.level = (RAILS_ENV == 'production') ? Logger::INFO : Logger::DEBUG
-TestRunImporter.logger = import_logger
 
+TestRunImporter.logger = import_logger
 TestRunBuilder.logger = import_logger
 
 LocalConfig = File.join(File.dirname(__FILE__), 'local')

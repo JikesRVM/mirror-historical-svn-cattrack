@@ -1,0 +1,47 @@
+#
+#  This file is part of the Jikes RVM project (http://jikesrvm.org).
+#
+#  This file is licensed to You under the Common Public License (CPL);
+#  You may not use this file except in compliance with the License. You
+#  may obtain a copy of the License at
+#
+#      http://www.opensource.org/licenses/cpl1.0.php
+#
+#  See the COPYRIGHT.txt file distributed with this work for information
+#  regarding copyright ownership.
+#
+class Summarizer < ActiveRecord::Base
+  auto_validations :except => [:id, :description]
+
+  DimensionField = Struct.new('DimensionField', :id, :label, :sql, :dimension)
+
+  def self.dimension(field)
+    label = "#{field.dimension_name.tableize.humanize}/#{field.name.to_s.humanize}"
+    sql = "#{field.dimension.table_name}.#{field.name}"
+    DimensionField.new(field.key,label,sql,field.dimension)
+  end
+
+  DimensionFields = Filter::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| dimension(f)}
+  DimensionMap = {}
+  DimensionFields.each {|d| DimensionMap[d.id.to_s] = d}
+  ValidDimensionFieldIds = DimensionFields.collect {|o| o.id.to_s}
+
+  FunctionField = Struct.new('FunctionField', :id, :label, :sql, :dimensions)
+  FunctionFields = [
+  FunctionField.new('success_rate', 'Success Rate', "CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('non_success_rate', 'Non-success Rate', "CAST(count(case when result_dimensions.name = 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('failure_rate', 'Failure Rate', "CAST(count(case when result_dimensions.name != 'FAILURE' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('overtime_rate', 'Overtime Rate', "CAST(count(case when result_dimensions.name != 'OVERTIME' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  FunctionField.new('excluded_rate', 'Excluded Rate', "CAST(count(case when result_dimensions.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
+  ]
+  ValidFunctionFieldIds = FunctionFields.collect {|o| o.id}
+
+  validates_inclusion_of :function, :in => ValidFunctionFieldIds
+  validates_inclusion_of :primary_dimension, :in => ValidDimensionFieldIds
+  validates_inclusion_of :secondary_dimension, :in => ValidDimensionFieldIds
+  validates_length_of :description, :in => 0..256
+
+  validates_each(:primary_dimension, :secondary_dimension) do |record, attr, value|
+    record.errors.add(attr, 'primary and secondary dimensions can not be the same.') if (not record.primary_dimension.nil? and record.primary_dimension == record.secondary_dimension)
+  end
+end
