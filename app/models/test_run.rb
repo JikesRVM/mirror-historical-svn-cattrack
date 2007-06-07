@@ -13,19 +13,20 @@
 class TestRun < ActiveRecord::Base
   belongs_to :host
   has_one :build_target, :dependent => :destroy
-  has_many :build_runs, :dependent => :destroy
-  has_many :test_configurations, :through => :build_runs
+  has_many :build_configurations, :dependent => :destroy
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*
    FROM test_runs
-   LEFT OUTER JOIN test_configurations ON test_configurations.test_run_id = test_runs.id
-   LEFT OUTER JOIN build_runs ON build_runs.id = test_configurations.build_run_id
-   LEFT OUTER JOIN build_configurations ON build_configurations.id = build_runs.build_configuration_id
+   LEFT OUTER JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
+   LEFT OUTER JOIN build_runs ON build_runs.build_configuration_id = build_configurations.id
+   LEFT OUTER JOIN test_configurations ON test_configurations.build_run_id = build_runs.id
    LEFT OUTER JOIN groups ON groups.test_configuration_id = test_configurations.id
    LEFT OUTER JOIN test_cases ON test_cases.group_id = groups.id
    WHERE test_runs.id = \#{id}
   END_SQL
+
+
 
   def self.test_case_rel(name, sql = nil)
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql

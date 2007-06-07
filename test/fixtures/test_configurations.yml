@@ -13,26 +13,21 @@
 tc1_1:
   id: 1
   name: 'prototype'
-  test_run_id: 1
   build_run_id: 1
 tc1_2:
   id: 2
   name: 'prototype_V2'
-  test_run_id: 1
   build_run_id: 1
 tc1_3:
   id: 3
   name: 'prototype-opt'
-  test_run_id: 1
   build_run_id: 2
 
 tc2_1:
   id: 4
   name: 'prototype'
-  test_run_id: 2
   build_run_id: 3
 tc2_2:
   id: 5
   name: 'prototype-opt'
-  test_run_id: 2
   build_run_id: 4

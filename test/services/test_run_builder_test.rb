@@ -41,128 +41,119 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( '0x5E000000', test_run.build_target.params['target.bootimage.rmap.address'])
     assert_equal( '0xb0000000', test_run.build_target.params['target.max-mappable.address'])
 
-    assert_equal( 2, test_run.build_runs.size )
-    test_run.build_runs.each do |br|
-      if br.build_configuration.name == 'prototype'
-        assert_equal( 111037, br.time )
-        assert_equal( 'SUCCESS', br.result )
-        assert_equal( true, br.output.include?('/target/prototype_ia32-linux/') )
+    assert_equal( 2, test_run.build_configurations.size )
+
+    c = test_run.build_configurations[0]
+    assert_equal( 'prototype', c.name )
+    assert_equal( 13, c.params.size)
+    assert_equal( 'base', c.params['config.runtime.compiler'])
+    assert_equal( 'base', c.params['config.bootimage.compiler'])
+    assert_equal( 'org.mmtk.plan.generational.marksweep.GenMS', c.params['config.mmtk.plan'])
+    assert_equal( 'false', c.params['config.include.aos'])
+    assert_equal( 'false', c.params['config.include.gcspy'])
+    assert_equal( '${config.include.gcspy-stub}', c.params['config.include.gcspy-stub'])
+    assert_equal( '1', c.params['config.include.gcspy-client'])
+    assert_equal( 'false', c.params['config.include.all-classes'])
+    assert_equal( 'normal', c.params['config.assertions'])
+    assert_equal( '20', c.params['config.default-heapsize.initial'])
+    assert_equal( '100', c.params['config.default-heapsize.maximum'])
+    assert_equal( '', c.params['config.bootimage.compiler.args'])
+    assert_equal( '0', c.params['config.stress-gc-interval'])
+    assert_equal( 111037, c.build_run.time )
+    assert_equal( 'SUCCESS', c.build_run.result )
+    assert_equal( true, c.build_run.output.include?('/target/prototype_ia32-linux/') )
+
+    assert_equal( 1, c.build_run.test_configurations.size)
+    tc = c.build_run.test_configurations[0]
+    assert_equal( 'prototype', tc.name)
+    assert_equal( 2, tc.params.size)
+    assert_equal( '', tc.params['mode'])
+    assert_equal( '', tc.params['extra.args'])
+    assert_equal( 2, tc.groups.size )
+    tc.groups.each do |g|
+      if g.name == 'basic'
+        assert_equal( 'basic', g.name )
+        assert_equal( 49, g.test_cases.size )
+        assert_equal( 45, g.successes.size )
+        assert_equal( 3, g.failures.size )
+        assert_equal( 1, g.excludes.size )
+
+        test_case = nil
+        g.test_cases.each { |tc| test_case = tc if tc.name == 'ImageSizes' }
+        assert_not_nil(test_case)
+        test_case = TestCase.find(test_case.id)
+        assert_equal( 'ImageSizes', test_case.name )
+        assert_equal( 'SUCCESS', test_case.result )
+        assert_equal( 0, test_case.exit_code )
+        assert_equal( 446, test_case.time )
+        assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
+        assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.args )
+        assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic', test_case.working_directory )
+        assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms20M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.command )
+        assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case.output )
+
+        assert_equal( 6, test_case.params.size)
+        assert_equal( '20', test_case.params['initial.heapsize'])
+        assert_equal( '150', test_case.params['max.heapsize'])
+        assert_equal( '400', test_case.params['time.limit'])
+        assert_equal( '', test_case.params['extra.args'])
+        assert_equal( 'all', test_case.params['processors'])
+        assert_equal( '', test_case.params['max.opt.level'])
+
+        assert_equal( 4, test_case.statistics.size)
+        assert_equal( '2938156', test_case.statistics['code.size'])
+        assert_equal( '14243924', test_case.statistics['data.size'])
+        assert_equal( '329907', test_case.statistics['rmap.size'])
+        assert_equal( '17511987', test_case.statistics['total.size'])
       else
-        assert_equal( 78607, br.time )
-        assert_equal( 'SUCCESS', br.result )
-        assert_equal( true, br.output.include?('/target/prototype-opt_ia32-linux/') )
+        assert_equal( 'opttests', g.name )
+        assert_equal( 1, g.test_cases.size )
+        assert_equal( 1, g.successes.size )
+        assert_equal( 0, g.failures.size )
+        assert_equal( 0, g.excludes.size )
       end
     end
 
-    configs = test_run.build_runs.collect {|br| br.build_configuration}
-    assert_equal( 2, configs.size )
-    configs.each do |c|
-      if c.name == 'prototype'
-        assert_equal( 'prototype', c.name )
-        assert_equal( 13, c.params.size)
-        assert_equal( 'base', c.params['config.runtime.compiler'])
-        assert_equal( 'base', c.params['config.bootimage.compiler'])
-        assert_equal( 'org.mmtk.plan.generational.marksweep.GenMS', c.params['config.mmtk.plan'])
-        assert_equal( 'false', c.params['config.include.aos'])
-        assert_equal( 'false', c.params['config.include.gcspy'])
-        assert_equal( '${config.include.gcspy-stub}', c.params['config.include.gcspy-stub'])
-        assert_equal( '1', c.params['config.include.gcspy-client'])
-        assert_equal( 'false', c.params['config.include.all-classes'])
-        assert_equal( 'normal', c.params['config.assertions'])
-        assert_equal( '20', c.params['config.default-heapsize.initial'])
-        assert_equal( '100', c.params['config.default-heapsize.maximum'])
-        assert_equal( '', c.params['config.bootimage.compiler.args'])
-        assert_equal( '0', c.params['config.stress-gc-interval'])
+    c = test_run.build_configurations[1]
+    assert_equal( 'prototype-opt', c.name )
+    assert_equal( 13, c.params.size)
+    assert_equal( 'opt', c.params['config.runtime.compiler'])
+    assert_equal( 'base', c.params['config.bootimage.compiler'])
+    assert_equal( 'org.mmtk.plan.generational.marksweep.GenMS', c.params['config.mmtk.plan'])
+    assert_equal( 'true', c.params['config.include.aos'])
+    assert_equal( 'false', c.params['config.include.gcspy'])
+    assert_equal( '${config.include.gcspy-stub}', c.params['config.include.gcspy-stub'])
+    assert_equal( '1', c.params['config.include.gcspy-client'])
+    assert_equal( 'false', c.params['config.include.all-classes'])
+    assert_equal( 'normal', c.params['config.assertions'])
+    assert_equal( '50', c.params['config.default-heapsize.initial'])
+    assert_equal( '100', c.params['config.default-heapsize.maximum'])
+    assert_equal( '', c.params['config.bootimage.compiler.args'])
+    assert_equal( '0', c.params['config.stress-gc-interval'])
+    assert_equal( 78607, c.build_run.time )
+    assert_equal( 'SUCCESS', c.build_run.result )
+    assert_equal( true, c.build_run.output.include?('/target/prototype-opt_ia32-linux/') )
+
+    assert_equal( 1, c.build_run.test_configurations.size)
+    tc = c.build_run.test_configurations[0]
+    assert_equal( 'prototype-opt', tc.name)
+    assert_equal( 2, tc.params.size)
+    assert_equal( '', tc.params['mode'])
+    assert_equal( '', tc.params['extra.args'])
+    assert_equal( 2, tc.groups.size )
+    tc.groups.each do |g|
+      if g.name == 'basic'
+        assert_equal( 'basic', g.name )
+        assert_equal( 49, g.test_cases.size )
+        assert_equal( 45, g.successes.size )
+        assert_equal( 3, g.failures.size )
+        assert_equal( 1, g.excludes.size )
       else
-        assert_equal( 'prototype-opt', c.name )
-        assert_equal( 13, c.params.size)
-        assert_equal( 'opt', c.params['config.runtime.compiler'])
-        assert_equal( 'base', c.params['config.bootimage.compiler'])
-        assert_equal( 'org.mmtk.plan.generational.marksweep.GenMS', c.params['config.mmtk.plan'])
-        assert_equal( 'true', c.params['config.include.aos'])
-        assert_equal( 'false', c.params['config.include.gcspy'])
-        assert_equal( '${config.include.gcspy-stub}', c.params['config.include.gcspy-stub'])
-        assert_equal( '1', c.params['config.include.gcspy-client'])
-        assert_equal( 'false', c.params['config.include.all-classes'])
-        assert_equal( 'normal', c.params['config.assertions'])
-        assert_equal( '50', c.params['config.default-heapsize.initial'])
-        assert_equal( '100', c.params['config.default-heapsize.maximum'])
-        assert_equal( '', c.params['config.bootimage.compiler.args'])
-        assert_equal( '0', c.params['config.stress-gc-interval'])
-      end
-    end
-    assert_equal( 2, test_run.test_configurations.size )
-    test_run.test_configurations.each do |tc|
-      if tc.name == 'prototype'
-        assert_equal( 'prototype', tc.name)
-        assert_equal( 2, tc.params.size)
-        assert_equal( '', tc.params['mode'])
-        assert_equal( '', tc.params['extra.args'])
-        assert_equal( 2, tc.groups.size )
-        tc.groups.each do |g|
-          if g.name == 'basic'
-            assert_equal( 'basic', g.name )
-            assert_equal( 49, g.test_cases.size )
-            assert_equal( 45, g.successes.size )
-            assert_equal( 3, g.failures.size )
-            assert_equal( 1, g.excludes.size )
-
-            test_case = nil
-            g.test_cases.each { |tc| test_case = tc if tc.name == 'ImageSizes' }
-            assert_not_nil(test_case)
-            test_case = TestCase.find(test_case.id)
-            assert_equal( 'ImageSizes', test_case.name )
-            assert_equal( 'SUCCESS', test_case.result )
-            assert_equal( 0, test_case.exit_code )
-            assert_equal( 446, test_case.time )
-            assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
-            assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.args )
-            assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic', test_case.working_directory )
-            assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms20M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.command )
-            assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case.output )
-
-            assert_equal( 6, test_case.params.size)
-            assert_equal( '20', test_case.params['initial.heapsize'])
-            assert_equal( '150', test_case.params['max.heapsize'])
-            assert_equal( '400', test_case.params['time.limit'])
-            assert_equal( '', test_case.params['extra.args'])
-            assert_equal( 'all', test_case.params['processors'])
-            assert_equal( '', test_case.params['max.opt.level'])
-
-            assert_equal( 4, test_case.statistics.size)
-            assert_equal( '2938156', test_case.statistics['code.size'])
-            assert_equal( '14243924', test_case.statistics['data.size'])
-            assert_equal( '329907', test_case.statistics['rmap.size'])
-            assert_equal( '17511987', test_case.statistics['total.size'])
-          else
-            assert_equal( 'opttests', g.name )
-            assert_equal( 1, g.test_cases.size )
-            assert_equal( 1, g.successes.size )
-            assert_equal( 0, g.failures.size )
-            assert_equal( 0, g.excludes.size )
-          end
-        end
-      else
-        assert_equal( 'prototype-opt', tc.name)
-        assert_equal( 2, tc.params.size)
-        assert_equal( '', tc.params['mode'])
-        assert_equal( '', tc.params['extra.args'])
-        assert_equal( 2, tc.groups.size )
-        tc.groups.each do |g|
-          if g.name == 'basic'
-            assert_equal( 'basic', g.name )
-            assert_equal( 49, g.test_cases.size )
-            assert_equal( 45, g.successes.size )
-            assert_equal( 3, g.failures.size )
-            assert_equal( 1, g.excludes.size )
-          else
-            assert_equal( 'opttests', g.name )
-            assert_equal( 1, g.test_cases.size )
-            assert_equal( 1, g.successes.size )
-            assert_equal( 0, g.failures.size )
-            assert_equal( 0, g.excludes.size )
-          end
-        end
+        assert_equal( 'opttests', g.name )
+        assert_equal( 1, g.test_cases.size )
+        assert_equal( 1, g.successes.size )
+        assert_equal( 0, g.failures.size )
+        assert_equal( 0, g.excludes.size )
       end
     end
   end

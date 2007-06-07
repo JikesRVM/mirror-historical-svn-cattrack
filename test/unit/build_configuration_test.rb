@@ -18,7 +18,7 @@ class BuildConfigurationTest < Test::Unit::TestCase
   end
 
   def test_parent_node
-    assert_parent_node(build_configurations(:bc1),TestRun,2)
+    assert_parent_node(build_configurations(:bc1),TestRun,1)
   end
 
   def test_basic_load
@@ -46,7 +46,7 @@ class BuildConfigurationTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foooish!'}
+    {:test_run_id => 1, :name => 'foooish!'}
   end
   def self.non_null_attributes
     [:name]

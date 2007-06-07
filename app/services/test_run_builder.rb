@@ -38,14 +38,14 @@ class TestRunBuilder
         test_run_id = test_run.id
         test_run = nil
 
-        configs = build_build_configurations(xml)
-        build_runs = build_build_runs(xml, test_run_id, configs)
+        configs = build_build_configurations(xml, test_run_id)
+        build_runs = build_build_runs(xml, configs)
         configs = nil
         build_build_target(xml, test_run_id)
 
         logger.debug("TestRun #{test_run_name} contains #{build_runs.size} build runs. Starting to process test configurations.")
 
-        build_test_configurations(xml, test_run_id, build_runs)
+        build_test_configurations(xml, build_runs)
 
         TestRun.find(test_run_id)
       rescue Object => e
@@ -72,7 +72,7 @@ class TestRunBuilder
     save!(build_target)
   end
 
-  def self.build_build_configurations(xml)
+  def self.build_build_configurations(xml, test_run_id)
     configs = {}
     xml.elements.each('/report/configuration') do |c_xml|
       build_configuration_name = c_xml.elements['id'].text
@@ -80,6 +80,7 @@ class TestRunBuilder
       c_xml.elements.each("parameters/parameter[@key != 'config.name']") do |p_xml|
         build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
       end
+      build_configuration.test_run_id = test_run_id
       save!(build_configuration)
       configs[build_configuration_name] = build_configuration.id
     end
@@ -87,31 +88,23 @@ class TestRunBuilder
     configs
   end
 
-  def self.build_build_runs(xml, test_run_id, configs)
+  def self.build_build_runs(xml, configs)
     build_runs = {}
     xml.elements.each('/report/builds/build') do |b_xml|
       build_run = BuildRun.new
       configuration_name = b_xml.elements['configuration'].text
-      if configs[configuration_name].nil?
-        #TODO: Hackity hack - build failed and our current report format does not
-        # include information regarding build configuration properties so we just
-        # look for an existing build with the same name
-        build_run.build_configuration = BuildConfiguration.find_by_name(configuration_name)
-      else
-        build_run.build_configuration_id = configs[configuration_name]
-      end
+      build_run.build_configuration_id = configs[configuration_name]
       raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_run.build_configuration_id
       build_run.time = b_xml.elements['time'].text.to_i
       build_run.result = b_xml.elements['result'].text
       build_run.output = b_xml.elements['output'].text
-      build_run.test_run_id = test_run_id
       save!(build_run)
       build_runs[build_run.build_configuration.name] = build_run.id
     end
     build_runs
   end
 
-  def self.build_test_configurations(xml, test_run_id, build_runs)
+  def self.build_test_configurations(xml, build_runs)
     xml.elements.each('/report/configuration') do |c_xml|
       build_run_name = c_xml.elements['id'].text
       build_run_id = build_runs[build_run_name]
@@ -121,7 +114,6 @@ class TestRunBuilder
         logger.debug("Processing test configuration for '#{test_configuration_name}' built with '#{build_run_name}'.")
 
         test_configuration = TestConfiguration.new
-        test_configuration.test_run_id = test_run_id
         test_configuration.build_run_id = build_run_id
         test_configuration.name = test_configuration_name
         tc_xml.elements.each("parameters/parameter") do |p_xml|

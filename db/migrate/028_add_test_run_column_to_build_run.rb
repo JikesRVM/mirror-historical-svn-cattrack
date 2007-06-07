@@ -18,22 +18,24 @@ class AddTestRunColumnToBuildRun < ActiveRecord::Migration
   end
 
   def self.up
-    add_column(:build_runs, :test_run_id, :integer, :default => -1, :null => false, :references => nil)
-    BuildRun.reset_column_information
+    ActiveRecord::Base.transaction do
+      add_column(:build_runs, :test_run_id, :integer, :default => -1, :null => false, :references => nil)
+      BuildRun.reset_column_information
 
-    BuildRun.find(:all).each do |b|
-      tc = TestConfiguration.find_by_build_run_id(b.id)
-      if tc
-        b.test_run_id = tc.test_run_id
-        b.save!
-      else
-        b.destroy
+      BuildRun.find(:all).each do |b|
+        tc = TestConfiguration.find_by_build_run_id(b.id)
+        if tc
+          b.test_run_id = tc.test_run_id
+          b.save!
+        else
+          b.destroy
+        end
       end
+      add_foreign_key(:build_runs, :test_run_id, :test_runs, :id, :on_delete => :cascade)
     end
-    add_foreign_key(:build_runs, :test_run_id, :test_runs, :id, :on_delete => :cascade)
   end
 
   def self.down
-    remove_column(:build_runs, :test_run_id)
+    #remove_column(:build_runs, :test_run_id)
   end
 end

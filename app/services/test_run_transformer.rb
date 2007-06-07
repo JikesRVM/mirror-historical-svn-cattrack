@@ -21,12 +21,14 @@ class TestRunTransformer
       revision = RevisionDimension.find_or_create_by_revision(test_run.revision)
 
       time = create_time(test_run.occured_at)
-      test_run.test_configurations.each do |tc|
-        test_configuration = create_test_configuration(tc)
-        build_configuration = create_build_configuration(tc.build_run.build_configuration)
-        tc.groups.each do |g|
-          g.test_cases.each do |t|
-            create_test(host, tr, build_target, revision, time, test_configuration, build_configuration, g.name, t)
+      test_run.build_configurations.each do |bc|
+        build_configuration = create_build_configuration(bc)
+        bc.build_run.test_configurations.each do |tc|
+          test_configuration = create_test_configuration(tc)
+          tc.groups.each do |g|
+            g.test_cases.each do |t|
+              create_test(host, tr, build_target, revision, time, test_configuration, build_configuration, g.name, t)
+            end
           end
         end
       end
@@ -36,7 +38,7 @@ class TestRunTransformer
   private
 
   def self.create_test_configuration(tc)
-    TestConfigurationDimension.find_or_create_by_name_and_mode(tc.name,tc.params['mode'] || '')
+    TestConfigurationDimension.find_or_create_by_name_and_mode(tc.name, tc.params['mode'] || '')
   end
 
   def self.create_time(t)
@@ -48,7 +50,7 @@ class TestRunTransformer
     params[:day_of_month] = t.mday
     params[:day_of_week] = t.wday + 1
     params[:time] = t
-    find_or_create(TimeDimension,params)
+    find_or_create(TimeDimension, params)
   end
 
   def self.create_build_target(bt)
@@ -58,7 +60,7 @@ class TestRunTransformer
     params[:arch] = p['target.arch']
     params[:address_size] = p['target.address.size'].to_i
     params[:operating_system] = p['target.os']
-    find_or_create(BuildTargetDimension,params)
+    find_or_create(BuildTargetDimension, params)
   end
 
   def self.create_build_configuration(bc)
@@ -70,18 +72,18 @@ class TestRunTransformer
     params[:mmtk_plan] = p['config.mmtk.plan']
     params[:assertion_level] = p['config.assertions']
     params[:bootimage_class_inclusion_policy] = (p['config.include.all-classes'] == 'false') ? 'minimal' : 'complete'
-    find_or_create(BuildConfigurationDimension,params)
+    find_or_create(BuildConfigurationDimension, params)
   end
 
-  def self.find_or_create(model,params)
+  def self.find_or_create(model, params)
     conditions = [params.keys.collect {|k| "#{k} = :#{k}"}.join(' AND '), params]
-    object = model.find(:first,:conditions => conditions)
+    object = model.find(:first, :conditions => conditions)
     return object if object
     model.create!(params)
   end
 
   def self.create_test(host, test_run, build_target, revision, time, test_configuration, build_configuration, group_name, t)
-    tc = TestCaseDimension.find_or_create_by_name_and_group(t.name,group_name)
+    tc = TestCaseDimension.find_or_create_by_name_and_group(t.name, group_name)
     result = ResultDimension.find_or_create_by_name(t.result)
     rfact = ResultFact.new
     rfact.host_id = host.id

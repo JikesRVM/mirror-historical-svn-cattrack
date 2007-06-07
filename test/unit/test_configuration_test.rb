@@ -27,8 +27,6 @@ class TestConfigurationTest < Test::Unit::TestCase
     assert_equal( 'prototype', tc.name )
     assert_equal( 1, tc.build_run_id )
     assert_equal( 1, tc.build_run.id )
-    assert_equal( 1, tc.test_run_id )
-    assert_equal( 1, tc.test_run.id )
 
     blank_params = { 'mode' => '', 'extra.args' => '' }
     assert_params_same(blank_params, tc.params)
@@ -39,16 +37,16 @@ class TestConfigurationTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :test_run_id => 1, :build_run_id => 1}
+    {:name => 'foo', :build_run_id => 1}
   end
   def self.non_null_attributes
-    [:name, :test_run_id, :build_run_id]
+    [:name, :build_run_id]
   end
   def self.unique_attributes
-    [[:test_run_id, :name]]
+    [[:build_run_id, :name]]
   end
   def self.str_length_attributes
-    [[:name, 76]]
+    [[:name, 75]]
   end
 
   perform_basic_model_tests

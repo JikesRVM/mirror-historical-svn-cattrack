@@ -29,8 +29,6 @@ class BuildRunTest < Test::Unit::TestCase
     assert_equal( "Prototype build log here ...", build.output )
     assert_equal( 1, build.build_configuration_id )
     assert_equal( 1, build.build_configuration.id )
-    assert_equal( 1, build.test_run_id )
-    assert_equal( 1, build.test_run.id )
   end
 
   def test_new_with_output
@@ -40,41 +38,11 @@ class BuildRunTest < Test::Unit::TestCase
     assert_equal( 'foooish!', br2.output )
   end
 
-  def test_remove_orphaned_build_configurations
-    build_configuration = BuildConfiguration.create!(:name => 'BC')
-    assert_equal(true,BuildConfiguration.exists?(build_configuration.id))
-    build_run = BuildRun.new(self.class.attributes_for_new)
-    build_run.build_configuration = build_configuration
-    build_run.save!
-
-    build_run.reload
-
-    build_run.destroy
-    assert_equal(false,BuildConfiguration.exists?(build_configuration.id))
-  end
-
-  def test_remove_orphaned_build_configurations_does_not_remove_non_orphaned
-    build_configuration = BuildConfiguration.create!(:name => 'BC')
-    assert_equal(true,BuildConfiguration.exists?(build_configuration.id))
-    build_run = BuildRun.new(self.class.attributes_for_new)
-    build_run.build_configuration = build_configuration
-    build_run.save!
-
-    build_run = BuildRun.new(self.class.attributes_for_new)
-    build_run.build_configuration = build_configuration
-    build_run.save!
-
-    build_run.reload
-
-    build_run.destroy
-    assert_equal(true,BuildConfiguration.exists?(build_configuration.id))
-  end
-
   def self.attributes_for_new
-    {:test_run_id => 1, :build_configuration_id => 3, :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
+    {:build_configuration_id => 3, :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
   end
   def self.non_null_attributes
-    [:test_run_id, :build_configuration_id, :result, :time, :output]
+    [:build_configuration_id, :result, :time, :output]
   end
   def self.bad_attributes
     [[:time, -1],[:result, 'Foo']]

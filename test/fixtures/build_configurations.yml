@@ -12,10 +12,17 @@
 #
 bc1:
   id: 1
+  test_run_id: 1
   name: prototype
 bc2:
   id: 2
+  test_run_id: 1
   name: prototype-opt
 bc3:
   id: 3
-  name: development
+  test_run_id: 2
+  name: prototype
+bc4:
+  id: 4
+  test_run_id: 2
+  name: prototype-opt

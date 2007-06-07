@@ -11,7 +11,6 @@
 #  regarding copyright ownership.
 #
 class BuildRun < ActiveRecord::Base
-  belongs_to :test_run
   belongs_to :build_configuration
   has_many :test_configurations, :dependent => :destroy
 
@@ -24,7 +23,6 @@ class BuildRun < ActiveRecord::Base
   end
 
   after_save :update_output
-  after_destroy :remove_orphaned_build_configurations
 
   def output=(output)
     @output = output
@@ -43,14 +41,10 @@ class BuildRun < ActiveRecord::Base
   end
 
   def parent_node
-    test_run
+    build_configuration.test_run
   end
 
   private
-
-  def remove_orphaned_build_configurations
-    build_configuration.destroy if build_configuration.build_runs.empty?
-  end
 
   def update_output
     if @output_modified

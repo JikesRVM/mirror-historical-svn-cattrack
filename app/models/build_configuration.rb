@@ -11,10 +11,11 @@
 #  regarding copyright ownership.
 #
 class BuildConfiguration < ActiveRecord::Base
-  has_many :build_runs
+  belongs_to :test_run
+  has_one :build_run
   has_params :params
 
   def parent_node
-    build_runs[0].parent_node
+    test_run
   end
 end

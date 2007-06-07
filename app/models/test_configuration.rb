@@ -12,7 +12,6 @@
 #
 class TestConfiguration < ActiveRecord::Base
   belongs_to :build_run
-  belongs_to :test_run
   has_many :groups, :dependent => :destroy
   has_params :params
 
@@ -37,6 +36,6 @@ class TestConfiguration < ActiveRecord::Base
   test_case_rel :test_cases
 
   def parent_node
-    test_run
+    build_run.build_configuration.test_run
   end
 end

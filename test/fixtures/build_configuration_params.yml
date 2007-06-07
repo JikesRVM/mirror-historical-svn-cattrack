@@ -61,4 +61,22 @@ bcp_<%= index %>:
     owner_id: 2
     key: '<%= k %>'
     value: '<%= v %>'
+<%
+  end
+  prototype_configs.each do |k,v|
+    index = index + 1
+%>
+bcp_<%= index %>:
+    owner_id: 3
+    key: '<%= k %>'
+    value: '<%= v %>'
+<%
+  end
+  prototype_opt_configs.each do |k,v|
+    index = index + 1
+%>
+bcp_<%= index %>:
+    owner_id: 4
+    key: '<%= k %>'
+    value: '<%= v %>'
 <% end %>
