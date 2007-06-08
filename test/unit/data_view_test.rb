@@ -20,15 +20,15 @@ class DataViewTest < Test::Unit::TestCase
     assert_equal( 1, data_view.filter.id )
     assert_equal( 1, data_view.summarizer_id )
     assert_equal( 1, data_view.summarizer.id )
-    assert_equal( 1, data_view.presentation_id )
-    assert_equal( 1, data_view.presentation.id )
+    assert_equal( 1, data_view.data_presentation_id )
+    assert_equal( 1, data_view.data_presentation.id )
   end
 
   def self.attributes_for_new
-    {:filter_id => 1, :summarizer_id => 1, :presentation_id => 1}
+    {:filter_id => 1, :summarizer_id => 1, :data_presentation_id => 1}
   end
   def self.non_null_attributes
-    [:filter_id, :summarizer_id, :presentation_id]
+    [:filter_id, :summarizer_id, :data_presentation_id]
   end
 
   perform_basic_model_tests

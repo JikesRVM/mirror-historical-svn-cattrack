@@ -13,5 +13,5 @@
 class DataView < ActiveRecord::Base
   belongs_to :filter
   belongs_to :summarizer
-  belongs_to :presentation
+  belongs_to :data_presentation
 end

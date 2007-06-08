@@ -12,13 +12,13 @@
 #
 require File.dirname(__FILE__) + '/../test_helper'
 
-class PresentationTest < Test::Unit::TestCase
+class DataPresentationTest < Test::Unit::TestCase
   def test_label
-    assert_equal( Presentation.find(1).name, Presentation.find(1).label )
+    assert_equal( DataPresentation.find(1).name, DataPresentation.find(1).label )
   end
 
   def test_basic_load
-    presentation = Presentation.find(1)
+    presentation = DataPresentation.find(1)
     assert_equal( 1, presentation.id )
     assert_equal( 'Pivot View', presentation.name )
     assert_equal( 1, presentation.params.size )

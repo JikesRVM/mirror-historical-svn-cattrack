@@ -101,7 +101,7 @@ OrderedTables = [
 'statistic_facts',
 'filters', 'filter_params',
 'summarizers',
-'presentations', 'presentation_params',
+'data_presentations', 'data_presentation_params',
 'data_views',
 ]
 

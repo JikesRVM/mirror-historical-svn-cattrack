@@ -10,26 +10,29 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreatePresentations < ActiveRecord::Migration
+class CreateDataPresentations < ActiveRecord::Migration
+  class DataPresentation < ActiveRecord::Base
+  end
+
   def self.up
-    create_table :presentations do |t|
+    create_table :data_presentations do |t|
       t.column :name, :string, :limit => 120, :null => false
     end
-    add_index :presentations, [:name], :unique => true
-    
-    create_table :presentation_params, :id => false, :force => true do |t|
+    add_index :data_presentations, [:name], :unique => true
+
+    create_table :data_presentation_params, :id => false, :force => true do |t|
       t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :string, :limit => 256, :null => false
     end
-    add_index :presentation_params, [:owner_id, :key], :unique => true
-    add_index :presentation_params, [:owner_id]
-    add_index :presentation_params, [:owner_id, :key, :value]
-    add_foreign_key :presentation_params, [:owner_id], :presentations, [:id], :on_delete => :cascade
+    add_index :data_presentation_params, [:owner_id, :key], :unique => true
+    add_index :data_presentation_params, [:owner_id]
+    add_index :data_presentation_params, [:owner_id, :key, :value]
+    add_foreign_key :data_presentation_params, [:owner_id], :data_presentations, [:id], :on_delete => :cascade
   end
 
   def self.down
-    drop_table :presentation_params
-    drop_table :presentations
+    drop_table :data_presentation_params
+    drop_table :data_presentations
   end
 end

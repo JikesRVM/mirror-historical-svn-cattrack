@@ -15,11 +15,11 @@ class CreateDataViews < ActiveRecord::Migration
     create_table :data_views do |t|
       t.column :filter_id, :integer, :null => false
       t.column :summarizer_id, :integer, :null => false
-      t.column :presentation_id, :integer, :null => false
+      t.column :data_presentation_id, :integer, :null => false
     end
     add_foreign_key :data_views, [:filter_id], :filters, [:id], :on_delete => :cascade
     add_foreign_key :data_views, [:summarizer_id], :summarizers, [:id], :on_delete => :cascade
-    add_foreign_key :data_views, [:presentation_id], :presentations, [:id], :on_delete => :cascade
+    add_foreign_key :data_views, [:data_presentation_id], :data_presentations, [:id], :on_delete => :cascade
   end
 
   def self.down
