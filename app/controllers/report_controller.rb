@@ -19,16 +19,17 @@ class ReportController < ApplicationController
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
 
-    @filter = Filter.new(params[:filter])
-    @filter.name = '*'
-    @filter.description = ''
-    @summarizer = Summarizer.new(params[:summarizer])
-    @summarizer.name = '*'
-    @summarizer.description = ''
-    @search = Search.new(params[:search])
-    if params[:summarizer] and @summarizer.valid?
-      @results = @search.perform_search(@filter, @summarizer)
-    end
+    data_view = DataView.new
+    data_view.filter = Filter.new(params[:filter])
+    data_view.filter.name = '*'
+    data_view.filter.description = ''
+    data_view.summarizer = Summarizer.new(params[:summarizer])
+    data_view.summarizer.name = '*'
+    data_view.summarizer.description = ''
+
+    @filter = data_view.filter
+    @summarizer = data_view.summarizer
+    @results = data_view.perform_search if (params[:summarizer] and @summarizer.valid?)
   end
 
   private

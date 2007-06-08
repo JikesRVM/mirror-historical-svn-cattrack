@@ -14,4 +14,43 @@ class DataView < ActiveRecord::Base
   belongs_to :filter
   belongs_to :summarizer
   belongs_to :data_presentation
+
+  def perform_search
+    conditions, joins = filter.filter_criteria()
+
+    rf = Summarizer::DimensionMap[summarizer.primary_dimension]
+    cf = Summarizer::DimensionMap[summarizer.secondary_dimension]
+    f = Summarizer::FunctionMap[summarizer.function]
+    rd = rf.dimension
+    cd = cf.dimension
+
+    f.dimensions.each{|d| joins << d unless joins.include?(d)}
+    joins.delete(rd)
+    joins.delete(cd)
+
+    join_sql = joins.uniq.collect {|d| join(d)}.join("\n ") + "\n " + join(rd, 'RIGHT')
+    join_sql = join_sql + "\n " + join(cd, 'RIGHT') unless (rd == cd)
+
+    criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
+    row = "#{rf.dimension.table_name}.#{rf.name}"
+    column = "#{cf.dimension.table_name}.#{cf.name}"
+    sql = <<END_OF_SQL
+SELECT
+ #{row} as row,
+ #{column} as column,
+ #{f.sql} as value
+FROM result_facts
+ #{join_sql}
+WHERE #{criteria}
+GROUP BY #{row}, #{column}
+ORDER BY #{row}, #{column}
+END_OF_SQL
+
+    data = ActiveRecord::Base.connection.select_all(sql)
+    ReportResultData.new(sql, rf, cf, f, data)
+  end
+
+  def join(dimension, type = 'LEFT')
+    "#{type} JOIN #{dimension.table_name} ON result_facts.#{dimension.table_name[0, dimension.table_name.singularize.size - 10]}_id = #{dimension.table_name}.id"
+  end
 end
