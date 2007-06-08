@@ -1,0 +1,25 @@
+%h1.page-title Edit Summarizer
+%form{:action => url_for(:action => 'edit', :id => @summarizer.id), :method => 'post' }
+  %div
+    = render(:partial => 'errors')
+    %table.search
+      %tr
+        %th Name
+        %td{:class => class_for_attribute(@summarizer,:name,'')}
+          %input{ :type => 'text', :name => 'summarizer[name]', :value => @summarizer.name }/
+          - if attribute_error?(@summarizer, :name)
+            .field_error= @summarizer.errors[:name]
+      %tr
+        %th Description
+        %td{:class => class_for_attribute(@summarizer,:description,'')}
+          %textarea{ :name => 'summarizer[description]', :rows => 5 , :cols => 40 }= @summarizer.description
+          - if attribute_error?(@summarizer, :description)
+            .field_error= @summarizer.errors[:description]
+    %hr/
+    = render(:partial => 'form')
+    %hr/
+    %ul.actions
+      %li
+        %button{:type => 'submit'} Save
+      %li= link_to('Cancel', :action => 'list')
+    .clearer

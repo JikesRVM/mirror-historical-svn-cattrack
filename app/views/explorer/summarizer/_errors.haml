@@ -1,0 +1,11 @@
+- if (@summarizer.errors and @summarizer.errors.count > 0)
+  .form_messages
+    %h4
+      = pluralize(@summarizer.errors.count, 'error')
+      with the summarizer.
+    - if @summarizer.errors[:base]
+      - errors = @summarizer.errors[:base]
+      - errors = errors.is_a?(Array) ? errors : [errors]
+      %ul
+        - errors.each do |e|
+          %li= h(e)

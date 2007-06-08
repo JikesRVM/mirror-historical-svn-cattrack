@@ -13,12 +13,12 @@
 class Summarizer < ActiveRecord::Base
   auto_validations :except => [:id, :description]
 
-  DimensionField = Struct.new('DimensionField', :id, :label, :sql, :dimension)
+  DimensionField = Struct.new('DimensionField', :id, :label, :sql, :dimension_name, :dimension)
 
   def self.dimension(field)
-    label = "#{field.dimension_name.tableize.humanize}/#{field.name.to_s.humanize}"
+    label = "#{field.dimension_name.tableize.singularize.humanize} #{field.name.to_s.humanize}"
     sql = "#{field.dimension.table_name}.#{field.name}"
-    DimensionField.new(field.key,label,sql,field.dimension)
+    DimensionField.new(field.key,label,sql,field.dimension_name,field.dimension)
   end
 
   DimensionFields = Filter::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| dimension(f)}
