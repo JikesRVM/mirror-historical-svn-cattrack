@@ -10,16 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Explorer::BaseController < ApplicationController
-  self.force_no_cache
-
-  protected
-  def protect?
-    true
-  end
-
-  private
-  def menu_name
-    (is_authenticated? and current_user.admin?) ? '/explorer/menu' : nil
+class Explorer::DashboardController < Explorer::BaseController
+  verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
+  def index
   end
 end

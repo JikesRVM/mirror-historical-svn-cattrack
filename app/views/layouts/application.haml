@@ -30,6 +30,10 @@
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
             = link_to( 'Browse Hosts', :controller => '/host', :action => 'list' )
+            %span#explorer_link
+              |
+              = link_to( 'Data Explorer', :controller => '/explorer/dashboard', :action => 'index')
+            %script{ :type => 'text/javascript' } if(!is_authenticated()) Element.hide('explorer_link')
             %span#admin_link
               |
               = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index')
