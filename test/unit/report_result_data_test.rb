@@ -57,4 +57,18 @@ class ReportResultDataTest < Test::Unit::TestCase
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
     assert_equal( [['1.0', nil, nil, '1.4'], ['2.0', '2.1', '2.2', nil]], d.tabular_data )
   end
+
+  def test_basic_operation_with_multiple_values
+    row = SearchField.new(BuildConfigurationDimension, :name)
+    column = SearchField.new(TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    data = [
+    {'row' => 'prototype', 'column' => '1', 'value1' => '1.0', 'value2' => 'a' },
+    {'row' => 'prototype-opt', 'column' => '2', 'value1' => '2.1', 'value2' => 'b' },
+    ]
+    d = ReportResultData.new('mysql', row, column, nil, data)
+    assert_equal( 'mysql', d.sql )
+    assert_equal( ['1', '2'], d.column_headers )
+    assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
+    assert_equal( [[{'value1' => '1.0', 'value2' => 'a'}, nil], [nil, {'value1' => '2.1', 'value2' => 'b'}]], d.tabular_data )
+  end
 end

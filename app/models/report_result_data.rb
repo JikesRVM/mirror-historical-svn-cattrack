@@ -26,8 +26,11 @@ class ReportResultData
         @tabular_data[r_index] = []
         0.upto(column_headers.size - 1) do |c_index|
           if ((index < @data.size) and (@row_headers[r_index] == @data[index]['row']) and (@column_headers[c_index] == @data[index]['column']))
-            @tabular_data[r_index][c_index] = @data[index]['value']
+            data = @data[index].dup
             index += 1
+            data.delete('row')
+            data.delete('column')
+            @tabular_data[r_index][c_index] = (data.size == 1) ? data.values[0] : data
           else
             @tabular_data[r_index][c_index] = nil
           end
