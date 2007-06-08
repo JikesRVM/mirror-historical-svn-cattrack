@@ -13,12 +13,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'search'
 
-class Search
-  def to_sql2(filter)
-    self.send :to_sql, filter
-  end
-end
-
 class SearchTest < Test::Unit::TestCase
   def test_to_sql2_with_no_filter
     filter = Filter.new
@@ -26,14 +20,15 @@ class SearchTest < Test::Unit::TestCase
     filter.description = ''
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
-
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -55,13 +50,15 @@ END_SQL
     filter.build_target_arch = 'ia32'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -84,13 +81,15 @@ END_SQL
     filter.time_week = 2
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -112,13 +111,15 @@ END_SQL
     filter.build_configuration_runtime_compiler = 'opt'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -140,13 +141,15 @@ END_SQL
     filter.time_week = 2
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -168,13 +171,15 @@ END_SQL
     filter.result_name = 'SUCCESS'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    assert_equal(<<END_SQL, search.to_sql2(filter))
+    assert_equal(<<END_SQL, Search.new.perform_search(filter, summarizer).sql)
 SELECT
  build_configuration_dimensions.name as row,
  time_dimensions.day_of_week as column,
@@ -189,20 +194,22 @@ ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
 END_SQL
   end
 
-  def test_perform_search
+  def test_perform_summarizer
     filter = Filter.new
     filter.name = 'X'
     filter.description = ''
     filter.result_name = 'SUCCESS'
     assert_equal(true, filter.valid?, filter.errors.to_xml)
 
-    search = Search.new
-    search.row = 'build_configuration_name'
-    search.column = 'time_day_of_week'
-    search.function = 'success_rate'
+    summarizer = Summarizer.new
+    summarizer.name = 'X'
+    summarizer.description = ''
+    summarizer.primary_dimension = 'build_configuration_name'
+    summarizer.secondary_dimension = 'time_day_of_week'
+    summarizer.function = 'success_rate'
+    assert_equal(true, summarizer.valid?, summarizer.errors.to_xml)
 
-    assert_equal(true, search.valid?, search.errors.to_xml)
-    result = search.perform_search(filter)
+    result = Search.new.perform_search(filter, summarizer)
     assert_not_nil(result)
     assert_not_nil(result.row)
     assert_not_nil(result.column)

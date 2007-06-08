@@ -24,6 +24,8 @@ class SearchFieldTest < Test::Unit::TestCase
     assert_equal( true, f.options[:any] )
     assert_equal( true, f.options[:multiple] )
     assert_equal( 'bar', f.options[:foo] )
+    assert_equal( 'test_configuration_name', f.key_name )
+    assert_equal( 'Test configuration Name', f.label )
   end
 
   def test_labels

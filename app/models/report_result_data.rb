@@ -11,10 +11,10 @@
 #  regarding copyright ownership.
 #
 class ReportResultData
-  attr_reader :row, :column, :function, :data, :row_headers, :column_headers
+  attr_reader :sql, :row, :column, :function, :data, :row_headers, :column_headers
 
-  def initialize(row, column, function, data)
-    @row, @column, @function, @data = row, column, function, data
+  def initialize(sql, row, column, function, data)
+    @sql, @row, @column, @function, @data = sql, row, column, function, data
     calc_headers
   end
 

@@ -20,8 +20,15 @@ class ReportController < ApplicationController
     end
 
     @filter = Filter.new(params[:filter])
+    @filter.name = '*'
+    @filter.description = ''
+    @summarizer = Summarizer.new(params[:summarizer])
+    @summarizer.name = '*'
+    @summarizer.description = ''
     @search = Search.new(params[:search])
-    @results = @search.perform_search(@filter) unless params[:search].nil?
+    if params[:summarizer] and @summarizer.valid?
+      @results = @search.perform_search(@filter, @summarizer)
+    end
   end
 
   private

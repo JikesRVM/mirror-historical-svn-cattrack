@@ -13,18 +13,10 @@
 class Summarizer < ActiveRecord::Base
   auto_validations :except => [:id, :description]
 
-  DimensionField = Struct.new('DimensionField', :id, :label, :sql, :dimension_name, :dimension)
-
-  def self.dimension(field)
-    label = "#{field.dimension_name.tableize.singularize.humanize} #{field.name.to_s.humanize}"
-    sql = "#{field.dimension.table_name}.#{field.name}"
-    DimensionField.new(field.key,label,sql,field.dimension_name,field.dimension)
-  end
-
-  DimensionFields = Filter::Fields.select {|f| f.options[:synthetic] != true}.collect {|f| dimension(f)}
+  DimensionFields = Filter::Fields.select {|f| f.options[:synthetic] != true}
   DimensionMap = {}
-  DimensionFields.each {|d| DimensionMap[d.id.to_s] = d}
-  ValidDimensionFieldIds = DimensionFields.collect {|o| o.id.to_s}
+  DimensionFields.each {|d| DimensionMap[d.key.to_s] = d}
+  ValidDimensionFieldIds = DimensionFields.collect {|o| o.key.to_s}
 
   FunctionField = Struct.new('FunctionField', :id, :label, :sql, :dimensions)
   FunctionFields = [
@@ -34,6 +26,8 @@ class Summarizer < ActiveRecord::Base
   FunctionField.new('overtime_rate', 'Overtime Rate', "CAST(count(case when result_dimensions.name != 'OVERTIME' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
   FunctionField.new('excluded_rate', 'Excluded Rate', "CAST(count(case when result_dimensions.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0", [ResultDimension]),
   ]
+  FunctionMap = {}
+  FunctionFields.each {|f| FunctionMap[f.id] = f}
   ValidFunctionFieldIds = FunctionFields.collect {|o| o.id}
 
   validates_inclusion_of :function, :in => ValidFunctionFieldIds

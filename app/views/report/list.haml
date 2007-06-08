@@ -1,27 +1,11 @@
-%h1.page-title Search Parameters
 %form{:action => url_for(:action => 'list'), :method => 'get'}
   %div
+    %h2.page-title Filter Parameters
     = render(:partial => '/explorer/filter/errors')
     = render(:partial => '/explorer/filter/form')
-    %h4 Group By
-    %table.search
-      %tr
-        %th Row
-        %td{:class => class_for_attribute(@search,:row,'')}
-          = fk_select(:row, :any => false, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels, :name => 'search')
-          - if attribute_error?(@search, :row)
-            .field_error= @search.errors[:row]
-      %tr
-        %th Column
-        %td{:class => class_for_attribute(@search,:column,'')}
-          = fk_select(:column, :any => false, :values => Search::ValidDimensionFieldIds, :labels => Search::DimensionFieldLabels, :name => 'search')
-          - if attribute_error?(@search, :column)
-            .field_error= @search.errors[:column]
-    %h4 Aggregation Function
-    %table.search
-      %tr
-        %th Function
-        %td= fk_select(:function, :values => Search::FunctionFields, :name => 'search')
+    %h2 Summarizer Parameters
+    = render(:partial => '/explorer/summarizer/errors')
+    = render(:partial => '/explorer/summarizer/form')
     %ul.actions
       %li
         %button{:type => 'submit'} Search
@@ -45,3 +29,5 @@
       %tr
         - d.each_pair do |k,v|
           %td= h(v)
+  %h2 SQL
+  .sql= @results.sql
