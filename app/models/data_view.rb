@@ -29,21 +29,22 @@ class DataView < ActiveRecord::Base
     joins.delete(cd)
 
     join_sql = joins.uniq.collect {|d| join(d)}.join("\n ") + "\n " + join(rd, 'RIGHT')
-    join_sql = join_sql + "\n " + join(cd, 'RIGHT') unless (rd == cd)
+    join_sql = join_sql + "\n " + join(cd, 'LEFT') unless (rd == cd)
 
     criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
-    row = "#{rf.dimension.table_name}.#{rf.name}"
-    column = "#{cf.dimension.table_name}.#{cf.name}"
+    primary_dimension = "#{rf.dimension.table_name}.#{rf.name}"
+    secondary_dimension = "#{cf.dimension.table_name}.#{cf.name}"
+    function_sql = f.sql.gsub(/\:primary_dimension/,primary_dimension).gsub(/\:secondary_dimension/,secondary_dimension)
     sql = <<END_OF_SQL
 SELECT
- #{row} as row,
- #{column} as column,
- #{f.sql} as value
+ #{primary_dimension} AS primary_dimension,
+ #{secondary_dimension} AS secondary_dimension,
+ #{function_sql}
 FROM result_facts
  #{join_sql}
 WHERE #{criteria}
-GROUP BY #{row}, #{column}
-ORDER BY #{row}, #{column}
+GROUP BY #{primary_dimension}, #{secondary_dimension}
+ORDER BY #{primary_dimension}, #{secondary_dimension}
 END_OF_SQL
 
     data = ActiveRecord::Base.connection.select_all(sql)

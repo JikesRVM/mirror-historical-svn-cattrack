@@ -25,11 +25,14 @@ class ReportResultData
       0.upto(row_headers.size - 1) do |r_index|
         @tabular_data[r_index] = []
         0.upto(column_headers.size - 1) do |c_index|
-          if ((index < @data.size) and (@row_headers[r_index] == @data[index]['row']) and (@column_headers[c_index] == @data[index]['column']))
+          while ((index < @data.size) and @data[index]['secondary_dimension'].nil?)
+            index += 1
+          end
+          if ((index < @data.size) and (@row_headers[r_index] == @data[index]['primary_dimension']) and (@column_headers[c_index] == @data[index]['secondary_dimension']))
             data = @data[index].dup
             index += 1
-            data.delete('row')
-            data.delete('column')
+            data.delete('primary_dimension')
+            data.delete('secondary_dimension')
             @tabular_data[r_index][c_index] = (data.size == 1) ? data.values[0] : data
           else
             @tabular_data[r_index][c_index] = nil
@@ -45,9 +48,9 @@ class ReportResultData
   def calc_headers
     rows, columns = [], []
     @data.each do |row|
-      c = row['column']
-      columns << c unless columns.include?(c)
-      r = row['row']
+      c = row['secondary_dimension']
+      columns << c unless (columns.include?(c) or c.nil?)
+      r = row['primary_dimension']
       rows << r unless rows.include?(r)
     end
     @row_headers = rows

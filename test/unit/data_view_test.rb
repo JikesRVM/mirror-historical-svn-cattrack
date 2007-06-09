@@ -13,6 +13,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DataViewTest < Test::Unit::TestCase
+  SUCCESS_FUNCTION = "case when time_dimensions.day_of_week IS NOT NULL then CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end"
   def test_basic_load
     data_view = DataView.find(1)
     assert_equal( 1, data_view.id )
@@ -67,13 +68,13 @@ class DataViewTest < Test::Unit::TestCase
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE 1 = 1
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
@@ -91,14 +92,14 @@ END_SQL
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN build_target_dimensions ON result_facts.build_target_id = build_target_dimensions.id
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE build_target_dimensions.arch = 'ia32'
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
@@ -116,13 +117,13 @@ END_SQL
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE time_dimensions.week = 2
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
@@ -140,13 +141,13 @@ END_SQL
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE build_configuration_dimensions.runtime_compiler = 'opt'
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
@@ -164,13 +165,13 @@ END_SQL
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE time_dimensions.week = 2
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
@@ -188,13 +189,13 @@ END_SQL
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
- build_configuration_dimensions.name as row,
- time_dimensions.day_of_week as column,
- CAST(count(case when result_dimensions.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 as value
+ build_configuration_dimensions.name AS primary_dimension,
+ time_dimensions.day_of_week AS secondary_dimension,
+ #{SUCCESS_FUNCTION}
 FROM result_facts
  LEFT JOIN result_dimensions ON result_facts.result_id = result_dimensions.id
  RIGHT JOIN build_configuration_dimensions ON result_facts.build_configuration_id = build_configuration_dimensions.id
- RIGHT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
+ LEFT JOIN time_dimensions ON result_facts.time_id = time_dimensions.id
 WHERE result_dimensions.name = 'SUCCESS'
 GROUP BY build_configuration_dimensions.name, time_dimensions.day_of_week
 ORDER BY build_configuration_dimensions.name, time_dimensions.day_of_week
