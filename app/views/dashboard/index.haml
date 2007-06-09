@@ -1,0 +1,25 @@
+%h1.page-title Recent Test Runs
+
+%table.list
+  %tr
+    %th Host
+    %th Name
+    %th Revision
+    %th Time
+    %th Success Rate
+    %th Operations
+  - @test_runs.each do |t|
+    %tr
+      %td= link_for(t.host)
+      %td= h(t.name)
+      %td= h(t.revision)
+      %td= time_ago_in_words(t.occured_at)
+      %td= "#{t.successes.count}/#{t.test_cases.count}"
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show")
+          %li{ :id => "test_run_#{t.id}_delete" }
+            = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => t},{:method => :post, :confirm => 'Are you sure you want to delete the record of the test-run?'})
+            %script{ :type => 'text/javascript' }
+              = "<!--\n if(!is_admin()) Element.hide('test_run_#{t.id}_delete') \n//-->"
+= render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})

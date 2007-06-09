@@ -15,5 +15,8 @@ class DashboardController < ApplicationController
   session :off
 
   def index
+    name = 'core'
+    @test_run_pages, @test_runs =
+      paginate(:test_run, :per_page => 20, :order => 'occured_at DESC', :conditions => ['name = ?', name])
   end
 end

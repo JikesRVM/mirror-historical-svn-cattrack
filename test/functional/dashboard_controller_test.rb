@@ -13,8 +13,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'dashboard_controller'
 
-# Re-raise errors caught by the controller.
 class DashboardController
+  # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
@@ -28,10 +28,20 @@ class DashboardControllerTest < Test::Unit::TestCase
   end
 
   def test_index
+    test_run = TestRun.new
+    test_run.attributes = TestRun.find(1).attributes
+    test_run.occured_at = Time.now
+    test_run.save!
+
     get(:index, {}, {:user_id => 1})
     assert_response(:success)
     assert_template('index')
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
+
+    assert_equal([test_run.id, 1], assigns(:test_runs).collect {|r| r.id} )
+    assert_not_nil(assigns(:test_run_pages))
+    assert_equal(0, assigns(:test_run_pages).current.offset)
+    assert_equal(1, assigns(:test_run_pages).page_count)
   end
 end
