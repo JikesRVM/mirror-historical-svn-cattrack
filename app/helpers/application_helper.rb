@@ -44,4 +44,13 @@ module ApplicationHelper
   def class_for_attribute(record, name, css)
     attribute_error?(record, name) ? "#{css} error": css
   end
+
+  def test_run_delete_link(test_run)
+    link = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => test_run},{:method => :post, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"})
+    s = <<EOS
+<li id="test_run_#{test_run.id}_delete">#{link}<script type='text/javascript'><!--
+if(!is_admin()) Element.hide('test_run_#{test_run.id}_delete')
+//--></script></li>
+EOS
+  end
 end

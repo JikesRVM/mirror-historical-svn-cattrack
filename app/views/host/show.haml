@@ -14,8 +14,5 @@
       %td
         %ul.actions
           %li= link_for(t, :label => "Show")
-          %li{ :id => "test_run_#{t.id}_delete" }
-            = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => t},{:method => :post, :confirm => 'Are you sure you want to delete the record of the test-run?'})
-            %script{ :type => 'text/javascript' }
-              = "<!--\n if(!is_admin()) Element.hide('test_run_#{t.id}_delete') \n//-->"
+          = test_run_delete_link(t)
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
