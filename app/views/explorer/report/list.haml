@@ -1,0 +1,21 @@
+%form#report_form{:action => url_for(:action => 'list'), :method => 'post'}
+  %div
+    %h2.page-title Filter Parameters
+    = render(:partial => '/explorer/filter/errors')
+    = render(:partial => '/explorer/filter/form')
+    %h2 Summarizer Parameters
+    = render(:partial => '/explorer/summarizer/errors')
+    = render(:partial => '/explorer/summarizer/form')
+    %h2 Presentation
+    %table.search
+      %tr
+        %th Type
+        %td
+          %select{:name => 'data_presentation'}
+            = options_from_collection_for_select(@data_presentations, :id, :name, params[:data_presentation].to_i)
+    %ul.actions
+      %li
+        %button{:type => 'submit'} Search
+    .clearer
+- if @results
+  = render(:partial => @data_presentation.key)

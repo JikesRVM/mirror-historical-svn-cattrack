@@ -10,15 +10,15 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class ReportController < ApplicationController
-  verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
+class Explorer::ReportController < Explorer::BaseController
+  #verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
 
   def list
     Filter::AutoFields.each do |f|
       value = select_values(f.dimension, f.name)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
-
+    @data_presentations = DataPresentation.find(:all, :order => 'name')
     data_view = DataView.new
     data_view.filter = Filter.new(params[:filter])
     data_view.filter.name = '*'
@@ -29,7 +29,14 @@ class ReportController < ApplicationController
 
     @filter = data_view.filter
     @summarizer = data_view.summarizer
-    @results = data_view.perform_search if (params[:summarizer] and @summarizer.valid?)
+
+    if request.post?
+      @data_presentation = DataPresentation.find(params[:data_presentation])
+      if @data_presentation and @summarizer.valid? and @filter.valid?
+        @results = data_view.perform_search
+        
+      end
+    end
   end
 
   private
