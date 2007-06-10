@@ -21,4 +21,5 @@ class StatisticFact < ActiveRecord::Base
   belongs_to :test_case, :class_name => 'TestCaseDimension', :foreign_key => 'test_case_id'
   belongs_to :source, :class_name => 'TestCase', :foreign_key => 'source_id'
   belongs_to :statistic, :class_name => 'StatisticDimension', :foreign_key => 'statistic_id'
+  belongs_to :result, :class_name => 'ResultDimension', :foreign_key => 'result_id'
 end

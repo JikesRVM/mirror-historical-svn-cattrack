@@ -24,6 +24,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
       t.column :statistic_id, :integer, :null => false
       t.column :source_id, :integer, :null => true
 
+      t.column :result_id, :integer, :null => false
       t.column :value, :float, :null => false
     end
     add_index :statistic_facts, [:id], :unique => true
@@ -36,6 +37,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
     add_index :statistic_facts, [:time_id]
     add_index :statistic_facts, [:revision_id]
     add_index :statistic_facts, [:source_id]
+    add_index :statistic_facts, [:result_id]
     add_index :statistic_facts, [:statistic_id]
 
     add_foreign_key :statistic_facts, [:host_id], :host_dimensions, [:id], :on_delete => :restrict
@@ -47,6 +49,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
     add_foreign_key :statistic_facts, [:time_id], :time_dimensions, [:id], :on_delete => :restrict
     add_foreign_key :statistic_facts, [:revision_id], :revision_dimensions, [:id], :on_delete => :restrict
     add_foreign_key :statistic_facts, [:statistic_id], :statistic_dimensions, [:id], :on_delete => :restrict
+    add_foreign_key :statistic_facts, [:result_id], :result_dimensions, [:id], :on_delete => :restrict
     add_foreign_key :statistic_facts, [:source_id], :test_cases, [:id], :on_delete => :set_null
   end
 

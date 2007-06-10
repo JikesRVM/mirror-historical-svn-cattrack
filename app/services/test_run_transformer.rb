@@ -110,6 +110,7 @@ class TestRunTransformer
     sfact.revision_id = revision.id
     sfact.source_id = t.id
     sfact.statistic_id = statistic.id
+    sfact.result_id = result.id
     sfact.value = t.time
     save!(sfact)
 
@@ -131,6 +132,7 @@ class TestRunTransformer
       sfact.revision_id = revision.id
       sfact.source_id = t.id
       sfact.statistic_id = statistic.id
+      sfact.result_id = result.id
       sfact.value = Kernel.Float(v)
       save!(sfact)
     end
