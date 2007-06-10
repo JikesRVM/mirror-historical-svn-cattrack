@@ -20,22 +20,23 @@ class DataPresentationTest < Test::Unit::TestCase
   def test_basic_load
     presentation = DataPresentation.find(1)
     assert_equal( 1, presentation.id )
-    assert_equal( 'Pivot View', presentation.name )
+    assert_equal( 'Pivot Table', presentation.name )
+    assert_equal( 'pivot', presentation.key )
     assert_equal( 1, presentation.params.size )
     assert_equal( '1', presentation.params['offset'] )
   end
 
   def self.attributes_for_new
-    {:name => 'foo'}
+    {:name => 'foo', :key => 'f'}
   end
   def self.non_null_attributes
-    [:name]
+    [:name, :key]
   end
   def self.unique_attributes
-    [[:name]]
+    [[:name], [:key]]
   end
   def self.str_length_attributes
-    [[:name, 120]]
+    [[:name, 120], [:key, 20]]
   end
 
   perform_basic_model_tests

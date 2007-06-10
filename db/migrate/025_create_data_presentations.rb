@@ -16,9 +16,11 @@ class CreateDataPresentations < ActiveRecord::Migration
 
   def self.up
     create_table :data_presentations do |t|
+      t.column :key, :string, :limit => 20, :null => false
       t.column :name, :string, :limit => 120, :null => false
     end
     add_index :data_presentations, [:id], :unique => true
+    add_index :data_presentations, [:key], :unique => true
     add_index :data_presentations, [:name], :unique => true
 
     create_table :data_presentation_params, :id => false, :force => true do |t|
@@ -30,6 +32,10 @@ class CreateDataPresentations < ActiveRecord::Migration
     add_index :data_presentation_params, [:owner_id]
     add_index :data_presentation_params, [:owner_id, :key, :value]
     add_foreign_key :data_presentation_params, [:owner_id], :data_presentations, [:id], :on_delete => :cascade
+
+    DataPresentation.create!(:name => 'Pivot Table', :key => 'pivot')
+    DataPresentation.create!(:name => 'Success Rate Table', :key => 'success')
+    DataPresentation.create!(:name => 'SQL + Raw Data', :key => 'raw')
   end
 
   def self.down

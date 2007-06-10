@@ -12,4 +12,13 @@
 #
 p1:
   id: 1
-  name: 'Pivot View'
+  name: 'Pivot Table'
+  key: 'pivot'
+p2:
+  id: 2
+  name: 'Success Rate Table'
+  key: 'success'
+p3:
+  id: 3
+  name: 'SQL + Raw Data'
+  key: 'raw'
