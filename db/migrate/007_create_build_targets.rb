@@ -14,7 +14,7 @@ class CreateBuildTargets < ActiveRecord::Migration
   def self.up
     create_table :build_targets, :force => true do |t|
       t.column :name, :string, :limit => 75, :null => false
-      t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
+      t.column :test_run_id, :integer, :null => false
     end
     add_index :build_targets, [:test_run_id], :unique => true
     add_index :build_targets, [:test_run_id, :name]
@@ -22,7 +22,7 @@ class CreateBuildTargets < ActiveRecord::Migration
     add_foreign_key :build_targets, [:test_run_id], :test_runs, [:id], :on_delete => :cascade
 
     create_table :build_target_params, :id => false, :force => true do |t|
-      t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :build_targets
+      t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :string, :limit => 256, :null => false
     end

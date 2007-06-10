@@ -13,7 +13,7 @@
 class CreateBuildConfigurations < ActiveRecord::Migration
   def self.up
     create_table :build_configurations, :force => true do |t|
-      t.column :test_run_id, :integer, :null => false, :on_delete => :cascade
+      t.column :test_run_id, :integer, :null => false
       t.column :name, :string, :limit => 75, :null => false
       t.column :result, :string, :limit => 15, :null => false
       t.column :time, :integer, :null => false
@@ -29,7 +29,7 @@ class CreateBuildConfigurations < ActiveRecord::Migration
     add_foreign_key :build_configuration_outputs, [:build_configuration_id], :build_configurations, [:id], :on_delete => :cascade
 
     create_table :build_configuration_params, :id => false, :force => true do |t|
-      t.column :owner_id, :integer, :null => false, :on_delete => :cascade, :references => :build_configurations
+      t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :string, :limit => 256, :null => false
     end
