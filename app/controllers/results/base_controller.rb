@@ -10,12 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class GroupController < ApplicationController
-  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
-  caches_page :show
-  session :off
-
-  def show
-    @record = Group.find(params[:id])
-  end
+class Results::BaseController < ApplicationController
+  verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
+  caches_page :show, :show_output
+  session :off, :except => [:destroy]
 end

@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
-require 'build_configuration_controller'
+require File.dirname(__FILE__) + '/../../test_helper'
+require 'results/build_configuration_controller'
 
-class BuildConfigurationController
+class Results::BuildConfigurationController
   # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
 end
 
-class BuildConfigurationControllerTest < Test::Unit::TestCase
+class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
   def setup
-    @controller = BuildConfigurationController.new
+    @controller = Results::BuildConfigurationController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end

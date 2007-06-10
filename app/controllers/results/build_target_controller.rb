@@ -10,18 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class TestCaseController < ApplicationController
-  verify :method => :get, :only => [:show, :show_output], :redirect_to => :access_denied_url
-  caches_page :show, :show_output
-  session :off
-
+class Results::BuildTargetController < Results::BaseController
   def show
-    @record = TestCase.find(params[:id])
-  end
-
-  def show_output
-    @record = TestCase.find(params[:id])
-    headers['Content-Type'] = 'text/plain'
-    render(:text => @record.output, :layout => false)
+    @record = BuildTarget.find(params[:id])
   end
 end

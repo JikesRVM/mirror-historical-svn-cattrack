@@ -10,21 +10,25 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
-require 'build_target_controller'
+require File.dirname(__FILE__) + '/../../test_helper'
+require 'results/test_case_controller'
 
-class BuildTargetController
+class Results::TestCaseController
   # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
 end
 
-class BuildTargetControllerTest < Test::Unit::TestCase
+class Results::TestCaseControllerTest < Test::Unit::TestCase
   def setup
-    @controller = BuildTargetController.new
+    @controller = Results::TestCaseController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+  end
+
+  def model
+    TestCase
   end
 
   def session_data
@@ -40,5 +44,15 @@ class BuildTargetControllerTest < Test::Unit::TestCase
     assert_nil(flash[:notice])
     assert_not_nil(assigns(:record))
     assert_equal(id, assigns(:record).id)
+  end
+
+  def test_show_output
+    get(:show_output, {:id => 1}, session_data)
+    assert_response(:success)
+    assert_template(nil)
+    assert_equal('text/plain; charset=utf-8',@response.headers['Content-Type'])
+    assert_equal('1 times around the merry go round',@response.body)
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
   end
 end

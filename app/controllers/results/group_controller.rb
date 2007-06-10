@@ -10,18 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class BuildConfigurationController < ApplicationController
-  verify :method => :get, :only => [:show, :show_output], :redirect_to => :access_denied_url
+class Results::GroupController < Results::BaseController
+  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
   caches_page :show
   session :off
 
   def show
-    @record = BuildConfiguration.find(params[:id])
-  end
-
-  def show_output
-    @record = BuildConfiguration.find(params[:id])
-    headers['Content-Type'] = 'text/plain'
-    render(:text => @record.output, :layout => false)
+    @record = Group.find(params[:id])
   end
 end

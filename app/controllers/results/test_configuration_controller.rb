@@ -10,11 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class TestConfigurationController < ApplicationController
-  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
-  caches_page :show
-  session :off
-
+class Results::TestConfigurationController < Results::BaseController
   def show
     @record = TestConfiguration.find(params[:id])
   end
