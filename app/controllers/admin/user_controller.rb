@@ -11,8 +11,8 @@
 #  regarding copyright ownership.
 #
 class Admin::UserController < Admin::BaseController
-  verify :method => :get, :only => [:show,:list], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:enable_admin, :disable_admin, :activate, :deactivate], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:show,:list], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:enable_admin, :disable_admin, :activate, :deactivate], :redirect_to => :access_denied_url
 
   def show
     @record = User.find(params[:id])

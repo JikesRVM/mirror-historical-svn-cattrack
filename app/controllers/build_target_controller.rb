@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class BuildTargetController < ApplicationController
-  verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
   caches_page :show
   session :off
 

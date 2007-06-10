@@ -11,8 +11,8 @@
 #  regarding copyright ownership.
 #
 class Explorer::FilterController < Explorer::BaseController
-  verify :method => :get, :only => [:list], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:destroy], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
 
   def list
     @filter_pages, @filters = paginate(:filters, :per_page => 10, :order => 'name')

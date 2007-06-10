@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class ReportController < ApplicationController
-  verify :method => :get, :only => [:list], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
 
   def list
     Filter::AutoFields.each do |f|

@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class BuildConfigurationController < ApplicationController
-  verify :method => :get, :only => [:show, :show_output], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:show, :show_output], :redirect_to => :access_denied_url
   caches_page :show
   session :off
 

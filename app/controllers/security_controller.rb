@@ -11,7 +11,8 @@
 #  regarding copyright ownership.
 #
 class SecurityController < ApplicationController
-  verify :method => :post, :only => [:logout], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:administrators, :access_denied], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:logout], :redirect_to => :access_denied_url
 
   def login
     if request.post?
@@ -27,6 +28,9 @@ class SecurityController < ApplicationController
   end
 
   def administrators
+  end
+
+  def access_denied
   end
 
   def logout

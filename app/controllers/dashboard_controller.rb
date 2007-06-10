@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class DashboardController < ApplicationController
-  verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:index], :redirect_to => :access_denied_url
   session :off
 
   def index

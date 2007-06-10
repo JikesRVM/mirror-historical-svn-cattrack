@@ -11,8 +11,8 @@
 #  regarding copyright ownership.
 #
 class TestRunController < ApplicationController
-  verify :method => :get, :only => [:show, :show_summary, :list], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:destroy], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:show, :show_summary, :list], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
   caches_page :show, :show_summary
   cache_sweeper :test_run_sweeper, :only => [:destroy]
   session :off, :except => [:destroy]

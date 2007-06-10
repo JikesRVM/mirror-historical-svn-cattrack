@@ -26,7 +26,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'admin', :controller => 'admin/dashboard'
   map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show'
 
+  map.access_denied 'security/access_denied', :controller => 'security', :action => 'access_denied'
   map.administrators 'security/administrators', :controller => 'security', :action => 'administrators'
+
   map.connect '', :controller => 'dashboard'
 
   map.connect 'admin/user/:action/:id', :controller => 'admin/user'

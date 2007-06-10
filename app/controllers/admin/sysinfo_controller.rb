@@ -11,8 +11,8 @@
 #  regarding copyright ownership.
 #
 class Admin::SysinfoController < Admin::BaseController
-  verify :method => :get, :only => [:show], :redirect_to => {:action => :index}
-  verify :method => :post, :only => [:purge_stale_sessions, :purge_historic_result_facts], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:purge_stale_sessions, :purge_historic_result_facts], :redirect_to => :access_denied_url
 
   def show
     @orhpan_dimensions = dimension_data

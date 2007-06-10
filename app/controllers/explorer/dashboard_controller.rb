@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class Explorer::DashboardController < Explorer::BaseController
-  verify :method => :get, :only => [:index], :redirect_to => {:action => :index}
+  verify :method => :get, :only => [:index], :redirect_to => :access_denied_url
   def index
   end
 end
