@@ -101,9 +101,11 @@ class TestRunBuilder
       build_configuration_id = configs[build_configuration_name]
       c_xml.elements.each('test-configuration') do |tc_xml|
 
-        test_configuration_name = tc_xml.elements['id'].text
-        logger.debug("Processing test configuration for '#{test_configuration_name}' using build configuration '#{build_configuration_name}'.")
+        test_configuration_id = tc_xml.elements['id'].text
+        logger.debug("Processing test configuration for '#{test_configuration_id}' using build configuration '#{build_configuration_name}'.")
 
+        test_configuration_name = tc_xml.elements['name'].text
+        test_configuration_name = "default" if test_configuration_name.blank? 
         test_configuration = TestConfiguration.new
         test_configuration.build_configuration_id = build_configuration_id
         test_configuration.name = test_configuration_name

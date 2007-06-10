@@ -65,7 +65,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     assert_equal( 1, c.test_configurations.size)
     tc = c.test_configurations[0]
-    assert_equal( 'prototype', tc.name)
+    assert_equal( 'default', tc.name)
     assert_equal( 2, tc.params.size)
     assert_equal( '', tc.params['mode'])
     assert_equal( '', tc.params['extra.args'])
@@ -134,7 +134,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     assert_equal( 1, c.test_configurations.size)
     tc = c.test_configurations[0]
-    assert_equal( 'prototype-opt', tc.name)
+    assert_equal( 'default', tc.name)
     assert_equal( 2, tc.params.size)
     assert_equal( '', tc.params['mode'])
     assert_equal( '', tc.params['extra.args'])
