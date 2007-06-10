@@ -13,10 +13,10 @@
       %td= link_for(t.host)
       %td= h(t.name)
       %td= h(t.revision)
-      %td= time_ago_in_words(t.occured_at)
-      %td= "#{t.successes.count}/#{t.test_cases.count}"
+      %td= "#{time_ago_in_words(t.occured_at)} ago"
+      %td= t.success_rate
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show")
+          %li= link_for(t, :label => "Show Summary", :action => 'show_summary')
           = test_run_delete_link(t)
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})

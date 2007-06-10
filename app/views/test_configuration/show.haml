@@ -20,5 +20,5 @@
   - @record.groups.each do |g|
     %tr
       %td= h(g.label)
-      %td= "#{g.successes.count}/#{g.test_cases.count}"
+      %td= g.success_rate
       %td= link_for(g, :label => 'Show')

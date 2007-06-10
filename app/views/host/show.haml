@@ -3,12 +3,14 @@
 %table.list
   %tr
     %th Name
+    %th Success Rate
     %th Revision
     %th Time
     %th Operations
   - @test_runs.each do |t|
     %tr
       %td= h(t.name)
+      %td= h(t.success_rate)
       %td= h(t.revision)
       %td= h(t.occured_at)
       %td

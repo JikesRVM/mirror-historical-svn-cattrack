@@ -31,9 +31,10 @@ class TestConfiguration < ActiveRecord::Base
   end
 
   test_case_rel :successes, "test_cases.result = 'SUCCESS'"
-  test_case_rel :failures, "test_cases.result = 'FAILURE'"
-  test_case_rel :excludes, "test_cases.result = 'EXCLUDE'"
+  test_case_rel :excluded, "test_cases.result = 'EXCLUDED'"
   test_case_rel :test_cases
+
+  include TestCaseContainer
 
   def parent_node
     build_configuration.test_run

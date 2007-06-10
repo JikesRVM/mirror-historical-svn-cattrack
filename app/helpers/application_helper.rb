@@ -12,7 +12,8 @@
 #
 module ApplicationHelper
   def link_for(object, options = {})
-    link_to(h(options[:label] || object.label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show'}.merge(gen_link_options(object)))
+    label = options.delete(:label) || object.label
+    link_to(h(label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show'}.merge(gen_link_options(object)).merge(options))
   end
 
   def draw_breadcrumbs(object)

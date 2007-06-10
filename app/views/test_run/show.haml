@@ -18,7 +18,7 @@
     %td= h(@record.occured_at)
   %tr
     %th Success Rate
-    %td= "#{@record.successes.count}/#{@record.test_cases.count}"
+    %td= @record.success_rate
   %tr
     %th Import Date
     %td= @record.created_at
@@ -48,5 +48,5 @@
     - bc.test_configurations.each do |tc|
       %tr
         %td= h(tc.label)
-        %td= "#{h(tc.successes.count)}/#{h(tc.test_cases.count)}"
+        %td= tc.success_rate
         %td= link_to('Show', :controller => "/test_configuration", :action => 'show', :id => tc.id)

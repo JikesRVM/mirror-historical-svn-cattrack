@@ -36,6 +36,10 @@ class TestConfigurationTest < Test::Unit::TestCase
     assert( tc.group_ids.include?(2) )
   end
 
+  def test_success_rate
+    assert_equal( "4/4", TestConfiguration.find(1).success_rate )
+  end
+
   def self.attributes_for_new
     {:name => 'foo', :build_configuration_id => 1}
   end

@@ -33,6 +33,17 @@ class GroupTest < Test::Unit::TestCase
     assert( group.test_case_ids.include?(2) )
   end
 
+  def test_success_rate
+    assert_equal( "2/2", Group.find(1).success_rate )
+    test_case = TestCase.new
+    test_case.attributes = TestCase.find(1).attributes
+    test_case.name = 'X'
+    test_case.result = 'EXCLUDED'
+    test_case.output = "X"
+    test_case.save!
+    assert_equal( "2/2 (1 excluded)", Group.find(1).success_rate )
+  end
+
   def self.attributes_for_new
     {:name => 'foo', :test_configuration_id => 1 }
   end

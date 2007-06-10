@@ -13,21 +13,23 @@
     %td= h(@record.occured_at)
   %tr
     %th Success Rate
-    %td= "#{@record.successes.count}/#{@record.test_cases.count}"
-- if @record.failures.size > 0
-  %h3 Failures
+    %td= @record.success_rate
+- if @record.non_successes.size > 0
+  %h3 Unsuccessful Tests
   %table.list
     %tr
       %th Test Configuration
       %th Group
       %th Test
+      %th Result
       %th Reason
       %th Operations
-    - @record.failures.each do |t|
+    - @record.non_successes.each do |t|
       %tr
         %td= link_for(t.group.test_configuration)
         %td= link_for(t.group)
         %td= h(t.name)
+        %td= h(t.result)
         %td= h(t.result_explanation)
         %td
           %ul.actions

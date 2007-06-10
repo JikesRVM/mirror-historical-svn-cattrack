@@ -10,16 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Group < ActiveRecord::Base
-  belongs_to :test_configuration
-
-  has_many :test_cases, :dependent => :destroy
-  has_many :successes, :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
-  has_many :excluded, :class_name => 'TestCase', :conditions => "result = 'EXCLUDED'"
-
-  include TestCaseContainer
-
-  def parent_node
-    test_configuration
+module TestCaseContainer
+  def success_rate
+    excluded = self.excluded.count
+    total = self.test_cases.count - excluded
+    postfix = (excluded > 0) ? " (#{excluded} excluded)" : ''
+    "#{self.successes.count}/#{total}#{postfix}"
   end
 end

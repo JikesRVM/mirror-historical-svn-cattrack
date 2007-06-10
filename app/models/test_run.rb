@@ -15,6 +15,8 @@ class TestRun < ActiveRecord::Base
   has_one :build_target, :dependent => :destroy
   has_many :build_configurations, :dependent => :destroy
 
+  validates_positive :revision
+
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*
    FROM test_runs
@@ -35,11 +37,11 @@ class TestRun < ActiveRecord::Base
   end
 
   test_case_rel :successes, "test_cases.result = 'SUCCESS'"
-  test_case_rel :failures, "test_cases.result = 'FAILURE'"
-  test_case_rel :excludes, "test_cases.result = 'EXCLUDED'"
+  test_case_rel :non_successes, "test_cases.result != 'SUCCESS'"
+  test_case_rel :excluded, "test_cases.result = 'EXCLUDED'"
   test_case_rel :test_cases
 
-  validates_positive :revision
+  include TestCaseContainer
 
   def parent_node
     host

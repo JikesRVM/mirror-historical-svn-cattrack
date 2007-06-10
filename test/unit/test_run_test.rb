@@ -37,12 +37,18 @@ class TestRunTest < Test::Unit::TestCase
     #
     assert_equal( 13, test_run.successes.size )
     assert_equal( true, test_run.successes.collect {|t| t.id }.include?(1) )
-    assert_equal( 0, test_run.failures.size )
-    assert_equal( [], test_run.failures.collect {|t| t.id } )
-    assert_equal( 0, test_run.excludes.size )
-    assert_equal( [], test_run.excludes.collect {|t| t.id } )
+    assert_equal( 0, test_run.excluded.size )
+    assert_equal( [], test_run.excluded.collect {|t| t.id } )
     assert_equal( 13, test_run.test_cases.size )
     assert_equal( true, test_run.test_cases.collect {|t| t.id }.include?(1) )
+
+    # Used on summary screen
+    assert_equal( 0, test_run.non_successes.size )
+    assert_equal( [], test_run.non_successes.collect {|t| t.id } )
+  end
+
+  def test_success_rate
+    assert_equal( "13/13", TestRun.find(1).success_rate )
   end
 
   def self.attributes_for_new
