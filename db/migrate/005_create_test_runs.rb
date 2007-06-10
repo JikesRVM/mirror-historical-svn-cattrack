@@ -19,6 +19,7 @@ class CreateTestRuns < ActiveRecord::Migration
       t.column :occured_at, :timestamp, :null => false
       t.column :created_at, :timestamp, :null => false
     end
+    add_index :test_runs, [:host_id, :name, :occured_at], :unique => true
     add_index :test_runs, [:name]
     add_index :test_runs, [:host_id]
     add_index :test_runs, [:revision]
