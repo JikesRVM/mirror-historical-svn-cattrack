@@ -10,19 +10,18 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateTestRunDimensions < ActiveRecord::Migration
+class CreateTestConfigurationDimension < ActiveRecord::Migration
   def self.up
-    create_table :test_run_dimensions do |t|
-      t.column :source_id, :integer, :null => true
+    create_table :test_configuration_dimension do |t|
       t.column :name, :string, :limit => 75, :null => false
+      t.column :mode, :string, :limit => 75, :null => false
     end
-    add_index :test_run_dimensions, [:id], :unique => true
-    add_index :test_run_dimensions, [:name]
-    add_index :test_run_dimensions, [:source_id]
-    add_foreign_key :test_run_dimensions, [:source_id], :test_cases, [:id], :on_delete => :set_null
+    add_index :test_configuration_dimension, [:id], :unique => true
+    add_index :test_configuration_dimension, [:name]
+    add_index :test_configuration_dimension, [:mode]
   end
 
   def self.down
-    drop_table :test_run_dimensions
+    drop_table :test_configuration_dimension
   end
 end

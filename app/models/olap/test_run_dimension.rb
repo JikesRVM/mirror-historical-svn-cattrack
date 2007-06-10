@@ -10,5 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::TestRunDimension < ActiveRecord::Base
+class Olap::TestRunDimension < Olap::Dimension
 end

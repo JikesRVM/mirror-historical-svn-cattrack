@@ -10,5 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::RevisionDimension < ActiveRecord::Base
+class Olap::RevisionDimension < Olap::Dimension
 end

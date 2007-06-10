@@ -10,16 +10,17 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateHostDimensions < ActiveRecord::Migration
-  def self.up
-    create_table :host_dimensions do |t|
-      t.column :name, :string, :limit => 75, :null => false
-    end
-    add_index :host_dimensions, [:id], :unique => true
-    add_index :host_dimensions, [:name], :unique => true
-  end
+class Olap::Dimension < ActiveRecord::Base
+  self.abstract_class = true
 
-  def self.down
-    drop_table :host_dimensions
+  class << self
+    # Dimensions should have a singularized table name
+    def table_name
+      puts "table_name called on #{name}"
+      #X if self == Olap::Dimension
+      name = self.name.demodulize.underscore
+      set_table_name(name)
+      name
+    end
   end
 end

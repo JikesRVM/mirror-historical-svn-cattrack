@@ -10,6 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::BuildTargetDimension < Olap::Dimension
-  validates_inclusion_of :address_size, :in => [32, 64]
+class CreateRevisionDimension < ActiveRecord::Migration
+  def self.up
+    create_table :revision_dimension do |t|
+      t.column :revision, :integer, :null => false
+    end
+    add_index :revision_dimension, [:id], :unique => true
+    add_index :revision_dimension, [:revision]
+  end
+
+  def self.down
+    drop_table :revision_dimension
+  end
 end

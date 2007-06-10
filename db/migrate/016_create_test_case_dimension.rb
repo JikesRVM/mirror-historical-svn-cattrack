@@ -10,16 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateStatisticDimensions < ActiveRecord::Migration
+class CreateTestCaseDimension < ActiveRecord::Migration
   def self.up
-    create_table :statistic_dimensions do |t|
+    create_table :test_case_dimension do |t|
+      t.column :group, :string, :limit => 75, :null => false
       t.column :name, :string, :limit => 75, :null => false
     end
-    add_index :statistic_dimensions, [:id], :unique => true
-    add_index :statistic_dimensions, [:name]
+    add_index :test_case_dimension, [:id], :unique => true
+    add_index :test_case_dimension, [:name, :group], :unique => true
+    add_index :test_case_dimension, [:name]
+    add_index :test_case_dimension, [:group]
   end
 
   def self.down
-    drop_table :statistic_dimensions
+    drop_table :test_case_dimension
   end
 end

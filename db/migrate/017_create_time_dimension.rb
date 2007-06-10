@@ -10,9 +10,9 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateTimeDimensions < ActiveRecord::Migration
+class CreateTimeDimension < ActiveRecord::Migration
   def self.up
-    create_table :time_dimensions do |t|
+    create_table :time_dimension do |t|
       t.column :year, :integer, :null => false
       t.column :month, :integer, :null => false
       t.column :week, :integer, :null => false
@@ -21,17 +21,17 @@ class CreateTimeDimensions < ActiveRecord::Migration
       t.column :day_of_week, :integer, :null => false
       t.column :time, :timestamp, :null => false
     end
-    add_index :time_dimensions, [:id], :unique => true
-    add_index :time_dimensions, [:year]
-    add_index :time_dimensions, [:month]
-    add_index :time_dimensions, [:week]
-    add_index :time_dimensions, [:day_of_year]
-    add_index :time_dimensions, [:day_of_month]
-    add_index :time_dimensions, [:day_of_week]
-    add_index :time_dimensions, [:time]
+    add_index :time_dimension, [:id], :unique => true
+    add_index :time_dimension, [:year]
+    add_index :time_dimension, [:month]
+    add_index :time_dimension, [:week]
+    add_index :time_dimension, [:day_of_year]
+    add_index :time_dimension, [:day_of_month]
+    add_index :time_dimension, [:day_of_week]
+    add_index :time_dimension, [:time]
   end
 
   def self.down
-    drop_table :time_dimensions
+    drop_table :time_dimension
   end
 end

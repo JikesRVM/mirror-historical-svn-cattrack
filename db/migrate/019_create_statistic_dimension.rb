@@ -10,16 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateRevisionDimensions < ActiveRecord::Migration
+class CreateStatisticDimension < ActiveRecord::Migration
   def self.up
-    create_table :revision_dimensions do |t|
-      t.column :revision, :integer, :null => false
+    create_table :statistic_dimension do |t|
+      t.column :name, :string, :limit => 75, :null => false
     end
-    add_index :revision_dimensions, [:id], :unique => true
-    add_index :revision_dimensions, [:revision]
+    add_index :statistic_dimension, [:id], :unique => true
+    add_index :statistic_dimension, [:name]
   end
 
   def self.down
-    drop_table :revision_dimensions
+    drop_table :statistic_dimension
   end
 end

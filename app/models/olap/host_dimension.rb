@@ -10,5 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::HostDimension < ActiveRecord::Base
+class Olap::HostDimension < Olap::Dimension
 end

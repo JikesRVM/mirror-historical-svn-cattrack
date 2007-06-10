@@ -10,16 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateResultDimensions < ActiveRecord::Migration
+class CreateHostDimension < ActiveRecord::Migration
   def self.up
-    create_table :result_dimensions do |t|
-      t.column :name, :string, :limit => 16, :null => false
+    create_table :host_dimension do |t|
+      t.column :name, :string, :limit => 75, :null => false
     end
-    add_index :result_dimensions, [:id], :unique => true
-    add_index :result_dimensions, [:name], :unique => true
+    add_index :host_dimension, [:id], :unique => true
+    add_index :host_dimension, [:name], :unique => true
   end
 
   def self.down
-    drop_table :result_dimensions
+    drop_table :host_dimension
   end
 end

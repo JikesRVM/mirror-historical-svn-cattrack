@@ -10,22 +10,22 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class CreateBuildTargetDimensions < ActiveRecord::Migration
+class CreateBuildTargetDimension < ActiveRecord::Migration
   def self.up
-    create_table :build_target_dimensions do |t|
+    create_table :build_target_dimension do |t|
       t.column :name, :string, :limit => 75, :null => false
       t.column :arch, :string, :limit => 10, :null => false
       t.column :address_size, :integer, :null => false
       t.column :operating_system, :string, :limit => 50, :null => false
     end
-    add_index :build_target_dimensions, [:id], :unique => true
-    add_index :build_target_dimensions, [:name]
-    add_index :build_target_dimensions, [:arch]
-    add_index :build_target_dimensions, [:address_size]
-    add_index :build_target_dimensions, [:operating_system]
+    add_index :build_target_dimension, [:id], :unique => true
+    add_index :build_target_dimension, [:name]
+    add_index :build_target_dimension, [:arch]
+    add_index :build_target_dimension, [:address_size]
+    add_index :build_target_dimension, [:operating_system]
   end
 
   def self.down
-    drop_table :build_target_dimensions
+    drop_table :build_target_dimension
   end
 end

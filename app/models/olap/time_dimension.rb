@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::TimeDimension < ActiveRecord::Base
+class Olap::TimeDimension < Olap::Dimension
   validates_inclusion_of :year, :in => 2000..2100
   validates_inclusion_of :month, :in => 1..12
   validates_inclusion_of :week, :in => 1..54

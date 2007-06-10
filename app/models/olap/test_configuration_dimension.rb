@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::TestConfigurationDimension < ActiveRecord::Base
+class Olap::TestConfigurationDimension < Olap::Dimension
   auto_validations :except => [:id, :mode]
   validates_not_null :mode
   validates_length_of :mode, :maximum => 75

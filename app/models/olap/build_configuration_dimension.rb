@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::BuildConfigurationDimension < ActiveRecord::Base
+class Olap::BuildConfigurationDimension < Olap::Dimension
   validates_inclusion_of :bootimage_compiler, :in => %w( base opt )
   validates_inclusion_of :runtime_compiler, :in => %w( base opt )
   validates_inclusion_of :assertion_level, :in => %w( none normal extreme )
