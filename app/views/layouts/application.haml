@@ -46,7 +46,7 @@
               %td.menu= render(:partial => menu)
             %td
               .main-copy
-                = draw_breadcrumbs(@record) if @record
+                = draw_breadcrumbs(@record.parent_node) if @record
                 = render(:partial => '/common/flash_messages')
                 = yield
       #ft= "Powered by CatTrack (Version \##{db_version})."

@@ -12,8 +12,22 @@
 #
 module ApplicationHelper
   def link_for(object, options = {})
-    label = options.delete(:label) || object.label
-    link_to(h(label), {:controller => "/#{object.class.table_name.singularize}", :action => 'show'}.merge(gen_link_options(object)).merge(options))
+    label = options[:label] || object.label
+    action = options[:action] || 'show'
+    link_to(h(label), {:controller => "/results/#{object.class.table_name.singularize}", :action => action}.merge(gen_link_options(object)))
+  end
+
+  def gen_link_options(object)
+    options = {}
+    breadcrumbs(object).each do |o|
+      if o.is_a? TestRun
+        options["#{o.class.table_name.singularize}_id".to_sym] = o.id
+      end
+      if not o.is_a? BuildTarget
+        options["#{o.class.table_name.singularize}_name".to_sym] = o.name
+      end
+    end
+    options
   end
 
   def draw_breadcrumbs(object)
@@ -21,7 +35,7 @@ module ApplicationHelper
     bc.collect {|o| "#{link_for(o)}"}.join(' &gt; ')
   end
 
-  def gen_link_options(object)
+  def gen_link_options_old(object)
     options = {}
     breadcrumbs(object).each { |o| options["#{o.class.table_name.singularize}_id".to_sym] = o.id }
     options[:id] = object.id
@@ -30,7 +44,7 @@ module ApplicationHelper
 
   def breadcrumbs(object)
     options = []
-    o = object.parent_node
+    o = object
     while o
       options << o
       o = o.parent_node
@@ -47,7 +61,7 @@ module ApplicationHelper
   end
 
   def test_run_delete_link(test_run)
-    link = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => test_run},{:method => :post, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"})
+    link = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => test_run}, {:method => :post, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"})
     s = <<EOS
 <li id="test_run_#{test_run.id}_delete">#{link}<script type='text/javascript'><!--
 if(!is_admin()) Element.hide('test_run_#{test_run.id}_delete')

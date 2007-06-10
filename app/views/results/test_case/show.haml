@@ -36,4 +36,4 @@
       %td= h(v)
   %tr
     %th Output
-    %td= link_to('...', :action => 'show_output', :id => @record)
+    %td= link_for(@record, :label => '...Output...', :action => 'show_output')

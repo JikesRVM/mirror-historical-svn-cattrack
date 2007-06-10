@@ -8,6 +8,5 @@
       %td= h(h.name)
       %td
         %ul.actions
-          %li
-            %a{:href => url_for(:action => 'show', :id => h) } Show
+          %li= link_for(h, :label => 'Show')
 = render(:partial => '/common/pagination', :locals => {:record_pages => @record_pages})

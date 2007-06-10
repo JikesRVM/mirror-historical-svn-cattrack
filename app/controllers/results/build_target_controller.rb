@@ -11,7 +11,11 @@
 #  regarding copyright ownership.
 #
 class Results::BuildTargetController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show
+  session :off
+
   def show
-    @record = BuildTarget.find(params[:id])
+    @record = build_target
   end
 end

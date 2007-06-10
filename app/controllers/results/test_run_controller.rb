@@ -11,20 +11,23 @@
 #  regarding copyright ownership.
 #
 class Results::TestRunController < Results::BaseController
+  verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
   verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
+  caches_page :show, :show_summary
   cache_sweeper :test_run_sweeper, :only => [:destroy]
+  session :off, :except => [:destroy]
 
   def show
-    @record = TestRun.find(params[:id])
+    @record = test_run
   end
 
   def show_summary
-    @record = TestRun.find(params[:id])
+    @record = test_run
   end
 
   def destroy
     raise AuthenticatedSystem::SecurityError unless is_authenticated?
-    @record = TestRun.find(params[:id])
+    @record = test_run
     raise AuthenticatedSystem::SecurityError unless current_user.admin?
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy

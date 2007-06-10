@@ -11,12 +11,16 @@
 #  regarding copyright ownership.
 #
 class Results::TestCaseController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show, :show_output
+  session :off
+
   def show
-    @record = TestCase.find(params[:id])
+    @record = test_case
   end
 
   def show_output
-    @record = TestCase.find(params[:id])
+    @record = test_case
     headers['Content-Type'] = 'text/plain'
     render(:text => @record.output, :layout => false)
   end

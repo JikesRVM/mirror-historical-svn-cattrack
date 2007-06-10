@@ -33,7 +33,13 @@ class Results::BuildTargetControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    get(:show, {:id => id}, session_data)
+    build_target = BuildTarget.find(id)
+    test_run = build_target.test_run
+    host = test_run.host
+    params = {:host_name => host.name}
+    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
+
+    get(:show, params, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])

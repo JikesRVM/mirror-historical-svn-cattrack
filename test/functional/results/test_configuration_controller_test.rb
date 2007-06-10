@@ -33,7 +33,16 @@ class Results::TestConfigurationControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    get(:show, {:id => id}, session_data)
+    test_configuration = TestConfiguration.find(id)
+    build_configuration = test_configuration.build_configuration
+    test_run = build_configuration.test_run
+    host = test_run.host
+    params = {:host_name => host.name}
+    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
+    params.merge!(:build_configuration_name => build_configuration.name)
+    params.merge!(:test_configuration_name => test_configuration.name)
+
+    get(:show, params, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])

@@ -37,6 +37,6 @@ class TestConfiguration < ActiveRecord::Base
   include TestCaseContainer
 
   def parent_node
-    build_configuration.test_run
+    build_configuration
   end
 end

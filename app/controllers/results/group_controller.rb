@@ -16,6 +16,6 @@ class Results::GroupController < Results::BaseController
   session :off
 
   def show
-    @record = Group.find(params[:id])
+    @record = group
   end
 end

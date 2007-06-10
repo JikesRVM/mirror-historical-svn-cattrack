@@ -37,7 +37,8 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    get(:show, {:id => id}, session_data)
+    test_run = TestRun.find(id)
+    get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])
@@ -48,7 +49,8 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
 
   def test_show_summary
     id = 1
-    get(:show_summary, {:id => id}, session_data)
+    test_run = TestRun.find(id)
+    get(:show_summary, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_response(:success)
     assert_template('show_summary')
     assert_nil(flash[:alert])
@@ -60,8 +62,9 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
   def test_destroy
     id = 1
     assert(model.exists?(id))
-    label = model.find(id).label
-    post(:destroy, {:id => id}, session_data)
+    test_run = TestRun.find(id)
+    label = test_run.label
+    post(:destroy, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_redirected_to(:controller => 'host', :action => 'show', :id => 1)
     assert(!model.exists?(id))
     assert_not_nil(assigns(:record))

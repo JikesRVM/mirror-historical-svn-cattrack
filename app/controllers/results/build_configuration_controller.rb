@@ -11,12 +11,16 @@
 #  regarding copyright ownership.
 #
 class Results::BuildConfigurationController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show, :show_output
+  session :off
+
   def show
-    @record = BuildConfiguration.find(params[:id])
+    @record = build_configuration
   end
 
   def show_output
-    @record = BuildConfiguration.find(params[:id])
+    @record = build_configuration
     headers['Content-Type'] = 'text/plain'
     render(:text => @record.output, :layout => false)
   end

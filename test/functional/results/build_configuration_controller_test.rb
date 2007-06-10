@@ -32,7 +32,15 @@ class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    get(:show, {:id => 1}, session_data)
+    id = 1
+    build_configuration = BuildConfiguration.find(id)
+    test_run = build_configuration.test_run
+    host = test_run.host
+    params = {:host_name => host.name}
+    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
+    params.merge!(:build_configuration_name => build_configuration.name)
+
+    get(:show, params, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])
@@ -42,7 +50,15 @@ class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
   end
 
   def test_show_output
-    get(:show_output, {:id => 1}, session_data)
+    id = 1
+    build_configuration = BuildConfiguration.find(id)
+    test_run = build_configuration.test_run
+    host = test_run.host
+    params = {:host_name => host.name}
+    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
+    params.merge!(:build_configuration_name => build_configuration.name)
+
+    get(:show_output, params, session_data)
     assert_response(:success)
     assert_template(nil)
     assert_equal('text/plain; charset=utf-8', @response.headers['Content-Type'])

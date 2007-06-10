@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class HostController < ApplicationController
-  verify :method => :get, :only => [:show, :list], :redirect_to => :access_denied_url
+class Results::HostController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
   session :off
 
   def show
-    @record = Host.find(params[:id])
+    @record = host
     @test_run_pages, @test_runs =
       paginate(:test_run, :per_page => 20, :order => 'occured_at DESC', :conditions => ['host_id = ?', @record.id])
   end

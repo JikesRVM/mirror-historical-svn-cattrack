@@ -33,4 +33,4 @@
         %td= h(t.result_explanation)
         %td
           %ul.actions
-            %li= link_to('Show', {:controller => "/test_case", :action => 'show'}.merge(gen_link_options(t)))
+            %li= link_for(t, :label => 'Show')

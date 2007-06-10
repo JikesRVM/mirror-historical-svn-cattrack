@@ -23,8 +23,7 @@
     %th Import Date
     %td= @record.created_at
 %ul.actions
-  %li
-    %a{:href => url_for(:action => 'show_summary', :id => @record) } Show Summary
+  %li= link_for(@record, :label => 'Show Summary', :action => 'show_summary')
 .clearer
 %h3 Build Runs
 %table.list
@@ -36,7 +35,7 @@
     %tr
       %td= h(bc.label)
       %td= h(bc.result)
-      %td= link_to('Show', :controller => "/build_configuration", :action => 'show', :id => bc.id)
+      %td= link_for(bc, :label => 'Show')
 
 %h3 Test Configurations
 %table.list
@@ -49,4 +48,4 @@
       %tr
         %td= h(tc.label)
         %td= tc.success_rate
-        %td= link_to('Show', :controller => "/test_configuration", :action => 'show', :id => tc.id)
+        %td= link_for(tc, :label => 'Show')

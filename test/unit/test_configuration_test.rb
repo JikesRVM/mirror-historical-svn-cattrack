@@ -18,7 +18,7 @@ class TestConfigurationTest < Test::Unit::TestCase
   end
 
   def test_parent_node
-    assert_parent_node(test_configurations(:tc1_1),TestRun,1)
+    assert_parent_node(test_configurations(:tc1_1),BuildConfiguration,1)
   end
 
   def test_basic_load

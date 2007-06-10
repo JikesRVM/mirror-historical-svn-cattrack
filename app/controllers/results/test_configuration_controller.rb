@@ -11,7 +11,11 @@
 #  regarding copyright ownership.
 #
 class Results::TestConfigurationController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show
+  session :off
+
   def show
-    @record = TestConfiguration.find(params[:id])
+    @record = test_configuration
   end
 end

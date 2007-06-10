@@ -11,17 +11,17 @@
 #  regarding copyright ownership.
 #
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'results/host/:host_id/test_run/:test_run_id/test_configuration/:test_configuration_id/group/:group_id/test_case/:id/Result.txt', :controller => 'results/test_case', :action => 'show_output'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/test_configuration/:test_configuration_id/group/:group_id/test_case/:id', :controller => 'results/test_case', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/test_configuration/:test_configuration_id/group/:id', :controller => 'results/group', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/test_configuration/:id', :controller => 'results/test_configuration', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/build_configuration/:id/Result.txt', :controller => 'results/build_configuration', :action => 'show_output'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/build_configuration/:id', :controller => 'results/build_configuration', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:test_run_id/build_target/:id', :controller => 'results/build_target', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:id', :controller => 'results/test_run', :action => 'show'
-  map.connect 'results/host/:host_id/test_run/:id/Summary', :controller => 'results/test_run', :action => 'show_summary'
-  map.connect 'results/host/:id', :controller => 'host', :action => 'show', :id => /\d/
-  map.connect 'results/hosts', :controller => 'host', :action => 'list'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/build_target', :controller => 'results/build_target', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/summary', :controller => 'results/test_run', :action => 'show_summary'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/Output.txt', :controller => 'results/test_case', :action => 'show_output'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name', :controller => 'results/test_case', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name', :controller => 'results/group', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name', :controller => 'results/test_configuration', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/Output.txt', :controller => 'results/build_configuration', :action => 'show_output'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name', :controller => 'results/build_configuration', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'show'
+  map.connect 'results/hosts', :controller => 'results/host', :action => 'list'
+  map.connect 'results/:host_name', :controller => 'results/host', :action => 'show'
 
   map.connect 'admin', :controller => 'admin/dashboard'
   map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show'

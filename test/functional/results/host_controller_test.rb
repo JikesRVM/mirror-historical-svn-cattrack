@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
-require 'host_controller'
+require File.dirname(__FILE__) + '/../../test_helper'
+require 'results/host_controller'
 
-class HostController
+class Results::HostController
   # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
 end
 
-class HostControllerTest < Test::Unit::TestCase
+class Results::HostControllerTest < Test::Unit::TestCase
   def setup
-    @controller = HostController.new
+    @controller = Results::HostController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
@@ -33,7 +33,7 @@ class HostControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    get(:show, {:id => id}, session_data)
+    get(:show, {:host_name => 'skunk'}, session_data)
     assert_response(:success)
     assert_template('show')
     assert_nil(flash[:alert])
