@@ -18,6 +18,7 @@ class CreateBuildTargetDimensions < ActiveRecord::Migration
       t.column :address_size, :integer, :null => false
       t.column :operating_system, :string, :limit => 50, :null => false
     end
+    add_index :build_target_dimensions, [:id], :unique => true
     add_index :build_target_dimensions, [:name]
     add_index :build_target_dimensions, [:arch]
     add_index :build_target_dimensions, [:address_size]

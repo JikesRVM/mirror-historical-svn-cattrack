@@ -21,6 +21,7 @@ class CreateTimeDimensions < ActiveRecord::Migration
       t.column :day_of_week, :integer, :null => false
       t.column :time, :timestamp, :null => false
     end
+    add_index :time_dimensions, [:id], :unique => true
     add_index :time_dimensions, [:year]
     add_index :time_dimensions, [:month]
     add_index :time_dimensions, [:week]

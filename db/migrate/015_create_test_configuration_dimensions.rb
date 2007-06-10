@@ -16,6 +16,7 @@ class CreateTestConfigurationDimensions < ActiveRecord::Migration
       t.column :name, :string, :limit => 75, :null => false
       t.column :mode, :string, :limit => 75, :null => false
     end
+    add_index :test_configuration_dimensions, [:id], :unique => true
     add_index :test_configuration_dimensions, [:name]
     add_index :test_configuration_dimensions, [:mode]
   end

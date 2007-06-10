@@ -15,6 +15,7 @@ class CreateHostDimensions < ActiveRecord::Migration
     create_table :host_dimensions do |t|
       t.column :name, :string, :limit => 75, :null => false
     end
+    add_index :host_dimensions, [:id], :unique => true
     add_index :host_dimensions, [:name], :unique => true
   end
 

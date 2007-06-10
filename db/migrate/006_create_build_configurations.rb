@@ -18,6 +18,7 @@ class CreateBuildConfigurations < ActiveRecord::Migration
       t.column :result, :string, :limit => 15, :null => false
       t.column :time, :integer, :null => false
     end
+    add_index :build_configurations, [:id], :unique => true
     add_index :build_configurations, [:test_run_id, :name], :unique => true
     add_foreign_key :build_configurations, [:test_run_id], :test_runs, [:id], :on_delete => :cascade
 

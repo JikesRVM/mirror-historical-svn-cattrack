@@ -19,6 +19,7 @@ class CreateUsers < ActiveRecord::Migration
       t.column :admin, :boolean, :null => false
       t.column :active, :boolean, :null => false
     end
+    add_index :users, [:id], :unique => true
     add_index :users, [:username], :unique => true
     add_index :users, [:username, :password, :active]
   end

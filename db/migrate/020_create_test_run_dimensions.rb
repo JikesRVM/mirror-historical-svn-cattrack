@@ -16,6 +16,7 @@ class CreateTestRunDimensions < ActiveRecord::Migration
       t.column :source_id, :integer, :null => true
       t.column :name, :string, :limit => 75, :null => false
     end
+    add_index :test_run_dimensions, [:id], :unique => true
     add_index :test_run_dimensions, [:name]
     add_index :test_run_dimensions, [:source_id]
     add_foreign_key :test_run_dimensions, [:source_id], :test_cases, [:id], :on_delete => :set_null

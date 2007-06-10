@@ -18,6 +18,7 @@ class CreateDataPresentations < ActiveRecord::Migration
     create_table :data_presentations do |t|
       t.column :name, :string, :limit => 120, :null => false
     end
+    add_index :data_presentations, [:id], :unique => true
     add_index :data_presentations, [:name], :unique => true
 
     create_table :data_presentation_params, :id => false, :force => true do |t|

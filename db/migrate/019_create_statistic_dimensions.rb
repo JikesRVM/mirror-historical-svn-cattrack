@@ -15,6 +15,7 @@ class CreateStatisticDimensions < ActiveRecord::Migration
     create_table :statistic_dimensions do |t|
       t.column :name, :string, :limit => 75, :null => false
     end
+    add_index :statistic_dimensions, [:id], :unique => true
     add_index :statistic_dimensions, [:name]
   end
 

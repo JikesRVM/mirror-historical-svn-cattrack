@@ -16,6 +16,7 @@ class CreateTestConfigurations < ActiveRecord::Migration
       t.column :name, :string, :limit => 75, :null => false
       t.column :build_configuration_id, :integer, :null => false
     end
+    add_index :test_configurations, [:id], :unique => true
     add_index :test_configurations, [:name, :build_configuration_id], :unique => true
     add_index :test_configurations, [:name]
     add_index :test_configurations, [:build_configuration_id]

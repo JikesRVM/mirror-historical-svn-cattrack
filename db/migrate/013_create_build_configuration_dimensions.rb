@@ -20,6 +20,7 @@ class CreateBuildConfigurationDimensions < ActiveRecord::Migration
       t.column :assertion_level, :string, :limit => 10, :null => false
       t.column :bootimage_class_inclusion_policy, :string, :limit => 10, :null => false
     end
+    add_index :build_configuration_dimensions, [:id], :unique => true
     add_index :build_configuration_dimensions, [:name]
     add_index :build_configuration_dimensions, [:bootimage_compiler]
     add_index :build_configuration_dimensions, [:runtime_compiler]

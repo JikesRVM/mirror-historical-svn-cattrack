@@ -18,6 +18,7 @@ class CreateSessions < ActiveRecord::Migration
          t.column :created_on, :timestamp, :null => false
          t.column :updated_on, :timestamp, :null => false
       end
+      add_index :sessions, [:id], :unique => true
       add_index :sessions, [:sessid], :unique => true
    end
 

@@ -15,6 +15,7 @@ class CreateRevisionDimensions < ActiveRecord::Migration
     create_table :revision_dimensions do |t|
       t.column :revision, :integer, :null => false
     end
+    add_index :revision_dimensions, [:id], :unique => true
     add_index :revision_dimensions, [:revision]
   end
 

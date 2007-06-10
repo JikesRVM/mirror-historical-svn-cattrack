@@ -20,6 +20,7 @@ class CreateSystemSettings < ActiveRecord::Migration
       t.column :value, :text, :null => false
     end
 
+    add_index :system_settings, [:id], :unique => true
     add_index :system_settings, [:name], :unique => true
 
     SystemSetting.create!(:name => 'environment', :value => ENV['SELECTED_ENV'] || ENV['RAILS_ENV'] || RAILS_ENV)

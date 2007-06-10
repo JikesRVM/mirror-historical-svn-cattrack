@@ -16,6 +16,7 @@ class CreateBuildTargets < ActiveRecord::Migration
       t.column :name, :string, :limit => 75, :null => false
       t.column :test_run_id, :integer, :null => false
     end
+    add_index :build_targets, [:id], :unique => true
     add_index :build_targets, [:test_run_id], :unique => true
     add_index :build_targets, [:test_run_id, :name]
     add_index :build_targets, [:name]

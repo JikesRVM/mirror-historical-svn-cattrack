@@ -19,6 +19,7 @@ class CreateSummarizers < ActiveRecord::Migration
       t.column :secondary_dimension, :string, :limit => 256, :null => false
       t.column :function, :string, :limit => 256, :null => false
     end
+    add_index :summarizers, [:id], :unique => true
     add_index :summarizers, [:name], :unique => true
   end
 

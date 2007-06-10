@@ -16,6 +16,7 @@ class CreateTestCaseDimensions < ActiveRecord::Migration
       t.column :group, :string, :limit => 75, :null => false
       t.column :name, :string, :limit => 75, :null => false
     end
+    add_index :test_case_dimensions, [:id], :unique => true
     add_index :test_case_dimensions, [:name, :group], :unique => true
     add_index :test_case_dimensions, [:name]
     add_index :test_case_dimensions, [:group]

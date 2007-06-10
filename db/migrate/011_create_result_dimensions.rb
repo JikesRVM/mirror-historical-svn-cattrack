@@ -15,6 +15,7 @@ class CreateResultDimensions < ActiveRecord::Migration
     create_table :result_dimensions do |t|
       t.column :name, :string, :limit => 16, :null => false
     end
+    add_index :result_dimensions, [:id], :unique => true
     add_index :result_dimensions, [:name], :unique => true
   end
 

@@ -26,6 +26,7 @@ class CreateStatisticFacts < ActiveRecord::Migration
 
       t.column :value, :float, :null => false
     end
+    add_index :statistic_facts, [:id], :unique => true
     add_index :statistic_facts, [:host_id]
     add_index :statistic_facts, [:test_run_id]
     add_index :statistic_facts, [:test_configuration_id]

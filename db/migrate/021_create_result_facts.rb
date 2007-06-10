@@ -25,6 +25,7 @@ class CreateResultFacts < ActiveRecord::Migration
 
       t.column :result_id, :integer, :null => false
     end
+    add_index :result_facts, [:id], :unique => true
     add_index :result_facts, [:host_id]
     add_index :result_facts, [:test_run_id]
     add_index :result_facts, [:test_configuration_id]
