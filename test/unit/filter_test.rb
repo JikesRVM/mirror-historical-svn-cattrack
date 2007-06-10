@@ -79,31 +79,31 @@ class FilterTest < Test::Unit::TestCase
   def test_search_filter_criteria_for_single_value_parameter
     conditions, join_sql = Filter.new(:host_name => 'ace').filter_criteria
     assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
-    assert_equal([HostDimension], join_sql)
+    assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_single_value_parameter_in_array
     conditions, join_sql = Filter.new(:host_name => ['ace']).filter_criteria
     assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
-    assert_equal([HostDimension], join_sql)
+    assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multi_value_parameter
     conditions, join_sql = Filter.new(:host_name => ['ace', 'baby']).filter_criteria
     assert_equal(["host_dimensions.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)
-    assert_equal([HostDimension], join_sql)
+    assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters
     conditions, join_sql = Filter.new(:host_name => 'ace', :test_run_name => 'foo').filter_criteria
     assert_equal(["host_dimensions.name = :host_name AND test_run_dimensions.name = :test_run_name", {:test_run_name=>"foo", :host_name=>"ace"}], conditions)
-    assert_equal([HostDimension, TestRunDimension], join_sql)
+    assert_equal([Olap::HostDimension, Olap::TestRunDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters_on_same_table
     conditions, join_sql = Filter.new(:test_case_name => 'ace', :test_case_group => 'foo').filter_criteria
     assert_equal(["test_case_dimensions.name = :test_case_name AND test_case_dimensions.group = :test_case_group", {:test_case_name=>"ace", :test_case_group=>"foo"}], conditions)
-    assert_equal([TestCaseDimension], join_sql)
+    assert_equal([Olap::TestCaseDimension], join_sql)
   end
 
   def test_calculate_hour_offset
@@ -145,13 +145,13 @@ class FilterTest < Test::Unit::TestCase
   def test_before_revision
     conditions, join_sql = Filter.new(:revision_before => '1234').filter_criteria
     assert_equal(["revision_dimensions.revision < :revision_before", {:revision_before=>"1234"}], conditions)
-    assert_equal([RevisionDimension], join_sql)
+    assert_equal([Olap::RevisionDimension], join_sql)
   end
 
   def test_after_revision
     conditions, join_sql = Filter.new(:revision_after => '1234').filter_criteria
     assert_equal(["revision_dimensions.revision > :revision_from", {:revision_after=>"1234"}], conditions)
-    assert_equal([RevisionDimension], join_sql)
+    assert_equal([Olap::RevisionDimension], join_sql)
   end
 
   def test_add_time_based_search
@@ -164,7 +164,7 @@ class FilterTest < Test::Unit::TestCase
     Filter.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(2, conditions.length)
     assert_equal(['time_dimensions.time < :time_before', 'time_dimensions.time > :time_after'], conditions)
-    assert_equal([TimeDimension], joins.uniq)
+    assert_equal([Olap::TimeDimension], joins.uniq)
     assert_equal(2, cond_params.length)
     assert_equal('1979-11-07 00:00:00', cond_params[:time_before])
     assert_equal('1977-10-20 00:00:00', cond_params[:time_after])
@@ -179,7 +179,7 @@ class FilterTest < Test::Unit::TestCase
     joins = []
     Filter.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(['time_dimensions.time > :time_from', 'time_dimensions.time < :time_to'], conditions)
-    assert_equal([TimeDimension, TimeDimension], joins)
+    assert_equal([Olap::TimeDimension, Olap::TimeDimension], joins)
     assert_equal(2, cond_params.length)
     # just assert that entrys exist - too hard to verify
     # stuff already tested elsewhere
@@ -235,6 +235,6 @@ class FilterTest < Test::Unit::TestCase
     :build_target_arch => "ia32",
     :build_target_name => ["foo", "bar", "baz"],
     :build_configuration_name => "prototype"}, conditions[1])
-    assert_equal([TestRunDimension, BuildTargetDimension, BuildConfigurationDimension, TestConfigurationDimension, ResultDimension, TimeDimension], join_sql)
+    assert_equal([Olap::TestRunDimension, Olap::BuildTargetDimension, Olap::BuildConfigurationDimension, Olap::TestConfigurationDimension, Olap::ResultDimension, Olap::TimeDimension], join_sql)
   end
 end

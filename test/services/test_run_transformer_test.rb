@@ -15,18 +15,18 @@ require File.dirname(__FILE__) + '/../test_helper'
 class TestRunTransformerTest < Test::Unit::TestCase
   def test_build_olap_model_from
     test_run = TestRun.find(1)
-    initial_result_fact_count = ResultFact.count
-    initial_statistic_fact_count = StatisticFact.count
+    initial_result_fact_count = Olap::ResultFact.count
+    initial_statistic_fact_count = Olap::StatisticFact.count
     TestRunTransformer.build_olap_model_from(test_run)
     assert_equal( 13, test_run.test_cases.size )
-    assert_equal( initial_result_fact_count + 13, ResultFact.count )
-    assert_equal( initial_statistic_fact_count + 1 + 13, StatisticFact.count )
+    assert_equal( initial_result_fact_count + 13, Olap::ResultFact.count )
+    assert_equal( initial_statistic_fact_count + 1 + 13, Olap::StatisticFact.count )
 
     # Assume no other statistics created for specific revision
-    revision = RevisionDimension.find_by_revision(test_run.revision)
+    revision = Olap::RevisionDimension.find_by_revision(test_run.revision)
     assert_not_nil(revision)
 
-    results = ResultFact.find_all_by_revision_id(revision.id)
+    results = Olap::ResultFact.find_all_by_revision_id(revision.id)
     assert_equal( 13, results.size )
     assert_equal( ['basic', 'caffeinemark', 'optests'], results.collect {|r| r.test_case.group }.uniq.sort )
     assert_equal( ["TestClassLoading", "TestCompares", "TestLotsOfLoops", "TestThrow", "caffeinemark"], results.collect {|r| r.test_case.name }.uniq.sort )
@@ -37,7 +37,7 @@ class TestRunTransformerTest < Test::Unit::TestCase
     assert_equal( ['ia32_linux'], results.collect {|r| r.build_target.name }.uniq )
     assert_equal( ['prototype', 'prototype-opt', 'prototype_V2'], results.collect {|r| r.test_configuration.name }.uniq.sort )
 
-    results = StatisticFact.find_all_by_revision_id(revision.id)
+    results = Olap::StatisticFact.find_all_by_revision_id(revision.id)
     assert_equal( 14, results.size )
 
     timings = results.select{|r| r.statistic.name != 'caffeinemark'}

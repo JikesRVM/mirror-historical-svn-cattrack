@@ -15,10 +15,10 @@
 class TestRunTransformer
   def self.build_olap_model_from(test_run)
     TestRun.transaction do
-      host = HostDimension.find_or_create_by_name(test_run.host.name)
-      tr = TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
+      host = Olap::HostDimension.find_or_create_by_name(test_run.host.name)
+      tr = Olap::TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
       build_target = create_build_target(test_run.build_target)
-      revision = RevisionDimension.find_or_create_by_revision(test_run.revision)
+      revision = Olap::RevisionDimension.find_or_create_by_revision(test_run.revision)
 
       time = create_time(test_run.occured_at)
       test_run.build_configurations.each do |bc|
@@ -38,7 +38,7 @@ class TestRunTransformer
   private
 
   def self.create_test_configuration(tc)
-    TestConfigurationDimension.find_or_create_by_name_and_mode(tc.name, tc.params['mode'] || '')
+    Olap::TestConfigurationDimension.find_or_create_by_name_and_mode(tc.name, tc.params['mode'] || '')
   end
 
   def self.create_time(t)
@@ -50,7 +50,7 @@ class TestRunTransformer
     params[:day_of_month] = t.mday
     params[:day_of_week] = t.wday + 1
     params[:time] = t
-    find_or_create(TimeDimension, params)
+    find_or_create(Olap::TimeDimension, params)
   end
 
   def self.create_build_target(bt)
@@ -60,7 +60,7 @@ class TestRunTransformer
     params[:arch] = p['target.arch']
     params[:address_size] = p['target.address.size'].to_i
     params[:operating_system] = p['target.os']
-    find_or_create(BuildTargetDimension, params)
+    find_or_create(Olap::BuildTargetDimension, params)
   end
 
   def self.create_build_configuration(bc)
@@ -72,7 +72,7 @@ class TestRunTransformer
     params[:mmtk_plan] = p['config.mmtk.plan']
     params[:assertion_level] = p['config.assertions']
     params[:bootimage_class_inclusion_policy] = (p['config.include.all-classes'] == 'false') ? 'minimal' : 'complete'
-    find_or_create(BuildConfigurationDimension, params)
+    find_or_create(Olap::BuildConfigurationDimension, params)
   end
 
   def self.find_or_create(model, params)
@@ -83,9 +83,9 @@ class TestRunTransformer
   end
 
   def self.create_test(host, test_run, build_target, revision, time, test_configuration, build_configuration, group_name, t)
-    tc = TestCaseDimension.find_or_create_by_name_and_group(t.name, group_name)
-    result = ResultDimension.find_or_create_by_name(t.result)
-    rfact = ResultFact.new
+    tc = Olap::TestCaseDimension.find_or_create_by_name_and_group(t.name, group_name)
+    result = Olap::ResultDimension.find_or_create_by_name(t.result)
+    rfact = Olap::ResultFact.new
     rfact.host_id = host.id
     rfact.test_run_id = test_run.id
     rfact.build_configuration_id = build_configuration.id
@@ -98,8 +98,8 @@ class TestRunTransformer
     rfact.result_id = result.id
     save!(rfact)
 
-    statistic = StatisticDimension.find_or_create_by_name('rvm.real.time')
-    sfact = StatisticFact.new
+    statistic = Olap::StatisticDimension.find_or_create_by_name('rvm.real.time')
+    sfact = Olap::StatisticFact.new
     sfact.host_id = host.id
     sfact.test_run_id = test_run.id
     sfact.build_configuration_id = build_configuration.id
@@ -120,8 +120,8 @@ class TestRunTransformer
       rescue ArgumentError, TypeError
         next
       end
-      statistic = StatisticDimension.find_or_create_by_name(k)
-      sfact = StatisticFact.new
+      statistic = Olap::StatisticDimension.find_or_create_by_name(k)
+      sfact = Olap::StatisticFact.new
       sfact.host_id = host.id
       sfact.test_run_id = test_run.id
       sfact.build_configuration_id = build_configuration.id

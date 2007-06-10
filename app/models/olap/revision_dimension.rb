@@ -10,6 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class BuildTargetDimension < ActiveRecord::Base
-  validates_inclusion_of :address_size, :in => [32, 64]
+class Olap::RevisionDimension < ActiveRecord::Base
 end

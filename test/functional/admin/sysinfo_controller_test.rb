@@ -47,36 +47,36 @@ class Admin::SysinfoControllerTest < Test::Unit::TestCase
   end
 
   def test_purge_historic_result_facts
-    assert_equal([1, 2], ResultFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_equal([1, 2], Olap::ResultFact.find(:all, :order => 'id').collect{|r|r.id})
     post(:purge_historic_result_facts, {}, {:user_id => 1})
     assert_redirected_to(:action => 'show')
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
-    assert_equal([1], ResultFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_equal([1], Olap::ResultFact.find(:all, :order => 'id').collect{|r|r.id})
   end
 
   def test_purge_historic_statistic_facts
-    assert_equal([1, 2], StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_equal([1, 2], Olap::StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
     post(:purge_historic_statistic_facts, {}, {:user_id => 1})
     assert_redirected_to(:action => 'show')
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
-    assert_equal([1], StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_equal([1], Olap::StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
   end
 
   def test_purge_orphan_dimensions
     assert_equal(
     [
-    ["Host", 2, HostDimension],
-    ["TestRun", 0, TestRunDimension],
-    ["TestConfiguration", 6, TestConfigurationDimension],
-    ["BuildConfiguration", 4, BuildConfigurationDimension],
-    ["BuildTarget", 0, BuildTargetDimension],
-    ["TestCase", 2, TestCaseDimension],
-    ["Time", 2, TimeDimension],
-    ["Revision", 2, RevisionDimension],
-    ["Result", 2, ResultDimension],
-    ["Statistic", 0, StatisticDimension],
+    ["Host", 2, Olap::HostDimension],
+    ["TestRun", 0, Olap::TestRunDimension],
+    ["TestConfiguration", 6, Olap::TestConfigurationDimension],
+    ["BuildConfiguration", 4, Olap::BuildConfigurationDimension],
+    ["BuildTarget", 0, Olap::BuildTargetDimension],
+    ["TestCase", 2, Olap::TestCaseDimension],
+    ["Time", 2, Olap::TimeDimension],
+    ["Revision", 2, Olap::RevisionDimension],
+    ["Result", 2, Olap::ResultDimension],
+    ["Statistic", 0, Olap::StatisticDimension],
     ],
     @controller.send(:dimension_data))
     post(:purge_orphan_dimensions, {}, {:user_id => 1})
@@ -85,16 +85,16 @@ class Admin::SysinfoControllerTest < Test::Unit::TestCase
     assert_nil(flash[:notice])
     assert_equal(
     [
-    ["Host", 0, HostDimension],
-    ["TestRun", 0, TestRunDimension],
-    ["TestConfiguration", 0, TestConfigurationDimension],
-    ["BuildConfiguration", 0, BuildConfigurationDimension],
-    ["BuildTarget", 0, BuildTargetDimension],
-    ["TestCase", 0, TestCaseDimension],
-    ["Time", 0, TimeDimension],
-    ["Revision", 0, RevisionDimension],
-    ["Result", 0, ResultDimension],
-    ["Statistic", 0, StatisticDimension]
+    ["Host", 0, Olap::HostDimension],
+    ["TestRun", 0, Olap::TestRunDimension],
+    ["TestConfiguration", 0, Olap::TestConfigurationDimension],
+    ["BuildConfiguration", 0, Olap::BuildConfigurationDimension],
+    ["BuildTarget", 0, Olap::BuildTargetDimension],
+    ["TestCase", 0, Olap::TestCaseDimension],
+    ["Time", 0, Olap::TimeDimension],
+    ["Revision", 0, Olap::RevisionDimension],
+    ["Result", 0, Olap::ResultDimension],
+    ["Statistic", 0, Olap::StatisticDimension]
     ],
     @controller.send(:dimension_data))
   end

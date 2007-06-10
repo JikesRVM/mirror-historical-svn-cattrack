@@ -10,5 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class StatisticDimension < ActiveRecord::Base
+class Olap::TestCaseDimension < ActiveRecord::Base
 end

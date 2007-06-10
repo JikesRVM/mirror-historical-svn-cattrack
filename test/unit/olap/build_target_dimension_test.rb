@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class BuildTargetDimensionTest < Test::Unit::TestCase
+class Olap::BuildTargetDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = BuildTargetDimension.find(1)
+    object = Olap::BuildTargetDimension.find(1)
     assert_equal( 1, object.id )
     assert_equal( 'ia32_linux', object.name )
     assert_equal( 'ia32', object.arch )
@@ -30,7 +30,7 @@ class BuildTargetDimensionTest < Test::Unit::TestCase
   end
 
   def self.str_length_attributes
-    [[:name, 76],[:arch, 11],[:operating_system, 51]]
+    [[:name, 76], [:arch, 11], [:operating_system, 51]]
   end
 
   def self.bad_attributes

@@ -60,11 +60,11 @@
   %table
     %tr
       %th Result Facts
-      %td= ResultFact.count(:conditions => 'source_id IS NULL')
+      %td= Olap::ResultFact.count(:conditions => 'source_id IS NULL')
       %td.operations= link_to('Purge', :action => 'purge_historic_result_facts')
     %tr
       %th Statistic Facts
-      %td= StatisticFact.count(:conditions => 'source_id IS NULL')
+      %td= Olap::StatisticFact.count(:conditions => 'source_id IS NULL')
       %td.operations= link_to('Purge', :action => 'purge_historic_statistic_facts')
     %tr
       %th Orphan Dimensions

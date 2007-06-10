@@ -24,22 +24,22 @@ class Admin::SysinfoController < Admin::BaseController
   end
 
   def purge_historic_result_facts
-    ResultFact.destroy_all(['source_id IS NULL'])
+    Olap::ResultFact.destroy_all(['source_id IS NULL'])
     redirect_to(:action => 'show')
   end
 
   def purge_historic_statistic_facts
-    StatisticFact.destroy_all(['source_id IS NULL'])
+    Olap::StatisticFact.destroy_all(['source_id IS NULL'])
     redirect_to(:action => 'show')
   end
 
   def purge_orphan_dimensions
     Dimensions.collect do |d|
-      name = d.name[0, d.name.length - 9]
-      column_name = name.tableize.singularize + "_id"
+      name = d.table_name.singularize
+      column_name = name[0, name.length - 9] + "id"
       sql = []
-      sql << ((d != StatisticDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)" : '1 = 1')
-      sql << ((d != ResultDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)" : '1 = 1')
+      sql << ((d != Olap::StatisticDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)" : '1 = 1')
+      sql << ((d != Olap::ResultDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)" : '1 = 1')
       d.destroy_all(sql.join(' AND '))
     end
     redirect_to(:action => 'show')
@@ -47,15 +47,15 @@ class Admin::SysinfoController < Admin::BaseController
 
   private
 
-  Dimensions = [HostDimension, TestRunDimension, TestConfigurationDimension, BuildConfigurationDimension, BuildTargetDimension, TestCaseDimension, TimeDimension, RevisionDimension, ResultDimension, StatisticDimension]
+  Dimensions = [Olap::HostDimension, Olap::TestRunDimension, Olap::TestConfigurationDimension, Olap::BuildConfigurationDimension, Olap::BuildTargetDimension, Olap::TestCaseDimension, Olap::TimeDimension, Olap::RevisionDimension, Olap::ResultDimension, Olap::StatisticDimension]
 
   def dimension_data
     Dimensions.collect do |d|
-      name = d.name[0, d.name.length - 9]
-      column_name = name.tableize.singularize + "_id"
-      result_fact_count = (d != StatisticDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)") : 0
-      statistic_fact_count = (d != ResultDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)") : 0
-      [name, result_fact_count + statistic_fact_count, d]
+      name = d.table_name.singularize
+      column_name = name[0, name.length - 9] + "id"
+      result_fact_count = (d != Olap::StatisticDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)") : 0
+      statistic_fact_count = (d != Olap::ResultDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)") : 0
+      [d.name[6, d.name.length - (9 + 6)], result_fact_count + statistic_fact_count, d]
     end
   end
 end

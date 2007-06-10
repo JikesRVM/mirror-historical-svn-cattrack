@@ -10,27 +10,23 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TestCaseDimensionTest < Test::Unit::TestCase
+class Olap::StatisticDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = TestCaseDimension.find(1)
+    object = Olap::StatisticDimension.find(1)
     assert_equal( 1, object.id )
-    assert_equal( 'ImageSizes', object.name )
-    assert_equal( 'basic', object.group )
+    assert_equal( 'time', object.name )
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :group => 'bar'}
+    {:name => 'foo'}
   end
   def self.non_null_attributes
-    [:name, :group]
-  end
-  def self.unique_attributes
-    [[:name, :group]]
+    [:name]
   end
   def self.str_length_attributes
-    [[:name, 75],[:group, 75]]
+    [[:name, 75]]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

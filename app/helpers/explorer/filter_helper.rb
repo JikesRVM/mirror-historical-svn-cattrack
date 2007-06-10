@@ -12,7 +12,7 @@
 #
 module Explorer::FilterHelper
   def dimension_name(dimension)
-    dimension.name.tableize
+    dimension.table_name
   end
 
   def dimension_block_name(dimension)

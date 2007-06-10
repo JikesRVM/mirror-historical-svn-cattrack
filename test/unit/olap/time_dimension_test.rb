@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TimeDimensionTest < Test::Unit::TestCase
+class Olap::TimeDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = TimeDimension.find(1)
+    object = Olap::TimeDimension.find(1)
     assert_equal( 1, object.id )
     assert_equal( 2007, object.year )
     assert_equal( 1, object.month )
@@ -32,7 +32,7 @@ class TimeDimensionTest < Test::Unit::TestCase
     [:year, :month, :week, :day_of_year, :day_of_month, :day_of_week, :time]
   end
   def self.bad_attributes
-    [[:year, 1977],[:month, 0],[:week, -22],[:day_of_year, -1],[:day_of_month, -22],[:day_of_week, 0]]
+    [[:year, 1977], [:month, 0], [:week, -22], [:day_of_year, -1], [:day_of_month, -22], [:day_of_week, 0]]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

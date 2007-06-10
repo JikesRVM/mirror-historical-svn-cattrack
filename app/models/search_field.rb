@@ -16,7 +16,7 @@ class SearchField
   def initialize(dimension,name,options = {})
     @dimension = dimension
     @name = name
-    @dimension_name = dimension.name[0,dimension.name.length - 9]
+    @dimension_name = dimension.name[6,dimension.name.length - (9 + 6)]
     @key = "#{@dimension_name.tableize.singularize}_#{name}".to_sym
     @key_name = @key.to_s
     @options = {:any => true, :size => 4, :multiple => true}

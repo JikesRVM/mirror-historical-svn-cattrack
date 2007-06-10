@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class ResultDimensionTest < Test::Unit::TestCase
+class Olap::ResultDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    result = ResultDimension.find(1)
+    result = Olap::ResultDimension.find(1)
     assert_equal( 1, result.id )
     assert_equal( 'SUCCESS', result.name )
   end

@@ -10,26 +10,20 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class HostDimensionTest < Test::Unit::TestCase
+class Olap::RevisionDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = HostDimension.find(1)
+    object = Olap::RevisionDimension.find(1)
     assert_equal( 1, object.id )
-    assert_equal( 'skunk', object.name )
+    assert_equal( 1977, object.revision )
   end
 
   def self.attributes_for_new
-    {:name => 'foo'}
+    {:revision => 1979}
   end
   def self.non_null_attributes
-    [:name]
-  end
-  def self.unique_attributes
-    [[:name]]
-  end
-  def self.str_length_attributes
-    [[:name, 76]]
+    [:revision]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

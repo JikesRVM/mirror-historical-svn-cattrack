@@ -10,24 +10,25 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TestRunDimensionTest < Test::Unit::TestCase
+class Olap::TestConfigurationDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = TestRunDimension.find(1)
+    object = Olap::TestConfigurationDimension.find(1)
     assert_equal( 1, object.id )
-    assert_equal( 'core', object.name )
-    assert_equal( 1, object.source_id )
+    assert_equal( 'prototype', object.name )
+    assert_equal( '', object.mode )
   end
 
   def self.attributes_for_new
-    {:source_id => 1, :name => 'core'}
+    {:name => 'foo', :mode => 'performance'}
   end
   def self.non_null_attributes
-    [:name]
+    [:name, :mode]
   end
+
   def self.str_length_attributes
-    [[:name, 75]]
+    [[:name, 76], [:mode, 76]]
   end
 
   perform_basic_model_tests(:skip => [:destroy])

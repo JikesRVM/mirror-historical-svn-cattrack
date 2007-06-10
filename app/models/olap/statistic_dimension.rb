@@ -10,21 +10,5 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
-
-class RevisionDimensionTest < Test::Unit::TestCase
- def test_basic_load
-    object = RevisionDimension.find(1)
-    assert_equal( 1, object.id )
-    assert_equal( 1977, object.revision )
-  end
-
-  def self.attributes_for_new
-    {:revision => 1979}
-  end
-  def self.non_null_attributes
-    [:revision]
-  end
-
-  perform_basic_model_tests(:skip => [:destroy])
+class Olap::StatisticDimension < ActiveRecord::Base
 end

@@ -28,44 +28,44 @@ class Filter < ActiveRecord::Base
   }.freeze
 
   AutoFields = [
-  SearchField.new(HostDimension, :name),
+  SearchField.new(Olap::HostDimension, :name),
 
-  SearchField.new(TestRunDimension, :name),
+  SearchField.new(Olap::TestRunDimension, :name),
 
-  SearchField.new(BuildTargetDimension, :name),
-  SearchField.new(BuildTargetDimension, :arch, :size => 3),
-  SearchField.new(BuildTargetDimension, :address_size, :size => 3),
-  SearchField.new(BuildTargetDimension, :operating_system),
+  SearchField.new(Olap::BuildTargetDimension, :name),
+  SearchField.new(Olap::BuildTargetDimension, :arch, :size => 3),
+  SearchField.new(Olap::BuildTargetDimension, :address_size, :size => 3),
+  SearchField.new(Olap::BuildTargetDimension, :operating_system),
 
-  SearchField.new(BuildConfigurationDimension, :name),
-  SearchField.new(BuildConfigurationDimension, :bootimage_compiler, :size => 3),
-  SearchField.new(BuildConfigurationDimension, :runtime_compiler, :size => 3),
-  SearchField.new(BuildConfigurationDimension, :mmtk_plan),
-  SearchField.new(BuildConfigurationDimension, :assertion_level),
-  SearchField.new(BuildConfigurationDimension, :bootimage_class_inclusion_policy, :size => 3),
+  SearchField.new(Olap::BuildConfigurationDimension, :name),
+  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_compiler, :size => 3),
+  SearchField.new(Olap::BuildConfigurationDimension, :runtime_compiler, :size => 3),
+  SearchField.new(Olap::BuildConfigurationDimension, :mmtk_plan),
+  SearchField.new(Olap::BuildConfigurationDimension, :assertion_level),
+  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_class_inclusion_policy, :size => 3),
 
-  SearchField.new(TestConfigurationDimension, :name),
-  SearchField.new(TestConfigurationDimension, :mode, :size => 3),
+  SearchField.new(Olap::TestConfigurationDimension, :name),
+  SearchField.new(Olap::TestConfigurationDimension, :mode, :size => 3),
 
-  SearchField.new(ResultDimension, :name),
+  SearchField.new(Olap::ResultDimension, :name),
   ].freeze
 
   Fields = AutoFields | [
-  SearchField.new(TestCaseDimension, :name, :type => :string),
-  SearchField.new(TestCaseDimension, :group, :type => :string),
+  SearchField.new(Olap::TestCaseDimension, :name, :type => :string),
+  SearchField.new(Olap::TestCaseDimension, :group, :type => :string),
 
-  SearchField.new(RevisionDimension, :before, :type => :integer, :synthetic => true),
-  SearchField.new(RevisionDimension, :after, :type => :integer, :synthetic => true),
-  SearchField.new(RevisionDimension, :revision, :type => :integer),
+  SearchField.new(Olap::RevisionDimension, :before, :type => :integer, :synthetic => true),
+  SearchField.new(Olap::RevisionDimension, :after, :type => :integer, :synthetic => true),
+  SearchField.new(Olap::RevisionDimension, :revision, :type => :integer),
 
-  SearchField.new(TimeDimension, :year),
-  SearchField.new(TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME),
-  SearchField.new(TimeDimension, :week),
-  SearchField.new(TimeDimension, :day_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME),
-  SearchField.new(TimeDimension, :from, :type => :period, :synthetic => true),
-  SearchField.new(TimeDimension, :to, :type => :period, :synthetic => true),
-  SearchField.new(TimeDimension, :before, :type => :date, :synthetic => true),
-  SearchField.new(TimeDimension, :after, :type => :date, :synthetic => true),
+  SearchField.new(Olap::TimeDimension, :year),
+  SearchField.new(Olap::TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME),
+  SearchField.new(Olap::TimeDimension, :week),
+  SearchField.new(Olap::TimeDimension, :day_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME),
+  SearchField.new(Olap::TimeDimension, :from, :type => :period, :synthetic => true),
+  SearchField.new(Olap::TimeDimension, :to, :type => :period, :synthetic => true),
+  SearchField.new(Olap::TimeDimension, :before, :type => :date, :synthetic => true),
+  SearchField.new(Olap::TimeDimension, :after, :type => :date, :synthetic => true),
   ].freeze
 
   Fields.each do |field|
@@ -113,13 +113,13 @@ class Filter < ActiveRecord::Base
     joins = []
 
     AutoFields.each {|f| add_search_term(search, f, conditions, cond_params, joins)}
-    add_search_term(search, field(TestCaseDimension, :name), conditions, cond_params, joins)
-    add_search_term(search, field(TestCaseDimension, :group), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TestCaseDimension, :name), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TestCaseDimension, :group), conditions, cond_params, joins)
     add_revision_criteria(search, conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension, :year), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension, :month), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension, :week), conditions, cond_params, joins)
-    add_search_term(search, field(TimeDimension, :day_of_week), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TimeDimension, :year), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TimeDimension, :month), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TimeDimension, :week), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TimeDimension, :day_of_week), conditions, cond_params, joins)
 
     add_time_based_search(search, conditions, cond_params, joins)
 
@@ -175,12 +175,12 @@ class Filter < ActiveRecord::Base
     if not is_empty?(search, :time_before)
       conditions << 'time_dimensions.time < :time_before'
       cond_params[:time_before] = search.time_before
-      joins << TimeDimension
+      joins << Olap::TimeDimension
     end
     if not is_empty?(search, :time_after)
       conditions << 'time_dimensions.time > :time_after'
       cond_params[:time_after] = search.time_after
-      joins << TimeDimension
+      joins << Olap::TimeDimension
     end
 
     if not is_empty?(search, :time_from)
@@ -188,7 +188,7 @@ class Filter < ActiveRecord::Base
       if from_time
         conditions << 'time_dimensions.time > :time_from'
         cond_params[:time_from] = from_time.strftime(TimeFormat)
-        joins << TimeDimension
+        joins << Olap::TimeDimension
       end
     end
 
@@ -197,7 +197,7 @@ class Filter < ActiveRecord::Base
       if to_time
         conditions << 'time_dimensions.time < :time_to'
         cond_params[:time_to] = to_time.strftime(TimeFormat)
-        joins << TimeDimension
+        joins << Olap::TimeDimension
       end
     end
   end
@@ -206,13 +206,13 @@ class Filter < ActiveRecord::Base
     if not is_empty?(search, :revision_before)
       conditions << 'revision_dimensions.revision < :revision_before'
       cond_params[:revision_before] = search.revision_before
-      joins << RevisionDimension
+      joins << Olap::RevisionDimension
     end
 
     if not is_empty?(search, :revision_after)
       conditions << 'revision_dimensions.revision > :revision_from'
       cond_params[:revision_after] = search.revision_after
-      joins << RevisionDimension
+      joins << Olap::RevisionDimension
     end
   end
 end

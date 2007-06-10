@@ -14,8 +14,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SearchFieldTest < Test::Unit::TestCase
   def test_basic_properties
-    f = SearchField.new(TestConfigurationDimension,:name, :foo => 'bar')
-    assert_equal( TestConfigurationDimension, f.dimension )
+    f = SearchField.new(Olap::TestConfigurationDimension,:name, :foo => 'bar')
+    assert_equal( Olap::TestConfigurationDimension, f.dimension )
     assert_equal( 'TestConfiguration', f.dimension_name )
     assert_equal( :name, f.name )
     assert_equal( :test_configuration_name, f.key )
@@ -29,7 +29,7 @@ class SearchFieldTest < Test::Unit::TestCase
   end
 
   def test_labels
-    f = SearchField.new(TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME)
+    f = SearchField.new(Olap::TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME)
     assert_equal( 'Jan', f.label_for(1) )
   end
 end

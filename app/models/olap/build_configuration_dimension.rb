@@ -10,5 +10,9 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class TestRunDimension < ActiveRecord::Base
+class Olap::BuildConfigurationDimension < ActiveRecord::Base
+  validates_inclusion_of :bootimage_compiler, :in => %w( base opt )
+  validates_inclusion_of :runtime_compiler, :in => %w( base opt )
+  validates_inclusion_of :assertion_level, :in => %w( none normal extreme )
+  validates_inclusion_of :bootimage_class_inclusion_policy, :in => %w( minimal complete )
 end

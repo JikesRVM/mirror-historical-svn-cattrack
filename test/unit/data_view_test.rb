@@ -215,10 +215,10 @@ END_SQL
     assert_not_nil(results.column)
     assert_not_nil(results.function)
     assert_not_nil(results.data)
-    assert_equal(BuildConfigurationDimension, results.row.dimension)
+    assert_equal(Olap::BuildConfigurationDimension, results.row.dimension)
     assert_equal(:name, results.row.name)
-    assert_equal(TimeDimension, results.column.dimension)
+    assert_equal(Olap::TimeDimension, results.column.dimension)
     assert_equal(:day_of_week, results.column.name)
-    assert_equal([ResultDimension], results.function.dimensions)
+    assert_equal([Olap::ResultDimension], results.function.dimensions)
   end
 end

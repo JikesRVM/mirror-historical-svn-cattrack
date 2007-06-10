@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class BuildConfigurationDimensionTest < Test::Unit::TestCase
+class Olap::BuildConfigurationDimensionTest < Test::Unit::TestCase
   def test_basic_load
-    object = BuildConfigurationDimension.find(1)
+    object = Olap::BuildConfigurationDimension.find(1)
     assert_equal( 1, object.id )
     assert_equal( 'prototype', object.name )
     assert_equal( 'base', object.bootimage_compiler )
@@ -37,10 +37,10 @@ class BuildConfigurationDimensionTest < Test::Unit::TestCase
     [:name, :bootimage_compiler, :runtime_compiler, :mmtk_plan, :assertion_level, :bootimage_class_inclusion_policy]
   end
   def self.str_length_attributes
-    [[:name, 76],[:bootimage_compiler, 11],[:runtime_compiler, 11],[:mmtk_plan, 51],[:assertion_level, 11],[:bootimage_class_inclusion_policy, 11]]
+    [[:name, 76], [:bootimage_compiler, 11], [:runtime_compiler, 11], [:mmtk_plan, 51], [:assertion_level, 11], [:bootimage_class_inclusion_policy, 11]]
   end
   def self.bad_attributes
-    [[:bootimage_compiler, 'X'],[:runtime_compiler, 'X'],[:assertion_level, 'X'],[:bootimage_class_inclusion_policy, 'X']]
+    [[:bootimage_compiler, 'X'], [:runtime_compiler, 'X'], [:assertion_level, 'X'], [:bootimage_class_inclusion_policy, 'X']]
   end
 
   perform_basic_model_tests(:skip => [:destroy])
