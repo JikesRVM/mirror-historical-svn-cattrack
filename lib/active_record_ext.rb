@@ -16,7 +16,16 @@ module ActiveRecord
       self.name.humanize
     end
 
-    def self.validates_positive(name, options={})
+    def self.validates_reference_exists(name, type, options={})
+      configuration = {:message => 'does not reference a valid record.', :on => :save}
+      configuration.update(options)
+      validates_each([name], configuration) do |record, attr_name, value|
+        value = record.send(attr_name)
+        record.errors.add(attr_name, configuration[:message]) if (not value.nil? and not type.exists?(value))
+      end
+    end
+
+    def self.validates_positiveness_of(name, options={})
       configuration = {:message => 'must be positive.', :on => :save}
       configuration.update(options)
       validates_each([name], configuration) do |record, attr_name, value|

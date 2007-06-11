@@ -11,4 +11,6 @@
 #  regarding copyright ownership.
 #
 class Olap::TestRunDimension < Olap::Dimension
+  validates_length_of :name, :in => 1..75
+  validates_reference_exists :source_id, TestCase
 end

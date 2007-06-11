@@ -11,5 +11,10 @@
 #  regarding copyright ownership.
 #
 class DataPresentation < ActiveRecord::Base
+  validates_length_of :key, :in => 1..20
+  validates_uniqueness_of :key
+  validates_length_of :name, :in => 1..120
+  validates_uniqueness_of :name
+
   has_params :params
 end

@@ -78,31 +78,31 @@ class FilterTest < Test::Unit::TestCase
 
   def test_search_filter_criteria_for_single_value_parameter
     conditions, join_sql = Filter.new(:host_name => 'ace').filter_criteria
-    assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
+    assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_single_value_parameter_in_array
     conditions, join_sql = Filter.new(:host_name => ['ace']).filter_criteria
-    assert_equal(["host_dimensions.name = :host_name", {:host_name=>"ace"}], conditions)
+    assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multi_value_parameter
     conditions, join_sql = Filter.new(:host_name => ['ace', 'baby']).filter_criteria
-    assert_equal(["host_dimensions.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)
+    assert_equal(["host_dimension.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters
     conditions, join_sql = Filter.new(:host_name => 'ace', :test_run_name => 'foo').filter_criteria
-    assert_equal(["host_dimensions.name = :host_name AND test_run_dimensions.name = :test_run_name", {:test_run_name=>"foo", :host_name=>"ace"}], conditions)
+    assert_equal(["host_dimension.name = :host_name AND test_run_dimension.name = :test_run_name", {:test_run_name=>"foo", :host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension, Olap::TestRunDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters_on_same_table
     conditions, join_sql = Filter.new(:test_case_name => 'ace', :test_case_group => 'foo').filter_criteria
-    assert_equal(["test_case_dimensions.name = :test_case_name AND test_case_dimensions.group = :test_case_group", {:test_case_name=>"ace", :test_case_group=>"foo"}], conditions)
+    assert_equal(["test_case_dimension.name = :test_case_name AND test_case_dimension.group = :test_case_group", {:test_case_name=>"ace", :test_case_group=>"foo"}], conditions)
     assert_equal([Olap::TestCaseDimension], join_sql)
   end
 
@@ -144,13 +144,13 @@ class FilterTest < Test::Unit::TestCase
 
   def test_before_revision
     conditions, join_sql = Filter.new(:revision_before => '1234').filter_criteria
-    assert_equal(["revision_dimensions.revision < :revision_before", {:revision_before=>"1234"}], conditions)
+    assert_equal(["revision_dimension.revision < :revision_before", {:revision_before=>"1234"}], conditions)
     assert_equal([Olap::RevisionDimension], join_sql)
   end
 
   def test_after_revision
     conditions, join_sql = Filter.new(:revision_after => '1234').filter_criteria
-    assert_equal(["revision_dimensions.revision > :revision_from", {:revision_after=>"1234"}], conditions)
+    assert_equal(["revision_dimension.revision > :revision_from", {:revision_after=>"1234"}], conditions)
     assert_equal([Olap::RevisionDimension], join_sql)
   end
 
@@ -163,7 +163,7 @@ class FilterTest < Test::Unit::TestCase
     joins = []
     Filter.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(2, conditions.length)
-    assert_equal(['time_dimensions.time < :time_before', 'time_dimensions.time > :time_after'], conditions)
+    assert_equal(['time_dimension.time < :time_before', 'time_dimension.time > :time_after'], conditions)
     assert_equal([Olap::TimeDimension], joins.uniq)
     assert_equal(2, cond_params.length)
     assert_equal('1979-11-07 00:00:00', cond_params[:time_before])
@@ -178,7 +178,7 @@ class FilterTest < Test::Unit::TestCase
     cond_params = {}
     joins = []
     Filter.add_time_based_search(search, conditions, cond_params, joins)
-    assert_equal(['time_dimensions.time > :time_from', 'time_dimensions.time < :time_to'], conditions)
+    assert_equal(['time_dimension.time > :time_from', 'time_dimension.time < :time_to'], conditions)
     assert_equal([Olap::TimeDimension, Olap::TimeDimension], joins)
     assert_equal(2, cond_params.length)
     # just assert that entrys exist - too hard to verify
@@ -216,7 +216,7 @@ class FilterTest < Test::Unit::TestCase
     filter.result_name = 'SUCCESS'
 
     conditions, join_sql = filter.filter_criteria
-    assert_equal("test_run_dimensions.name = :test_run_name AND build_target_dimensions.name IN (:build_target_name) AND build_target_dimensions.arch = :build_target_arch AND build_target_dimensions.address_size = :build_target_address_size AND build_target_dimensions.operating_system IN (:build_target_operating_system) AND build_configuration_dimensions.name = :build_configuration_name AND build_configuration_dimensions.bootimage_compiler = :build_configuration_bootimage_compiler AND build_configuration_dimensions.runtime_compiler = :build_configuration_runtime_compiler AND build_configuration_dimensions.mmtk_plan = :build_configuration_mmtk_plan AND build_configuration_dimensions.assertion_level = :build_configuration_assertion_level AND build_configuration_dimensions.bootimage_class_inclusion_policy = :build_configuration_bootimage_class_inclusion_policy AND test_configuration_dimensions.name = :test_configuration_name AND result_dimensions.name = :result_name AND time_dimensions.year = :time_year AND time_dimensions.month = :time_month AND time_dimensions.week = :time_week AND time_dimensions.day_of_week IN (:time_day_of_week) AND time_dimensions.time < :time_before", conditions[0])
+    assert_equal("test_run_dimension.name = :test_run_name AND build_target_dimension.name IN (:build_target_name) AND build_target_dimension.arch = :build_target_arch AND build_target_dimension.address_size = :build_target_address_size AND build_target_dimension.operating_system IN (:build_target_operating_system) AND build_configuration_dimension.name = :build_configuration_name AND build_configuration_dimension.bootimage_compiler = :build_configuration_bootimage_compiler AND build_configuration_dimension.runtime_compiler = :build_configuration_runtime_compiler AND build_configuration_dimension.mmtk_plan = :build_configuration_mmtk_plan AND build_configuration_dimension.assertion_level = :build_configuration_assertion_level AND build_configuration_dimension.bootimage_class_inclusion_policy = :build_configuration_bootimage_class_inclusion_policy AND test_configuration_dimension.name = :test_configuration_name AND result_dimension.name = :result_name AND time_dimension.year = :time_year AND time_dimension.month = :time_month AND time_dimension.week = :time_week AND time_dimension.day_of_week IN (:time_day_of_week) AND time_dimension.time < :time_before", conditions[0])
     assert_equal( {:build_configuration_runtime_compiler=>"base",
     :time_before => "1979-11-07 00:00:00",
     :time_year => 2007,

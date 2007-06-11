@@ -11,4 +11,6 @@
 #  regarding copyright ownership.
 #
 class Olap::ResultDimension < Olap::Dimension
+  validates_length_of :name, :in => 1..16
+  validates_uniqueness_of :name
 end

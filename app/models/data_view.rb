@@ -11,6 +11,12 @@
 #  regarding copyright ownership.
 #
 class DataView < ActiveRecord::Base
+  validates_presence_of :filter_id, :summarizer_id, :data_presentation_id   
+
+  validates_reference_exists :filter_id, Filter
+  validates_reference_exists :summarizer_id, Summarizer
+  validates_reference_exists :data_presentation_id, DataPresentation
+
   belongs_to :filter
   belongs_to :summarizer
   belongs_to :data_presentation

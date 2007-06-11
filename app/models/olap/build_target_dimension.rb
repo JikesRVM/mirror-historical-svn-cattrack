@@ -11,5 +11,8 @@
 #  regarding copyright ownership.
 #
 class Olap::BuildTargetDimension < Olap::Dimension
+  validates_length_of :name, :in => 1..75
+  validates_length_of :arch, :in => 1..10
   validates_inclusion_of :address_size, :in => [32, 64]
+  validates_length_of :operating_system, :in => 1..50
 end

@@ -11,11 +11,17 @@
 #  regarding copyright ownership.
 #
 class TestRun < ActiveRecord::Base
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :name, :scope => [:host_id, :occured_at]
+  validates_presence_of :host_id
+  validates_reference_exists :host_id, Host
+  validates_positiveness_of :revision
+  validates_numericality_of :revision, :only_integer => true
+  validates_presence_of :occured_at
+
   belongs_to :host
   has_one :build_target, :dependent => :destroy
   has_many :build_configurations, :dependent => :destroy
-
-  validates_positive :revision
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*
@@ -26,8 +32,6 @@ class TestRun < ActiveRecord::Base
    LEFT OUTER JOIN test_cases ON test_cases.group_id = groups.id
    WHERE test_runs.id = \#{id}
   END_SQL
-
-
 
   def self.test_case_rel(name, sql = nil)
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql

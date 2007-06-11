@@ -11,13 +11,19 @@
 #  regarding copyright ownership.
 #
 class BuildConfiguration < ActiveRecord::Base
+  validates_reference_exists :test_run_id, TestRun
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :name, :scope => [:test_run_id]
+  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
+  validates_not_null :output
+  validates_positiveness_of :time
+  validates_numericality_of :time, :only_integer => true
+  validates_presence_of :test_run_id
+  validates_reference_exists :test_run_id, TestRun
+
   belongs_to :test_run
   has_params :params
   has_many :test_configurations, :dependent => :destroy
-
-  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
-  validates_not_null :output
-  validates_positive :time
 
   def parent_node
     test_run

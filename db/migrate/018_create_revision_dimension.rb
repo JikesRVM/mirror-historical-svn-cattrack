@@ -16,7 +16,7 @@ class CreateRevisionDimension < ActiveRecord::Migration
       t.column :revision, :integer, :null => false
     end
     add_index :revision_dimension, [:id], :unique => true
-    add_index :revision_dimension, [:revision]
+    add_index :revision_dimension, [:revision], :unique => true
   end
 
   def self.down

@@ -11,6 +11,12 @@
 #  regarding copyright ownership.
 #
 class BuildTarget < ActiveRecord::Base
+  validates_reference_exists :test_run_id, TestRun
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :test_run_id
+  validates_presence_of :test_run_id
+  validates_reference_exists :test_run_id, TestRun
+
   belongs_to :test_run
   has_params :params
 

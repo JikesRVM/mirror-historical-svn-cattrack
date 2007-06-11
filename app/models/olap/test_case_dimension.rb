@@ -11,4 +11,7 @@
 #  regarding copyright ownership.
 #
 class Olap::TestCaseDimension < Olap::Dimension
+  validates_length_of :name, :in => 1..75
+  validates_length_of :group, :in => 1..75
+  validates_uniqueness_of :name, :scope => [:group]
 end

@@ -11,9 +11,11 @@
 #  regarding copyright ownership.
 #
 class Filter < ActiveRecord::Base
-  has_params :params
-  auto_validations :except => [:id, :description]
+  validates_length_of :name, :in => 1..75
   validates_length_of :description, :in => 0..256
+  validates_uniqueness_of :name
+
+  has_params :params
 
   TimeFormat = '%Y-%m-%d %H:%M:%S'
 
@@ -173,12 +175,12 @@ class Filter < ActiveRecord::Base
     add_join = false
 
     if not is_empty?(search, :time_before)
-      conditions << 'time_dimensions.time < :time_before'
+      conditions << 'time_dimension.time < :time_before'
       cond_params[:time_before] = search.time_before
       joins << Olap::TimeDimension
     end
     if not is_empty?(search, :time_after)
-      conditions << 'time_dimensions.time > :time_after'
+      conditions << 'time_dimension.time > :time_after'
       cond_params[:time_after] = search.time_after
       joins << Olap::TimeDimension
     end
@@ -186,7 +188,7 @@ class Filter < ActiveRecord::Base
     if not is_empty?(search, :time_from)
       from_time = period_to_time(Time.now, search.time_from)
       if from_time
-        conditions << 'time_dimensions.time > :time_from'
+        conditions << 'time_dimension.time > :time_from'
         cond_params[:time_from] = from_time.strftime(TimeFormat)
         joins << Olap::TimeDimension
       end
@@ -195,7 +197,7 @@ class Filter < ActiveRecord::Base
     if not is_empty?(search, :time_to)
       to_time = period_to_time(Time.now, search.time_to)
       if to_time
-        conditions << 'time_dimensions.time < :time_to'
+        conditions << 'time_dimension.time < :time_to'
         cond_params[:time_to] = to_time.strftime(TimeFormat)
         joins << Olap::TimeDimension
       end
@@ -204,13 +206,13 @@ class Filter < ActiveRecord::Base
 
   def self.add_revision_criteria(search, conditions, cond_params, joins)
     if not is_empty?(search, :revision_before)
-      conditions << 'revision_dimensions.revision < :revision_before'
+      conditions << 'revision_dimension.revision < :revision_before'
       cond_params[:revision_before] = search.revision_before
       joins << Olap::RevisionDimension
     end
 
     if not is_empty?(search, :revision_after)
-      conditions << 'revision_dimensions.revision > :revision_from'
+      conditions << 'revision_dimension.revision > :revision_from'
       cond_params[:revision_after] = search.revision_after
       joins << Olap::RevisionDimension
     end

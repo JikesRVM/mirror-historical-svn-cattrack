@@ -16,7 +16,7 @@ class CreateStatisticDimension < ActiveRecord::Migration
       t.column :name, :string, :limit => 75, :null => false
     end
     add_index :statistic_dimension, [:id], :unique => true
-    add_index :statistic_dimension, [:name]
+    add_index :statistic_dimension, [:name], :unique => true
   end
 
   def self.down

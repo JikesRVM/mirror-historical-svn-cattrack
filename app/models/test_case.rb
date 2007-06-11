@@ -11,16 +11,24 @@
 #  regarding copyright ownership.
 #
 class TestCase < ActiveRecord::Base
-  belongs_to :group
-  has_params :statistics
-  has_params :params
-
-  auto_validations :except => [:id, :args, :result_explanation]
-
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :name, :scope => [:group_id]
+  validates_presence_of :group_id
+  validates_reference_exists :group_id, Group
+  validates_length_of :classname, :in => 1..75
+  validates_length_of :working_directory, :in => 1..256
+  validates_length_of :result_explanation, :in => 0..256
+  validates_presence_of :command
+  validates_numericality_of :exit_code, :only_integer => true
+  validates_numericality_of :time, :only_integer => true
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
   validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
   validates_not_null :output
-  validates_positive :time
+  validates_positiveness_of :time
+
+  belongs_to :group
+  has_params :statistics
+  has_params :params
 
   after_save :update_output
 

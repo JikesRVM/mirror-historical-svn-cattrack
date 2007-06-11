@@ -16,8 +16,6 @@ class Olap::Dimension < ActiveRecord::Base
   class << self
     # Dimensions should have a singularized table name
     def table_name
-      puts "table_name called on #{name}"
-      #X if self == Olap::Dimension
       name = self.name.demodulize.underscore
       set_table_name(name)
       name

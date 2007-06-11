@@ -11,6 +11,8 @@
 #  regarding copyright ownership.
 #
 class Olap::BuildConfigurationDimension < Olap::Dimension
+  validates_length_of :name, :in => 1..75
+  validates_length_of :mmtk_plan, :in => 1..50
   validates_inclusion_of :bootimage_compiler, :in => %w( base opt )
   validates_inclusion_of :runtime_compiler, :in => %w( base opt )
   validates_inclusion_of :assertion_level, :in => %w( none normal extreme )

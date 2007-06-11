@@ -11,7 +11,10 @@
 #  regarding copyright ownership.
 #
 class User < ActiveRecord::Base
-  auto_validations :only => [:username, :admin]
+  validates_length_of :username, :in => 1..40
+  validates_presence_of :salt
+  validates_inclusion_of :admin, :active, :in => [true, false], :message => ActiveRecord::Errors.default_error_messages[:blank]
+  validates_uniqueness_of :username
 
   def self.authenticate(name, password)
     user = find_by_username(name)

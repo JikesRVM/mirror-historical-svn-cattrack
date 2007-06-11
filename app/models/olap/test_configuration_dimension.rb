@@ -11,7 +11,6 @@
 #  regarding copyright ownership.
 #
 class Olap::TestConfigurationDimension < Olap::Dimension
-  auto_validations :except => [:id, :mode]
-  validates_not_null :mode
-  validates_length_of :mode, :maximum => 75
+  validates_length_of :name, :in => 1..75
+  validates_length_of :mode, :in => 0..75
 end

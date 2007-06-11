@@ -17,4 +17,5 @@ class Olap::TimeDimension < Olap::Dimension
   validates_inclusion_of :day_of_year, :in => 1..365
   validates_inclusion_of :day_of_month, :in => 1..31
   validates_inclusion_of :day_of_week, :in => 1..7
+  validates_presence_of :time
 end

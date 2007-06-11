@@ -11,6 +11,11 @@
 #  regarding copyright ownership.
 #
 class TestConfiguration < ActiveRecord::Base
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :name, :scope => [:build_configuration_id]
+  validates_presence_of :build_configuration_id
+  validates_reference_exists :build_configuration_id, BuildConfiguration
+
   belongs_to :build_configuration
   has_many :groups, :dependent => :destroy
   has_params :params

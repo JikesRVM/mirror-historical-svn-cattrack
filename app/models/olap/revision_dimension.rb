@@ -11,4 +11,6 @@
 #  regarding copyright ownership.
 #
 class Olap::RevisionDimension < Olap::Dimension
+  validates_numericality_of :revision, :only_integer => true
+  validates_uniqueness_of :revision
 end

@@ -11,6 +11,9 @@
 #  regarding copyright ownership.
 #
 class Host < ActiveRecord::Base
+  validates_length_of :name, :in => 1..100
+  validates_uniqueness_of :name
+
   has_many :test_runs, :dependent => :destroy
 
   def parent_node
