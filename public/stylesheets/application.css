@@ -554,12 +554,12 @@ table.search td div.explanation {
 
 a.toggle_visibility {
   display: block;
-  background: transparent url( "../images/icons/close.png" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/close.gif" ) left 50% no-repeat;
   padding-left: 2em;
   width: 80%;
 }
 a.toggle_visibility.open {
-  background: transparent url( "../images/icons/open.png" ) left 50% no-repeat;
+  background: transparent url( "../images/icons/open.gif" ) left 50% no-repeat;
 }
 
 /* Table */
