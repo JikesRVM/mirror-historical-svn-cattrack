@@ -12,7 +12,6 @@
 #
 class Results::HostController < Results::BaseController
   verify :method => :get, :redirect_to => :access_denied_url
-  session :off
 
   def show
     @record = host
