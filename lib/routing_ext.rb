@@ -13,4 +13,5 @@
 
 # Monkey patch routing so that we can use . in url options
 # Specifically we use this when extracting host names from url
-ActionController::Routing::SEPARATORS = %w( / ; , ? )
+ActionController::Routing.send :remove_const, 'SEPARATORS'
+ActionController::Routing.const_set('SEPARATORS', %w( / ; , ? ))
