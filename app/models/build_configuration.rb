@@ -12,6 +12,7 @@
 #
 class BuildConfiguration < ActiveRecord::Base
   validates_reference_exists :test_run_id, TestRun
+  validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:test_run_id]
   validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )

@@ -13,6 +13,7 @@
 class TestRun < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:host_id, :occured_at]
+  validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_presence_of :host_id
   validates_reference_exists :host_id, Host
   validates_positiveness_of :revision

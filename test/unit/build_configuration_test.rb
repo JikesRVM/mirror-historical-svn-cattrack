@@ -49,13 +49,13 @@ class BuildConfigurationTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:test_run_id => 1, :name => 'foooish!', :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
+    {:test_run_id => 1, :name => 'foooish', :result => 'SUCCESS', :time => 142, :output => 'foooish!'}
   end
   def self.non_null_attributes
     [:name, :result, :time, :output]
   end
   def self.bad_attributes
-    [[:time, -1],[:result, 'Foo']]
+    [[:time, -1],[:result, 'Foo'],[:name, '.']]
   end
 
   perform_basic_model_tests

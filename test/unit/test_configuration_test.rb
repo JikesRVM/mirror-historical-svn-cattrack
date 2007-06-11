@@ -53,6 +53,9 @@ class TestConfigurationTest < Test::Unit::TestCase
   def self.str_length_attributes
     [[:name, 75]]
   end
+  def self.bad_attributes
+    [[:name, '.']]
+  end
 
   perform_basic_model_tests
 end

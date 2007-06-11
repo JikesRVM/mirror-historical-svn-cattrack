@@ -13,6 +13,7 @@
 class TestConfiguration < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:build_configuration_id]
+  validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_presence_of :build_configuration_id
   validates_reference_exists :build_configuration_id, BuildConfiguration
 

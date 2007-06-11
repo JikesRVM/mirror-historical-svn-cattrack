@@ -59,7 +59,7 @@ class TestRunTest < Test::Unit::TestCase
     [[:name, 76]]
   end
   def self.bad_attributes
-    [[:revision, -1]]
+    [[:revision, -1],[:name, '.']]
   end
 
   perform_basic_model_tests

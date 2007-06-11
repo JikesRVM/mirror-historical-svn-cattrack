@@ -55,6 +55,9 @@ class GroupTest < Test::Unit::TestCase
   def self.str_length_attributes
     [[:name, 76]]
   end
+  def self.bad_attributes
+    [[:name, '.']]
+  end
 
   perform_basic_model_tests
 end
