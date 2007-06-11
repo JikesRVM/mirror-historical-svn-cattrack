@@ -15,7 +15,7 @@ class Explorer::ReportController < Explorer::BaseController
 
   def list
     Filter::AutoFields.each do |f|
-      value = select_values(f.dimension, f.name)
+      value = f.dimension.attribute_values(f.name.to_s)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
     @data_presentations = DataPresentation.find(:all, :order => 'name')
@@ -34,15 +34,8 @@ class Explorer::ReportController < Explorer::BaseController
       @data_presentation = DataPresentation.find(params[:data_presentation])
       if @data_presentation and @summarizer.valid? and @filter.valid?
         @results = data_view.perform_search
-        
+
       end
     end
-  end
-
-  private
-
-  def select_values(type, key)
-    sql = "SELECT DISTINCT #{key} FROM #{type.table_name} ORDER BY #{key}"
-    type.connection.select_values(sql)
   end
 end

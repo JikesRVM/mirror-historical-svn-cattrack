@@ -29,5 +29,11 @@ class Olap::Dimension < ActiveRecord::Base
     def relation_name
       short_name + '_id'
     end
+
+    def attribute_values(attribute)
+      key = connection.quote_column_name(attribute)
+      sql = "SELECT DISTINCT #{key} FROM #{table_name} ORDER BY #{key}"
+      connection.select_values(sql)
+    end
   end
 end
