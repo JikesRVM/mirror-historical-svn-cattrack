@@ -12,8 +12,6 @@
 #
 class Results::BaseController < ApplicationController
   verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
-  caches_page :show, :show_output
-  session :off, :except => [:destroy]
 
   protected
 
