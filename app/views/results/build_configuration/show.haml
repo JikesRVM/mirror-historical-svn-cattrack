@@ -3,9 +3,6 @@
 
 %table.details
   %tr
-    %th Test Configuration(s)
-    %td= @record.test_configurations.collect {|tc| link_for(tc)}.join(', ')
-  %tr
     %th Result
     %td= h(@record.result)
   %tr
@@ -21,3 +18,18 @@
     %tr
       %th= h(k)
       %td= h(v)
+
+%h3 Test Configurations
+%table.list
+  %tr
+    %th Name
+    %th Success Rate
+    %th Operations
+  - @record.test_configurations.each do |tc|
+    %tr
+      %td= h(tc.name)
+      %td= h(tc.success_rate)
+      %td
+        %ul.actions
+          %li= link_for(tc, :label => 'Show')
+
