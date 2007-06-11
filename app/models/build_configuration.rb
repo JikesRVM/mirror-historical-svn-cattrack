@@ -23,7 +23,7 @@ class BuildConfiguration < ActiveRecord::Base
 
   belongs_to :test_run
   has_params :params
-  has_many :test_configurations, :dependent => :destroy
+  has_many :test_configurations, :order => 'name', :dependent => :destroy
 
   def parent_node
     test_run

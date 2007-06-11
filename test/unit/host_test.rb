@@ -25,6 +25,7 @@ class HostTest < Test::Unit::TestCase
     host = hosts(:host_skunk)
     assert_equal( 1, host.id )
     assert_equal( "skunk", host.name )
+    assert_equal( [1], host.test_run_ids )
   end
 
   def self.attributes_for_new

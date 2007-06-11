@@ -17,7 +17,7 @@ class TestConfiguration < ActiveRecord::Base
   validates_reference_exists :build_configuration_id, BuildConfiguration
 
   belongs_to :build_configuration
-  has_many :groups, :dependent => :destroy
+  has_many :groups, :order => 'name', :dependent => :destroy
   has_params :params
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
@@ -30,7 +30,7 @@ class TestConfiguration < ActiveRecord::Base
 
   def self.test_case_rel(name,sql = nil)
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql
-    finder_sql = common_sql
+    finder_sql = common_sql + " ORDER BY test_configurations.name, groups.name, test_cases.name"
     counter_sql = "SELECT COUNT(*) FROM (#{common_sql}) f"
     has_many name, :class_name => 'TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
   end

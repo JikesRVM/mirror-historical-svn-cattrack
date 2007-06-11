@@ -18,9 +18,9 @@ class Group < ActiveRecord::Base
 
   belongs_to :test_configuration
 
-  has_many :test_cases, :dependent => :destroy
-  has_many :successes, :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
-  has_many :excluded, :class_name => 'TestCase', :conditions => "result = 'EXCLUDED'"
+  has_many :test_cases, :order => 'name', :dependent => :destroy
+  has_many :successes, :order => 'name', :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
+  has_many :excluded, :order => 'name', :class_name => 'TestCase', :conditions => "result = 'EXCLUDED'"
 
   include TestCaseContainer
 

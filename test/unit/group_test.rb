@@ -27,10 +27,9 @@ class GroupTest < Test::Unit::TestCase
     assert_equal( "basic", group.name )
     assert_equal( 1, group.test_configuration_id )
     assert_equal( 1, group.test_configuration.id )
-
-    assert_equal( 2, group.test_cases.size )
-    assert( group.test_case_ids.include?(1) )
-    assert( group.test_case_ids.include?(2) )
+    assert_equal( [1 , 2], group.test_case_ids )
+    assert_equal( [], group.excluded_ids )
+    assert_equal( [1 , 2], group.success_ids )
   end
 
   def test_success_rate

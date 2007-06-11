@@ -18,7 +18,7 @@ class TestConfigurationTest < Test::Unit::TestCase
   end
 
   def test_parent_node
-    assert_parent_node(test_configurations(:tc1_1),BuildConfiguration,1)
+    assert_parent_node(test_configurations(:tc1_1), BuildConfiguration, 1)
   end
 
   def test_basic_load
@@ -31,9 +31,10 @@ class TestConfigurationTest < Test::Unit::TestCase
     blank_params = { 'mode' => '', 'extra.args' => '' }
     assert_params_same(blank_params, tc.params)
 
-    assert_equal( 2, tc.groups.size )
-    assert( tc.group_ids.include?(1) )
-    assert( tc.group_ids.include?(2) )
+    assert_equal( [1, 2], tc.group_ids )
+    assert_equal( [1, 2, 4, 3], tc.success_ids )
+    assert_equal( [], tc.excluded_ids )
+    assert_equal( [1, 2, 4, 3], tc.test_case_ids )
   end
 
   def test_success_rate

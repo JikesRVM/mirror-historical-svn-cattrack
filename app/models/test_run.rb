@@ -21,7 +21,7 @@ class TestRun < ActiveRecord::Base
 
   belongs_to :host
   has_one :build_target, :dependent => :destroy
-  has_many :build_configurations, :dependent => :destroy
+  has_many :build_configurations, :order => 'name', :dependent => :destroy
 
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*
@@ -35,7 +35,7 @@ class TestRun < ActiveRecord::Base
 
   def self.test_case_rel(name, sql = nil)
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql
-    finder_sql = common_sql
+    finder_sql = common_sql + " ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name"
     counter_sql = "SELECT COUNT(*) FROM (#{common_sql}) f"
     has_many name, :class_name => 'TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
   end

@@ -31,20 +31,18 @@ class TestRunTest < Test::Unit::TestCase
     assert_equal( 1, test_run.host.id )
     assert_equal( 1, test_run.build_target.id )
 
-    assert_equal( [1, 2], test_run.build_configurations.collect{|bc| bc.id}.sort )
+    assert_equal( [1, 2], test_run.build_configuration_ids )
 
     # force both count and finder sqls ==> size + find
     #
     assert_equal( 13, test_run.successes.size )
-    assert_equal( true, test_run.successes.collect {|t| t.id }.include?(1) )
+    assert_equal( [1, 2, 4, 3, 5, 6, 8, 7, 13, 14, 17, 16, 15], test_run.success_ids )
     assert_equal( 0, test_run.excluded.size )
-    assert_equal( [], test_run.excluded.collect {|t| t.id } )
+    assert_equal( [], test_run.excluded_ids )
     assert_equal( 13, test_run.test_cases.size )
-    assert_equal( true, test_run.test_cases.collect {|t| t.id }.include?(1) )
-
-    # Used on summary screen
+    assert_equal( [1, 2, 4, 3, 5, 6, 8, 7, 13, 14, 17, 16, 15], test_run.test_case_ids )
     assert_equal( 0, test_run.non_successes.size )
-    assert_equal( [], test_run.non_successes.collect {|t| t.id } )
+    assert_equal( [], test_run.non_success_ids )
   end
 
   def test_success_rate
