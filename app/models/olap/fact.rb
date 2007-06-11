@@ -10,17 +10,16 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Olap::ResultFact < Olap::Fact
-  dimension :host
-  dimension :time
-  dimension :revision
-  dimension :test_run
-  dimension :build_target
-  dimension :build_configuration
-  dimension :test_configuration
-  dimension :test_case
-  dimension :result
+class Olap::Fact < ActiveRecord::Base
+  self.abstract_class = true
 
-  validates_reference_exists :source_id, TestCase
-  belongs_to :source, :class_name => 'TestCase', :foreign_key => 'source_id'
+  class << self
+    def dimension(name)
+      type = "Olap::#{name.to_s.camelize}Dimension".constantize
+      validates_presence_of type.relation_name
+      validates_reference_exists type.relation_name, type
+
+      belongs_to name, :class_name => type.name, :foreign_key => type.relation_name
+    end
+  end
 end
