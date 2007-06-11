@@ -1,5 +1,5 @@
 - @content_for_breadcrumbs = draw_breadcrumbs(@record.parent_node)
-- @page_title = "Test Run: #{h(@record.name)}-#{@record.id}"
+- @page_title = "Test Run: #{h(@record.name)}.#{@record.id}"
 %h1.page-title= @page_title
 
 %table.details
@@ -20,6 +20,7 @@
     %td= @record.created_at
 %ul.actions
   %li= link_for(@record, :label => 'Show Summary', :action => 'show_summary')
+  %li= link_for(@record, :label => 'Show Report', :controller => '/reports/test_run_by_revision_report')
 .clearer
 %h3 Build Runs
 %table.list

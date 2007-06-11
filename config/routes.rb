@@ -36,11 +36,12 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'admin/user/:action/:id', :controller => 'admin/user'
   map.connect 'security/:action/:id', :controller => 'security'
 
+  map.connect 'reports/:host_name/:test_run_name.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
+
   map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index'
   map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
   map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
   map.connect 'explorer/summarizer/:action/:id', :controller => 'explorer/summarizer'
-  #map.connect ':controller/:action/:id'
   if RAILS_ENV == 'test'
     map.connect 'application/:action', :controller => 'application'
     map.connect 'explorer/base/:action', :controller => 'explorer/base'
