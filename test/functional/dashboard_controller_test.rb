@@ -39,7 +39,7 @@ class DashboardControllerTest < Test::Unit::TestCase
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
 
-    assert_equal([test_run.id, 1], assigns(:test_runs).collect {|r| r.id} )
+    assert_equal([test_run.id, 2, 1], assigns(:test_runs).collect {|r| r.id} )
     assert_not_nil(assigns(:test_run_pages))
     assert_equal(0, assigns(:test_run_pages).current.offset)
     assert_equal(1, assigns(:test_run_pages).page_count)
