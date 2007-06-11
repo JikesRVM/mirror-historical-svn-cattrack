@@ -64,8 +64,9 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     assert(model.exists?(id))
     test_run = TestRun.find(id)
     label = test_run.label
-    post(:destroy, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
-    assert_redirected_to(:controller => 'host', :action => 'show', :id => 1)
+    host_name = test_run.host.name
+    delete(:destroy, {:host_name => host_name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
+    assert_redirected_to(:controller => 'results/host', :action => 'show', :host_name => host_name)
     assert(!model.exists?(id))
     assert_not_nil(assigns(:record))
     assert_equal(id, assigns(:record).id)

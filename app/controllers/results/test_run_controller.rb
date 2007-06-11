@@ -12,7 +12,7 @@
 #
 class Results::TestRunController < Results::BaseController
   verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
-  verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
+  verify :method => :delete, :only => [:destroy], :redirect_to => :access_denied_url
   caches_page :show, :show_summary
   cache_sweeper :test_run_sweeper, :only => [:destroy]
   session :off, :except => [:destroy]
@@ -28,9 +28,10 @@ class Results::TestRunController < Results::BaseController
   def destroy
     raise AuthenticatedSystem::SecurityError unless is_authenticated?
     @record = test_run
+    host_name = @record.host.name
     raise AuthenticatedSystem::SecurityError unless current_user.admin?
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
-    redirect_to(:controller => '/host', :action => 'show', :id => @record.host_id)
+    redirect_to(:controller => '/results/host', :action => 'show', :host_name => host_name)
   end
 end

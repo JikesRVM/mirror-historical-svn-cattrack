@@ -19,7 +19,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name', :controller => 'results/test_configuration', :action => 'show'
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/Output.txt', :controller => 'results/build_configuration', :action => 'show_output'
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name', :controller => 'results/build_configuration', :action => 'show'
-  map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'show'
+  map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'show', :conditions => {:method => :get}
+  map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'destroy', :conditions => {:method => :delete}
   map.connect 'results/hosts', :controller => 'results/host', :action => 'list'
   map.connect 'results/:host_name', :controller => 'results/host', :action => 'show'
 
@@ -31,8 +32,18 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect '', :controller => 'dashboard'
 
+  map.connect 'admin/sysinfo/:action', :controller => 'admin/sysinfo'
   map.connect 'admin/user/:action/:id', :controller => 'admin/user'
   map.connect 'security/:action/:id', :controller => 'security'
 
-  map.connect ':controller/:action/:id'
+  map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index'
+  map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
+  map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
+  map.connect 'explorer/summarizer/:action/:id', :controller => 'explorer/summarizer'
+  #map.connect ':controller/:action/:id'
+  if RAILS_ENV == 'test'
+    map.connect 'application/:action', :controller => 'application'
+    map.connect 'explorer/base/:action', :controller => 'explorer/base'
+    map.connect 'admin/base/:action', :controller => 'admin/base'
+  end
 end

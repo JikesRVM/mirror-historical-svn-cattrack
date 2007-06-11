@@ -61,7 +61,9 @@ module ApplicationHelper
   end
 
   def test_run_delete_link(test_run)
-    link = link_to('Delete', {:controller => '/test_run', :action => 'destroy', :id => test_run}, {:method => :post, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"})
+    params = {:controller => '/results/test_run', :action => 'destroy', :host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}
+    options = {:method => :delete, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"}
+    link = link_to('Delete', params, options)
     s = <<EOS
 <li id="test_run_#{test_run.id}_delete">#{link}<script type='text/javascript'><!--
 if(!is_admin()) Element.hide('test_run_#{test_run.id}_delete')
