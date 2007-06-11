@@ -41,7 +41,7 @@ class TestRunBuilder
         configs = build_build_configurations(xml, test_run_id)
         build_build_target(xml, test_run_id)
 
-        logger.debug("TestRun #{test_run_name} contains #{configs.size} build configurationss. Starting to process test configurations.")
+        logger.debug("TestRun #{test_run_name} contains #{configs.size} build configurations. Starting to process test configurations.")
 
         build_test_configurations(xml, configs)
 
@@ -84,7 +84,7 @@ class TestRunBuilder
     xml.elements.each('/report/builds/build') do |b_xml|
       configuration_name = b_xml.elements['configuration'].text
       build_configuration = configs[configuration_name]
-      raise BuilderException.new("Missing build_run. Builds likely failed.") unless build_configuration
+      raise BuilderException.new("Missing build_run named #{configuration_name}. Build most likely failed.") unless build_configuration
       build_configuration.time = b_xml.elements['time'].text.to_i
       build_configuration.result = b_xml.elements['result'].text
       build_configuration.output = b_xml.elements['output'].text
@@ -105,7 +105,7 @@ class TestRunBuilder
         logger.debug("Processing test configuration for '#{test_configuration_id}' using build configuration '#{build_configuration_name}'.")
 
         test_configuration_name = tc_xml.elements['name'].text
-        test_configuration_name = "default" if test_configuration_name.blank? 
+        test_configuration_name = "default" if test_configuration_name.blank?
         test_configuration = TestConfiguration.new
         test_configuration.build_configuration_id = build_configuration_id
         test_configuration.name = test_configuration_name
