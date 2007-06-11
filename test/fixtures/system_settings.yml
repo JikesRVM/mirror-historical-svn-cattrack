@@ -30,4 +30,7 @@ s_results_directory:
   id: 5
   name: 'results.dir'
   value: '<%= File.expand_path(RAILS_ROOT) %>/results'
-
+s_scm_url:
+  id: 6
+  name: 'scm.url'
+  value: 'http://svn.sourceforge.net/viewvc/jikesrvm?view=rev&revision=@@revision@@'

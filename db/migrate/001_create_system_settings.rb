@@ -27,6 +27,7 @@ class CreateSystemSettings < ActiveRecord::Migration
     SystemSetting.create!(:name => 'minor.version', :value => '0')
     SystemSetting.create!(:name => 'session.timeout', :value => '20')
     SystemSetting.create!(:name => 'results.dir', :value => "#{File.expand_path(RAILS_ROOT)}/results")
+    SystemSetting.create!(:name => 'scm.url', :value => "http://svn.sourceforge.net/viewvc/jikesrvm?view=rev&revision=@@revision@@")
   end
 
   def self.down

@@ -13,7 +13,7 @@
     %tr
       %td= link_for(t.host)
       %td= h(t.name)
-      %td= h(t.revision)
+      %td= revision_link(t.revision)
       %td= "#{time_ago_in_words(t.occured_at)} ago"
       %td= t.success_rate
       %td

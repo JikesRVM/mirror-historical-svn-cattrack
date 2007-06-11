@@ -12,7 +12,7 @@
     %tr
       %td= h(t.name)
       %td= h(t.success_rate)
-      %td= h(t.revision)
+      %td= revision_link(t.revision)
       %td= h(t.occured_at)
       %td
         %ul.actions

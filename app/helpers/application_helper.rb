@@ -71,4 +71,10 @@ if(!is_admin()) Element.hide('test_run_#{test_run.id}_delete')
 //--></script></li>
 EOS
   end
+
+  def revision_link(revision)
+    s = <<EOS
+<a href="#{h(SystemSetting['scm.url'].gsub(/@@revision@@/,revision.to_s))}">#{h(revision)}</a>
+EOS
+  end
 end
