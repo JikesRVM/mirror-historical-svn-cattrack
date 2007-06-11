@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 namespace :test do
-  Rake::TestTask.new(:services => :environment) do |t|
+  Rake::TestTask.new(:services => ["db:test:prepare", :environment]) do |t|
     t.libs << "test"
     t.pattern = 'test/services/**/*_test.rb'
     t.verbose = true
@@ -19,4 +19,8 @@ namespace :test do
   Rake::Task['test:services'].comment = "Run the service tests in test/services"
 end
 
-Rake::Task['test'].enhance(['test:services'])
+Rake::Task['test'].prerequisites << 'test:services'
+
+desc "Run the continuous integration action"
+task :cia => ['clear', 'test'] do
+end
