@@ -37,9 +37,11 @@ class RoutingTest < Test::Unit::TestCase
 
     assert_routing('/reports/excalibur.watson.ibm.com/core.36', :host_name => 'excalibur.watson.ibm.com', :test_run_name => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
 
-    [:show, :list, :enable_admin, :disable_admin, :activate, :deactivate].each do |action|
-      assert_routing("/admin/user/#{action}", :controller => 'admin/user', :action => action.to_s)
+    [:show, :enable_admin, :disable_admin, :activate, :deactivate].each do |action|
+      assert_routing("/admin/user/#{action}/1", :controller => 'admin/user', :action => action.to_s, :id => '1')
     end
+
+    assert_routing("/admin/user/list", :controller => 'admin/user', :action => 'list')
 
     assert_routing('/explorer', :controller => 'explorer/dashboard', :action => 'index')
     # The following untested as they are likely to change in future
