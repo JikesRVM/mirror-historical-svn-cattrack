@@ -14,7 +14,8 @@ module ApplicationHelper
   def link_for(object, options = {})
     label = options[:label] || object.label
     action = options[:action] || 'show'
-    link_to(h(label), {:controller => "/results/#{object.class.table_name.singularize}", :action => action}.merge(gen_link_options(object)))
+    controller = options[:controller] || "/results/#{object.class.table_name.singularize}"
+    link_to(h(label), {:controller => controller, :action => action}.merge(gen_link_options(object)))
   end
 
   def gen_link_options(object)
