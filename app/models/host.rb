@@ -11,6 +11,7 @@
 #  regarding copyright ownership.
 #
 class Host < ActiveRecord::Base
+  validates_format_of :name, :with => /^[\.\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..100
   validates_uniqueness_of :name
 

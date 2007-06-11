@@ -40,6 +40,9 @@ class HostTest < Test::Unit::TestCase
   def self.str_length_attributes
     [[:name, 101]]
   end
+  def self.bad_attributes
+    [[:name, '*']]
+  end
 
   perform_basic_model_tests
 end
