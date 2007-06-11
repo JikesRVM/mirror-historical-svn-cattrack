@@ -1,9 +1,5 @@
-%h2= "Test Configuration: #{h(@record.name)}"
-
-%table.details
-  %tr
-    %th Build Configuration
-    %td= link_for(@record.build_configuration)
+- @page_title = "Test Configuration: #{h(@record.name)}"
+%h1.page-title= @page_title
 
 %h3 Configuration Parameters
 %table.details

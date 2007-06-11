@@ -1,4 +1,5 @@
-%h2= "Test Case: #{h(@record.name)}"
+- @page_title = "Test Case: #{h(@record.name)}"
+%h1.page-title= @page_title
 
 %h3 Test Parameters
 %table.details

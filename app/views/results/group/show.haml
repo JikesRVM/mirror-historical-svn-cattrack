@@ -1,4 +1,5 @@
-%h2= "Group: #{h(@record.name)}"
+- @page_title = "Group: #{h(@record.name)}"
+%h1.page-title= @page_title
 
 %table.list
   %tr

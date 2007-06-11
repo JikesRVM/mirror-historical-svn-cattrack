@@ -1,5 +1,5 @@
 - @page_title = "Login Required"
-%h1.page-title Login Required
+%h1.page-title= @page_title
 %p
   You are not logged in. You cannot view this URL without
   %a{:href => url_for(:controller => '/security', :action => 'login'), :title => 'Log on'}

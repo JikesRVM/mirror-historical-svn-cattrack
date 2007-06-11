@@ -1,7 +1,6 @@
+- @page_title = "User: #{h(@record.username)}"
+%h1.page-title= @page_title
 %table.details
-  %tr
-    %th Username
-    %td= h(@record.username)
   %tr
     %th Admin?
     %td= h(@record.admin?)

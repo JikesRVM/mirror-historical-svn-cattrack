@@ -1,5 +1,5 @@
 - @page_title = "Login"
-%h1.page-title Login
+%h1.page-title= @page_title
 
 %form{:action => url_for(:action => 'login'), :method => 'post'}
   %table.details

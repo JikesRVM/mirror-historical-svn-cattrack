@@ -1,4 +1,5 @@
-%h2= "Build Configuration: #{h(@record.name)}"
+- @page_title = "Build Configuration: #{h(@record.name)}"
+%h1.page-title= @page_title
 
 %table.details
   %tr
@@ -13,7 +14,6 @@
   %tr
     %th Output
     %td= link_for(@record, :label => '...Output...', :action => 'show_output')
-
 
 %h3 Configuration Parameters
 %table.details

@@ -1,7 +1,7 @@
+- @page_title = "Test Run Summary: #{h(@record.name)}-#{@record.id}"
+%h1.page-title= @page_title
+
 %table.details
-  %tr
-    %th Name
-    %td= h(@record.name)
   %tr
     %th Target
     %td= link_for(@record.build_target)
