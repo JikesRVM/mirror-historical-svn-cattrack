@@ -20,5 +20,14 @@ class Olap::Dimension < ActiveRecord::Base
       set_table_name(name)
       name
     end
+
+    def short_name
+      self.name.demodulize.underscore.gsub(/_dimension/, '')
+    end
+
+    # The name that facts use as foreign key when relating to this dimension
+    def relation_name
+      short_name + '_id'
+    end
   end
 end

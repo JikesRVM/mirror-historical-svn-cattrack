@@ -35,11 +35,9 @@ class Admin::SysinfoController < Admin::BaseController
 
   def purge_orphan_dimensions
     Dimensions.collect do |d|
-      name = d.table_name.singularize
-      column_name = name[0, name.length - 9] + "id"
       sql = []
-      sql << ((d != Olap::StatisticDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)" : '1 = 1')
-      sql << ((d != Olap::ResultDimension) ? "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)" : '1 = 1')
+      sql << ((d != Olap::StatisticDimension) ? "id NOT IN (SELECT DISTINCT #{d.relation_name} FROM result_facts)" : '1 = 1')
+      sql << ((d != Olap::ResultDimension) ? "id NOT IN (SELECT DISTINCT #{d.relation_name} FROM statistic_facts)" : '1 = 1')
       d.destroy_all(sql.join(' AND '))
     end
     redirect_to(:action => 'show')
@@ -51,11 +49,9 @@ class Admin::SysinfoController < Admin::BaseController
 
   def dimension_data
     Dimensions.collect do |d|
-      name = d.table_name.singularize
-      column_name = name[0, name.length - 9] + "id"
-      result_fact_count = (d != Olap::StatisticDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM result_facts)") : 0
-      statistic_fact_count = (d != Olap::ResultDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{column_name} FROM statistic_facts)") : 0
-      [d.name[6, d.name.length - (9 + 6)], result_fact_count + statistic_fact_count, d]
+      result_fact_count = (d != Olap::StatisticDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{d.relation_name} FROM result_facts)") : 0
+      statistic_fact_count = (d != Olap::ResultDimension) ? d.count(:conditions => "id NOT IN (SELECT DISTINCT #{d.relation_name} FROM statistic_facts)") : 0
+      [d.short_name.classify, result_fact_count + statistic_fact_count, d]
     end
   end
 end
