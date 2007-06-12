@@ -64,4 +64,12 @@ class SecurityControllerTest < Test::Unit::TestCase
     assert_nil(flash[:alert])
     assert_nil(flash[:notice])
   end
+
+  def test_access_denied
+    get(:access_denied, {}, {})
+    assert_response(403)
+    assert_template('access_denied')
+    assert_nil(flash[:alert])
+    assert_nil(flash[:notice])
+  end
 end

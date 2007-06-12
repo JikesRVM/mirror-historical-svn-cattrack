@@ -31,6 +31,7 @@ class SecurityController < ApplicationController
   end
 
   def access_denied
+    render(:template => 'security/access_denied', :status => 403)
   end
 
   def logout
