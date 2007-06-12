@@ -26,6 +26,6 @@ class Admin::BaseController < ApplicationController
   end
 
   def verify_admin
-    raise AuthenticatedSystem::SecurityError unless current_user.admin?
+    raise CatTrack::SecurityError unless current_user.admin?
   end
 end

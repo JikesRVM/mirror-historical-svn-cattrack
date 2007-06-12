@@ -20,7 +20,7 @@ class SecurityController < ApplicationController
       if self.current_user
         cookies[:cattrack_admin] = current_user.admin?.to_s
         cookies[:cattrack_user] = current_user.username
-        redirect_back_or_default(:controller => 'dashboard')
+        redirect_to_url(:controller => 'dashboard')
       else
         flash[:alert] = 'Incorrect Login or Password.'
       end

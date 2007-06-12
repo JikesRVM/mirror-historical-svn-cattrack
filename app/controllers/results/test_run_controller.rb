@@ -26,10 +26,10 @@ class Results::TestRunController < Results::BaseController
   end
 
   def destroy
-    raise AuthenticatedSystem::SecurityError unless is_authenticated?
+    raise CatTrack::SecurityError unless is_authenticated?
     @record = test_run
     host_name = @record.host.name
-    raise AuthenticatedSystem::SecurityError unless current_user.admin?
+    raise CatTrack::SecurityError unless current_user.admin?
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
     redirect_to(:controller => '/results/host', :action => 'show', :host_name => host_name)

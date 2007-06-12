@@ -15,7 +15,7 @@ require 'explorer/base_controller'
 
 class Explorer::BaseController
   def raise_error
-    raise AuthenticatedSystem::SecurityError
+    raise CatTrack::SecurityError
   end
 end
 
