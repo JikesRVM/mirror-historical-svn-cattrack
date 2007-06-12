@@ -5,7 +5,7 @@
     %td{:class => class_for_attribute(@summarizer,:primary_dimension,'')}
       %select{ :name => 'summarizer[primary_dimension]' }
         - Summarizer::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
-          %optgroup{ :label => d.tableize.singularize.humanize }
+          %optgroup{ :label => d.titleize }
             = options_from_collection_for_select(Summarizer::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @summarizer.primary_dimension)
       - if attribute_error?(@summarizer, :primary_dimension)
         .field_error= @summarizer.errors[:primary_dimension]
@@ -14,7 +14,7 @@
     %td{:class => class_for_attribute(@summarizer,:secondary_dimension,'')}
       %select{ :name => 'summarizer[secondary_dimension]' }
         - Summarizer::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
-          %optgroup{ :label => d.tableize.singularize.humanize }
+          %optgroup{ :label => d.titleize }
             = options_from_collection_for_select(Summarizer::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @summarizer.secondary_dimension)
       - if attribute_error?(@summarizer, :secondary_dimension)
         .field_error= @summarizer.errors[:secondary_dimension]

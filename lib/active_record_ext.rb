@@ -12,10 +12,6 @@
 #
 module ActiveRecord
   class Base
-    def self.label
-      self.name.humanize
-    end
-
     def self.validates_reference_exists(name, type, options={})
       configuration = {:message => 'does not reference a valid record.', :on => :save}
       configuration.update(options)

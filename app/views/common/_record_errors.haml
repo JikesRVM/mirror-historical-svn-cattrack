@@ -3,7 +3,7 @@
     %h4
       = pluralize(record.errors.count, 'error')
       prohibited this
-      = model.label
+      = model.name.titleize
       from being saved
     - if record.errors[:base]
       - errors = record.errors[:base]
