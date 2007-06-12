@@ -76,6 +76,7 @@ require 'active_record_ext' # My custom extension to ar for labels etc
 require 'param_helper' # For custom has_params extension
 require 'rexml/document' # For parsing uploaded xml files
 require 'routing_ext' # Monkey patch routing to remove . as a separator
+require 'no_cache' # Add in method to force no caching on the client. 
 
 OrderedTables = [
 'system_settings',
