@@ -1,7 +1,7 @@
 - Filter::AutoFields.collect{|f| f.dimension}.uniq.each do |d|
   = dimension_header(d)
   %table.search{:id => dimension_block_name(d)}
-    - Filter::Fields.select{|f| f.dimension == d}.each do |f|
+    - Filter::AutoFields.select{|f| f.dimension == d}.each do |f|
       %tr
         %th= f.name.to_s.humanize
         %td= fk_select(f.key, f.options)
