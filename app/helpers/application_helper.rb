@@ -36,13 +36,6 @@ module ApplicationHelper
     bc.collect {|o| "#{link_for(o)}"}.join(' &gt; ')
   end
 
-  def gen_link_options_old(object)
-    options = {}
-    breadcrumbs(object).each { |o| options["#{o.class.table_name.singularize}_id".to_sym] = o.id }
-    options[:id] = object.id
-    options
-  end
-
   def breadcrumbs(object)
     options = []
     o = object
@@ -54,7 +47,7 @@ module ApplicationHelper
   end
 
   def attribute_error?(record, name)
-    record.errors and record.errors[name]
+    !!(record.errors and record.errors[name])
   end
 
   def class_for_attribute(record, name, css)
