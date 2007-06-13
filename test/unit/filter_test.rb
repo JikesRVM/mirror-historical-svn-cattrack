@@ -88,6 +88,12 @@ class FilterTest < Test::Unit::TestCase
     assert_equal([Olap::HostDimension], join_sql)
   end
 
+  def test_search_filter_criteria_for_test_run_source_id
+    conditions, join_sql = Filter.new(:test_run_source_id => 1).filter_criteria
+    assert_equal(["test_run_dimension.source_id = :test_run_source_id", {:test_run_source_id=>1}], conditions)
+    assert_equal([Olap::TestRunDimension], join_sql)
+  end
+
   def test_search_filter_criteria_for_multi_value_parameter
     conditions, join_sql = Filter.new(:host_name => ['ace', 'baby']).filter_criteria
     assert_equal(["host_dimension.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)

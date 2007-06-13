@@ -60,6 +60,8 @@ class Filter < ActiveRecord::Base
   SearchField.new(Olap::RevisionDimension, :after, :type => :integer, :synthetic => true),
   SearchField.new(Olap::RevisionDimension, :revision, :type => :integer),
 
+  SearchField.new(Olap::TestRunDimension, :source_id),
+
   SearchField.new(Olap::TimeDimension, :year),
   SearchField.new(Olap::TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME),
   SearchField.new(Olap::TimeDimension, :week),
@@ -122,6 +124,7 @@ class Filter < ActiveRecord::Base
     add_search_term(search, field(Olap::TimeDimension, :month), conditions, cond_params, joins)
     add_search_term(search, field(Olap::TimeDimension, :week), conditions, cond_params, joins)
     add_search_term(search, field(Olap::TimeDimension, :day_of_week), conditions, cond_params, joins)
+    add_search_term(search, field(Olap::TestRunDimension, :source_id), conditions, cond_params, joins)
 
     add_time_based_search(search, conditions, cond_params, joins)
 
