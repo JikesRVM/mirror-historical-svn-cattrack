@@ -14,7 +14,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TestRunTest < Test::Unit::TestCase
   def test_label
-    assert_equal('core', test_runs(:tr_1).label)
+    assert_equal('core-1', test_runs(:tr_1).label)
   end
 
   def test_parent_node

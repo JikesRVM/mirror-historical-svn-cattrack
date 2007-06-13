@@ -47,6 +47,10 @@ class TestRun < ActiveRecord::Base
 
   include TestCaseContainer
 
+  def label
+    "#{name}-#{id}"
+  end
+
   def parent_node
     host
   end
