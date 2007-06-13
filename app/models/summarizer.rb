@@ -40,7 +40,7 @@ class Summarizer < ActiveRecord::Base
   validates_inclusion_of :secondary_dimension, :in => ValidDimensionFieldIds
   validates_length_of :description, :in => 0..256
 
-  validates_each(:primary_dimension, :secondary_dimension) do |record, attr, value|
+  validates_each(:primary_dimension) do |record, attr, value|
     record.errors.add(attr, 'primary and secondary dimensions can not be the same.') if (not record.primary_dimension.nil? and record.primary_dimension == record.secondary_dimension)
   end
 end
