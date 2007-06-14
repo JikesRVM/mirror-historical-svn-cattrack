@@ -14,13 +14,13 @@ class Explorer::ReportController < Explorer::BaseController
   #verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
 
   def list
-    Filter::AutoFields.each do |f|
+    Olap::Query::Filter::AutoFields.each do |f|
       value = f.dimension.attribute_values(f.name.to_s)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
     @data_presentations = DataPresentation.find(:all, :order => 'name')
     data_view = DataView.new
-    data_view.filter = Filter.new(params[:filter])
+    data_view.filter = Olap::Query::Filter.new(params[:filter])
     data_view.filter.name = '*'
     data_view.filter.description = ''
     data_view.summarizer = Summarizer.new(params[:summarizer])
