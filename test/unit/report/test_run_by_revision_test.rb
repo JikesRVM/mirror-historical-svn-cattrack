@@ -17,7 +17,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_run = TestRun.find(1)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
-    assert_equal(10, report.window_size)
+    assert_equal(6, report.window_size)
     assert_equal([], report.new_failures.collect{|t| t.id})
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t.id}.sort)
     assert_equal([], report.intermittent_failures.collect{|t| t.id})
