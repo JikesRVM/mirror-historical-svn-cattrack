@@ -12,11 +12,11 @@
       %tr
         %th Type
         %td
-          %select{:name => 'data_presentation'}
-            = options_from_collection_for_select(@data_presentations, :id, :name, params[:data_presentation].to_i)
+          %select{:name => 'presentation'}
+            = options_from_collection_for_select(@presentations, :id, :name, params[:presentation].to_i)
     %ul.actions
       %li
         %button{:type => 'submit'} Search
     .clearer
 - if @results
-  = render(:partial => @data_presentation.key)
+  = render(:partial => @presentation.key)

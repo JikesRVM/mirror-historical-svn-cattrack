@@ -74,8 +74,8 @@ class Report::TestRunByRevision
     data_view.summarizer = Summarizer.new
     data_view.summarizer.name = '*'
     data_view.summarizer.description = ''
-    data_view.data_presentation = DataPresentation.new
-    data_view.data_presentation.name = '*'
+    data_view.presentation = Olap::Query::Presentation.new
+    data_view.presentation.name = '*'
     data_view.summarizer.primary_dimension = 'build_configuration_name'
     data_view.summarizer.secondary_dimension = 'test_run_source_id'
     data_view.summarizer.function = 'success_rate'
@@ -90,8 +90,8 @@ class Report::TestRunByRevision
     data_view.summarizer = Summarizer.new
     data_view.summarizer.name = '*'
     data_view.summarizer.description = ''
-    data_view.data_presentation = DataPresentation.new
-    data_view.data_presentation.name = '*'
+    data_view.presentation = Olap::Query::Presentation.new
+    data_view.presentation.name = '*'
     data_view.summarizer.primary_dimension = 'test_case_name'
     data_view.summarizer.secondary_dimension = 'test_run_source_id'
     data_view.summarizer.function = 'success_rate'

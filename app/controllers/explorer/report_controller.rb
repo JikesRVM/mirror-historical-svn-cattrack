@@ -18,7 +18,7 @@ class Explorer::ReportController < Explorer::BaseController
       value = f.dimension.attribute_values(f.name.to_s)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
-    @data_presentations = DataPresentation.find(:all, :order => 'name')
+    @presentations = Olap::Query::Presentation.find(:all, :order => 'name')
     data_view = DataView.new
     data_view.filter = Olap::Query::Filter.new(params[:filter])
     data_view.filter.name = '*'
@@ -31,8 +31,8 @@ class Explorer::ReportController < Explorer::BaseController
     @summarizer = data_view.summarizer
 
     if request.post?
-      @data_presentation = DataPresentation.find(params[:data_presentation])
-      if @data_presentation and @summarizer.valid? and @filter.valid?
+      @presentation = Olap::Query::Presentation.find(params[:presentation])
+      if @presentation and @summarizer.valid? and @filter.valid?
         @results = data_view.perform_search
 
       end

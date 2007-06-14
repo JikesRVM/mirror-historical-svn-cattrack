@@ -11,15 +11,15 @@
 #  regarding copyright ownership.
 #
 class DataView < ActiveRecord::Base
-  validates_presence_of :filter_id, :summarizer_id, :data_presentation_id
+  validates_presence_of :filter_id, :summarizer_id, :presentation_id
 
   validates_reference_exists :filter_id, Olap::Query::Filter
   validates_reference_exists :summarizer_id, Summarizer
-  validates_reference_exists :data_presentation_id, DataPresentation
+  validates_reference_exists :presentation_id, Olap::Query::Presentation
 
   belongs_to :filter, :class_name => 'Olap::Query::Filter', :foreign_key => 'filter_id'
   belongs_to :summarizer
-  belongs_to :data_presentation
+  belongs_to :presentation, :class_name => 'Olap::Query::Presentation', :foreign_key => 'presentation_id'
 
   def perform_search
     conditions, joins = filter.filter_criteria()

@@ -14,4 +14,4 @@ p1:
   id: 1
   filter_id: 1
   summarizer_id: 1
-  data_presentation_id: 1
+  presentation_id: 1

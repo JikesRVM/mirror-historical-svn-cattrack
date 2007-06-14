@@ -10,20 +10,18 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class DataPresentationTest < Test::Unit::TestCase
+class Olap::Query::PresentationTest < Test::Unit::TestCase
   def test_label
-    assert_equal( DataPresentation.find(1).name, DataPresentation.find(1).label )
+    assert_equal( Olap::Query::Presentation.find(1).name, Olap::Query::Presentation.find(1).label )
   end
 
   def test_basic_load
-    presentation = DataPresentation.find(1)
+    presentation = Olap::Query::Presentation.find(1)
     assert_equal( 1, presentation.id )
     assert_equal( 'Pivot Table', presentation.name )
     assert_equal( 'pivot', presentation.key )
-    assert_equal( 1, presentation.params.size )
-    assert_equal( '1', presentation.params['offset'] )
   end
 
   def self.attributes_for_new
