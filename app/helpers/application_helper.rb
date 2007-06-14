@@ -21,10 +21,10 @@ module ApplicationHelper
   def gen_link_options(object)
     options = {}
     breadcrumbs(object).each do |o|
-      if o.is_a? TestRun
+      if o.is_a? Tdm::TestRun
         options["#{o.class.table_name.singularize}_id".to_sym] = o.id
       end
-      if not o.is_a? BuildTarget
+      if not o.is_a? Tdm::BuildTarget
         options["#{o.class.table_name.singularize}_name".to_sym] = o.name
       end
     end

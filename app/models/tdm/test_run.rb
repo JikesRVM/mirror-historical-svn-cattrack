@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class TestRun < ActiveRecord::Base
+class Tdm::TestRun < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:host_id, :occured_at]
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_presence_of :host_id
-  validates_reference_exists :host_id, Host
+  validates_reference_exists :host_id, Tdm::Host
   validates_positiveness_of :revision
   validates_numericality_of :revision, :only_integer => true
   validates_presence_of :occured_at

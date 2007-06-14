@@ -31,7 +31,7 @@ class Report::TestRunByRevision
     options[:conditions] = [ sql, @test_run.host.id, @test_run.occured_at, @test_run.name, @test_run.id ]
     options[:limit] = @window_size
     options[:order] = 'occured_at DESC'
-    @past_test_runs = TestRun.find(:all, options)
+    @past_test_runs = Tdm::TestRun.find(:all, options)
     test_run_ids = @past_test_runs.collect {|tr| tr.id}
 
     @new_failures = []
@@ -121,7 +121,7 @@ class Report::TestRunByRevision
 SELECT
   count(*) AS test_count,
   count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS success_count
-#{TestRun::TEST_RUN_TO_TESTCASE_SQL} WHERE
+#{Tdm::TestRun::TEST_RUN_TO_TESTCASE_SQL} WHERE
   test_runs.name = :test_run_name AND
   test_runs.id != :test_run_id AND
   build_configurations.name = :build_configuration_name AND
@@ -130,7 +130,7 @@ SELECT
   test_cases.name = :test_case_name #{extra}
 SQL
     sql = ActiveRecord::Base.send :sanitize_sql_array, [sql, options]
-    values = TestRun.connection.select_one(sql)
+    values = Tdm::TestRun.connection.select_one(sql)
     #puts "values=#{values.inspect}"
     return values['test_count'].to_i, values['success_count'].to_i
   end

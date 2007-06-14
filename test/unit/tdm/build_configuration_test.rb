@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class BuildConfigurationTest < Test::Unit::TestCase
+class Tdm::BuildConfigurationTest < Test::Unit::TestCase
   def test_label
-    assert_equal( BuildConfiguration.find(1).name, BuildConfiguration.find(1).label )
+    assert_equal( Tdm::BuildConfiguration.find(1).name, Tdm::BuildConfiguration.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(BuildConfiguration.find(1),TestRun,1)
+    assert_parent_node(Tdm::BuildConfiguration.find(1),Tdm::TestRun,1)
   end
 
   def test_basic_load
-    bc = BuildConfiguration.find(1)
+    bc = Tdm::BuildConfiguration.find(1)
     assert_equal( "prototype", bc.name )
     assert_equal( "SUCCESS", bc.result )
     assert_equal( 10323, bc.time )
@@ -61,9 +61,9 @@ class BuildConfigurationTest < Test::Unit::TestCase
   perform_basic_model_tests
 
   def test_new_with_output
-    bc = BuildConfiguration.new(self.class.attributes_for_new)
+    bc = Tdm::BuildConfiguration.new(self.class.attributes_for_new)
     bc.save!
-    bc = BuildConfiguration.find(bc.id)
+    bc = Tdm::BuildConfiguration.find(bc.id)
     assert_equal( 'foooish!', bc.output )
   end
 end

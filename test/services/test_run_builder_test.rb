@@ -80,7 +80,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
         test_case = nil
         g.test_cases.each { |tc| test_case = tc if tc.name == 'ImageSizes' }
         assert_not_nil(test_case)
-        test_case = TestCase.find(test_case.id)
+        test_case = Tdm::TestCase.find(test_case.id)
         assert_equal( 'ImageSizes', test_case.name )
         assert_equal( 'SUCCESS', test_case.result )
         assert_equal( 0, test_case.exit_code )

@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TestConfigurationTest < Test::Unit::TestCase
+class Tdm::TestConfigurationTest < Test::Unit::TestCase
   def test_label
-    assert_equal( 'prototype', test_configurations(:tc1_1).label )
+    assert_equal( Tdm::TestConfiguration.find(1).name, Tdm::TestConfiguration.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(test_configurations(:tc1_1), BuildConfiguration, 1)
+    assert_parent_node(Tdm::TestConfiguration.find(1), Tdm::BuildConfiguration, 1)
   end
 
   def test_basic_load
-    tc = TestConfiguration.find(1)
+    tc = Tdm::TestConfiguration.find(1)
     assert_equal( 1, tc.id )
     assert_equal( 'prototype', tc.name )
     assert_equal( 1, tc.build_configuration_id )
@@ -38,7 +38,7 @@ class TestConfigurationTest < Test::Unit::TestCase
   end
 
   def test_success_rate
-    assert_equal( "4/4", TestConfiguration.find(1).success_rate )
+    assert_equal( "4/4", Tdm::TestConfiguration.find(1).success_rate )
   end
 
   def self.attributes_for_new

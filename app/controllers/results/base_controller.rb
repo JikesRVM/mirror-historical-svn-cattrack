@@ -16,7 +16,7 @@ class Results::BaseController < ApplicationController
   protected
 
   def host
-    Host.find_by_name(params[:host_name])
+    Tdm::Host.find_by_name(params[:host_name])
   end
 
   def test_run

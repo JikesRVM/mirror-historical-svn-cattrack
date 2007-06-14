@@ -16,7 +16,7 @@ class Reports::TestRunByRevisionReportController < ApplicationController
   session :off
 
   def show
-    @host = Host.find_by_name(params[:host_name])
+    @host = Tdm::Host.find_by_name(params[:host_name])
     @test_run = @host.test_runs.find_by_id_and_name(params[:test_run_id], params[:test_run_name])
     @test_run.host = @host # Avoid loads when rendering
     @report = Report::TestRunByRevision.new(@test_run)

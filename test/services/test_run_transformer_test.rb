@@ -14,7 +14,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TestRunTransformerTest < Test::Unit::TestCase
   def test_build_olap_model_from
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     initial_result_fact_count = Olap::ResultFact.count
     initial_statistic_fact_count = Olap::StatisticFact.count
     TestRunTransformer.build_olap_model_from(test_run)

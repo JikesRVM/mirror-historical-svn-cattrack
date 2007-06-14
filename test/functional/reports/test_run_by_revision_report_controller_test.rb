@@ -33,7 +33,7 @@ class Reports::TestRunByRevisionReportControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    test_run = TestRun.find(id)
+    test_run = Tdm::TestRun.find(id)
     get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_response(:success)
     assert_template('show')

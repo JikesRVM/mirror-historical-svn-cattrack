@@ -37,7 +37,7 @@ class Results::TestCaseControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    test_case = TestCase.find(id)
+    test_case = Tdm::TestCase.find(id)
     group = test_case.group
     test_configuration = group.test_configuration
     build_configuration = test_configuration.build_configuration
@@ -61,7 +61,7 @@ class Results::TestCaseControllerTest < Test::Unit::TestCase
 
   def test_show_output
     id = 1
-    test_case = TestCase.find(id)
+    test_case = Tdm::TestCase.find(id)
     group = test_case.group
     test_configuration = group.test_configuration
     build_configuration = test_configuration.build_configuration

@@ -33,7 +33,7 @@ class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    build_configuration = BuildConfiguration.find(id)
+    build_configuration = Tdm::BuildConfiguration.find(id)
     test_run = build_configuration.test_run
     host = test_run.host
     params = {:host_name => host.name}
@@ -51,7 +51,7 @@ class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
 
   def test_show_output
     id = 1
-    build_configuration = BuildConfiguration.find(id)
+    build_configuration = Tdm::BuildConfiguration.find(id)
     test_run = build_configuration.test_run
     host = test_run.host
     params = {:host_name => host.name}

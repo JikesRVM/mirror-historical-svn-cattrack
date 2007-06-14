@@ -28,8 +28,8 @@ class DashboardControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    test_run = TestRun.new
-    test_run.attributes = TestRun.find(1).attributes
+    test_run = Tdm::TestRun.new
+    test_run.attributes = Tdm::TestRun.find(1).attributes
     test_run.occured_at = Time.now
     test_run.save!
 

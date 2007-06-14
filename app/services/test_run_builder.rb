@@ -21,13 +21,14 @@ class TestRunBuilder
     logger.info("Importing test run from host '#{host_name}' defined in file #{filename}")
 
     #TODO: Validate xml against a schema
-    test_run = TestRun.new
-    test_run.host = Host.find_or_create_by_name(host_name)
     file = Zlib::GzipReader.open(filename) if filename =~ /\.gz$/
     file = File.open(filename) unless file
 
-    TestRun.transaction do
+    Tdm::TestRun.transaction do
       xml = REXML::Document.new(file)
+
+      test_run = Tdm::TestRun.new
+      test_run.host = Tdm::Host.find_or_create_by_name(host_name)
 
       test_run_name = xml.elements['/report/id'].text
       begin
@@ -45,7 +46,7 @@ class TestRunBuilder
 
         build_test_configurations(xml, configs)
 
-        TestRun.find(test_run_id)
+        Tdm::TestRun.find(test_run_id)
       rescue Object => e
         logger.debug("TestRun #{test_run_name} caused an error #{e.message}.")
         raise e
@@ -62,7 +63,7 @@ class TestRunBuilder
     raise BuilderException.new("Missing target name. Likely all builds failed.") unless target_element
     target_run_name = target_element.value
 
-    build_target = BuildTarget.new(:name => target_run_name)
+    build_target = Tdm::BuildTarget.new(:name => target_run_name)
     xml.elements.each("/report/target/parameters/parameter[@key != 'target.name']") do |p_xml|
       build_target.params[p_xml.attributes['key']] = p_xml.attributes['value']
     end
@@ -74,7 +75,7 @@ class TestRunBuilder
     configs = {}
     xml.elements.each('/report/configuration') do |c_xml|
       build_configuration_name = c_xml.elements['id'].text
-      build_configuration = BuildConfiguration.new(:name => build_configuration_name)
+      build_configuration = Tdm::BuildConfiguration.new(:name => build_configuration_name)
       c_xml.elements.each("parameters/parameter[@key != 'config.name']") do |p_xml|
         build_configuration.params[p_xml.attributes['key']] = p_xml.attributes['value']
       end
@@ -106,7 +107,7 @@ class TestRunBuilder
 
         test_configuration_name = tc_xml.elements['name'].text
         test_configuration_name = "default" if test_configuration_name.blank?
-        test_configuration = TestConfiguration.new
+        test_configuration = Tdm::TestConfiguration.new
         test_configuration.build_configuration_id = build_configuration_id
         test_configuration.name = test_configuration_name
         tc_xml.elements.each("parameters/parameter") do |p_xml|
@@ -122,7 +123,7 @@ class TestRunBuilder
   end
 
   def self.build_group(xml, test_configuration_id)
-    group = Group.new
+    group = Tdm::Group.new
     group.test_configuration_id = test_configuration_id
     group.name = xml.elements['id'].text
     save!(group)
@@ -136,7 +137,7 @@ class TestRunBuilder
   def self.build_test_case(xml, group_id)
     test_name = xml.elements['id'].text
     logger.debug("Processing test #{test_name}.")
-    test_case = TestCase.new
+    test_case = Tdm::TestCase.new
     test_case.group_id = group_id
     test_case.name = test_name
     test_case.classname = xml.elements['class'].text

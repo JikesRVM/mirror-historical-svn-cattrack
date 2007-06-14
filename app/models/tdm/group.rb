@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Group < ActiveRecord::Base
+class Tdm::Group < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_uniqueness_of :name, :scope => [:test_configuration_id]
   validates_presence_of :test_configuration_id
-  validates_reference_exists :test_configuration_id, TestConfiguration
+  validates_reference_exists :test_configuration_id, Tdm::TestConfiguration
 
   belongs_to :test_configuration
 

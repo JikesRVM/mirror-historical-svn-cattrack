@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class TestCase < ActiveRecord::Base
+class Tdm::TestCase < ActiveRecord::Base
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:group_id]
   validates_presence_of :group_id
-  validates_reference_exists :group_id, Group
+  validates_reference_exists :group_id, Tdm::Group
   validates_length_of :classname, :in => 1..75
   validates_length_of :working_directory, :in => 1..256
   validates_length_of :result_explanation, :in => 0..256

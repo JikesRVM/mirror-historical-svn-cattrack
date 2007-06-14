@@ -59,10 +59,10 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
   end
 
   def test_test_run_delete_link
-    assert_equal("<li id=\"test_run_1_delete\"><a href=\"/results/skunk/core.1\" onclick=\"if (confirm('Are you sure you want to delete the core test-run?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\">Delete</a><script type='text/javascript'><!--\nif(!is_admin()) Element.hide('test_run_1_delete')\n//--></script></li>\n", MyClass.new.test_run_delete_link(TestRun.find(1)))
+    assert_equal("<li id=\"test_run_1_delete\"><a href=\"/results/skunk/core.1\" onclick=\"if (confirm('Are you sure you want to delete the core test-run?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\">Delete</a><script type='text/javascript'><!--\nif(!is_admin()) Element.hide('test_run_1_delete')\n//--></script></li>\n", MyClass.new.test_run_delete_link(Tdm::TestRun.find(1)))
   end
 
-  class FakeTestRun < TestRun
+  class FakeTestRun < Tdm::TestRun
     attr_accessor :label, :id, :name, :parent_node
     def self.table_name
       'test_run'
@@ -78,7 +78,7 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
     end
   end
 
-  class FakeBuildTarget < BuildTarget
+  class FakeBuildTarget < Tdm::BuildTarget
     attr_accessor :name, :parent_node
     def self.table_name
       'build_target'

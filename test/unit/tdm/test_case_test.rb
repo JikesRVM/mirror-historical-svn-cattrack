@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TestCaseTest < Test::Unit::TestCase
+class Tdm::TestCaseTest < Test::Unit::TestCase
   def test_label
-    assert_equal( "TestClassLoading", test_cases(:tc_1).label )
+    assert_equal( Tdm::TestCase.find(1).name, Tdm::TestCase.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(test_cases(:tc_1),Group,1)
+    assert_parent_node(Tdm::TestCase.find(1),Tdm::Group,1)
   end
 
   def test_basic_load
-    tc = test_cases(:tc_1)
+    tc = Tdm::TestCase.find(1)
     assert_equal( 1, tc.id )
     assert_equal( "TestClassLoading", tc.name )
     assert_equal( "TestClassLoading", tc.classname )
@@ -40,7 +40,7 @@ class TestCaseTest < Test::Unit::TestCase
   end
 
   def test_load_with_statistics
-    tc = test_cases(:tc_17)
+    tc = Tdm::TestCase.find(17)
     assert_equal( 17, tc.id )
     assert_equal( "caffeinemark", tc.name )
     assert_equal( 1, tc.statistics.size )
@@ -48,16 +48,16 @@ class TestCaseTest < Test::Unit::TestCase
   end
 
   def test_new_with_output
-    tc = TestCase.new(self.class.attributes_for_new)
+    tc = Tdm::TestCase.new(self.class.attributes_for_new)
     tc.save!
-    tc2 = TestCase.find(tc.id)
+    tc2 = Tdm::TestCase.find(tc.id)
     assert_equal( 'foooish!', tc2.output )
   end
 
   def test_new_with_success_and_result_explanation
     attrs = self.class.attributes_for_new
     attrs[:result_explanation] = 'foo'
-    tc = TestCase.new(attrs)
+    tc = Tdm::TestCase.new(attrs)
     assert(!tc.valid?)
     assert_not_nil( tc.errors[:result_explanation] )
   end

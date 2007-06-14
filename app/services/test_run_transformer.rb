@@ -14,7 +14,7 @@
 # Utility class that transforms a test-run from OLTP to OLAP schemas
 class TestRunTransformer
   def self.build_olap_model_from(test_run)
-    TestRun.transaction do
+    Tdm::TestRun.transaction do
       host = Olap::HostDimension.find_or_create_by_name(test_run.host.name)
       tr = Olap::TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
       build_target = create_build_target(test_run.build_target)

@@ -16,6 +16,6 @@ class DashboardController < ApplicationController
 
   def index
     @test_run_pages, @test_runs =
-      paginate(:test_run, :per_page => 20, :order => 'occured_at DESC')
+      paginate(Tdm::TestRun, :per_page => 20, :order => 'occured_at DESC')
   end
 end

@@ -33,7 +33,7 @@ class Results::GroupControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    group = Group.find(id)
+    group = Tdm::Group.find(id)
     test_configuration = group.test_configuration
     build_configuration = test_configuration.build_configuration
     test_run = build_configuration.test_run

@@ -21,6 +21,6 @@ class Olap::ResultFact < Olap::Fact
   dimension :test_case
   dimension :result
 
-  validates_reference_exists :source_id, TestCase
-  belongs_to :source, :class_name => 'TestCase', :foreign_key => 'source_id'
+  validates_reference_exists :source_id, Tdm::TestCase
+  belongs_to :source, :class_name => 'Tdm::TestCase', :foreign_key => 'source_id'
 end

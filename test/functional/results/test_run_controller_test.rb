@@ -27,17 +27,13 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  def model
-    TestRun
-  end
-
   def session_data
     {:user_id => 1}
   end
 
   def test_show
     id = 1
-    test_run = TestRun.find(id)
+    test_run = Tdm::TestRun.find(id)
     get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_response(:success)
     assert_template('show')
@@ -49,7 +45,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
 
   def test_show_summary
     id = 1
-    test_run = TestRun.find(id)
+    test_run = Tdm::TestRun.find(id)
     get(:show_summary, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_response(:success)
     assert_template('show_summary')
@@ -61,13 +57,13 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
 
   def test_destroy
     id = 1
-    assert(model.exists?(id))
-    test_run = TestRun.find(id)
+    assert(Tdm::TestRun.exists?(id))
+    test_run = Tdm::TestRun.find(id)
     label = test_run.label
     host_name = test_run.host.name
     delete(:destroy, {:host_name => host_name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_redirected_to(:controller => 'results/host', :action => 'show', :host_name => host_name)
-    assert(!model.exists?(id))
+    assert(!Tdm::TestRun.exists?(id))
     assert_not_nil(assigns(:record))
     assert_equal(id, assigns(:record).id)
     assert_equal(true, assigns(:record).frozen?)

@@ -33,7 +33,7 @@ class Results::BuildTargetControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    build_target = BuildTarget.find(id)
+    build_target = Tdm::BuildTarget.find(id)
     test_run = build_target.test_run
     host = test_run.host
     params = {:host_name => host.name}

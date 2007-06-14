@@ -33,7 +33,7 @@ class Results::TestConfigurationControllerTest < Test::Unit::TestCase
 
   def test_show
     id = 1
-    test_configuration = TestConfiguration.find(id)
+    test_configuration = Tdm::TestConfiguration.find(id)
     build_configuration = test_configuration.build_configuration
     test_run = build_configuration.test_run
     host = test_run.host

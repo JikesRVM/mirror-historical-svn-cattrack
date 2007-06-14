@@ -33,51 +33,51 @@ class TestRunImporterTest < Test::Unit::TestCase
   end
 
   def test_process_empty_dir
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial, TestRun.count)
+    assert_equal(initial, Tdm::TestRun.count)
   end
 
   def test_process_with_non_matching_file
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/foo.bar.baz"
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial, TestRun.count)
+    assert_equal(initial, Tdm::TestRun.count)
   end
 
   def test_process_a_single_successful_file
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/Report.xml.gz"
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial + 1, TestRun.count)
+    assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
   end
 
   def test_process_a_single_file_that_is_too_large
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", "#{@host_dir}/Report.xml.gz"
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial, TestRun.count)
+    assert_equal(initial, Tdm::TestRun.count)
     assert_equal(false, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
   end
 
   def test_process_a_single_successful_file
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/Report.xml.gz"
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial + 1, TestRun.count)
+    assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
   end
 
   def test_process_multiple_files
-    initial = TestRun.count
+    initial = Tdm::TestRun.count
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/Report.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", "#{@host_dir}/HugeReport.xml.gz"
     TestRunImporter.process_incoming_test_runs
-    assert_equal(initial + 1, TestRun.count)
+    assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/HugeReport.xml.gz"))
   end

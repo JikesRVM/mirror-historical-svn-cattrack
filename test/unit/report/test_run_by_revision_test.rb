@@ -14,7 +14,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Report::TestRunByRevisionTest < Test::Unit::TestCase
   def test_report_with_no_history
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(6, report.window_size)
@@ -25,7 +25,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
   end
 
   def test_report_minimal_history_from_identical_run
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
 
     report = Report::TestRunByRevision.new(test_run)
@@ -37,7 +37,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
   end
 
   def test_report_minimal_history_new_successes_and_failures
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
     test_case1 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
     test_case1.result = 'OVERTIME'
@@ -56,7 +56,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
   end
 
   def test_report_minimal_history_consistent_and_intermitent_failures
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
     test_run_2 = clone_test_run(test_run, 20)
 
@@ -86,7 +86,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
 
 
     report = nil
-    TestRun.transaction do
+    Tdm::TestRun.transaction do
       report = Report::TestRunByRevision.new(test_run)
     end
     assert_equal(test_run, report.test_run)
@@ -99,31 +99,31 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
   private
 
   def clone_test_run(_test_run, offset)
-    test_run = TestRun.new(_test_run.attributes)
+    test_run = Tdm::TestRun.new(_test_run.attributes)
     test_run.revision -= offset
     test_run.occured_at = test_run.occured_at - offset
     test_run.save!
 
-    bt = BuildTarget.new(_test_run.build_target.attributes)
+    bt = Tdm::BuildTarget.new(_test_run.build_target.attributes)
     bt.test_run_id = test_run.id
     bt.save!
 
     _test_run.build_configurations.each do |_bc|
 
-      bc = BuildConfiguration.new(_bc.attributes)
+      bc = Tdm::BuildConfiguration.new(_bc.attributes)
       bc.test_run_id = test_run.id
       bc.output = 'X'
       bc.save!
       _bc.test_configurations.each do |_tc|
-        tc = TestConfiguration.new(_tc.attributes)
+        tc = Tdm::TestConfiguration.new(_tc.attributes)
         tc.build_configuration_id = bc.id
         tc.save!
         _tc.groups.each do |_g|
-          g = Group.new(_g.attributes)
+          g = Tdm::Group.new(_g.attributes)
           g.test_configuration_id = tc.id
           g.save!
           _g.test_cases.each do |_t|
-            t = TestCase.new(_t.attributes)
+            t = Tdm::TestCase.new(_t.attributes)
             t.group_id = g.id
             t.output = 'X'
             _t.statistics.each_pair do |k, v|

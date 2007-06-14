@@ -16,10 +16,10 @@ class Results::HostController < Results::BaseController
   def show
     @record = host
     @test_run_pages, @test_runs =
-      paginate(:test_run, :per_page => 20, :order => 'occured_at DESC', :conditions => ['host_id = ?', @record.id])
+      paginate(Tdm::TestRun, :per_page => 20, :order => 'occured_at DESC', :conditions => ['host_id = ?', @record.id])
   end
 
   def list
-    @record_pages, @records = paginate(:host, :per_page => 20, :order => 'name')
+    @record_pages, @records = paginate(Tdm::Host, :per_page => 20, :order => 'name')
   end
 end

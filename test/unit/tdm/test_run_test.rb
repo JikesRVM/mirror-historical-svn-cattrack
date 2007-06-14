@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class TestRunTest < Test::Unit::TestCase
+class Tdm::TestRunTest < Test::Unit::TestCase
   def test_label
-    assert_equal('core-1', test_runs(:tr_1).label)
+    assert_equal('core-1', Tdm::TestRun.find(1).label)
   end
 
   def test_parent_node
-    assert_parent_node(test_runs(:tr_1), Host, 1)
+    assert_parent_node(Tdm::TestRun.find(1), Tdm::Host, 1)
   end
 
   def test_basic_load
-    test_run = TestRun.find(1)
+    test_run = Tdm::TestRun.find(1)
     assert_equal( 1, test_run.id )
     assert_equal( 1234, test_run.revision )
     assert_equal( "2005-10-20T00:00:00Z", test_run.occured_at.xmlschema )
@@ -46,7 +46,7 @@ class TestRunTest < Test::Unit::TestCase
   end
 
   def test_success_rate
-    assert_equal( "13/13", TestRun.find(1).success_rate )
+    assert_equal( "13/13", Tdm::TestRun.find(1).success_rate )
   end
 
   def self.attributes_for_new

@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class GroupTest < Test::Unit::TestCase
+class Tdm::GroupTest < Test::Unit::TestCase
   def test_label
-    assert_equal( "basic", groups(:group_1).label )
+    assert_equal( "basic", Tdm::Group.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(groups(:group_1),TestConfiguration,1)
+    assert_parent_node(Tdm::Group.find(1),Tdm::TestConfiguration,1)
   end
 
   def test_basic_load
-    group = groups(:group_1)
+    group = Tdm::Group.find(1)
     assert_equal( 1, group.id )
     assert_equal( "basic", group.name )
     assert_equal( 1, group.test_configuration_id )
@@ -33,14 +33,14 @@ class GroupTest < Test::Unit::TestCase
   end
 
   def test_success_rate
-    assert_equal( "2/2", Group.find(1).success_rate )
-    test_case = TestCase.new
-    test_case.attributes = TestCase.find(1).attributes
+    assert_equal( "2/2", Tdm::Group.find(1).success_rate )
+    test_case = Tdm::TestCase.new
+    test_case.attributes = Tdm::TestCase.find(1).attributes
     test_case.name = 'X'
     test_case.result = 'EXCLUDED'
     test_case.output = "X"
     test_case.save!
-    assert_equal( "2/2 (1 excluded)", Group.find(1).success_rate )
+    assert_equal( "2/2 (1 excluded)", Tdm::Group.find(1).success_rate )
   end
 
   def self.attributes_for_new

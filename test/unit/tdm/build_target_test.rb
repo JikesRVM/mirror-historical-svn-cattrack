@@ -10,20 +10,20 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class BuildTargetTest < Test::Unit::TestCase
+class Tdm::BuildTargetTest < Test::Unit::TestCase
 
   def test_label
-    assert_equal( "ia32_linux", build_targets(:ia32_linux_tr_1).label )
+    assert_equal( "ia32_linux", Tdm::BuildTarget.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(build_targets(:ia32_linux_tr_1),TestRun,1)
+    assert_parent_node(Tdm::BuildTarget.find(1),Tdm::TestRun,1)
   end
 
   def test_basic_load
-    bt = build_targets(:ia32_linux_tr_1)
+    bt = Tdm::BuildTarget.find(1)
     assert_equal( "ia32_linux", bt.name )
     target_params = { 'target.name' => 'ia32-linux',
                           'target.arch' => 'ia32',
@@ -38,7 +38,7 @@ class BuildTargetTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    test_run = TestRun.create!(:name => 'foo', :host_id => 1, :revision => 123, :occured_at => Time.now)
+    test_run = Tdm::TestRun.create!(:name => 'foo', :host_id => 1, :revision => 123, :occured_at => Time.now)
     {:name => 'foo', :test_run_id => test_run.id}
   end
   def self.non_null_attributes

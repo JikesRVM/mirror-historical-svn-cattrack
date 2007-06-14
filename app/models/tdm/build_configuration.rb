@@ -10,8 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class BuildConfiguration < ActiveRecord::Base
-  validates_reference_exists :test_run_id, TestRun
+class Tdm::BuildConfiguration < ActiveRecord::Base
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:test_run_id]
@@ -20,7 +19,7 @@ class BuildConfiguration < ActiveRecord::Base
   validates_positiveness_of :time
   validates_numericality_of :time, :only_integer => true
   validates_presence_of :test_run_id
-  validates_reference_exists :test_run_id, TestRun
+  validates_reference_exists :test_run_id, Tdm::TestRun
 
   belongs_to :test_run
   has_params :params

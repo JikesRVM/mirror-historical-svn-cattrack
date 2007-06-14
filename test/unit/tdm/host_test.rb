@@ -10,19 +10,19 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class HostTest < Test::Unit::TestCase
+class Tdm::HostTest < Test::Unit::TestCase
   def test_label
-    assert_equal( "skunk", hosts(:host_skunk).label )
+    assert_equal( Tdm::Host.find(1).name, Tdm::Host.find(1).label )
   end
 
   def test_parent_node
-    assert_parent_node(hosts(:host_skunk),nil)
+    assert_parent_node(Tdm::Host.find(1),nil)
   end
 
   def test_basic_load
-    host = hosts(:host_skunk)
+    host = Tdm::Host.find(1)
     assert_equal( 1, host.id )
     assert_equal( "skunk", host.name )
     assert_equal( [1], host.test_run_ids )

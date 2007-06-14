@@ -24,6 +24,6 @@ class Olap::StatisticFact < Olap::Fact
 
   validates_numericality_of :value, :only_integer => false
 
-  validates_reference_exists :source_id, TestCase
-  belongs_to :source, :class_name => 'TestCase', :foreign_key => 'source_id'
+  validates_reference_exists :source_id, Tdm::TestCase
+  belongs_to :source, :class_name => 'Tdm::TestCase', :foreign_key => 'source_id'
 end

@@ -10,14 +10,17 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Host < ActiveRecord::Base
-  validates_format_of :name, :with => /^[\.\-a-zA-Z_0-9]+$/
-  validates_length_of :name, :in => 1..100
-  validates_uniqueness_of :name
+class Tdm::BuildTarget < ActiveRecord::Base
+  validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
+  validates_length_of :name, :in => 1..75
+  validates_uniqueness_of :test_run_id
+  validates_presence_of :test_run_id
+  validates_reference_exists :test_run_id, Tdm::TestRun
 
-  has_many :test_runs, :order => 'occured_at DESC', :dependent => :destroy
+  belongs_to :test_run
+  has_params :params
 
   def parent_node
-    nil
+    test_run
   end
 end

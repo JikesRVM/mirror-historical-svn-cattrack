@@ -102,7 +102,7 @@ end
 ActiveRecord::Base.class_eval do
 
   def self.has_params(name, options = {})
-    table_name = (self.name.tableize.singularize + '_' + name.to_s).pluralize
+    table_name = (self.table_name.singularize + '_' + name.to_s).pluralize
     define_method(name) do |*params|
       force_reload = params.first unless params.empty?
       association = instance_variable_get("@#{name}")
