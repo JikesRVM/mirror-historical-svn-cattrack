@@ -15,4 +15,6 @@ class Olap::Query::Presentation < ActiveRecord::Base
   validates_uniqueness_of :key
   validates_length_of :name, :in => 1..120
   validates_uniqueness_of :name
+
+  has_and_belongs_to_many :measures, :class_name => 'Olap::Query::Measure'
 end

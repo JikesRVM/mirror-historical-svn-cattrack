@@ -17,6 +17,8 @@ class Olap::Query::Measure < ActiveRecord::Base
   validates_length_of :joins, :in => 0..50
   validates_length_of :grouping, :in => 0..50
 
+  has_and_belongs_to_many :presentations, :class_name => 'Olap::Query::Presentation'
+
   def join_dimensions
     joins.split.collect {|j| "Olap::#{j.classify}Dimension".constantize }
   end

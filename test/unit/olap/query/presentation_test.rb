@@ -22,6 +22,7 @@ class Olap::Query::PresentationTest < Test::Unit::TestCase
     assert_equal( 1, presentation.id )
     assert_equal( 'Pivot Table', presentation.name )
     assert_equal( 'pivot', presentation.key )
+    assert_equal( [1, 2, 3, 4, 5], presentation.measure_ids )
   end
 
   def self.attributes_for_new

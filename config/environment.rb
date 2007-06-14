@@ -105,7 +105,7 @@ OrderedTables = [
 'summarizers',
 'presentations',
 'data_views',
-'measures',
+'measures', 'measures_presentations'
 ]
 
 import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")

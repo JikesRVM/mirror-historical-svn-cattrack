@@ -24,6 +24,7 @@ class Olap::Query::MeasureTest < Test::Unit::TestCase
     assert_equal( "case when :secondary_dimension IS NOT NULL then CAST(count(case when result_dimension.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end", measure.sql )
     assert_equal( "result", measure.joins )
     assert_equal( "", measure.grouping )
+    assert_equal( [1, 2, 3], measure.presentation_ids )
   end
 
   def self.attributes_for_new

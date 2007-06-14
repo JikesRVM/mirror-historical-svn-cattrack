@@ -1,0 +1,61 @@
+#
+#  This file is part of the Jikes RVM project (http://jikesrvm.org).
+#
+#  This file is licensed to You under the Common Public License (CPL);
+#  You may not use this file except in compliance with the License. You
+#  may obtain a copy of the License at
+#
+#      http://www.opensource.org/licenses/cpl1.0.php
+#
+#  See the COPYRIGHT.txt file distributed with this work for information
+#  regarding copyright ownership.
+#
+mp11:
+  measure_id: 1
+  presentation_id: 1
+mp12:
+  measure_id: 1
+  presentation_id: 2
+mp13:
+  measure_id: 1
+  presentation_id: 3
+
+mp21:
+  measure_id: 2
+  presentation_id: 1
+mp22:
+  measure_id: 2
+  presentation_id: 2
+mp23:
+  measure_id: 2
+  presentation_id: 3
+
+mp31:
+  measure_id: 3
+  presentation_id: 1
+mp32:
+  measure_id: 3
+  presentation_id: 2
+mp33:
+  measure_id: 3
+  presentation_id: 3
+
+mp41:
+  measure_id: 4
+  presentation_id: 1
+mp42:
+  measure_id: 4
+  presentation_id: 2
+mp43:
+  measure_id: 4
+  presentation_id: 3
+
+mp51:
+  measure_id: 5
+  presentation_id: 1
+mp52:
+  measure_id: 5
+  presentation_id: 2
+mp53:
+  measure_id: 5
+  presentation_id: 3
