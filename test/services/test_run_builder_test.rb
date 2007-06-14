@@ -28,7 +28,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     assert_equal( 'tiny', test_run.name )
     assert_equal( 12200, test_run.revision )
-    assert_equal( "2007-05-20T10:50:50Z", test_run.occured_at.getutc.xmlschema )
+    assert_equal( "2007-05-20T10:50:50Z", test_run.occurred_at.getutc.xmlschema )
     assert_equal( 'myhostname', test_run.host.name )
 
     assert_equal( 'ia32-linux', test_run.build_target.name )

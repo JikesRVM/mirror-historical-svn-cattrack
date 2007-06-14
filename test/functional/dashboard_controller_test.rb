@@ -30,7 +30,7 @@ class DashboardControllerTest < Test::Unit::TestCase
   def test_index
     test_run = Tdm::TestRun.new
     test_run.attributes = Tdm::TestRun.find(1).attributes
-    test_run.occured_at = Time.now
+    test_run.occurred_at = Time.now
     test_run.save!
 
     get(:index, {}, {:user_id => 1})

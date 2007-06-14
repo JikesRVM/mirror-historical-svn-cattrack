@@ -13,7 +13,7 @@
     %td= revision_link(@test_run.revision)
   %tr
     %th Time
-    %td= h(@test_run.occured_at)
+    %td= h(@test_run.occurred_at)
   %tr
     %th Success Rate
     %td= @test_run.success_rate
@@ -119,7 +119,7 @@
     %tr
       %td= h(t.label)
       %td= revision_link(t.revision)
-      %td= t.occured_at
+      %td= t.occurred_at
       %td
         %ul.actions
           %li= link_for(t, :label => "Show Summary", :action => 'show_summary')

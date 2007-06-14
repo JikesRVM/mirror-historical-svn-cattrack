@@ -20,7 +20,7 @@ class TestRunTransformer
       build_target = create_build_target(test_run.build_target)
       revision = Olap::RevisionDimension.find_or_create_by_revision(test_run.revision)
 
-      time = create_time(test_run.occured_at)
+      time = create_time(test_run.occurred_at)
       test_run.build_configurations.each do |bc|
         build_configuration = create_build_configuration(bc)
         bc.test_configurations.each do |tc|

@@ -27,10 +27,10 @@ class Report::TestRunByRevision
 
   def perform
     options = {}
-    sql = 'host_id = ? AND occured_at < ? AND name = ? AND id != ?'
-    options[:conditions] = [ sql, @test_run.host.id, @test_run.occured_at, @test_run.name, @test_run.id ]
+    sql = 'host_id = ? AND occurred_at < ? AND name = ? AND id != ?'
+    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.name, @test_run.id ]
     options[:limit] = @window_size
-    options[:order] = 'occured_at DESC'
+    options[:order] = 'occurred_at DESC'
     @past_test_runs = Tdm::TestRun.find(:all, options)
     test_run_ids = @past_test_runs.collect {|tr| tr.id}
 
@@ -79,7 +79,7 @@ class Report::TestRunByRevision
     data_view.summarizer.primary_dimension = 'build_configuration_name'
     data_view.summarizer.secondary_dimension = 'test_run_source_id'
     data_view.summarizer.function = 'success_rate'
-    #order by occured_at
+    #order by occurred_at
     @build_configuration_name_by_test_run = data_view.perform_search
 
     data_view = DataView.new
