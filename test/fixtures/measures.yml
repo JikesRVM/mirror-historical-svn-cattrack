@@ -1,0 +1,42 @@
+#
+#  This file is part of the Jikes RVM project (http://jikesrvm.org).
+#
+#  This file is licensed to You under the Common Public License (CPL);
+#  You may not use this file except in compliance with the License. You
+#  may obtain a copy of the License at
+#
+#      http://www.opensource.org/licenses/cpl1.0.php
+#
+#  See the COPYRIGHT.txt file distributed with this work for information
+#  regarding copyright ownership.
+#
+m1:
+  id: 1
+  name: Success Rate
+  sql: case when :secondary_dimension IS NOT NULL then CAST(count(case when result_dimension.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end
+  joins: result
+  grouping: ''
+m2:
+  id: 2
+  name: Non-success Rate
+  sql: CAST(count(case when result_dimension.name = 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
+  joins: result
+  grouping: ''
+m3:
+  id: 3
+  name: Failure Rate
+  sql: CAST(count(case when result_dimension.name != 'FAILURE' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
+  joins: result
+  grouping: ''
+m4:
+  id: 4
+  name: Overtime Rate
+  sql: CAST(count(case when result_dimension.name != 'OVERTIME' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
+  joins: result
+  grouping: ''
+m5:
+  id: 5
+  name: Excluded Rate
+  sql: CAST(count(case when result_dimension.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
+  joins: result
+  grouping: ''

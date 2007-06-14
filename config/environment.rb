@@ -76,7 +76,7 @@ require 'active_record_ext' # My custom extension to ar for labels etc
 require 'param_helper' # For custom has_params extension
 require 'rexml/document' # For parsing uploaded xml files
 require 'routing_ext' # Monkey patch routing to remove . as a separator
-require 'no_cache' # Add in method to force no caching on the client. 
+require 'no_cache' # Add in method to force no caching on the client.
 
 OrderedTables = [
 'system_settings',
@@ -105,6 +105,7 @@ OrderedTables = [
 'summarizers',
 'data_presentations', 'data_presentation_params',
 'data_views',
+'measures',
 ]
 
 import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")
