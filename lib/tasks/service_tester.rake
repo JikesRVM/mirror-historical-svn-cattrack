@@ -21,6 +21,17 @@ end
 
 Rake::Task['test'].prerequisites << 'test:services'
 
+namespace :test do
+  Rake::TestTask.new(:helpers => ["db:test:prepare", :environment]) do |t|
+    t.libs << "test"
+    t.pattern = 'test/helpers/**/*_test.rb'
+    t.verbose = true
+  end
+  Rake::Task['test:helpers'].comment = "Run the helper tests in test/helpers"
+end
+
+Rake::Task['test'].prerequisites << 'test:helpers'
+
 desc "Run the continuous integration action"
 task :cia => ['clear', 'test'] do
 end

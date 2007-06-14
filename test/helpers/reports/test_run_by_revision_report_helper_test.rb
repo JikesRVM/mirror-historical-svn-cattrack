@@ -31,6 +31,6 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
   end
 
   def test_column_header
-    assert_equal("<th class\"column\">core-1</th>", MyClass.new.column_header('1',TestRun.find(:all, :conditions => 'id = 1')))
+    assert_equal("<th class=\"column\">core-1</th>", MyClass.new.column_header('1',TestRun.find(:all, :conditions => 'id = 1')))
   end
 end
