@@ -10,22 +10,22 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class FilterTest < Test::Unit::TestCase
+class Olap::Query::FilterTest < Test::Unit::TestCase
   def test_label
-    assert_equal( Filter.find(1).name, Filter.find(1).label )
+    assert_equal( Olap::Query::Filter.find(1).name, Olap::Query::Filter.find(1).label )
   end
 
   def test_basic_load
-    filter = Filter.find(1)
+    filter = Olap::Query::Filter.find(1)
     assert_equal( 1, filter.id )
     assert_equal( "Last Week", filter.name )
     assert_equal( 'Filter out results not in last week', filter.description )
 
     assert_params_same({'time_from' => '-1w'}, filter.params)
 
-    filter = Filter.find(2)
+    filter = Olap::Query::Filter.find(2)
     assert_equal( 2, filter.id )
     assert_equal( "Core Configurations", filter.name )
     assert_equal( '', filter.description )
@@ -50,7 +50,7 @@ class FilterTest < Test::Unit::TestCase
   perform_basic_model_tests
 
   def test_new_filter_with_blank_attributes
-    filter = Filter.new
+    filter = Olap::Query::Filter.new
     filter.time_from = 'X'
     assert_not_nil( filter.time_from )
     filter.time_from = ''
@@ -62,52 +62,52 @@ class FilterTest < Test::Unit::TestCase
   end
 
   def test_is_empty
-    assert_equal(true, Filter.is_empty?(Filter.new(:host_name => nil), :host_name))
-    assert_equal(true, Filter.is_empty?(Filter.new(:host_name => ''), :host_name))
-    assert_equal(true, Filter.is_empty?(Filter.new(:host_name => []), :host_name))
-    assert_equal(true, Filter.is_empty?(Filter.new(:host_name => [nil]), :host_name))
-    assert_equal(false, Filter.is_empty?(Filter.new(:host_name => ['a', nil]), :host_name))
-    assert_equal(false, Filter.is_empty?(Filter.new(:host_name => 'a'), :host_name))
+    assert_equal(true, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => nil), :host_name))
+    assert_equal(true, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => ''), :host_name))
+    assert_equal(true, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => []), :host_name))
+    assert_equal(true, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => [nil]), :host_name))
+    assert_equal(false, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => ['a', nil]), :host_name))
+    assert_equal(false, Olap::Query::Filter.is_empty?(Olap::Query::Filter.new(:host_name => 'a'), :host_name))
   end
 
   def test_empty_search_filter_criteria
-    conditions, join_sql = Filter.new.filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new.filter_criteria
     assert_equal('1 = 1', conditions)
     assert_equal([], join_sql)
   end
 
   def test_search_filter_criteria_for_single_value_parameter
-    conditions, join_sql = Filter.new(:host_name => 'ace').filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:host_name => 'ace').filter_criteria
     assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_single_value_parameter_in_array
-    conditions, join_sql = Filter.new(:host_name => ['ace']).filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:host_name => ['ace']).filter_criteria
     assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_test_run_source_id
-    conditions, join_sql = Filter.new(:test_run_source_id => 1).filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:test_run_source_id => 1).filter_criteria
     assert_equal(["test_run_dimension.source_id = :test_run_source_id", {:test_run_source_id=>1}], conditions)
     assert_equal([Olap::TestRunDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multi_value_parameter
-    conditions, join_sql = Filter.new(:host_name => ['ace', 'baby']).filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:host_name => ['ace', 'baby']).filter_criteria
     assert_equal(["host_dimension.name IN (:host_name)", {:host_name=>['ace', 'baby']}], conditions)
     assert_equal([Olap::HostDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters
-    conditions, join_sql = Filter.new(:host_name => 'ace', :test_run_name => 'foo').filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:host_name => 'ace', :test_run_name => 'foo').filter_criteria
     assert_equal(["host_dimension.name = :host_name AND test_run_dimension.name = :test_run_name", {:test_run_name=>"foo", :host_name=>"ace"}], conditions)
     assert_equal([Olap::HostDimension, Olap::TestRunDimension], join_sql)
   end
 
   def test_search_filter_criteria_for_multiple_parameters_on_same_table
-    conditions, join_sql = Filter.new(:test_case_name => 'ace', :test_case_group => 'foo').filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:test_case_name => 'ace', :test_case_group => 'foo').filter_criteria
     assert_equal(["test_case_dimension.name = :test_case_name AND test_case_dimension.group = :test_case_group", {:test_case_name=>"ace", :test_case_group=>"foo"}], conditions)
     assert_equal([Olap::TestCaseDimension], join_sql)
   end
@@ -140,34 +140,34 @@ class FilterTest < Test::Unit::TestCase
   end
 
   def assert_hour_offset(count, description)
-    assert_equal(count, Filter.calculate_hour_offset(description))
+    assert_equal(count, Olap::Query::Filter.calculate_hour_offset(description))
   end
 
   def assert_period_to_time(expected, time, description)
-    pt = Filter.period_to_time(time, description)
-    assert_equal(expected, pt ? pt.strftime(Filter::TimeFormat) : nil)
+    pt = Olap::Query::Filter.period_to_time(time, description)
+    assert_equal(expected, pt ? pt.strftime(Olap::Query::Filter::TimeFormat) : nil)
   end
 
   def test_before_revision
-    conditions, join_sql = Filter.new(:revision_before => '1234').filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:revision_before => '1234').filter_criteria
     assert_equal(["revision_dimension.revision < :revision_before", {:revision_before=>"1234"}], conditions)
     assert_equal([Olap::RevisionDimension], join_sql)
   end
 
   def test_after_revision
-    conditions, join_sql = Filter.new(:revision_after => '1234').filter_criteria
+    conditions, join_sql = Olap::Query::Filter.new(:revision_after => '1234').filter_criteria
     assert_equal(["revision_dimension.revision > :revision_from", {:revision_after=>"1234"}], conditions)
     assert_equal([Olap::RevisionDimension], join_sql)
   end
 
   def test_add_time_based_search
-    search = Filter.new
+    search = Olap::Query::Filter.new
     search.time_before = '1979-11-07 00:00:00'
     search.time_after = '1977-10-20 00:00:00'
     conditions = []
     cond_params = {}
     joins = []
-    Filter.add_time_based_search(search, conditions, cond_params, joins)
+    Olap::Query::Filter.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(2, conditions.length)
     assert_equal(['time_dimension.time < :time_before', 'time_dimension.time > :time_after'], conditions)
     assert_equal([Olap::TimeDimension], joins.uniq)
@@ -177,13 +177,13 @@ class FilterTest < Test::Unit::TestCase
   end
 
   def test_add_time_based_search_with_period
-    search = Filter.new
+    search = Olap::Query::Filter.new
     search.time_from = '-1d'
     search.time_to = '-0d'
     conditions = []
     cond_params = {}
     joins = []
-    Filter.add_time_based_search(search, conditions, cond_params, joins)
+    Olap::Query::Filter.add_time_based_search(search, conditions, cond_params, joins)
     assert_equal(['time_dimension.time > :time_from', 'time_dimension.time < :time_to'], conditions)
     assert_equal([Olap::TimeDimension, Olap::TimeDimension], joins)
     assert_equal(2, cond_params.length)
@@ -194,7 +194,7 @@ class FilterTest < Test::Unit::TestCase
   end
 
   def test_gen_sql
-    filter = Filter.new
+    filter = Olap::Query::Filter.new
     filter.name = 'X'
     filter.time_before = '1979-11-07 00:00:00'
     filter.time_year = 2007

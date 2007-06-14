@@ -14,8 +14,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ReportResultDataTest < Test::Unit::TestCase
   def test_basic_operation
-    row = SearchField.new(Olap::BuildConfigurationDimension, :name)
-    column = SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    row = Olap::Query::SearchField.new(Olap::BuildConfigurationDimension, :name)
+    column = Olap::Query::SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
     data = [
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '1', 'value' => '1.0' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
@@ -28,8 +28,8 @@ class ReportResultDataTest < Test::Unit::TestCase
   end
 
   def test_larger_data_sets
-    row = SearchField.new(Olap::BuildConfigurationDimension, :name)
-    column = SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    row = Olap::Query::SearchField.new(Olap::BuildConfigurationDimension, :name)
+    column = Olap::Query::SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
     data = [
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '1', 'value' => '1.0' },
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '2', 'value' => '1.1' },
@@ -59,8 +59,8 @@ class ReportResultDataTest < Test::Unit::TestCase
   end
 
   def test_basic_operation_with_multiple_values
-    row = SearchField.new(Olap::BuildConfigurationDimension, :name)
-    column = SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    row = Olap::Query::SearchField.new(Olap::BuildConfigurationDimension, :name)
+    column = Olap::Query::SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
     data = [
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '1', 'value1' => '1.0', 'value2' => 'a' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value1' => '2.1', 'value2' => 'b' },
@@ -73,8 +73,8 @@ class ReportResultDataTest < Test::Unit::TestCase
   end
 
   def test_basic_operation_with_null_column
-    row = SearchField.new(Olap::BuildConfigurationDimension, :name)
-    column = SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
+    row = Olap::Query::SearchField.new(Olap::BuildConfigurationDimension, :name)
+    column = Olap::Query::SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
     data = [
     {'primary_dimension' => 'prototype', 'secondary_dimension' => nil, 'value' => nil },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
@@ -85,5 +85,4 @@ class ReportResultDataTest < Test::Unit::TestCase
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
     assert_equal( [[nil], ['2.1']], d.tabular_data )
   end
-
 end

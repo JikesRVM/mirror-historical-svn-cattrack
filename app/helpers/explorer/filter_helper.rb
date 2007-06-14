@@ -26,8 +26,8 @@ module Explorer::FilterHelper
 
   def dimension_footer(dimension)
     show = false
-    Filter::Fields.each do |f|
-      show = true if ((f.dimension == dimension) and not Filter.is_empty?(@filter, f.key))
+    Olap::Query::Filter::Fields.each do |f|
+      show = true if ((f.dimension == dimension) and not Olap::Query::Filter.is_empty?(@filter, f.key))
     end
 
     show ? '' : "<script type=\"text/javascript\">Element.hide('#{dimension_block_name(dimension)}')</script>"
@@ -37,7 +37,7 @@ module Explorer::FilterHelper
     name = options[:name] ? options[:name] : 'filter'
     object = instance_variable_get("@#{name}")
 
-    selected = Filter.is_empty?(object, key) ? ' selected="true"' : ''
+    selected = Olap::Query::Filter.is_empty?(object, key) ? ' selected="true"' : ''
     is_multiple = (options[:multiple] and (options[:multiple] == true)) or (options[:multiple].nil? and options[:size])
     multiple = is_multiple ? " multiple=\"multiple\"" : ''
     name_suffix = is_multiple ? '[]' : ''
@@ -45,7 +45,7 @@ module Explorer::FilterHelper
     str = "<select id=\"#{name}_#{key}\"#{multiple}#{size} name=\"#{name}[#{key}]#{name_suffix}\">"
     if options[:any]
       description = (options[:any] == true) ? 'Any' : options[:any]
-      str << draw_option('', Filter.is_empty?(object, key), description)
+      str << draw_option('', Olap::Query::Filter.is_empty?(object, key), description)
     end
     values = options[:values] ? options[:values] : instance_variable_get("@#{key.to_s.pluralize}")
     values.each do |v|

@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class SearchFieldTest < Test::Unit::TestCase
+class Olap::Query::SearchFieldTest < Test::Unit::TestCase
   def test_basic_properties
-    f = SearchField.new(Olap::TestConfigurationDimension,:name, :foo => 'bar')
+    f = Olap::Query::SearchField.new(Olap::TestConfigurationDimension,:name, :foo => 'bar')
     assert_equal( Olap::TestConfigurationDimension, f.dimension )
     assert_equal( 'TestConfiguration', f.dimension_name )
     assert_equal( :name, f.name )
@@ -29,7 +29,7 @@ class SearchFieldTest < Test::Unit::TestCase
   end
 
   def test_labels
-    f = SearchField.new(Olap::TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME)
+    f = Olap::Query::SearchField.new(Olap::TimeDimension, :month, :labels => [nil] | Time::RFC2822_MONTH_NAME)
     assert_equal( 'Jan', f.label_for(1) )
   end
 end

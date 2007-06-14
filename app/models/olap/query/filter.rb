@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Filter < ActiveRecord::Base
+class Olap::Query::Filter < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_length_of :description, :in => 0..256
   validates_uniqueness_of :name
@@ -28,6 +28,8 @@ class Filter < ActiveRecord::Base
   'd' => 24,
   'h' => 1
   }.freeze
+
+  SearchField = Olap::Query::SearchField
 
   AutoFields = [
   SearchField.new(Olap::HostDimension, :name),

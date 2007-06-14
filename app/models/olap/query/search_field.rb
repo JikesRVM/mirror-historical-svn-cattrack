@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class SearchField
+class Olap::Query::SearchField
   attr_reader :dimension, :name, :key, :key_name, :options, :dimension_name, :label
 
   def initialize(dimension,name,options = {})

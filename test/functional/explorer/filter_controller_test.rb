@@ -97,10 +97,10 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
 
   def test_destroy
     id = 1
-    assert(Filter.exists?(id))
+    assert(Olap::Query::Filter.exists?(id))
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
     assert_equal("Filter named 'Last Week' was successfully deleted.", flash[:notice])
-    assert(!Filter.exists?(id))
+    assert(!Olap::Query::Filter.exists?(id))
   end
 end

@@ -18,7 +18,7 @@ class Summarizer < ActiveRecord::Base
   validates_length_of :secondary_dimension, :in => 1..256
   validates_length_of :function, :in => 1..256
 
-  DimensionFields = Filter::Fields.select {|f| f.options[:synthetic] != true}
+  DimensionFields = Olap::Query::Filter::Fields.select {|f| f.options[:synthetic] != true}
   DimensionMap = {}
   DimensionFields.each {|d| DimensionMap[d.key.to_s] = d}
   ValidDimensionFieldIds = DimensionFields.collect {|o| o.key.to_s}

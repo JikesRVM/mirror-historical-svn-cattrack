@@ -15,11 +15,11 @@ class Explorer::FilterController < Explorer::BaseController
   verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
 
   def list
-    @filter_pages, @filters = paginate(:filters, :per_page => 10, :order => 'name')
+    @filter_pages, @filters = paginate(Olap::Query::Filter, :per_page => 10, :order => 'name')
   end
 
   def edit
-    @filter = params[:id] ? Filter.find(params[:id]) : Filter.new
+    @filter = params[:id] ? Olap::Query::Filter.find(params[:id]) : Olap::Query::Filter.new
     @filter.attributes = params[:filter]
     if request.post?
       if @filter.save
@@ -27,23 +27,16 @@ class Explorer::FilterController < Explorer::BaseController
         redirect_to(:action => 'list')
       end
     end
-    Filter::AutoFields.each do |f|
-      value = select_values(f.dimension, f.name)
+    Olap::Query::Filter::AutoFields.each do |f|
+      value = f.dimension.attribute_values(f.name.to_s)
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
   end
 
   def destroy
-    filter = Filter.find(params[:id])
+    filter = Olap::Query::Filter.find(params[:id])
     filter.destroy
     flash[:notice] = "Filter named '#{filter.name}' was successfully deleted."
     redirect_to(:action => 'list')
-  end
-
-  private
-
-  def select_values(type, key)
-    sql = "SELECT DISTINCT #{key} FROM #{type.table_name} ORDER BY #{key}"
-    type.connection.select_values(sql)
   end
 end

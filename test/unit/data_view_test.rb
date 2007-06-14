@@ -36,7 +36,7 @@ class DataViewTest < Test::Unit::TestCase
 
   def blank_data_view
     data_view = DataView.new
-    data_view.filter = Filter.new
+    data_view.filter = Olap::Query::Filter.new
     data_view.filter.name = 'X'
     data_view.filter.description = ''
     data_view.summarizer = Summarizer.new

@@ -67,7 +67,7 @@ class Report::TestRunByRevision
     valid_test_runs_ids = @test_runs.collect {|tr| tr.id}
 
     data_view = DataView.new
-    data_view.filter = Filter.new
+    data_view.filter = Olap::Query::Filter.new
     data_view.filter.name = '*'
     data_view.filter.description = ''
     data_view.filter.test_run_source_id = valid_test_runs_ids
@@ -83,7 +83,7 @@ class Report::TestRunByRevision
     @build_configuration_name_by_test_run = data_view.perform_search
 
     data_view = DataView.new
-    data_view.filter = Filter.new
+    data_view.filter = Olap::Query::Filter.new
     data_view.filter.name = '*'
     data_view.filter.description = ''
     data_view.filter.test_run_source_id = valid_test_runs_ids
