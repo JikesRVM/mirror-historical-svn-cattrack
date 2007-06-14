@@ -15,9 +15,9 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :new_failures, :new_successes, :intermittent_failures, :consistent_failures
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :test_case_name_by_test_run
 
-  def initialize(test_run, window_size = 10)
+  def initialize(test_run, window_size = 6)
     @test_run = test_run
     @window_size = window_size
     perform
@@ -29,10 +29,10 @@ class Report::TestRunByRevision
     options = {}
     sql = 'host_id = ? AND occured_at < ? AND name = ? AND id != ?'
     options[:conditions] = [ sql, @test_run.host.id, @test_run.occured_at, @test_run.name, @test_run.id ]
-    options[:limit] = 10
+    options[:limit] = @window_size
     options[:order] = 'occured_at DESC'
-    @test_runs = TestRun.find(:all, options)
-    test_run_ids = @test_runs.collect {|tr| tr.id}
+    @past_test_runs = TestRun.find(:all, options)
+    test_run_ids = @past_test_runs.collect {|tr| tr.id}
 
     @new_failures = []
     @new_successes = []
@@ -62,6 +62,42 @@ class Report::TestRunByRevision
         end
       end
     end
+
+    @test_runs = [@test_run] + @past_test_runs
+    valid_test_runs_ids = @test_runs.collect {|tr| tr.id}
+
+    data_view = DataView.new
+    data_view.filter = Filter.new
+    data_view.filter.name = '*'
+    data_view.filter.description = ''
+    data_view.filter.test_run_source_id = valid_test_runs_ids
+    data_view.summarizer = Summarizer.new
+    data_view.summarizer.name = '*'
+    data_view.summarizer.description = ''
+    data_view.data_presentation = DataPresentation.new
+    data_view.data_presentation.name = '*'
+    data_view.summarizer.primary_dimension = 'build_configuration_name'
+    data_view.summarizer.secondary_dimension = 'test_run_source_id'
+    data_view.summarizer.function = 'success_rate'
+    #order by occured_at
+    @build_configuration_name_by_test_run = data_view.perform_search
+
+    data_view = DataView.new
+    data_view.filter = Filter.new
+    data_view.filter.name = '*'
+    data_view.filter.description = ''
+    data_view.filter.test_run_source_id = valid_test_runs_ids
+    data_view.summarizer = Summarizer.new
+    data_view.summarizer.name = '*'
+    data_view.summarizer.description = ''
+    data_view.data_presentation = DataPresentation.new
+    data_view.data_presentation.name = '*'
+    data_view.summarizer.primary_dimension = 'test_case_name'
+    data_view.summarizer.secondary_dimension = 'test_run_source_id'
+    data_view.summarizer.function = 'success_rate'
+    # HAVING success_rate < 0
+    @test_case_name_by_test_run = data_view.perform_search
+
   end
 
   private

@@ -103,3 +103,50 @@
           %ul.actions
             %li= link_for(t, :label => 'Show')
           %script{ :type => 'text/javascript' } Element.hide('consistent_failures')
+- if @report.test_runs.size > 1
+  %h2 Revisions Covered By Report
+  %p
+    = ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link(r)}.join(', ')
+
+%h2 Test Runs Covered By Report
+%table.list
+  %tr
+    %th Name
+    %th Revision
+    %th Time
+    %th Operations
+  - @report.test_runs.each do |t|
+    %tr
+      %td= h(t.label)
+      %td= revision_link(t.revision)
+      %td= t.occured_at
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show Summary", :action => 'show_summary')
+
+- results = @report.build_configuration_name_by_test_run
+%h2 Build Configuration By Test Run
+%table.report
+  %tr
+    %th.pivot
+    - results.column_headers.each do |c|
+      = column_header(c,@report.test_runs)
+  - results.row_headers.each_with_index do |r,r_index|
+    %tr
+      %th.row= h(results.row.label_for(r))
+      - 0.upto(results.column_headers.size - 1) do |c_index|
+        = cell(results.tabular_data[r_index][c_index].to_i)
+
+- results = @report.test_case_name_by_test_run
+%h2 Test Case By Test Run
+%table.report
+  %tr
+    %th.pivot
+    - results.column_headers.each do |c|
+      = column_header(c,@report.test_runs)
+  - results.row_headers.each_with_index do |r,r_index|
+    %tr
+      %th.row= h(results.row.label_for(r))
+      - 0.upto(results.column_headers.size - 1) do |c_index|
+        = cell(results.tabular_data[r_index][c_index].to_i)
+
