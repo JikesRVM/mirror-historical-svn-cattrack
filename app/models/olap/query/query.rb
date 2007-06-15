@@ -17,14 +17,12 @@ class Olap::Query::Query < ActiveRecord::Base
   validates_length_of :primary_dimension, :in => 1..256
   validates_length_of :secondary_dimension, :in => 1..256
 
-  validates_presence_of :measure_id, :filter_id, :presentation_id
+  validates_presence_of :measure_id, :filter_id
   validates_reference_exists :measure_id, Olap::Query::Measure
   validates_reference_exists :filter_id, Olap::Query::Filter
-  validates_reference_exists :presentation_id, Olap::Query::Presentation
 
   belongs_to :measure, :class_name => 'Olap::Query::Measure', :foreign_key => 'measure_id'
   belongs_to :filter, :class_name => 'Olap::Query::Filter', :foreign_key => 'filter_id'
-  belongs_to :presentation, :class_name => 'Olap::Query::Presentation', :foreign_key => 'presentation_id'
 
   DimensionFields = Olap::Query::Filter::Fields.select {|f| f.options[:synthetic] != true}
   ValidDimensionFieldIds = DimensionFields.collect {|o| o.key.to_s}

@@ -36,5 +36,6 @@ class Explorer::ReportController < Explorer::BaseController
       end
     end
     @measures = Olap::Query::Measure.find(:all)
+    @filters = Olap::Query::Filter.find(:all, :order => 'name')
   end
 end

@@ -18,4 +18,3 @@ s1:
   secondary_dimension: time_day_of_week
   measure_id: 1
   filter_id: 1
-  presentation_id: 2

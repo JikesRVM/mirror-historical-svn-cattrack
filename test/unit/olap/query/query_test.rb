@@ -30,15 +30,13 @@ class Olap::Query::QueryTest < Test::Unit::TestCase
     assert_equal( 1, summarizer.measure.id )
     assert_equal( 1, summarizer.filter_id )
     assert_equal( 1, summarizer.filter.id )
-    assert_equal( 2, summarizer.presentation_id )
-    assert_equal( 2, summarizer.presentation.id )
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :description => '', :primary_dimension => 'build_target_name', :secondary_dimension => 'time_day_of_week', :filter_id => 1, :measure_id => 1, :presentation_id => 3}
+    {:name => 'foo', :description => '', :primary_dimension => 'build_target_name', :secondary_dimension => 'time_day_of_week', :filter_id => 1, :measure_id => 1}
   end
   def self.non_null_attributes
-    [:name, :description, :primary_dimension, :secondary_dimension, :filter_id, :measure_id, :presentation_id]
+    [:name, :description, :primary_dimension, :secondary_dimension, :filter_id, :measure_id]
   end
   def self.unique_attributes
     [[:name]]
@@ -56,8 +54,6 @@ class Olap::Query::QueryTest < Test::Unit::TestCase
     query.filter = Olap::Query::Filter.new
     query.filter.name = '*'
     query.filter.description = ''
-    query.presentation = Olap::Query::Presentation.new
-    query.presentation.name = '*'
     query.primary_dimension = 'build_configuration_name'
     query.secondary_dimension = 'time_day_of_week'
     query.measure = Olap::Query::Measure.find(1)

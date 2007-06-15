@@ -71,7 +71,6 @@ class Report::TestRunByRevision
     query.filter.name = '*'
     query.filter.description = ''
     query.filter.test_run_source_id = valid_test_runs_ids
-    query.presentation = Olap::Query::Presentation.find_by_key('success')
     query.primary_dimension = 'build_configuration_name'
     query.secondary_dimension = 'test_run_source_id'
     query.measure = Olap::Query::Measure.find(1)
@@ -83,7 +82,6 @@ class Report::TestRunByRevision
     query.filter.name = '*'
     query.filter.description = ''
     query.filter.test_run_source_id = valid_test_runs_ids
-    query.presentation = Olap::Query::Presentation.find_by_key('success')
     query.primary_dimension = 'test_case_name'
     query.secondary_dimension = 'test_run_source_id'
     query.measure = Olap::Query::Measure.find(1)

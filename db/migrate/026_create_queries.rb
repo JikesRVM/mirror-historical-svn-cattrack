@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class CreateQueries < ActiveRecord::Migration
-  def self.up     
+  def self.up
     create_table :queries do |t|
       t.column :name, :string, :limit => 120, :null => false
       t.column :description, :string, :limit => 256, :null => false
@@ -19,13 +19,11 @@ class CreateQueries < ActiveRecord::Migration
       t.column :secondary_dimension, :string, :limit => 256, :null => false
       t.column :measure_id, :integer, :null => false
       t.column :filter_id, :integer, :null => false
-      t.column :presentation_id, :integer, :null => false
     end
     add_index :queries, [:id], :unique => true
     add_index :queries, [:name], :unique => true
     add_foreign_key :queries, [:measure_id], :measures, [:id], :on_delete => :cascade
     add_foreign_key :queries, [:filter_id], :filters, [:id], :on_delete => :cascade
-    add_foreign_key :queries, [:presentation_id], :presentations, [:id], :on_delete => :cascade
   end
 
   def self.down

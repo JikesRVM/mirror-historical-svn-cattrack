@@ -65,7 +65,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
   end
 
   def test_new_post
-    post(:edit, {:query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1, :filter_id => 1, :presentation_id => 1}}, session_data)
+    post(:edit, {:query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1, :filter_id => 1}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_not_nil(assigns(:query))
     assert_equal(false, assigns(:query).new_record?)
