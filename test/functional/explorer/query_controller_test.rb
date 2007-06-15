@@ -69,7 +69,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
     assert_flash_count(1)
-    assert_not_nil(assigns(:query))
+    assert_assigned(:query)
     assert_equal(false, assigns(:query).new_record?)
     assert_equal('build_configuration_name', assigns(:query).primary_dimension)
     assert_equal('time_day_of_week', assigns(:query).secondary_dimension)
