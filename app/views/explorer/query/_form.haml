@@ -1,3 +1,10 @@
+%h4 Filter
+%table.search
+  %tr
+    %th Filter
+    %td
+      %select{ :name => 'query[filter_id]' }
+        = options_from_collection_for_select(@filters, :id, :label, @query.filter_id)
 %h4 Group By
 %table.search
   %tr

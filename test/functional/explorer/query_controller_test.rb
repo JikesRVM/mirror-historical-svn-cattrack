@@ -52,7 +52,17 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_equal(true, assigns(:query).new_record?)
     assert_nil(flash[:flash])
     assert_nil(flash[:alert])
+
+    assert_standard_edit_assigns
   end
+
+  def assert_standard_edit_assigns
+    assert_not_nil(assigns(:filters))
+    assert_equal([2, 1], assigns(:filters).collect{|f|f.id})
+    assert_not_nil(assigns(:measures))
+    assert_equal([5, 3, 2, 4, 1], assigns(:measures).collect{|m|m.id})
+  end
+
 
   def test_new_post_with_error
     post(:edit, {:query => {:name => '', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
@@ -63,6 +73,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns(:query).errors[:name])
     assert_nil(flash[:flash])
     assert_nil(flash[:alert])
+    assert_standard_edit_assigns
   end
 
   def test_new_post
@@ -85,6 +96,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_equal(1, assigns(:query).id)
     assert_nil(flash[:flash])
     assert_nil(flash[:alert])
+    assert_standard_edit_assigns
   end
 
   def test_edit_post_with_error
@@ -96,6 +108,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns(:query).errors[:name])
     assert_nil(flash[:flash])
     assert_nil(flash[:alert])
+    assert_standard_edit_assigns
   end
 
   def test_edit_post

@@ -28,7 +28,8 @@ class Explorer::QueryController < Explorer::BaseController
         return
       end
     end
-    @measures = Olap::Query::Measure.find(:all)
+    @filters = Olap::Query::Filter.find(:all, :order => 'name')
+    @measures = Olap::Query::Measure.find(:all, :order => 'name')
   end
 
   def destroy
