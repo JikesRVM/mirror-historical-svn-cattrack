@@ -23,5 +23,5 @@
   %tr
     %th Measure
     %td
-      %select{ :name => 'query[measure]' }
+      %select{ :name => 'query[measure_id]' }
         = options_from_collection_for_select(@measures, :id, :label, @query.measure_id)
