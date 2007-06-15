@@ -41,13 +41,6 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_equal([1], assigns(:queries).collect {|r| r.id} )
   end
 
-  def test_new_get
-    get(:edit, {}, session_data)
-    assert_normal_response('edit', 3)
-    assert_standard_edit_assigns
-    assert_new_record(:query)
-  end
-
   def assert_standard_edit_assigns
     assert_assigned(:query)
     assert_assigned(:filters)
@@ -56,16 +49,23 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_equal([5, 3, 2, 4, 1], assigns(:measures).collect{|m|m.id})
   end
 
+  def test_new_get
+    get(:new, {}, session_data)
+    assert_normal_response('new', 3)
+    assert_standard_edit_assigns
+    assert_new_record(:query)
+  end
+
   def test_new_post_with_error
-    post(:edit, {:query => {:name => '', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
-    assert_normal_response('edit', 3)
+    post(:new, {:query => {:name => '', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
+    assert_normal_response('new', 3)
     assert_standard_edit_assigns
     assert_new_record(:query)
     assert_error_on(:query, :name)
   end
 
   def test_new_post
-    post(:edit, {:query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1, :filter_id => 1}}, session_data)
+    post(:new, {:query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1, :filter_id => 1}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
     assert_flash_count(1)
@@ -74,7 +74,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_equal('build_configuration_name', assigns(:query).primary_dimension)
     assert_equal('time_day_of_week', assigns(:query).secondary_dimension)
     assert_equal(1, assigns(:query).measure_id)
-    assert_flash(:notice, "Query named 'X' was successfully saved.")
+    assert_flash(:notice, "Query named 'X' was successfully created.")
   end
 
   def test_edit_get

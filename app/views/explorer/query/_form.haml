@@ -1,34 +1,24 @@
-%h4 Filter
-%table.search
-  %tr
-    %th Filter
-    %td
-      %select{ :name => 'query[filter_id]' }
-        = options_from_collection_for_select(@filters, :id, :label, @query.filter_id)
-%h4 Group By
-%table.search
-  %tr
-    %th Primary Dimension
-    %td{:class => class_for_attribute(@query,:primary_dimension,'')}
-      %select{ :name => 'query[primary_dimension]' }
-        - Olap::Query::Query::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
-          %optgroup{ :label => d.titleize }
-            = options_from_collection_for_select(Olap::Query::Query::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @query.primary_dimension)
-      - if attribute_error?(@query, :primary_dimension)
-        .field_error= @query.errors[:primary_dimension]
-  %tr
-    %th Secondary Dimension
-    %td{:class => class_for_attribute(@query,:secondary_dimension,'')}
-      %select{ :name => 'query[secondary_dimension]' }
-        - Olap::Query::Query::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
-          %optgroup{ :label => d.titleize }
-            = options_from_collection_for_select(Olap::Query::Query::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @query.secondary_dimension)
-      - if attribute_error?(@query, :secondary_dimension)
-        .field_error= @query.errors[:secondary_dimension]
-%h4 Measure
-%table.search
-  %tr
-    %th Measure
-    %td
-      %select{ :name => 'query[measure_id]' }
-        = options_from_collection_for_select(@measures, :id, :label, @query.measure_id)
+%div
+  = render(:partial => 'errors')
+  %table.search
+    %tr
+      %th Name
+      %td{:class => class_for_attribute(@query,:name,'')}
+        %input{ :type => 'text', :name => 'query[name]', :value => @query.name }/
+        - if attribute_error?(@query, :name)
+          .field_error= @query.errors[:name]
+    %tr
+      %th Description
+      %td{:class => class_for_attribute(@query,:description,'')}
+        %textarea{ :name => 'query[description]', :rows => 5 , :cols => 40 }= @query.description
+        - if attribute_error?(@query, :description)
+          .field_error= @query.errors[:description]
+  %hr/
+  = render(:partial => 'fields')
+  %hr/
+  %ul.actions
+    %li
+      %button{:type => 'submit'}
+        = save_label
+    %li= link_to('Cancel', :action => 'list')
+  .clearer

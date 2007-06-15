@@ -18,8 +18,21 @@ class Explorer::QueryController < Explorer::BaseController
     @query_pages, @queries = paginate(Olap::Query::Query, :per_page => 10, :order => 'name')
   end
 
+  def new
+    @query = Olap::Query::Query.new(params[:query])
+    if request.post?
+      if @query.save
+        flash[:notice] = "Query named '#{@query.name}' was successfully created."
+        redirect_to(:action => 'list')
+        return
+      end
+    end
+    @filters = Olap::Query::Filter.find(:all, :order => 'name')
+    @measures = Olap::Query::Measure.find(:all, :order => 'name')
+  end
+
   def edit
-    @query = params[:id] ? Olap::Query::Query.find(params[:id]) : Olap::Query::Query.new
+    @query = Olap::Query::Query.find(params[:id])
     @query.attributes = params[:query]
     if request.post?
       if @query.save
