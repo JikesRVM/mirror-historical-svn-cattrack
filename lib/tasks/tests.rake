@@ -19,8 +19,6 @@ namespace :test do
   Rake::Task['test:services'].comment = "Run the service tests in test/services"
 end
 
-Rake::Task['test'].prerequisites << 'test:services'
-
 namespace :test do
   Rake::TestTask.new(:helpers => ["db:test:prepare", :environment]) do |t|
     t.libs << "test"
@@ -30,8 +28,20 @@ namespace :test do
   Rake::Task['test:helpers'].comment = "Run the helper tests in test/helpers"
 end
 
-Rake::Task['test'].prerequisites << 'test:helpers'
-
 desc "Run the continuous integration action"
 task :cia => ['clear', 'test'] do
 end
+
+Rake.application.instance_variable_get("@tasks").delete_if {|key, value| key == 'test'}
+
+desc 'Test all units and functionals'
+task :test do
+  Rake::Task["test:units"].invoke rescue got_error = true
+  Rake::Task["test:helpers"].invoke rescue got_error = true
+  Rake::Task["test:services"].invoke rescue got_error = true
+  Rake::Task["test:functionals"].invoke rescue got_error = true
+  Rake::Task["test:integration"].invoke rescue got_error = true
+
+  raise "Test failures" if got_error
+end
+
