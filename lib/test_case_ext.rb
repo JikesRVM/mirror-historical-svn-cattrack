@@ -43,13 +43,17 @@ class Test::Unit::TestCase
 
   def assert_assigns_count(assigns_count)
     unless assigns_count.nil?
-      user_assigns = assigns.select{|k, v| not DEFAULT_ASSIGNS.include?(k) and not APP_DEFAULT_ASSIGNS.include?(k)}.collect{|k, v|k}
-      assert_equal(assigns_count, user_assigns.size, "Assigns item count. Actual assigns #{user_assigns.join(', ')}")
+      user_assigns_keys = user_assigns.collect{|k, v|k}
+      assert_equal(assigns_count, user_assigns_keys.size, "Assigns item count. Actual assigns #{user_assigns_keys.join(', ')}") 
     end
   end
 
   def assert_flash(key, value)
     assert_not_nil(flash[key], "flash[:#{key}]. Valid flash keys #{flash.keys.inspect}")
     assert_equal(value, flash[key], "flash[:#{key}] content")
+  end
+
+  def user_assigns
+    assigns.select{|k, v| not DEFAULT_ASSIGNS.include?(k) and not APP_DEFAULT_ASSIGNS.include?(k)}
   end
 end
