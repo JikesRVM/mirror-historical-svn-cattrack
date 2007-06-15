@@ -20,16 +20,16 @@ class Olap::Query::QueryTest < Test::Unit::TestCase
   end
 
   def test_basic_load
-    summarizer = Olap::Query::Query.find(1)
-    assert_equal( 1, summarizer.id )
-    assert_equal( 'Success Rate by Build Configuration by Day of Week', summarizer.name )
-    assert_equal( '', summarizer.description )
-    assert_equal( 'build_configuration_name', summarizer.primary_dimension )
-    assert_equal( 'time_day_of_week', summarizer.secondary_dimension )
-    assert_equal( 1, summarizer.measure_id )
-    assert_equal( 1, summarizer.measure.id )
-    assert_equal( 1, summarizer.filter_id )
-    assert_equal( 1, summarizer.filter.id )
+    query = Olap::Query::Query.find(1)
+    assert_equal( 1, query.id )
+    assert_equal( 'Success Rate by Build Configuration by Day of Week', query.name )
+    assert_equal( '', query.description )
+    assert_equal( 'build_configuration_name', query.primary_dimension )
+    assert_equal( 'time_day_of_week', query.secondary_dimension )
+    assert_equal( 1, query.measure_id )
+    assert_equal( 1, query.measure.id )
+    assert_equal( 1, query.filter_id )
+    assert_equal( 1, query.filter.id )
   end
 
   def self.attributes_for_new
