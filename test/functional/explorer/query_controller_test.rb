@@ -67,13 +67,14 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
   def test_new_post
     post(:edit, {:query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1, :filter_id => 1}}, session_data)
     assert_redirected_to(:action => 'list')
+    assert_assigns_count(1)
+    assert_flash_count(1)
     assert_not_nil(assigns(:query))
     assert_equal(false, assigns(:query).new_record?)
     assert_equal('build_configuration_name', assigns(:query).primary_dimension)
     assert_equal('time_day_of_week', assigns(:query).secondary_dimension)
     assert_equal(1, assigns(:query).measure_id)
-    assert_equal("Query named 'X' was successfully saved.", flash[:notice])
-    assert_nil(flash[:alert])
+    assert_flash(:notice, "Query named 'X' was successfully saved.")
   end
 
   def test_edit_get
@@ -94,13 +95,14 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
   def test_edit_post
     post(:edit, {:id => 1, :query => {:name => 'X', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
     assert_redirected_to(:action => 'list')
+    assert_assigns_count(1)
+    assert_flash_count(1)
     assert_not_nil(assigns(:query))
     assert_equal(1, assigns(:query).id)
     assert_equal('build_configuration_name', assigns(:query).primary_dimension)
     assert_equal('time_day_of_week', assigns(:query).secondary_dimension)
     assert_equal(1, assigns(:query).measure_id)
-    assert_equal("Query named 'X' was successfully saved.", flash[:notice])
-    assert_nil(flash[:alert])
+    assert_flash(:notice, "Query named 'X' was successfully saved.")
   end
 
   def test_destroy
@@ -108,8 +110,9 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert(Olap::Query::Query.exists?(id))
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
-    assert_equal("Query named 'Success Rate by Build Configuration by Day of Week' was successfully deleted.", flash[:notice])
-    assert_nil(flash[:alert])
+    assert_assigns_count(0)
+    assert_flash_count(1)
+    assert_flash(:notice, "Query named 'Success Rate by Build Configuration by Day of Week' was successfully deleted.")
     assert(!Olap::Query::Query.exists?(id))
   end
 end

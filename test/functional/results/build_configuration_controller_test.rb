@@ -32,38 +32,29 @@ class Results::BuildConfigurationControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    id = 1
-    build_configuration = Tdm::BuildConfiguration.find(id)
-    test_run = build_configuration.test_run
-    host = test_run.host
-    params = {:host_name => host.name}
-    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
-    params.merge!(:build_configuration_name => build_configuration.name)
-
-    get(:show, params, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    get(:show, gen_params(Tdm::BuildConfiguration.find(1)), session_data)
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_equal(1, assigns(:record).id)
   end
 
   def test_show_output
-    id = 1
-    build_configuration = Tdm::BuildConfiguration.find(id)
+    get(:show_output, gen_params(Tdm::BuildConfiguration.find(1)), session_data)
+    assert_response(:success)
+    assert_template(nil)
+    assert_equal('text/plain; charset=utf-8', @response.headers['Content-Type'])
+    assert_equal('Prototype build log here ...', @response.body)
+    assert_assigns_count(0)
+    assert_flash_count(0)
+  end
+
+
+  def gen_params(build_configuration)
     test_run = build_configuration.test_run
     host = test_run.host
     params = {:host_name => host.name}
     params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
     params.merge!(:build_configuration_name => build_configuration.name)
-
-    get(:show_output, params, session_data)
-    assert_response(:success)
-    assert_template(nil)
-    assert_equal('text/plain; charset=utf-8', @response.headers['Content-Type'])
-    assert_equal('Prototype build log here ...', @response.body)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    params
   end
 end

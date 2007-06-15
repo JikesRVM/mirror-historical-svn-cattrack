@@ -45,11 +45,8 @@ class Results::GroupControllerTest < Test::Unit::TestCase
     params.merge!(:group_name => group.name)
 
     get(:show, params, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
   end
 end

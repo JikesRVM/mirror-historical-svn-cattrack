@@ -27,10 +27,6 @@ class Admin::UserControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  def model
-    User
-  end
-
   def session_data
     {:user_id => 1}
   end
@@ -38,64 +34,51 @@ class Admin::UserControllerTest < Test::Unit::TestCase
   def test_show
     id = 1
     get(:show, {:id => id}, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
   end
 
   def test_list
     get(:list, {}, session_data)
-    assert_response(:success)
-    assert_template('list')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:records))
+    assert_normal_response('list', 2)
+    assert_assigned(:records)
+    assert_assigned(:record_pages)
 
-    assert_equal(5, assigns(:records).size)
-    assert_not_nil(assigns(:record_pages))
+    assert_equal([4, 3, 1, 2, 5], assigns(:records).collect {|r| r.id} )
     assert_equal(0, assigns(:record_pages).current.offset)
     assert_equal(1, assigns(:record_pages).page_count)
-    assert_equal([4, 3, 1, 2, 5], assigns(:records).collect {|r| r.id} )
   end
 
   def test_list_with_query
     get(:list, {:q => 'e'}, session_data)
-    assert_response(:success)
-    assert_template('list')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:records))
+    assert_normal_response('list', 2)
+    assert_assigned(:records)
+    assert_assigned(:record_pages)
 
-    assert_equal(3, assigns(:records).size)
-    assert_not_nil(assigns(:record_pages))
+    assert_equal([4, 3, 1], assigns(:records).collect {|r| r.id} )
     assert_equal(0, assigns(:record_pages).current.offset)
     assert_equal(1, assigns(:record_pages).page_count)
-    assert_equal([4, 3, 1], assigns(:records).collect {|r| r.id} )
   end
 
   def test_destroy
     id = 4
-    assert(model.exists?(id))
-    label = model.find(id).label
+    assert(User.exists?(id))
+    label = User.find(id).label
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
-    assert(!model.exists?(id))
-    assert_not_nil(assigns(:user))
-    assert_equal(id, assigns(:user).id)
-    assert_equal(true, assigns(:user).frozen?)
-    assert_equal("#{label} was successfully deleted.", flash[:notice])
-    assert_nil(flash[:alert])
+    assert_assigns_count(0)
+    assert_flash_count(1)
+    assert(!User.exists?(id))
+    assert_flash(:notice, "#{label} was successfully deleted.")
   end
 
   def test_enable_admin
     assert(!User.find(2).admin?)
     post(:enable_admin, {:id => 2}, session_data)
     assert_redirected_to(:action => 'show', :id => 2)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_assigns_count(0)
+    assert_flash_count(0)
     assert(User.find(2).admin?)
   end
 
@@ -103,8 +86,8 @@ class Admin::UserControllerTest < Test::Unit::TestCase
     assert(User.find(1).admin?)
     post(:disable_admin, {:id => 1}, session_data)
     assert_redirected_to(:action => 'show', :id => 1)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_assigns_count(0)
+    assert_flash_count(0)
     assert(!User.find(1).admin?)
   end
 
@@ -113,8 +96,8 @@ class Admin::UserControllerTest < Test::Unit::TestCase
     assert(!User.find(id).active?)
     post(:activate, {:id => id}, session_data)
     assert_redirected_to(:action => 'show', :id => id)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_assigns_count(0)
+    assert_flash_count(0)
     assert(User.find(id).active?)
   end
 
@@ -123,8 +106,8 @@ class Admin::UserControllerTest < Test::Unit::TestCase
     assert(User.find(id).active?)
     post(:deactivate, {:id => id}, session_data)
     assert_redirected_to(:action => 'show', :id => id)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_assigns_count(0)
+    assert_flash_count(0)
     assert(!User.find(id).active?)
   end
 end

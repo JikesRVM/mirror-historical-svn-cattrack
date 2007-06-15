@@ -29,47 +29,35 @@ class SecurityControllerTest < Test::Unit::TestCase
 
   def test_login_get
     get(:login, {}, {})
-    assert_response(:success)
-    assert_template('login')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('login')
   end
 
   def test_login_post_success
     post(:login, {:username => 'peter', :password => 'retep'}, {})
     assert_redirected_to(:controller => 'dashboard')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_flash_count(0)
   end
 
   def test_login_post_fail
     post(:login, {:username => 'peter', :password => ''}, {})
-    assert_response(:success)
-    assert_template('login')
-    assert_equal('Incorrect Login or Password.', flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('login', 0, 1)
+    assert_flash(:alert, 'Incorrect Login or Password.')
   end
 
   def test_logout
-    post(:logout, {}, {:user_id => users(:user_peter).id})
+    post(:logout, {}, {:user_id => User.find(1).id})
     assert_redirected_to(:action => 'login')
-    assert_nil(flash[:alert])
-    assert_equal('You have been logged out.', flash[:notice])
+    assert_flash_count(1)
+    assert_flash(:notice, 'You have been logged out.')
   end
 
   def test_administrators
     get(:administrators, {}, {})
-    assert_response(:success)
-    assert_template('administrators')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('administrators')
   end
 
   def test_access_denied
     get(:access_denied, {}, {})
-    assert_response(403)
-    assert_template('access_denied')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('access_denied', 0, 0, 403)
   end
 end

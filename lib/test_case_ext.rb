@@ -18,11 +18,8 @@ class Test::Unit::TestCase
   def assert_normal_response(template_name, assigns_count = 0, flash_count = 0, response_code = :success)
     assert_response(response_code)
     assert_template(template_name)
-    assert_equal(flash_count, flash.size, "Flash item count. Actual flash #{flash}") unless flash_count.nil?
-    unless assigns_count.nil?
-      user_assigns = assigns.select{|k, v| not DEFAULT_ASSIGNS.include?(k) and not APP_DEFAULT_ASSIGNS.include?(k)}.collect{|k,v|k}
-      assert_equal(assigns_count, user_assigns.size, "Assigns item count. Actual assigns #{user_assigns.join(', ')}")
-    end
+    assert_flash_count(flash_count)
+    assert_assigns_count(assigns_count)
   end
 
   def assert_new_record(key)
@@ -38,5 +35,21 @@ class Test::Unit::TestCase
     assert_assigned(object)
     assert_not_nil(assigns(object).errors, "Checking errors not nil for #{object}")
     assert_not_nil(assigns(object).errors[field], "Checking error on #{object} for field #{field}")
+  end
+
+  def assert_flash_count(flash_count)
+    assert_equal(flash_count, flash.size, "Flash item count. Actual flash #{flash}") unless flash_count.nil?
+  end
+
+  def assert_assigns_count(assigns_count)
+    unless assigns_count.nil?
+      user_assigns = assigns.select{|k, v| not DEFAULT_ASSIGNS.include?(k) and not APP_DEFAULT_ASSIGNS.include?(k)}.collect{|k, v|k}
+      assert_equal(assigns_count, user_assigns.size, "Assigns item count. Actual assigns #{user_assigns.join(', ')}")
+    end
+  end
+
+  def assert_flash(key, value)
+    assert_not_nil(flash[key], "flash[:#{key}]. Valid flash keys #{flash.keys.inspect}")
+    assert_equal(value, flash[key], "flash[:#{key}] content")
   end
 end

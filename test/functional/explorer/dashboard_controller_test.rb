@@ -29,9 +29,6 @@ class Explorer::DashboardControllerTest < Test::Unit::TestCase
 
   def test_index
     get(:index, {}, {:user_id => 1})
-    assert_response(:success)
-    assert_template('index')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('index')
   end
 end

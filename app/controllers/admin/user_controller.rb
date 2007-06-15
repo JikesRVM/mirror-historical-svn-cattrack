@@ -27,37 +27,37 @@ class Admin::UserController < Admin::BaseController
   end
 
   def enable_admin
-    @user = User.find(params[:id])
-    @user.admin = true
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
+    user = User.find(params[:id])
+    user.admin = true
+    user.save!
+    redirect_to(:action => 'show', :id => user)
   end
 
   def disable_admin
-    @user = User.find(params[:id])
-    @user.admin = false
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
+    user = User.find(params[:id])
+    user.admin = false
+    user.save!
+    redirect_to(:action => 'show', :id => user)
   end
 
   def activate
-    @user = User.find(params[:id])
-    @user.active = true
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
+    user = User.find(params[:id])
+    user.active = true
+    user.save!
+    redirect_to(:action => 'show', :id => user)
   end
 
   def deactivate
-    @user = User.find(params[:id])
-    @user.active = false
-    @user.save!
-    redirect_to(:action => 'show', :id => @user)
+    user = User.find(params[:id])
+    user.active = false
+    user.save!
+    redirect_to(:action => 'show', :id => user)
   end
 
   def destroy
-    @user = User.find(params[:id])
-    flash[:notice] = "#{@user.label} was successfully deleted."
-    @user.destroy
+    user = User.find(params[:id])
+    flash[:notice] = "#{user.label} was successfully deleted."
+    user.destroy
     redirect_to(:action => 'list')
   end
 end

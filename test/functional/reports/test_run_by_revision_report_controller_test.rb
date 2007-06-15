@@ -35,12 +35,8 @@ class Reports::TestRunByRevisionReportControllerTest < Test::Unit::TestCase
     id = 1
     test_run = Tdm::TestRun.find(id)
     get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:test_run))
-    assert_equal(id, assigns(:test_run).id)
+    assert_normal_response('show', 1)
+    assert_assigned(:report)
+    assert_equal(id, assigns(:report).test_run.id)
   end
-
 end

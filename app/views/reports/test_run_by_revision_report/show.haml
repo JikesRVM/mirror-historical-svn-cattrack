@@ -1,22 +1,22 @@
-- @page_title = "Test Run Report: #{h(@test_run.name)}.#{@test_run.id}"
+- @page_title = "Test Run Report: #{h(@report.test_run.name)}.#{@report.test_run.id}"
 %h1.page-title= @page_title
 
 %table.details
   %tr
     %th Test Run
-    %td= link_for(@test_run)
+    %td= link_for(@report.test_run)
   %tr
     %th Build Target
-    %td= link_for(@test_run.build_target)
+    %td= link_for(@report.test_run.build_target)
   %tr
     %th Revision
-    %td= revision_link(@test_run.revision)
+    %td= revision_link(@report.test_run.revision)
   %tr
     %th Time
-    %td= h(@test_run.occurred_at)
+    %td= h(@report.test_run.occurred_at)
   %tr
     %th Success Rate
-    %td= @test_run.success_rate
+    %td= @report.test_run.success_rate
 
 - if @report.new_failures.size > 0
   = tests_header('new_failures', pluralize(@report.new_failures.size, 'New Failures'))

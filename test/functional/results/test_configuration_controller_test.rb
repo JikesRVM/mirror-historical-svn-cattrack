@@ -43,10 +43,8 @@ class Results::TestConfigurationControllerTest < Test::Unit::TestCase
     params.merge!(:test_configuration_name => test_configuration.name)
 
     get(:show, params, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_not_nil(assigns(:record))
     assert_equal(id, assigns(:record).id)
   end

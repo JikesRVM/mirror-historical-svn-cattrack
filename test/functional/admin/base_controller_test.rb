@@ -31,15 +31,11 @@ class Admin::BaseControllerTest < Test::Unit::TestCase
   def test_allow_access_to_admin
     get(:index, {}, {:user_id => 1})
     assert_response(:success)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_flash_count(0)
   end
 
   def test_deny_access_to_non_admin
     get(:index, {}, {:user_id => 2})
-    assert_response(403)
-    assert_template('access_denied')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('access_denied', 0, 0, 403)
   end
 end

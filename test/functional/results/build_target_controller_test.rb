@@ -40,11 +40,8 @@ class Results::BuildTargetControllerTest < Test::Unit::TestCase
     params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
 
     get(:show, params, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
   end
 end

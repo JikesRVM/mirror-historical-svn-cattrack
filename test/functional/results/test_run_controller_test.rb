@@ -35,11 +35,8 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     id = 1
     test_run = Tdm::TestRun.find(id)
     get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
-    assert_response(:success)
-    assert_template('show')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    assert_normal_response('show', 1)
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
   end
 
@@ -47,11 +44,8 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     id = 1
     test_run = Tdm::TestRun.find(id)
     get(:show_summary, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
-    assert_response(:success)
-    assert_template('show_summary')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-    assert_not_nil(assigns(:record))
+    assert_normal_response('show_summary', 1)
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
   end
 
@@ -64,10 +58,10 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     delete(:destroy, {:host_name => host_name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_redirected_to(:controller => 'results/host', :action => 'show', :host_name => host_name)
     assert(!Tdm::TestRun.exists?(id))
-    assert_not_nil(assigns(:record))
+    assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
     assert_equal(true, assigns(:record).frozen?)
+    assert_flash_count(1)
     assert_equal("#{label} was successfully deleted.", flash[:notice])
-    assert_nil(flash[:alert])
   end
 end

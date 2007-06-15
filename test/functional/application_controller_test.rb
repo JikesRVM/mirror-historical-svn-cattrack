@@ -35,23 +35,16 @@ class ApplicationControllerTest < Test::Unit::TestCase
   def test_allow_unauthenticated_access
     get(:index, {}, {})
     assert_response(:success)
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_flash_count(0)
   end
 
   def test_access_denied_with_authenticated
     get(:raise_error, {}, {:user_id => 1})
-    assert_response(403)
-    assert_template('access_denied')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('access_denied', 0, 0, 403)
   end
 
   def test_access_denied_with_unauthenticated
     get(:raise_error, {}, {})
-    assert_response(403)
-    assert_template('login_required')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('login_required', 0, 0, 403)
   end
 end

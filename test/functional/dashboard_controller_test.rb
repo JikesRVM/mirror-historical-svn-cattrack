@@ -28,18 +28,12 @@ class DashboardControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    test_run = Tdm::TestRun.new
-    test_run.attributes = Tdm::TestRun.find(1).attributes
-    test_run.occurred_at = Time.now
-    test_run.save!
-
     get(:index, {}, {:user_id => 1})
-    assert_response(:success)
-    assert_template('index')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('index', 2)
+    assert_assigned(:test_runs)
+    assert_assigned(:test_run_pages)
 
-    assert_equal([test_run.id, 2, 1], assigns(:test_runs).collect {|r| r.id} )
+    assert_equal([2, 1], assigns(:test_runs).collect {|r| r.id} )
     assert_not_nil(assigns(:test_run_pages))
     assert_equal(0, assigns(:test_run_pages).current.offset)
     assert_equal(1, assigns(:test_run_pages).page_count)

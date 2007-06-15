@@ -20,8 +20,7 @@ class Results::TestCaseController < Results::BaseController
   end
 
   def show_output
-    @record = test_case
     headers['Content-Type'] = 'text/plain'
-    render(:text => @record.output, :layout => false)
+    render(:text => test_case.output, :layout => false)
   end
 end

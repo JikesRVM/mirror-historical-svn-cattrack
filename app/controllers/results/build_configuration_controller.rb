@@ -20,8 +20,7 @@ class Results::BuildConfigurationController < Results::BaseController
   end
 
   def show_output
-    @record = build_configuration
     headers['Content-Type'] = 'text/plain'
-    render(:text => @record.output, :layout => false)
+    render(:text => build_configuration.output, :layout => false)
   end
 end

@@ -28,9 +28,6 @@ class Explorer::BaseControllerTest < Test::Unit::TestCase
 
   def test_access_denied_with_unauthenticated
     get(:raise_error, {}, {})
-    assert_response(403)
-    assert_template('login_required')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('login_required', 0, 0, 403)
   end
 end

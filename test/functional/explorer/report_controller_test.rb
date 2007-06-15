@@ -33,10 +33,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
 
   def test_list
     get(:list, {}, session_data)
-    assert_response(:success)
-    assert_template('list')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('list', 20)
 
     assert_equal(['helm','skunk'], assigns(:host_names) )
     assert_equal(['core'], assigns(:test_run_names) )
