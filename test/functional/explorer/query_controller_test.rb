@@ -33,12 +33,9 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
 
   def test_list
     get(:list, {}, session_data)
-    assert_response(:success)
-    assert_template('list')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
-
-    assert_not_nil(assigns(:query_pages))
+    assert_normal_response('list', 2)
+    assert_assigned(:query_pages)
+    assert_assigned(:queries)
     assert_equal(0, assigns(:query_pages).current.offset)
     assert_equal(1, assigns(:query_pages).page_count)
     assert_equal([1], assigns(:queries).collect {|r| r.id} )
@@ -46,34 +43,25 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
 
   def test_new_get
     get(:edit, {}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:query))
-    assert_equal(true, assigns(:query).new_record?)
-    assert_nil(flash[:flash])
-    assert_nil(flash[:alert])
-
+    assert_normal_response('edit', 3)
     assert_standard_edit_assigns
+    assert_new_record(:query)
   end
 
   def assert_standard_edit_assigns
-    assert_not_nil(assigns(:filters))
+    assert_assigned(:query)
+    assert_assigned(:filters)
     assert_equal([2, 1], assigns(:filters).collect{|f|f.id})
-    assert_not_nil(assigns(:measures))
+    assert_assigned(:measures)
     assert_equal([5, 3, 2, 4, 1], assigns(:measures).collect{|m|m.id})
   end
 
-
   def test_new_post_with_error
     post(:edit, {:query => {:name => '', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:query))
-    assert_equal(true, assigns(:query).new_record?)
-    assert_not_nil(assigns(:query).errors[:name])
-    assert_nil(flash[:flash])
-    assert_nil(flash[:alert])
+    assert_normal_response('edit', 3)
     assert_standard_edit_assigns
+    assert_new_record(:query)
+    assert_error_on(:query, :name)
   end
 
   def test_new_post
@@ -90,25 +78,17 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
 
   def test_edit_get
     get(:edit, {:id => 1}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:query))
-    assert_equal(1, assigns(:query).id)
-    assert_nil(flash[:flash])
-    assert_nil(flash[:alert])
+    assert_normal_response('edit', 3)
     assert_standard_edit_assigns
+    assert_equal(1, assigns(:query).id)
   end
 
   def test_edit_post_with_error
     post(:edit, {:id => 1, :query => {:name => '', :description => '', :primary_dimension => 'build_configuration_name', :secondary_dimension => 'time_day_of_week', :measure_id => 1}}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:query))
-    assert_equal(1, assigns(:query).id)
-    assert_not_nil(assigns(:query).errors[:name])
-    assert_nil(flash[:flash])
-    assert_nil(flash[:alert])
+    assert_normal_response('edit', 3)
     assert_standard_edit_assigns
+    assert_equal(1, assigns(:query).id)
+    assert_error_on(:query, :name)
   end
 
   def test_edit_post
