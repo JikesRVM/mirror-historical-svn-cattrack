@@ -1,0 +1,4 @@
+- @page_title = "New Filter"
+%h1.page-title= @page_title
+%form{:action => url_for(:action => 'new'), :method => 'post' }
+  = render(:partial => 'form', :locals => {:save_label => 'Create'})

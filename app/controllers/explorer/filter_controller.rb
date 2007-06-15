@@ -18,19 +18,29 @@ class Explorer::FilterController < Explorer::BaseController
     @filter_pages, @filters = paginate(Olap::Query::Filter, :per_page => 10, :order => 'name')
   end
 
+  def new
+    @filter = Olap::Query::Filter.new(params[:filter])
+    if request.post?
+      if @filter.save
+        flash[:notice] = "Filter named '#{@filter.name}' was successfully created."
+        redirect_to(:action => 'list')
+        return
+      end
+    end
+    populate_dimension_values
+  end
+
   def edit
-    @filter = params[:id] ? Olap::Query::Filter.find(params[:id]) : Olap::Query::Filter.new
+    @filter = Olap::Query::Filter.find(params[:id])
     @filter.attributes = params[:filter]
     if request.post?
       if @filter.save
         flash[:notice] = "Filter named '#{@filter.name}' was successfully saved."
         redirect_to(:action => 'list')
+        return
       end
     end
-    Olap::Query::Filter::AutoFields.each do |f|
-      value = f.dimension.attribute_values(f.name.to_s)
-      instance_variable_set("@#{f.key.to_s.pluralize}", value)
-    end
+    populate_dimension_values
   end
 
   def destroy
@@ -38,5 +48,14 @@ class Explorer::FilterController < Explorer::BaseController
     filter.destroy
     flash[:notice] = "Filter named '#{filter.name}' was successfully deleted."
     redirect_to(:action => 'list')
+  end
+
+  private
+
+  def populate_dimension_values
+    Olap::Query::Filter::AutoFields.each do |f|
+      value = f.dimension.attribute_values(f.name.to_s)
+      instance_variable_set("@#{f.key.to_s.pluralize}", value)
+    end
   end
 end

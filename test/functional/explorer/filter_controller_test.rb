@@ -35,64 +35,88 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   def test_list
     get(:list, {}, session_data)
     assert_response(:success)
-    assert_template('list')
-    assert_nil(flash[:alert])
-    assert_nil(flash[:notice])
+    assert_normal_response('list', 2)
+    assert_assigned(:filter_pages)
+    assert_assigned(:filters)
 
-    assert_not_nil(assigns(:filter_pages))
+    assert_equal([2, 1], assigns(:filters).collect {|r| r.id} )
     assert_equal(0, assigns(:filter_pages).current.offset)
     assert_equal(1, assigns(:filter_pages).page_count)
-    assert_equal([2, 1], assigns(:filters).collect {|r| r.id} )
+  end
+
+  def assert_standard_edit_assigns
+    [
+    [:test_run_names, ["core"]],
+    [:build_target_names, ["ia32_linux"]],
+    [:build_configuration_bootimage_class_inclusion_policies, ["complete", "minimal"]],
+    [:build_target_address_sizes, ["32"]],
+    [:test_configuration_modes, ["", "gcstress", "performance"]],
+    [:build_target_arches, ["ia32"]],
+    [:host_names, ["helm", "skunk"]],
+    [:test_configuration_names, ["development", "performance_production", "prototype", "prototype-opt"]],
+    [:build_configuration_names, ["development", "prototype", "prototype-opt"]], ["build_configuration_bootimage_compilers", ["base", "opt"]],
+    [:build_configuration_runtime_compilers, ["base", "opt"]],
+    [:build_target_operating_systems, ["Linux"]],
+    [:build_configuration_assertion_levels, ["normal"]],
+    [:result_names, ["EXCLUDED", "FAILURE", "OVERTIME", "SUCCESS"]],
+    [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]]
+    ].each do |v|
+      assert_assigned(v[0])
+      assert_equal(v[1], assigns(v[0]), "Values for assign #{v[0]}")
+    end
   end
 
   def test_new_get
-    get(:edit, {}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:filter))
-    assert_equal(true, assigns(:filter).new_record?)
+    get(:new, {}, session_data)
+    assert_normal_response('new', 1 + 15)
+    assert_standard_edit_assigns
+    assert_new_record(:filter)
   end
 
   def test_new_post_with_error
-    post(:edit, {:filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:filter))
-    assert_equal(true, assigns(:filter).new_record?)
-    assert_not_nil(assigns(:filter).errors[:name])
+    post(:new, {:filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
+    assert_normal_response('new', 1 + 15)
+    assert_standard_edit_assigns
+    assert_new_record(:filter)
+    assert_error_on(:filter, :name)
   end
 
   def test_new_post
-    post(:edit, {:filter => {:name => 'X', :description => '', :revision_after => '123'}}, session_data)
+    post(:new, {:filter => {:name => 'X', :description => '', :revision_after => '123'}}, session_data)
     assert_redirected_to(:action => 'list')
-    assert_not_nil(assigns(:filter))
+    assert_assigns_count(1)
+    assert_flash_count(1)
+    assert_assigned(:filter)
     assert_equal(false, assigns(:filter).new_record?)
     assert_equal('123', assigns(:filter).revision_after)
+    assert_flash(:notice, "Filter named 'X' was successfully created.")
   end
 
   def test_edit_get
     get(:edit, {:id => 1}, session_data)
     assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:filter))
+    assert_normal_response('edit', 1 + 15)
+    assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
   end
 
   def test_edit_post_with_error
     post(:edit, {:id => 1, :filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_response(:success)
-    assert_template('edit')
-    assert_not_nil(assigns(:filter))
+    assert_normal_response('edit', 1 + 15)
+    assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
-    assert_not_nil(assigns(:filter).errors[:name])
+    assert_error_on(:filter, :name)
   end
 
   def test_edit_post
     post(:edit, {:id => 1, :filter => {:name => 'X', :description => '', :revision_after => '123'}}, session_data)
     assert_redirected_to(:action => 'list')
-    assert_not_nil(assigns(:filter))
+    assert_assigns_count(1)
+    assert_flash_count(1)
+    assert_assigned(:filter)
     assert_equal(1, assigns(:filter).id)
     assert_equal('123', assigns(:filter).revision_after)
+    assert_flash(:notice, "Filter named 'X' was successfully saved.")
   end
 
   def test_destroy
@@ -100,7 +124,9 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
     assert(Olap::Query::Filter.exists?(id))
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
-    assert_equal("Filter named 'Last Week' was successfully deleted.", flash[:notice])
+    assert_assigns_count(0)
+    assert_flash_count(1)
+    assert_flash(:notice, "Filter named 'Last Week' was successfully deleted.")
     assert(!Olap::Query::Filter.exists?(id))
   end
 end

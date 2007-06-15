@@ -1,0 +1,78 @@
+- Olap::Query::Filter::AutoFields.collect{|f| f.dimension}.uniq.each do |d|
+  = dimension_header(d)
+  %table.search{:id => dimension_block_name(d)}
+    - Olap::Query::Filter::AutoFields.select{|f| f.dimension == d}.each do |f|
+      %tr
+        %th= f.name.to_s.humanize
+        %td= fk_select(f.key, f.options)
+  = dimension_footer(d)
+= dimension_header(Olap::TestCaseDimension)
+%table.search{:id => dimension_block_name(Olap::TestCaseDimension)}
+  %tr
+    %th Name
+    %td
+      %input{ :type => 'text', :name => 'filter[test_case_name]', :value => @filter.test_case_name }/
+  %tr
+    %th Group
+    %td
+      %input{ :type => 'text', :name => 'filter[test_case_group]', :value => @filter.test_case_group }/
+= dimension_footer(Olap::TestCaseDimension)
+= dimension_header(Olap::RevisionDimension)
+%table.search{:id => dimension_block_name(Olap::RevisionDimension)}
+  %tr
+    %th After
+    %td{:class => class_for_attribute(@filter,:revision_after,'')}
+      %input{ :type => 'text', :name => 'filter[revision_after]', :value => @filter.revision_after }/
+      - if attribute_error?(@filter, :revision_after)
+        .field_error= @filter.errors[:revision_after]
+  %tr
+    %th Before
+    %td{:class => class_for_attribute(@filter,:revision_before,'')}
+      %input{ :type => 'text', :name => 'filter[revision_before]', :value => @filter.revision_before }/
+      - if attribute_error?(@filter, :revision_before)
+        .field_error= @filter.errors[:revision_before]
+= dimension_footer(Olap::RevisionDimension)
+= dimension_header(Olap::TimeDimension)
+%table.search{:id => dimension_block_name(Olap::TimeDimension)}
+  %tr
+    %th Year
+    %td= fk_select(:time_year, :multiple => true, :any => true, :size => 4, :values => ['2006','2007','2008'])
+  %tr
+    %th Month
+    %td= fk_select(:time_month, :multiple => true, :any => true, :size => 4, :values => (1..12).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_MONTH_NAME)
+  %tr
+    %th Week
+    %td= fk_select(:time_week, :multiple => true, :any => true, :size => 4, :values => (0..53).collect{|v|v} )
+  %tr
+    %th Day Of Week
+    %td= fk_select(:time_day_of_week, :multiple => true, :any => true, :size => 4, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
+  %tr
+    %th In Range
+    %td{:class => class_for_attribute(@filter,:time_to,class_for_attribute(@filter,:time_from,''))}
+      %span
+        From
+        %input{ :type => 'text', :name => 'filter[time_from]', :value => @filter.time_from }/
+        - if attribute_error?(@filter, :time_from)
+          .field_error= @filter.errors[:time_from]
+      %span
+        To
+        %input{ :type => 'text', :name => 'filter[time_to]', :value => @filter.time_to }/
+        - if attribute_error?(@filter, :time_to)
+          .field_error= @filter.errors[:time_to]
+      .explanation
+        For example, '1w 2d 5h 30m', where w = weeks, d = days, h = hours, m = minutes, If the field starts with a '-', it is treated as a time in the past, for example, '-1w 3d' is "10 days ago". An unset field denotes unbounded, so if from is blank, and to is -1d, this means "everything earlier than 1 day ago".
+  %tr
+    %th Before
+    %td{:class => class_for_attribute(@filter,:time_before,'')}
+      %input{ :type => 'text', :name => 'filter[time_before]', :value => @filter.time_before }/
+      - if attribute_error?(@filter, :time_before)
+        .field_error= @filter.errors[:time_before]
+      .explanation YYYY-MM-DD HH:MM:SS
+  %tr
+    %th After
+    %td{:class => class_for_attribute(@filter,:time_after,'')}
+      %input{ :type => 'text', :name => 'filter[time_after]', :value => @filter.time_after }/
+      - if attribute_error?(@filter, :time_after)
+        .field_error= @filter.errors[:time_after]
+      .explanation YYYY-MM-DD HH:MM:SS
+= dimension_footer(Olap::TimeDimension)
