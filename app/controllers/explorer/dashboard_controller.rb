@@ -11,7 +11,36 @@
 #  regarding copyright ownership.
 #
 class Explorer::DashboardController < Explorer::BaseController
-  verify :method => :get, :only => [:index], :redirect_to => :access_denied_url
   def index
+    query = Olap::Query::Query.new(params[:query])
+    query.filter = Olap::Query::Filter.new(params[:filter])
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.name = '*'
+    query.description = ''
+
+    @measure = query.measure
+    @filter = query.filter
+    @query = query
+
+    if request.post?
+      @presentation = Olap::Query::Presentation.find(params[:presentation])
+      if @presentation and query.measure.valid? and query.filter.valid?
+        @results = query.perform_search
+      end
+    else
+      # Assume get and populate with reasonable defaults
+      @query.measure = Olap::Query::Measure.find_by_name('Success Rate')
+      @query.primary_dimension = 'test_configuration_name'
+      @query.secondary_dimension = 'revision_revision'
+    end
+
+    @presentations = Olap::Query::Presentation.find(:all, :order => 'name')
+    @measures = Olap::Query::Measure.find(:all, :order => 'name')
+    @filters = Olap::Query::Filter.find(:all, :order => 'name')
+    Olap::Query::Filter::AutoFields.each do |f|
+      value = f.dimension.attribute_values(f.name.to_s)
+      instance_variable_set("@#{f.key.to_s.pluralize}", value)
+    end
   end
 end

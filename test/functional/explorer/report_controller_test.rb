@@ -33,13 +33,87 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
 
   def test_list
     get(:list, {}, session_data)
-    assert_normal_response('list', 20)
+    assert_response(:success)
+    assert_normal_response('list', 2)
+    assert_assigned(:report_pages)
+    assert_assigned(:reports)
 
-    assert_equal(['helm','skunk'], assigns(:host_names) )
-    assert_equal(['core'], assigns(:test_run_names) )
-    assert_equal(['ia32_linux'], assigns(:build_target_names) )
-    assert_equal(['ia32'], assigns(:build_target_arches) )
-    assert_equal(['32'], assigns(:build_target_address_sizes) )
-    assert_equal(['Linux'], assigns(:build_target_operating_systems) )
+    assert_equal([1], assigns(:reports).collect {|r| r.id} )
+    assert_equal(0, assigns(:report_pages).current.offset)
+    assert_equal(1, assigns(:report_pages).page_count)
+  end
+
+  def assert_standard_edit_assigns
+    assert_assigned(:presentations)
+    assert_assigned(:queries)
+    assert_assigned(:report)
+    assert_equal([1, 3, 2], assigns(:presentations).collect {|r| r.id} )
+    assert_equal([1], assigns(:queries).collect {|r| r.id} )
+  end
+
+  def test_new_get
+    get(:new, {}, session_data)
+    assert_normal_response('new', 1 + 2)
+    assert_standard_edit_assigns
+    assert_new_record(:report)
+  end
+
+  def test_new_post_with_error
+    post(:new, {:report => {:name => '', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
+    assert_normal_response('new', 1 + 2)
+    assert_standard_edit_assigns
+    assert_new_record(:report)
+    assert_error_on(:report, :name)
+  end
+
+  def test_new_post
+    post(:new, {:report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
+    assert_redirected_to(:action => 'list')
+    assert_assigns_count(1)
+    assert_flash_count(1)
+    assert_assigned(:report)
+    assert_equal(false, assigns(:report).new_record?)
+    assert_equal(1, assigns(:report).query_id)
+    assert_equal(1, assigns(:report).presentation_id)
+    assert_flash(:notice, "Report named 'X' was successfully created.")
+  end
+
+  def test_edit_get
+    get(:edit, {:id => 1}, session_data)
+    assert_response(:success)
+    assert_normal_response('edit', 1 + 2)
+    assert_standard_edit_assigns
+    assert_equal(1, assigns(:report).id)
+  end
+
+  def test_edit_post_with_error
+    post(:edit, {:id => 1, :report => {:name => '', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
+    assert_normal_response('edit', 1 + 2)
+    assert_standard_edit_assigns
+    assert_equal(1, assigns(:report).id)
+    assert_error_on(:report, :name)
+  end
+
+  def test_edit_post
+    post(:edit, {:id => 1, :report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
+    assert_redirected_to(:action => 'list')
+    assert_assigns_count(1)
+    assert_flash_count(1)
+    assert_assigned(:report)
+    assert_equal(1, assigns(:report).id)
+    assert_equal(1, assigns(:report).query_id)
+    assert_equal(1, assigns(:report).presentation_id)
+    assert_flash(:notice, "Report named 'X' was successfully saved.")
+  end
+
+  def test_destroy
+    id = 1
+    assert(Olap::Query::Report.exists?(id))
+    post(:destroy, {:id => id}, session_data)
+    assert_redirected_to(:action => 'list')
+    assert_assigns_count(0)
+    assert_flash_count(1)
+    assert_flash(:notice, "Report named 'Success Rate by Build Configuration by Day of Week Report' was successfully deleted.")
+    assert(!Olap::Query::Report.exists?(id))
   end
 end

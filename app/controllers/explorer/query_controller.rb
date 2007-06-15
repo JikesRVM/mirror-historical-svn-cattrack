@@ -27,8 +27,7 @@ class Explorer::QueryController < Explorer::BaseController
         return
       end
     end
-    @filters = Olap::Query::Filter.find(:all, :order => 'name')
-    @measures = Olap::Query::Measure.find(:all, :order => 'name')
+    populate_values
   end
 
   def edit
@@ -41,8 +40,7 @@ class Explorer::QueryController < Explorer::BaseController
         return
       end
     end
-    @filters = Olap::Query::Filter.find(:all, :order => 'name')
-    @measures = Olap::Query::Measure.find(:all, :order => 'name')
+    populate_values
   end
 
   def destroy
@@ -50,5 +48,12 @@ class Explorer::QueryController < Explorer::BaseController
     query.destroy
     flash[:notice] = "Query named '#{query.name}' was successfully deleted."
     redirect_to(:action => 'list')
+  end
+
+  private
+
+  def populate_values
+    @filters = Olap::Query::Filter.find(:all, :order => 'name')
+    @measures = Olap::Query::Measure.find(:all, :order => 'name')
   end
 end

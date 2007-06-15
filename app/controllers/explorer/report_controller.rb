@@ -11,30 +11,49 @@
 #  regarding copyright ownership.
 #
 class Explorer::ReportController < Explorer::BaseController
+  verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
+  verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
+
   def list
-    Olap::Query::Filter::AutoFields.each do |f|
-      value = f.dimension.attribute_values(f.name.to_s)
-      instance_variable_set("@#{f.key.to_s.pluralize}", value)
-    end
-    query = Olap::Query::Query.new(params[:query])
-    query.filter = Olap::Query::Filter.new(params[:filter])
-    query.filter.name = '*'
-    query.filter.description = ''
-    query.name = '*'
-    query.description = ''
+    @report_pages, @reports = paginate(Olap::Query::Report, :per_page => 10, :order => 'name')
+  end
 
-    @measure = query.measure
-    @filter = query.filter
-    @query = query
-
+  def new
+    @report = Olap::Query::Report.new(params[:report])
     if request.post?
-      @presentation = Olap::Query::Presentation.find(params[:presentation])
-      if @presentation and query.measure.valid? and query.filter.valid?
-        @results = query.perform_search
+      if @report.save
+        flash[:notice] = "Report named '#{@report.name}' was successfully created."
+        redirect_to(:action => 'list')
+        return
       end
     end
+    populate_query_values
+  end
+
+  def edit
+    @report = Olap::Query::Report.find(params[:id])
+    @report.attributes = params[:report]
+    if request.post?
+      if @report.save
+        flash[:notice] = "Report named '#{@report.name}' was successfully saved."
+        redirect_to(:action => 'list')
+        return
+      end
+    end
+    populate_query_values
+  end
+
+  def destroy
+    report = Olap::Query::Report.find(params[:id])
+    report.destroy
+    flash[:notice] = "Report named '#{report.name}' was successfully deleted."
+    redirect_to(:action => 'list')
+  end
+
+  private
+
+  def populate_query_values
+    @queries = Olap::Query::Query.find(:all, :order => 'name')
     @presentations = Olap::Query::Presentation.find(:all, :order => 'name')
-    @measures = Olap::Query::Measure.find(:all)
-    @filters = Olap::Query::Filter.find(:all, :order => 'name')
   end
 end

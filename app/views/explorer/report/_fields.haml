@@ -1,0 +1,7 @@
+%h4 Presentation
+%table.search
+  %tr
+    %th Presentation
+    %td
+      %select{ :name => 'report[presentation_id]' }
+        = options_from_collection_for_select(@presentations, :id, :label, @report.presentation_id)

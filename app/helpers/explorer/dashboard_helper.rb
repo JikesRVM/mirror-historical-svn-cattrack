@@ -10,6 +10,6 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module Explorer::ReportHelper
+module Explorer::DashboardHelper
   include Explorer::FilterHelper
 end

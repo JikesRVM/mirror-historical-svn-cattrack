@@ -38,7 +38,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'reports/:host_name/:test_run_name.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
 
-  map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index', :conditions => {:method => :get}
+  map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index'
   map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
   map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
   map.connect 'explorer/query/:action/:id', :controller => 'explorer/query'

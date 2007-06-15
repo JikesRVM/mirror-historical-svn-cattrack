@@ -1,22 +1,17 @@
-- @page_title = "Data Explorer"
-%form#report_form{:action => url_for(:action => 'list'), :method => 'post'}
-  %div
-    %h2.page-title Filter Parameters
-    = render(:partial => '/explorer/filter/errors')
-    = render(:partial => '/explorer/filter/fields')
-    %h2 Query Parameters
-    = render(:partial => '/explorer/query/errors')
-    = render(:partial => '/explorer/query/fields')
-    %h2 Presentation
-    %table.search
-      %tr
-        %th Type
-        %td
-          %select{:name => 'presentation'}
-            = options_from_collection_for_select(@presentations, :id, :name, params[:presentation].to_i)
-    %ul.actions
-      %li
-        %button{:type => 'submit'} Search
-    .clearer
-- if @results
-  = render(:partial => @presentation.key)
+- @page_title = "Browse Reports"
+%a{:href => url_for(:action => 'new') } Create New Report
+%table.list
+  %tr
+    %th Name
+    %th Description
+    %th Operations
+  - @reports.each do |h|
+    %tr
+      %td= h(h.name)
+      %td= h(h.description)
+      %td
+        %ul.actions
+          %li
+            %a{:href => url_for(:action => 'edit', :id => h) } Edit
+          %li= link_to('Delete', {:action => 'destroy', :id => h}, {:confirm => "Are you sure you want to delete report named #{h.name}?", :method => :post})
+= render(:partial => '/common/pagination', :locals => {:record_pages => @report_pages})
