@@ -10,29 +10,31 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Explorer::SummarizerController < Explorer::BaseController
+class Explorer::QueryController < Explorer::BaseController
   verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
   verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
 
   def list
-    @summarizer_pages, @summarizers = paginate(:summarizers, :per_page => 10, :order => 'name')
+    @query_pages, @queries = paginate(Olap::Query::Query, :per_page => 10, :order => 'name')
   end
 
   def edit
-    @summarizer = params[:id] ? Summarizer.find(params[:id]) : Summarizer.new
-    @summarizer.attributes = params[:summarizer]
+    @query = params[:id] ? Olap::Query::Query.find(params[:id]) : Olap::Query::Query.new
+    @query.attributes = params[:query]
     if request.post?
-      if @summarizer.save
-        flash[:notice] = "Summarizer named '#{@summarizer.name}' was successfully saved."
+      if @query.save
+        flash[:notice] = "Query named '#{@query.name}' was successfully saved."
         redirect_to(:action => 'list')
+        return
       end
     end
+    @measures = Olap::Query::Measure.find(:all)
   end
 
   def destroy
-    summarizer = Summarizer.find(params[:id])
-    summarizer.destroy
-    flash[:notice] = "Summarizer named '#{summarizer.name}' was successfully deleted."
+    query = Olap::Query::Query.find(params[:id])
+    query.destroy
+    flash[:notice] = "Query named '#{query.name}' was successfully deleted."
     redirect_to(:action => 'list')
   end
 end

@@ -19,23 +19,22 @@ class Explorer::ReportController < Explorer::BaseController
       instance_variable_set("@#{f.key.to_s.pluralize}", value)
     end
     @presentations = Olap::Query::Presentation.find(:all, :order => 'name')
-    data_view = DataView.new
-    data_view.filter = Olap::Query::Filter.new(params[:filter])
-    data_view.filter.name = '*'
-    data_view.filter.description = ''
-    data_view.summarizer = Summarizer.new(params[:summarizer])
-    data_view.summarizer.name = '*'
-    data_view.summarizer.description = ''
+    query = Olap::Query::Query.new
+    query.filter = Olap::Query::Filter.new(params[:filter])
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.name = '*'
+    query.description = ''
 
-    @filter = data_view.filter
-    @summarizer = data_view.summarizer
+    @filter = query.filter
+    @query = query
 
     if request.post?
       @presentation = Olap::Query::Presentation.find(params[:presentation])
       if @presentation and @summarizer.valid? and @filter.valid?
-        @results = data_view.perform_search
-
+        @results = query.perform_search
       end
     end
+    @measures = Olap::Query::Measure.find(:all)
   end
 end

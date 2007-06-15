@@ -66,37 +66,29 @@ class Report::TestRunByRevision
     @test_runs = [@test_run] + @past_test_runs
     valid_test_runs_ids = @test_runs.collect {|tr| tr.id}
 
-    data_view = DataView.new
-    data_view.filter = Olap::Query::Filter.new
-    data_view.filter.name = '*'
-    data_view.filter.description = ''
-    data_view.filter.test_run_source_id = valid_test_runs_ids
-    data_view.summarizer = Summarizer.new
-    data_view.summarizer.name = '*'
-    data_view.summarizer.description = ''
-    data_view.presentation = Olap::Query::Presentation.new
-    data_view.presentation.name = '*'
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'test_run_source_id'
-    data_view.summarizer.function = 'success_rate'
+    query = Olap::Query::Query.new
+    query.filter = Olap::Query::Filter.new
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.filter.test_run_source_id = valid_test_runs_ids
+    query.presentation = Olap::Query::Presentation.find_by_key('success')
+    query.primary_dimension = 'build_configuration_name'
+    query.secondary_dimension = 'test_run_source_id'
+    query.measure = Olap::Query::Measure.find(1)
     #order by occurred_at
-    @build_configuration_name_by_test_run = data_view.perform_search
+    @build_configuration_name_by_test_run = query.perform_search
 
-    data_view = DataView.new
-    data_view.filter = Olap::Query::Filter.new
-    data_view.filter.name = '*'
-    data_view.filter.description = ''
-    data_view.filter.test_run_source_id = valid_test_runs_ids
-    data_view.summarizer = Summarizer.new
-    data_view.summarizer.name = '*'
-    data_view.summarizer.description = ''
-    data_view.presentation = Olap::Query::Presentation.new
-    data_view.presentation.name = '*'
-    data_view.summarizer.primary_dimension = 'test_case_name'
-    data_view.summarizer.secondary_dimension = 'test_run_source_id'
-    data_view.summarizer.function = 'success_rate'
+    query = Olap::Query::Query.new
+    query.filter = Olap::Query::Filter.new
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.filter.test_run_source_id = valid_test_runs_ids
+    query.presentation = Olap::Query::Presentation.find_by_key('success')
+    query.primary_dimension = 'test_case_name'
+    query.secondary_dimension = 'test_run_source_id'
+    query.measure = Olap::Query::Measure.find(1)
     # HAVING success_rate < 0
-    @test_case_name_by_test_run = data_view.perform_search
+    @test_case_name_by_test_run = query.perform_search
 
   end
 

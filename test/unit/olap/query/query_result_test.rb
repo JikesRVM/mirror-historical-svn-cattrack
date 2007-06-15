@@ -10,9 +10,9 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class ReportResultDataTest < Test::Unit::TestCase
+class Olap::Query::QueryResultTest < Test::Unit::TestCase
   def test_basic_operation
     row = Olap::Query::SearchField.new(Olap::BuildConfigurationDimension, :name)
     column = Olap::Query::SearchField.new(Olap::TimeDimension, :da_of_week, :labels => [nil] | Time::RFC2822_DAY_NAME)
@@ -20,7 +20,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '1', 'value' => '1.0' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
     ]
-    d = ReportResultData.new('mysql', row, column, nil, data)
+    d = Olap::Query::QueryResult.new('mysql', row, column, nil, data)
     assert_equal( 'mysql', d.sql )
     assert_equal( ['1', '2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
@@ -36,7 +36,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '1', 'value' => '2.0' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
     ]
-    d = ReportResultData.new('mysql', row, column, nil, data)
+    d = Olap::Query::QueryResult.new('mysql', row, column, nil, data)
     assert_equal( 'mysql', d.sql )
     assert_equal( ['1', '2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
@@ -51,7 +51,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '3', 'value' => '2.2' },
     ]
-    d = ReportResultData.new('mysql', row, column, nil, data)
+    d = Olap::Query::QueryResult.new('mysql', row, column, nil, data)
     assert_equal( 'mysql', d.sql )
     assert_equal( ['1', '2', '3', '4'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
@@ -65,7 +65,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'primary_dimension' => 'prototype', 'secondary_dimension' => '1', 'value1' => '1.0', 'value2' => 'a' },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value1' => '2.1', 'value2' => 'b' },
     ]
-    d = ReportResultData.new('mysql', row, column, nil, data)
+    d = Olap::Query::QueryResult.new('mysql', row, column, nil, data)
     assert_equal( 'mysql', d.sql )
     assert_equal( ['1', '2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )
@@ -79,7 +79,7 @@ class ReportResultDataTest < Test::Unit::TestCase
     {'primary_dimension' => 'prototype', 'secondary_dimension' => nil, 'value' => nil },
     {'primary_dimension' => 'prototype-opt', 'secondary_dimension' => '2', 'value' => '2.1' },
     ]
-    d = ReportResultData.new('mysql', row, column, nil, data)
+    d = Olap::Query::QueryResult.new('mysql', row, column, nil, data)
     assert_equal( 'mysql', d.sql )
     assert_equal( ['2'], d.column_headers )
     assert_equal( ['prototype', 'prototype-opt'], d.row_headers )

@@ -10,61 +10,74 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../../test_helper'
 
-class DataViewTest < Test::Unit::TestCase
+class Olap::Query::QueryTest < Test::Unit::TestCase
   SUCCESS_FUNCTION = "case when time_dimension.day_of_week IS NOT NULL then CAST(count(case when result_dimension.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end"
+
+  def test_label
+    assert_equal( Olap::Query::Query.find(1).name, Olap::Query::Query.find(1).label )
+  end
+
   def test_basic_load
-    data_view = DataView.find(1)
-    assert_equal( 1, data_view.id )
-    assert_equal( 1, data_view.filter_id )
-    assert_equal( 1, data_view.filter.id )
-    assert_equal( 1, data_view.summarizer_id )
-    assert_equal( 1, data_view.summarizer.id )
-    assert_equal( 1, data_view.presentation_id )
-    assert_equal( 1, data_view.presentation.id )
+    summarizer = Olap::Query::Query.find(1)
+    assert_equal( 1, summarizer.id )
+    assert_equal( 'Success Rate by Build Configuration by Day of Week', summarizer.name )
+    assert_equal( '', summarizer.description )
+    assert_equal( 'build_configuration_name', summarizer.primary_dimension )
+    assert_equal( 'time_day_of_week', summarizer.secondary_dimension )
+    assert_equal( 1, summarizer.measure_id )
+    assert_equal( 1, summarizer.measure.id )
+    assert_equal( 1, summarizer.filter_id )
+    assert_equal( 1, summarizer.filter.id )
+    assert_equal( 2, summarizer.presentation_id )
+    assert_equal( 2, summarizer.presentation.id )
   end
 
   def self.attributes_for_new
-    {:filter_id => 1, :summarizer_id => 1, :presentation_id => 1}
+    {:name => 'foo', :description => '', :primary_dimension => 'build_target_name', :secondary_dimension => 'time_day_of_week', :filter_id => 1, :measure_id => 1, :presentation_id => 3}
   end
   def self.non_null_attributes
-    [:filter_id, :summarizer_id, :presentation_id]
+    [:name, :description, :primary_dimension, :secondary_dimension, :filter_id, :measure_id, :presentation_id]
+  end
+  def self.unique_attributes
+    [[:name]]
+  end
+  def self.str_length_attributes
+    [[:name, 120],[:description,256],[:primary_dimension,256],[:secondary_dimension,256]]
   end
 
   perform_basic_model_tests
 
-  def blank_data_view
-    data_view = DataView.new
-    data_view.filter = Olap::Query::Filter.new
-    data_view.filter.name = 'X'
-    data_view.filter.description = ''
-    data_view.summarizer = Summarizer.new
-    data_view.summarizer.name = 'X'
-    data_view.summarizer.description = ''
-    data_view.presentation = Olap::Query::Presentation.new
-    data_view.presentation.name = 'X'
-    data_view
+  def new_query
+    query = Olap::Query::Query.new
+    query.name = '*'
+    query.description = ''
+    query.filter = Olap::Query::Filter.new
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.presentation = Olap::Query::Presentation.new
+    query.presentation.name = '*'
+    query.primary_dimension = 'build_configuration_name'
+    query.secondary_dimension = 'time_day_of_week'
+    query.measure = Olap::Query::Measure.find(1)
+    query
   end
 
-  def check_data_view(data_view)
-    assert_equal(true, data_view.filter.valid?, data_view.filter.errors.to_xml)
-    assert_equal(true, data_view.summarizer.valid?, data_view.summarizer.errors.to_xml)
-    #assert_equal(true, data_view.valid?, data_view.errors.to_xml)
+  def check_query(query)
+    assert_equal(true, query.filter.valid?, query.filter.errors.to_xml)
+    #assert_equal(true, query.valid?, query.errors.to_xml)
   end
 
-  def do_search(data_view)
-    check_data_view(data_view)
-    data_view.perform_search
+  def do_search(query)
+    check_query(query)
+    query.perform_search
   end
 
   def test_sql_with_no_filter
-    data_view = blank_data_view
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+    query = new_query
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -82,13 +95,10 @@ END_SQL
   end
 
   def test_sql_with_non_overlapping_filter
-    data_view = blank_data_view
-    data_view.filter.build_target_arch = 'ia32'
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+    query = new_query
+    query.filter.build_target_arch = 'ia32'
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -107,13 +117,10 @@ END_SQL
   end
 
   def test_sql_with_filter_overlapping_column
-    data_view = blank_data_view
-    data_view.filter.time_week = 2
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+    query = new_query
+    query.filter.time_week = 2
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -131,13 +138,10 @@ END_SQL
   end
 
   def test_sql_with_filter_overlapping_row
-    data_view = blank_data_view
-    data_view.filter.build_configuration_runtime_compiler = 'opt'
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+    query = new_query
+    query.filter.build_configuration_runtime_compiler = 'opt'
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -155,13 +159,10 @@ END_SQL
   end
 
   def test_sql_with_filter_overlapping_column
-    data_view = blank_data_view
-    data_view.filter.time_week = 2
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+    query = new_query
+    query.filter.time_week = 2
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -178,14 +179,11 @@ ORDER BY build_configuration_dimension.name, time_dimension.day_of_week
 END_SQL
   end
 
-  def test_sql_with_filter_overlapping_function
-    data_view = blank_data_view
-    data_view.filter.result_name = 'SUCCESS'
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+  def test_sql_with_filter_overlapping_measure
+    query = new_query
+    query.filter.result_name = 'SUCCESS'
 
-    results = do_search(data_view)
+    results = do_search(query)
 
     assert_equal(<<END_SQL, results.sql)
 SELECT
@@ -202,23 +200,21 @@ ORDER BY build_configuration_dimension.name, time_dimension.day_of_week
 END_SQL
   end
 
-  def test_perform_summarizer
-    data_view = blank_data_view
-    data_view.filter.result_name = 'SUCCESS'
-    data_view.summarizer.primary_dimension = 'build_configuration_name'
-    data_view.summarizer.secondary_dimension = 'time_day_of_week'
-    data_view.summarizer.function = 'success_rate'
+  def test_perform
+    query = new_query
+    query.filter.result_name = 'SUCCESS'
 
-    results = do_search(data_view)
+    results = do_search(query)
     assert_not_nil(results)
     assert_not_nil(results.row)
     assert_not_nil(results.column)
-    assert_not_nil(results.function)
+    assert_not_nil(results.measure)
     assert_not_nil(results.data)
     assert_equal(Olap::BuildConfigurationDimension, results.row.dimension)
     assert_equal(:name, results.row.name)
     assert_equal(Olap::TimeDimension, results.column.dimension)
     assert_equal(:day_of_week, results.column.name)
-    assert_equal([Olap::ResultDimension], results.function.dimensions)
+    assert_equal([Olap::ResultDimension], results.measure.join_dimensions)
   end
+
 end

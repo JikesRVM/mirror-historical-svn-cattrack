@@ -10,11 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class ReportResultData
-  attr_reader :sql, :row, :column, :function, :data, :row_headers, :column_headers
+class Olap::Query::QueryResult
+  attr_reader :sql, :row, :column, :measure, :data, :row_headers, :column_headers
 
-  def initialize(sql, row, column, function, data)
-    @sql, @row, @column, @function, @data = sql, row, column, function, data
+  def initialize(sql, row, column, measure, data)
+    @sql, @row, @column, @measure, @data = sql, row, column, measure, data
     calc_headers
   end
 

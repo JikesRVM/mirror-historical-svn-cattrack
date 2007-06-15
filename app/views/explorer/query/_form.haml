@@ -1,0 +1,27 @@
+%h4 Group By
+%table.search
+  %tr
+    %th Primary Dimension
+    %td{:class => class_for_attribute(@query,:primary_dimension,'')}
+      %select{ :name => 'query[primary_dimension]' }
+        - Olap::Query::Query::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
+          %optgroup{ :label => d.titleize }
+            = options_from_collection_for_select(Olap::Query::Query::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @query.primary_dimension)
+      - if attribute_error?(@query, :primary_dimension)
+        .field_error= @query.errors[:primary_dimension]
+  %tr
+    %th Secondary Dimension
+    %td{:class => class_for_attribute(@query,:secondary_dimension,'')}
+      %select{ :name => 'query[secondary_dimension]' }
+        - Olap::Query::Query::DimensionFields.collect{|d|d.dimension_name}.uniq.each do |d|
+          %optgroup{ :label => d.titleize }
+            = options_from_collection_for_select(Olap::Query::Query::DimensionFields.select{|f|f.dimension_name == d}, :key_name, :label, @query.secondary_dimension)
+      - if attribute_error?(@query, :secondary_dimension)
+        .field_error= @query.errors[:secondary_dimension]
+%h4 Measure
+%table.search
+  %tr
+    %th Measure
+    %td
+      %select{ :name => 'query[measure]' }
+        = options_from_collection_for_select(@measures, :id, :label, @query.measure_id)

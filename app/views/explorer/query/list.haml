@@ -1,0 +1,17 @@
+- @page_title = "Browse Queries"
+%a{:href => url_for(:action => 'edit') } Create New Query
+%table.list
+  %tr
+    %th Name
+    %th Description
+    %th Operations
+  - @queries.each do |h|
+    %tr
+      %td= h(h.name)
+      %td= h(h.description)
+      %td
+        %ul.actions
+          %li
+            %a{:href => url_for(:action => 'edit', :id => h) } Edit
+          %li= link_to('Delete', {:action => 'destroy', :id => h}, {:confirm => "Are you sure you want to delete query named #{h.name}?", :method => :post})
+= render(:partial => '/common/pagination', :locals => {:record_pages => @query_pages})

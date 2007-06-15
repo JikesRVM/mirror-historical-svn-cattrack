@@ -10,8 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-p1:
+s1:
   id: 1
+  name: 'Success Rate by Build Configuration by Day of Week'
+  description: ''
+  primary_dimension: build_configuration_name
+  secondary_dimension: time_day_of_week
+  measure_id: 1
   filter_id: 1
-  summarizer_id: 1
-  presentation_id: 1
+  presentation_id: 2
