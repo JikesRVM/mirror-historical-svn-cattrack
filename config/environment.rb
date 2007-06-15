@@ -107,6 +107,8 @@ OrderedTables = [
 'queries'
 ]
 
+ENV['FIXTURES'] = OrderedTables.join(',')
+
 import_logger = Logger.new("#{File.expand_path(RAILS_ROOT)}/log/importer.log")
 import_logger.level = (RAILS_ENV == 'production') ? Logger::INFO : Logger::DEBUG
 
