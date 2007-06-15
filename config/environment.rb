@@ -105,7 +105,8 @@ OrderedTables = [
 'filters', 'filter_params',
 'presentations',
 'measures', 'measures_presentations',
-'queries'
+'queries',
+'reports',
 ]
 
 ENV['FIXTURES'] = OrderedTables.join(',')
