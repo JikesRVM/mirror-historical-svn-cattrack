@@ -39,7 +39,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     initial = Tdm::TestRun.count
     TestRunImporter.process_incoming_test_runs
     assert_equal(initial, Tdm::TestRun.count)
-    assert_logs([["import.started", ""], ["import.host", "rvmx86lnx64.anu.edu.au"], ["import.completed", ""]])
+    assert_logs([["import.started", ""], ["import.host", "rvmx86lnx64.anu.edu.au"], ["import.completed", ""]], nil, nil)
   end
 
   def test_process_with_non_matching_file
@@ -48,7 +48,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/foo.bar.baz"
     TestRunImporter.process_incoming_test_runs
     assert_equal(initial, Tdm::TestRun.count)
-    assert_logs([["import.started", ""], ["import.host", "rvmx86lnx64.anu.edu.au"], ["import.completed", ""]])
+    assert_logs([["import.started", ""], ["import.host", "rvmx86lnx64.anu.edu.au"], ["import.completed", ""]], nil, nil)
   end
 
   def test_process_a_single_successful_file
@@ -65,7 +65,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     ["import.file.started", filename],
     ["olap.import.test-run", "id=2 (tiny)"],
     ["import.file.success", filename],
-    ["import.completed", ""]])
+    ["import.completed", ""]], nil, nil)
   end
 
   def test_process_a_single_file_that_is_too_large
@@ -81,7 +81,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     ["import.host", "rvmx86lnx64.anu.edu.au"],
     ["import.file.started", filename],
     ["import.file.error", "Failed to process file #{filename} due to Unzipping #{filename} produced too large a file 114381038"],
-    ["import.completed", ""]])
+    ["import.completed", ""]], nil, nil)
   end
 
   def test_process_multiple_files
@@ -102,6 +102,6 @@ class TestRunImporterTest < Test::Unit::TestCase
     ["import.file.started", sfilename],
     ["olap.import.test-run", "id=3 (tiny)"],
     ["import.file.success", sfilename],
-    ["import.completed", ""]])
+    ["import.completed", ""]], nil, nil)
   end
 end

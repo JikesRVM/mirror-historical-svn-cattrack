@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
 
   def setup_audit_log_data
     AuditLog.current_user_id = current_user ? current_user.id : nil
-    AuditLog.current_ip_address = request.env['REMOTE_HOST']
+    AuditLog.current_ip_address = request.remote_ip
   end
 
   # if an error occurs and it is a security error then redirect to access_denied page

@@ -47,7 +47,7 @@ class ApplicationControllerTest < Test::Unit::TestCase
   def test_audit_log_setup
     AuditLog.current_user_id = nil
     AuditLog.current_ip_address = nil
-    @request.env['REMOTE_HOST'] = '1.2.3.4'
+    @request.env['HTTP_CLIENT_IP'] = '1.2.3.4'
     get(:index, {}, {:user_id => 1})
     assert_response(:success)
     assert_flash_count(0)

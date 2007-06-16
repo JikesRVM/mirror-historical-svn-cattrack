@@ -34,7 +34,7 @@ class Test::Unit::TestCase
     AuditLog.destroy_all
   end
 
-  def assert_logs(messages, user_id = nil, ip_address = nil)
+  def assert_logs(messages, user_id = nil, ip_address = '0.0.0.0')
     logs = AuditLog.find(:all, :order => 'created_at')
     assert_equal(messages, logs.collect {|l| [l.name, l.message]})
     logs.each do |l|
