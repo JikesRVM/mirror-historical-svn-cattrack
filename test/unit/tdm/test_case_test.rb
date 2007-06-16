@@ -87,7 +87,7 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     [[:name, 76],[:classname, 76],[:working_directory, 257],[:result, 16],[:result_explanation, 257]]
   end
   def self.bad_attributes
-    [[:result, 'FOO'],[:time, -1],[:name, '.']]
+    [[:result, 'FOO'],[:time, -1],[:name, '*']]
   end
 
   perform_basic_model_tests
