@@ -16,6 +16,7 @@ class CreateAuditLogs < ActiveRecord::Migration
       t.column :name, :string, :limit => 120, :null => false
       t.column :created_at, :timestamp, :null => false
       t.column :user_id, :integer, :null => true
+      t.column :username, :string, :limit => 40, :null => true
       t.column :ip_address, :string, :limit => 24, :null => true
       t.column :message, :text, :null => false
     end
@@ -25,7 +26,8 @@ class CreateAuditLogs < ActiveRecord::Migration
     add_index :audit_logs, [:user_id]
     add_index :audit_logs, [:name, :created_at]
     add_index :audit_logs, [:name, :created_at, :user_id]
-  end
+    add_foreign_key :audit_logs, [:user_id], :users, [:id], :on_delete => :set_null
+   end
 
   def self.down
     drop_table :audit_logs

@@ -15,6 +15,7 @@ al1:
   name: 'user.created'
   created_at: '2005-10-20 00:15:35'
   user_id: 1
+  username: peter
   ip_address: '123.3.2.1'
   message: 'User 23 (Bob) created'
 al2:
@@ -22,6 +23,7 @@ al2:
   name: 'test-run.created'
   created_at: '2005-10-20 00:15:35'
   user_id: 1
+  username: peter
   ip_address:
   message: 'TestRun 33 (core-33) created'
 al3:
@@ -29,5 +31,6 @@ al3:
   name: 'test-run.deleted'
   created_at: '2005-10-20 00:15:36'
   user_id: 1
+  username: peter
   ip_address:
   message: 'TestRun 33 (core-33) deleted'

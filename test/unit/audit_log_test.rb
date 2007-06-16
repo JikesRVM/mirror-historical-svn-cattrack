@@ -14,18 +14,18 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class AuditLogTest < Test::Unit::TestCase
   def test_current_user_and_ip_address_setters
-    AuditLog.current_user_id = nil
+    AuditLog.current_user = nil
     AuditLog.current_ip_address = nil
-    assert_nil( AuditLog.current_user_id )
+    assert_nil( AuditLog.current_user )
     assert_nil( AuditLog.current_ip_address )
-    AuditLog.current_user_id = 1
+    AuditLog.current_user = User.find(1)
     AuditLog.current_ip_address = '1.2.3.4'
-    assert_equal( 1, AuditLog.current_user_id )
+    assert_equal( 1, AuditLog.current_user.id )
     assert_equal( '1.2.3.4', AuditLog.current_ip_address )
   end
 
   def test_log_with_no_currents
-    AuditLog.current_user_id = nil
+    AuditLog.current_user = nil
     AuditLog.current_ip_address = nil
     count = AuditLog.count
     audit_log = AuditLog.log('user.created', 'User 23 (Bob) created')
@@ -38,7 +38,7 @@ class AuditLogTest < Test::Unit::TestCase
   end
 
   def test_log_with_no_message
-    AuditLog.current_user_id = nil
+    AuditLog.current_user = nil
     AuditLog.current_ip_address = nil
     count = AuditLog.count
     audit_log = AuditLog.log('user.created')
@@ -51,7 +51,7 @@ class AuditLogTest < Test::Unit::TestCase
   end
 
   def test_log_with_currents
-    AuditLog.current_user_id = 1
+    AuditLog.current_user = User.find(1)
     AuditLog.current_ip_address = '1.2.3.4'
     count = AuditLog.count
     audit_log = AuditLog.log('user.created', 'User 23 (Bob) created')
@@ -64,7 +64,7 @@ class AuditLogTest < Test::Unit::TestCase
   end
 
   def test_log_with_active_record
-    AuditLog.current_user_id = 1
+    AuditLog.current_user = User.find(1)
     AuditLog.current_ip_address = '1.2.3.4'
     count = AuditLog.count
     audit_log = AuditLog.log('user.created', User.find(1))

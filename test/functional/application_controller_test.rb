@@ -45,13 +45,13 @@ class ApplicationControllerTest < Test::Unit::TestCase
   end
 
   def test_audit_log_setup
-    AuditLog.current_user_id = nil
+    AuditLog.current_user = nil
     AuditLog.current_ip_address = nil
     @request.env['HTTP_CLIENT_IP'] = '1.2.3.4'
     get(:index, {}, {:user_id => 1})
     assert_response(:success)
     assert_flash_count(0)
-    assert_equal( 1, AuditLog.current_user_id )
+    assert_equal( 1, AuditLog.current_user.id )
     assert_equal( '1.2.3.4', AuditLog.current_ip_address )
   end
 

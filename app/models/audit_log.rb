@@ -13,14 +13,15 @@
 class AuditLog < ActiveRecord::Base
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9\.]+$/
   validates_length_of :name, :in => 1..120
+  validates_length_of :username, :in => 1..40, :allow_nil => true
   validates_length_of :ip_address, :in => 0..24, :allow_nil => true
   validates_reference_exists :user_id, User
   belongs_to :user
 
-  cattr_accessor :current_user_id, :current_ip_address
+  cattr_accessor :current_user, :current_ip_address
 
   def self.log(event, message = '')
     message = "id=#{message.id} (#{message.label})" if message.is_a? ActiveRecord::Base
-    AuditLog.create!(:name => event, :message => message, :user_id => current_user_id, :ip_address => current_ip_address)
+    AuditLog.create!(:name => event, :message => message, :user_id => current_user ? current_user.id : nil, :username => current_user ? current_user.username : nil, :ip_address => current_ip_address)
   end
 end

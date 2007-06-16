@@ -109,7 +109,7 @@ class ApplicationController < ActionController::Base
   end
 
   def setup_audit_log_data
-    AuditLog.current_user_id = current_user ? current_user.id : nil
+    AuditLog.current_user = current_user
     AuditLog.current_ip_address = request.remote_ip
   end
 
