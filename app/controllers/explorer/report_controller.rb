@@ -30,6 +30,21 @@ class Explorer::ReportController < Explorer::BaseController
       @presentation = Olap::Query::Presentation.find(params[:presentation])
       if @presentation and query.measure.valid? and query.filter.valid?
         @results = query.perform_search
+        parts = []
+        parts << "measure_name = #{@query.measure.name}"
+        parts << "primary_dimension = #{@query.primary_dimension}"
+        parts << "secondary_dimension = #{@query.secondary_dimension}"
+
+        filter_params = {}
+        query.filter.params.each_pair {|k, v| filter_params[k] = v}
+        filter_params.keys.sort.each do |k|
+          parts << "filter[#{k}] = #{filter_params[k]}"
+        end
+        parts << "presentation_key = #{@presentation.key}"
+
+        parts << "measure_id = #{@query.measure.id}"
+        parts << "presentation_id = #{@presentation.id}"
+        AuditLog.log('report.query', parts.join(', '))
       end
     else
       # Assume get and populate with reasonable defaults

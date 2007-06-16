@@ -34,6 +34,15 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   def test_adhoc
     get(:adhoc, {}, {:user_id => 1})
     assert_normal_response('adhoc', 6 + 15)
+    assert_adhoc_params
+
+    #defaults
+    assert_equal('Success Rate', assigns(:query).measure.name )
+    assert_equal('test_configuration_name', assigns(:query).primary_dimension )
+    assert_equal('revision_revision', assigns(:query).secondary_dimension )
+  end
+
+  def assert_adhoc_params
     assert_dimension_assigns
     assert_assigned(:presentations)
     assert_assigned(:measures)
@@ -43,13 +52,26 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_assigned(:filter)
     assert_assigned(:query)
 
-    assert_equal('Success Rate', assigns(:query).measure.name )
-    assert_equal('test_configuration_name', assigns(:query).primary_dimension )
-    assert_equal('revision_revision', assigns(:query).secondary_dimension )
-
     assert_equal([1, 3, 2], assigns(:presentations).collect {|r| r.id} )
     assert_equal([5, 3, 2, 4, 1], assigns(:measures).collect {|r| r.id} )
     assert_equal([2, 1], assigns(:filters).collect {|r| r.id} )
+  end
+
+  def test_adhoc_post
+    purge_log
+    post(:adhoc, {'presentation' => 1, :query => {:measure_id => 1, :primary_dimension => 'test_configuration_name', :secondary_dimension => 'test_case_name'} }, {:user_id => 1})
+    assert_normal_response('adhoc', 2 + 6 + 15)
+    assert_adhoc_params
+
+    assert_equal(1, assigns(:query).measure.id )
+    assert_equal('test_configuration_name', assigns(:query).primary_dimension )
+    assert_equal('test_case_name', assigns(:query).secondary_dimension )
+
+    assert_assigned(:results)
+    assert_assigned(:presentation)
+    assert_equal(1, assigns(:presentation).id )
+
+    assert_logs([["report.query", "measure_name = Success Rate, primary_dimension = test_configuration_name, secondary_dimension = test_case_name, presentation_key = pivot, measure_id = 1, presentation_id = 1"]], 1)
   end
 
   def assert_dimension_assigns
