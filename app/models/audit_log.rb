@@ -20,6 +20,7 @@ class AuditLog < ActiveRecord::Base
   cattr_accessor :current_user_id, :current_ip_address
 
   def self.log(event, message = '')
+    message = "id=#{message.id} (#{message.label})" if message.is_a? ActiveRecord::Base
     AuditLog.create!(:name => event, :message => message, :user_id => current_user_id, :ip_address => current_ip_address)
   end
 end

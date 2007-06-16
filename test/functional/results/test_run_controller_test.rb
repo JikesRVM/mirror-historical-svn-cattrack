@@ -55,6 +55,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     test_run = Tdm::TestRun.find(id)
     label = test_run.label
     host_name = test_run.host.name
+    purge_log
     delete(:destroy, {:host_name => host_name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
     assert_redirected_to(:controller => 'results/host', :action => 'show', :host_name => host_name)
     assert(!Tdm::TestRun.exists?(id))
@@ -63,5 +64,6 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     assert_equal(true, assigns(:record).frozen?)
     assert_flash_count(1)
     assert_equal("#{label} was successfully deleted.", flash[:notice])
+    assert_logs([["test-run.deleted", 'id=1 (core-1)']], 1)
   end
 end

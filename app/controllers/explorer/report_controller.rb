@@ -61,6 +61,7 @@ class Explorer::ReportController < Explorer::BaseController
       if @report.save
         flash[:notice] = "Report named '#{@report.name}' was successfully created."
         redirect_to(:action => 'list')
+        AuditLog.log('report.created', @report)
         return
       end
     end
@@ -71,6 +72,7 @@ class Explorer::ReportController < Explorer::BaseController
     @report = Olap::Query::Report.find_by_key(params[:key])
     raise CatTrack::SecurityError unless @report
     @results = @report.query.perform_search
+    AuditLog.log('report.show', @report)
   end
 
   def edit
@@ -78,6 +80,7 @@ class Explorer::ReportController < Explorer::BaseController
     @report.attributes = params[:report]
     if request.post?
       if @report.save
+        AuditLog.log('report.updated', @report)
         flash[:notice] = "Report named '#{@report.name}' was successfully saved."
         redirect_to(:action => 'list')
         return
@@ -90,6 +93,7 @@ class Explorer::ReportController < Explorer::BaseController
     report = Olap::Query::Report.find(params[:id])
     report.destroy
     flash[:notice] = "Report named '#{report.name}' was successfully deleted."
+    AuditLog.log('report.deleted', report)
     redirect_to(:action => 'list')
   end
 

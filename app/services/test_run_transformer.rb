@@ -32,6 +32,7 @@ class TestRunTransformer
           end
         end
       end
+      AuditLog.log('olap.import.test-run', tr)
     end
   end
 

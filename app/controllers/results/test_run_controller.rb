@@ -32,6 +32,7 @@ class Results::TestRunController < Results::BaseController
     raise CatTrack::SecurityError unless current_user.admin?
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
+    AuditLog.log('test-run.deleted', @record)
     redirect_to(:controller => '/results/host', :action => 'show', :host_name => host_name)
   end
 end

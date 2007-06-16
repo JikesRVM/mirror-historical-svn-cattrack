@@ -30,6 +30,19 @@ class Test::Unit::TestCase
     end
   end
 
+  def purge_log
+    AuditLog.destroy_all
+  end
+
+  def assert_logs(messages, user_id = nil, ip_address = nil)
+    logs = AuditLog.find(:all, :order => 'created_at')
+    assert_equal(messages, logs.collect {|l| [l.name, l.message]})
+    logs.each do |l|
+      assert_equal(user_id, l.user_id)
+      assert_equal(ip_address, l.ip_address)
+    end
+  end
+
   def assert_parent_node(object, type = nil, id = nil)
     node = object.parent_node
     if type.nil?

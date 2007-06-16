@@ -30,36 +30,42 @@ class Admin::SysinfoControllerTest < Test::Unit::TestCase
   def test_show
     get(:show, {}, {:user_id => 1})
     assert_normal_response('show', 1)
-    assert_assigned(:orhpan_dimensions)    
+    assert_assigned(:orhpan_dimensions)
   end
 
   def test_purge_stale_sessions
     time = Time.at(0)
     CGI::Session::ActiveRecordStore::Session.create!( :sessid => 'abcde', :data => '', :created_on => time, :updated_on => time )
     assert_equal(1, CGI::Session::ActiveRecordStore::Session.count)
+    purge_log
     post(:purge_stale_sessions, {}, {:user_id => 1})
     assert_redirected_to(:action => 'show')
     assert_flash_count(0)
     assert_assigns_count(0)
     assert_equal(0, CGI::Session::ActiveRecordStore::Session.count)
+    assert_logs([["sys.purge_stale_sessions", '']], 1)
   end
 
   def test_purge_historic_result_facts
     assert_equal([1, 2], Olap::ResultFact.find(:all, :order => 'id').collect{|r|r.id})
+    purge_log
     post(:purge_historic_result_facts, {}, {:user_id => 1})
     assert_redirected_to(:action => 'show')
     assert_flash_count(0)
     assert_assigns_count(0)
     assert_equal([1], Olap::ResultFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_logs([["sys.purge_historic_result_facts", '']], 1)
   end
 
   def test_purge_historic_statistic_facts
     assert_equal([1, 2], Olap::StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
+    purge_log
     post(:purge_historic_statistic_facts, {}, {:user_id => 1})
     assert_redirected_to(:action => 'show')
     assert_flash_count(0)
     assert_assigns_count(0)
     assert_equal([1], Olap::StatisticFact.find(:all, :order => 'id').collect{|r|r.id})
+    assert_logs([["sys.purge_historic_statistic_facts", '']], 1)
   end
 
   def test_purge_orphan_dimensions

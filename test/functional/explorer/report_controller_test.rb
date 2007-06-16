@@ -136,6 +136,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   end
 
   def test_new_post
+    purge_log
     post(:new, {:report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1, :key => 'x'}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
@@ -146,6 +147,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_equal(1, assigns(:report).presentation_id)
     assert_equal('x', assigns(:report).key)
     assert_flash(:notice, "Report named 'X' was successfully created.")
+    assert_logs([["report.created", "id=#{assigns(:report).id} (X)"]], 1)
   end
 
   def test_edit_get
@@ -164,6 +166,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   end
 
   def test_edit_post
+    purge_log
     post(:edit, {:id => 1, :report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
@@ -173,9 +176,11 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_equal(1, assigns(:report).query_id)
     assert_equal(1, assigns(:report).presentation_id)
     assert_flash(:notice, "Report named 'X' was successfully saved.")
+    assert_logs([["report.updated", "id=#{assigns(:report).id} (X)"]], 1)
   end
 
   def test_destroy
+    purge_log
     id = 1
     assert(Olap::Query::Report.exists?(id))
     post(:destroy, {:id => id}, session_data)
@@ -184,5 +189,6 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_flash_count(1)
     assert_flash(:notice, "Report named 'Success Rate by Build Configuration by Day of Week Report' was successfully deleted.")
     assert(!Olap::Query::Report.exists?(id))
+    assert_logs([["report.deleted", "id=1 (Success Rate by Build Configuration by Day of Week Report)"]], 1)
   end
 end

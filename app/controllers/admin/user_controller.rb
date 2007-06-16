@@ -30,6 +30,7 @@ class Admin::UserController < Admin::BaseController
     user = User.find(params[:id])
     user.admin = true
     user.save!
+    AuditLog.log('user.enable_admin', user)
     redirect_to(:action => 'show', :id => user)
   end
 
@@ -37,6 +38,7 @@ class Admin::UserController < Admin::BaseController
     user = User.find(params[:id])
     user.admin = false
     user.save!
+    AuditLog.log('user.disable_admin', user)
     redirect_to(:action => 'show', :id => user)
   end
 
@@ -44,6 +46,7 @@ class Admin::UserController < Admin::BaseController
     user = User.find(params[:id])
     user.active = true
     user.save!
+    AuditLog.log('user.activate', user)
     redirect_to(:action => 'show', :id => user)
   end
 
@@ -51,6 +54,7 @@ class Admin::UserController < Admin::BaseController
     user = User.find(params[:id])
     user.active = false
     user.save!
+    AuditLog.log('user.deactivate', user)
     redirect_to(:action => 'show', :id => user)
   end
 
@@ -58,6 +62,7 @@ class Admin::UserController < Admin::BaseController
     user = User.find(params[:id])
     flash[:notice] = "#{user.label} was successfully deleted."
     user.destroy
+    AuditLog.log('user.delete', user)
     redirect_to(:action => 'list')
   end
 end

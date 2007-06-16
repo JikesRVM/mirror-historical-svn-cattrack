@@ -21,6 +21,7 @@ class TestRunImporter
   def self.process_incoming_test_runs
     results_base_dir = SystemSetting['results.dir']
     raise ImportException.new("Missing 'results.dir' system setting") unless results_base_dir
+    AuditLog.log('import.started')
     logger.info("Import starting with results.dir='#{results_base_dir}'")
     incoming_dir = "#{results_base_dir}/incoming"
     processed_dir = "#{results_base_dir}/processed"
@@ -28,9 +29,11 @@ class TestRunImporter
 
     Dir.glob("#{incoming_dir}/*").each do |d|
       host = File.basename(d)
+      AuditLog.log('import.host', host)
       logger.info("Processing host '#{host}' in dir #{d}")
       Dir.glob("#{d}/*.xml.gz").each do |f|
         next unless File.exists?(f)
+        AuditLog.log('import.file.started', f)
         logger.info("Processing file: #{f}")
         intermediate_filename = "#{f}.processing"
         temp_filename = "#{f}.tmp"
@@ -48,10 +51,12 @@ class TestRunImporter
           test_run = TestRunBuilder.create_from(host, temp_filename)
           TestRunTransformer.build_olap_model_from(test_run)
           logger.info("Successfully processed file: #{f}")
+          AuditLog.log('import.file.success', f)
           FileUtils.mkdir_p "#{processed_dir}/#{host}"
           FileUtils.mv(intermediate_filename, "#{processed_dir}/#{host}/#{File.basename(f)}")
         rescue Object => e
           logger.info("Failed to process file: #{f} due to: #{e.message}")
+          AuditLog.log('import.file.error', "Failed to process file #{f} due to #{e.message}")
           FileUtils.mkdir_p "#{failed_dir}/#{host}"
           FileUtils.mv(intermediate_filename, "#{failed_dir}/#{host}/#{File.basename(f)}")
         ensure
@@ -59,5 +64,6 @@ class TestRunImporter
         end
       end
     end
+    AuditLog.log('import.completed')
   end
 end

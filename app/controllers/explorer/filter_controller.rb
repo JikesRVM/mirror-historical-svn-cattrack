@@ -24,6 +24,7 @@ class Explorer::FilterController < Explorer::BaseController
       if @filter.save
         flash[:notice] = "Filter named '#{@filter.name}' was successfully created."
         redirect_to(:action => 'list')
+        AuditLog.log('filter.created', @filter)
         return
       end
     end
@@ -37,6 +38,7 @@ class Explorer::FilterController < Explorer::BaseController
       if @filter.save
         flash[:notice] = "Filter named '#{@filter.name}' was successfully saved."
         redirect_to(:action => 'list')
+        AuditLog.log('filter.updated', @filter)
         return
       end
     end
@@ -47,6 +49,7 @@ class Explorer::FilterController < Explorer::BaseController
     filter = Olap::Query::Filter.find(params[:id])
     filter.destroy
     flash[:notice] = "Filter named '#{filter.name}' was successfully deleted."
+    AuditLog.log('filter.deleted', filter)
     redirect_to(:action => 'list')
   end
 

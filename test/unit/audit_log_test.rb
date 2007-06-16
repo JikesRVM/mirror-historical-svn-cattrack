@@ -63,6 +63,20 @@ class AuditLogTest < Test::Unit::TestCase
     assert_equal( '1.2.3.4', audit_log.ip_address )
   end
 
+  def test_log_with_active_record
+    AuditLog.current_user_id = 1
+    AuditLog.current_ip_address = '1.2.3.4'
+    count = AuditLog.count
+    audit_log = AuditLog.log('user.created', User.find(1))
+    assert_equal( count + 1, AuditLog.count )
+    assert_equal( 'user.created', audit_log.name )
+    assert_equal( 'id=1 (peter)', audit_log.message )
+    assert_not_nil( audit_log.created_at )
+    assert_equal( 1, audit_log.user_id )
+    assert_equal( '1.2.3.4', audit_log.ip_address )
+  end
+
+
   def test_label
     assert_equal( AuditLog.find(1).name, AuditLog.find(1).label )
   end

@@ -24,6 +24,7 @@ class Explorer::QueryController < Explorer::BaseController
       if @query.save
         flash[:notice] = "Query named '#{@query.name}' was successfully created."
         redirect_to(:action => 'list')
+        AuditLog.log('query.created', @query)
         return
       end
     end
@@ -37,6 +38,7 @@ class Explorer::QueryController < Explorer::BaseController
       if @query.save
         flash[:notice] = "Query named '#{@query.name}' was successfully saved."
         redirect_to(:action => 'list')
+        AuditLog.log('query.updated', @query)
         return
       end
     end
@@ -47,6 +49,7 @@ class Explorer::QueryController < Explorer::BaseController
     query = Olap::Query::Query.find(params[:id])
     query.destroy
     flash[:notice] = "Query named '#{query.name}' was successfully deleted."
+    AuditLog.log('query.deleted', query)
     redirect_to(:action => 'list')
   end
 

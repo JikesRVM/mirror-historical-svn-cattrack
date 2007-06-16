@@ -83,6 +83,7 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   end
 
   def test_new_post
+    purge_log
     post(:new, {:filter => {:name => 'X', :description => '', :revision_after => '123'}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
@@ -91,6 +92,7 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
     assert_equal(false, assigns(:filter).new_record?)
     assert_equal('123', assigns(:filter).revision_after)
     assert_flash(:notice, "Filter named 'X' was successfully created.")
+    assert_logs([["filter.created", "id=#{assigns(:filter).id} (X)"]], 1)
   end
 
   def test_edit_get
@@ -110,6 +112,7 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   end
 
   def test_edit_post
+    purge_log
     post(:edit, {:id => 1, :filter => {:name => 'X', :description => '', :revision_after => '123'}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
@@ -118,16 +121,19 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
     assert_equal(1, assigns(:filter).id)
     assert_equal('123', assigns(:filter).revision_after)
     assert_flash(:notice, "Filter named 'X' was successfully saved.")
+    assert_logs([["filter.updated", "id=#{assigns(:filter).id} (X)"]], 1)
   end
 
   def test_destroy
     id = 1
     assert(Olap::Query::Filter.exists?(id))
+    purge_log
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(0)
     assert_flash_count(1)
     assert_flash(:notice, "Filter named 'Last Week' was successfully deleted.")
     assert(!Olap::Query::Filter.exists?(id))
+    assert_logs([["filter.deleted", "id=1 (Last Week)"]], 1)
   end
 end

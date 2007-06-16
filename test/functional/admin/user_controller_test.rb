@@ -65,49 +65,59 @@ class Admin::UserControllerTest < Test::Unit::TestCase
     id = 4
     assert(User.exists?(id))
     label = User.find(id).label
+    purge_log
     post(:destroy, {:id => id}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(0)
     assert_flash_count(1)
     assert(!User.exists?(id))
     assert_flash(:notice, "#{label} was successfully deleted.")
+    assert_logs([["user.delete", "id=4 (morpheus)"]], 1)
   end
 
   def test_enable_admin
     assert(!User.find(2).admin?)
+    purge_log
     post(:enable_admin, {:id => 2}, session_data)
     assert_redirected_to(:action => 'show', :id => 2)
     assert_assigns_count(0)
     assert_flash_count(0)
     assert(User.find(2).admin?)
+    assert_logs([["user.enable_admin", "id=2 (trinity)"]], 1)
   end
 
   def test_disable_admin
     assert(User.find(1).admin?)
+    purge_log
     post(:disable_admin, {:id => 1}, session_data)
     assert_redirected_to(:action => 'show', :id => 1)
     assert_assigns_count(0)
     assert_flash_count(0)
     assert(!User.find(1).admin?)
+    assert_logs([["user.disable_admin", "id=1 (peter)"]], 1)
   end
 
   def test_activate
     id = 4
     assert(!User.find(id).active?)
+    purge_log
     post(:activate, {:id => id}, session_data)
     assert_redirected_to(:action => 'show', :id => id)
     assert_assigns_count(0)
     assert_flash_count(0)
     assert(User.find(id).active?)
+    assert_logs([["user.activate", "id=4 (morpheus)"]], 1)
   end
 
   def test_deactivate
     id = 1
     assert(User.find(id).active?)
+    purge_log
     post(:deactivate, {:id => id}, session_data)
     assert_redirected_to(:action => 'show', :id => id)
     assert_assigns_count(0)
     assert_flash_count(0)
     assert(!User.find(id).active?)
+    assert_logs([["user.deactivate", "id=1 (peter)"]], 1)
   end
 end

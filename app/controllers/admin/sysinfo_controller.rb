@@ -20,16 +20,19 @@ class Admin::SysinfoController < Admin::BaseController
 
   def purge_stale_sessions
     SessionCleaner::remove_stale_sessions
+    AuditLog.log('sys.purge_stale_sessions')
     redirect_to(:action => 'show')
   end
 
   def purge_historic_result_facts
     Olap::ResultFact.destroy_all(['source_id IS NULL'])
+    AuditLog.log('sys.purge_historic_result_facts')
     redirect_to(:action => 'show')
   end
 
   def purge_historic_statistic_facts
     Olap::StatisticFact.destroy_all(['source_id IS NULL'])
+    AuditLog.log('sys.purge_historic_statistic_facts')
     redirect_to(:action => 'show')
   end
 
@@ -40,6 +43,7 @@ class Admin::SysinfoController < Admin::BaseController
       sql << ((d != Olap::ResultDimension) ? "id NOT IN (SELECT DISTINCT #{d.relation_name} FROM statistic_facts)" : '1 = 1')
       d.destroy_all(sql.join(' AND '))
     end
+    AuditLog.log('sys.purge_orphan_dimensions')
     redirect_to(:action => 'show')
   end
 
