@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class Tdm::TestCase < ActiveRecord::Base
-  validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
+  validates_format_of :name, :with => /^[\.\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:group_id]
   validates_presence_of :group_id
