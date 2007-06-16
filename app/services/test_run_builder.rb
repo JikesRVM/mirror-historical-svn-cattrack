@@ -85,7 +85,12 @@ class TestRunBuilder
     xml.elements.each('/report/builds/build') do |b_xml|
       configuration_name = b_xml.elements['configuration'].text
       build_configuration = configs[configuration_name]
-      raise BuilderException.new("Missing build_run named #{configuration_name}. Build most likely failed.") unless build_configuration
+
+      if build_configuration.nil?
+        logger.debug("Missing build_run named #{configuration_name}. Build most likely failed.") unless build_configuration
+        build_configuration = Tdm::BuildConfiguration.new(:name => configuration_name, :test_run_id =>test_run_id)
+      end
+
       build_configuration.time = b_xml.elements['time'].text.to_i
       build_configuration.result = b_xml.elements['result'].text
       build_configuration.output = b_xml.elements['output'].text
@@ -169,7 +174,7 @@ class TestRunBuilder
     begin
       object.save!
     rescue => e
-      puts object.to_xml
+      logger.debug("Error saving object:#{object.to_xml}")
       raise e
     end
   end

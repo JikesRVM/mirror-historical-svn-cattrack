@@ -26,10 +26,10 @@ class Tdm::TestRun < ActiveRecord::Base
 
   TEST_RUN_TO_TESTCASE_SQL = <<-END_SQL
    FROM test_runs
-   LEFT OUTER JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
-   LEFT OUTER JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
-   LEFT OUTER JOIN groups ON groups.test_configuration_id = test_configurations.id
-   LEFT OUTER JOIN test_cases ON test_cases.group_id = groups.id
+   RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
+   RIGHT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
+   RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
+   RIGHT JOIN test_cases ON test_cases.group_id = groups.id
   END_SQL
   TESTCASE_SQL_PREFIX =  "SELECT test_cases.* #{TEST_RUN_TO_TESTCASE_SQL} WHERE test_runs.id = \#{id}"
 

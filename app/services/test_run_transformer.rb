@@ -22,6 +22,9 @@ class TestRunTransformer
 
       time = create_time(test_run.occurred_at)
       test_run.build_configurations.each do |bc|
+        # Do not try and process build_configuration with zero test_configurations
+        # as the build has failed and has invalid set of properties
+        next unless bc.test_configurations.size > 0
         build_configuration = create_build_configuration(bc)
         bc.test_configurations.each do |tc|
           test_configuration = create_test_configuration(tc)
