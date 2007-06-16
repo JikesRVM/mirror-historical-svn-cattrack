@@ -18,8 +18,7 @@ class Explorer::BaseController < ApplicationController
     true
   end
 
-  private
   def menu_name
-    (is_authenticated? and current_user.admin?) ? '/explorer/menu' : nil
+    is_authenticated? ? '/explorer/menu' : nil
   end
 end

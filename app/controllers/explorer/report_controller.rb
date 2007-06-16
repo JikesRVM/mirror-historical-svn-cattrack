@@ -11,8 +11,12 @@
 #  regarding copyright ownership.
 #
 class Explorer::ReportController < Explorer::BaseController
-  verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
+  verify :method => :get, :only => [:public_list, :show, :list], :redirect_to => :access_denied_url
   verify :method => :post, :only => [:destroy], :redirect_to => :access_denied_url
+
+  def public_list
+    list
+  end
 
   def list
     @report_pages, @reports = paginate(Olap::Query::Report, :per_page => 10, :order => 'name')
@@ -28,6 +32,12 @@ class Explorer::ReportController < Explorer::BaseController
       end
     end
     populate_query_values
+  end
+
+  def show
+    @report = Olap::Query::Report.find_by_key(params[:key])
+    raise CatTrack::SecurityError unless @report
+    @results = @report.query.perform_search
   end
 
   def edit
@@ -48,6 +58,15 @@ class Explorer::ReportController < Explorer::BaseController
     report.destroy
     flash[:notice] = "Report named '#{report.name}' was successfully deleted."
     redirect_to(:action => 'list')
+  end
+
+  protected
+  def protect?
+    not ['public_list', 'show'].include?( action_name )
+  end
+
+  def menu_name
+    (is_authenticated? and protect?) ? '/explorer/menu' : nil
   end
 
   private

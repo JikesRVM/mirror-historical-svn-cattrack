@@ -31,6 +31,31 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     {:user_id => 1}
   end
 
+  def test_public_list
+    get(:public_list, {}, session_data)
+    assert_response(:success)
+    assert_normal_response('public_list', 2)
+    assert_assigned(:report_pages)
+    assert_assigned(:reports)
+
+    assert_equal([1], assigns(:reports).collect {|r| r.id} )
+    assert_equal(0, assigns(:report_pages).current.offset)
+    assert_equal(1, assigns(:report_pages).page_count)
+  end
+
+  def test_show_missing_key
+    assert_raises(CatTrack::SecurityError) {get(:show, {:key => 'X'}, session_data)}
+  end
+
+  def test_show
+    get(:show, {:key => 'SRxBNxW'}, session_data)
+    assert_response(:success)
+    assert_normal_response('show', 2)
+    assert_assigned(:report)
+    assert_assigned(:results)
+    assert_equal(1, assigns(:report).id)
+  end
+
   def test_list
     get(:list, {}, session_data)
     assert_response(:success)

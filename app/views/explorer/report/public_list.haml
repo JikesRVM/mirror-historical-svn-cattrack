@@ -1,5 +1,8 @@
 - @page_title = "Browse Reports"
-%a{:href => url_for(:action => 'new') } Create New Report
+%h1.page-title= @page_title 
+%p
+  CatTrack has several saved reports as well as a mechanism for generating ad-hoc reports. Below is a list of global saved reports. A regression reports for a particular test run is also linked form the test run page.
+
 %table.list
   %tr
     %th Name
@@ -13,7 +16,4 @@
         %ul.actions
           %li
             %a{:href => url_for(:action => 'show', :key => h.key) } Show
-          %li
-            %a{:href => url_for(:action => 'edit', :id => h) } Edit
-          %li= link_to('Delete', {:action => 'destroy', :id => h}, {:confirm => "Are you sure you want to delete report named #{h.name}?", :method => :post})
 = render(:partial => '/common/pagination', :locals => {:record_pages => @report_pages})
