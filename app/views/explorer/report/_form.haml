@@ -8,6 +8,12 @@
         - if attribute_error?(@report, :name)
           .field_error= @report.errors[:name]
     %tr
+      %th Key
+      %td{:class => class_for_attribute(@report,:key,'')}
+        %input{ :type => 'text', :name => 'report[key]', :value => @report.key }/
+        - if attribute_error?(@report, :key)
+          .field_error= @report.errors[:key]
+    %tr
       %th Description
       %td{:class => class_for_attribute(@report,:description,'')}
         %textarea{ :name => 'report[description]', :rows => 5 , :cols => 40 }= @report.description
