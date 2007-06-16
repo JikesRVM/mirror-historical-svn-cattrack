@@ -37,6 +37,9 @@ class Olap::Query::PresentationTest < Test::Unit::TestCase
   def self.str_length_attributes
     [[:name, 120], [:key, 20]]
   end
+  def self.bad_attributes
+    [[:key, '*']]
+  end
 
   perform_basic_model_tests
 end

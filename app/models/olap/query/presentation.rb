@@ -13,6 +13,7 @@
 class Olap::Query::Presentation < ActiveRecord::Base
   validates_length_of :key, :in => 1..20
   validates_uniqueness_of :key
+  validates_format_of :key, :with => /^[\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..120
   validates_uniqueness_of :name
 
