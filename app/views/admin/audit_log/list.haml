@@ -1,0 +1,22 @@
+- @page_title = "Browse Audit Log"
+.list_header
+  %form{:method => 'get', :action => url_for(:action => 'list')}
+    %div
+      %input{:type => 'text', :name => 'q', :value => params[:q]}/
+      %button{:type => 'submit'} Search
+      %a{:href => '?q='} Reset
+%table.list
+  %tr
+    %th Name
+    %th Time
+    %th User
+    %th Message
+  - @audit_logs.each do |log|
+    %tr
+      %td= h(log.name)
+      %td= h(log.created_at.strftime('%Y/%m/%d %H:%M'))
+      - user = log.user_id ? log.user.label : ''
+      - ip_address = log.ip_address ? "(#{log.ip_address})" : ''
+      %td= h("#{user} #{ip_address}")
+      %td= h(log.message)
+= render(:partial => '/common/pagination', :locals => {:record_pages => @audit_log_pages})

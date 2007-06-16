@@ -34,6 +34,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'admin/sysinfo/:action', :controller => 'admin/sysinfo'
   map.connect 'admin/user/:action/:id', :controller => 'admin/user'
+  map.connect 'admin/audit_log', :controller => 'admin/audit_log', :action => 'list'
   map.connect 'security/:action/:id', :controller => 'security'
 
   map.connect 'reports/regression/:host_name/:test_run_name.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}

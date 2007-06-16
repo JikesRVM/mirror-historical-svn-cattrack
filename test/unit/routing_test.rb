@@ -26,6 +26,7 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/results/hosts', :controller => 'results/host', :action => 'list')
     assert_routing('/admin', :controller => 'admin/dashboard', :action => 'index')
     assert_routing('/admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show')
+    assert_routing('admin/audit_log', :controller => 'admin/audit_log', :action => 'list')
     assert_routing('/admin/sysinfo/purge_historic_result_facts', :controller => 'admin/sysinfo', :action => 'purge_historic_result_facts')
     assert_routing('/admin/sysinfo/purge_historic_statistic_facts', :controller => 'admin/sysinfo', :action => 'purge_historic_statistic_facts')
     assert_routing('/admin/sysinfo/purge_stale_sessions', :controller => 'admin/sysinfo', :action => 'purge_stale_sessions')
