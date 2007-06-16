@@ -19,4 +19,5 @@
         %button{:type => 'submit'} Search
     .clearer
 - if @results
+  %h1.page-title Results
   = render(:partial => "presentations/#{@presentation.key}")
