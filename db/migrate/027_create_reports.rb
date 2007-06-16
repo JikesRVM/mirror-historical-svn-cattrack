@@ -13,12 +13,14 @@
 class CreateReports < ActiveRecord::Migration
   def self.up
     create_table :reports do |t|
+      t.column :key, :string, :limit => 20, :null => false
       t.column :name, :string, :limit => 120, :null => false
       t.column :description, :string, :limit => 256, :null => false
       t.column :presentation_id, :integer, :null => false
       t.column :query_id, :integer, :null => false
     end
     add_index :reports, [:id], :unique => true
+    add_index :reports, [:key], :unique => true
     add_index :reports, [:name], :unique => true
     add_foreign_key :reports, [:presentation_id], :presentations, [:id], :on_delete => :cascade
     add_foreign_key :reports, [:query_id], :queries, [:id], :on_delete => :cascade

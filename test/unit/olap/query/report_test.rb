@@ -29,16 +29,16 @@ class Olap::Query::ReportTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :description => '', :query_id => 1, :presentation_id => 1}
+    {:name => 'foo', :description => '', :key => 'foo', :query_id => 1, :presentation_id => 1}
   end
   def self.non_null_attributes
-    [:name, :description, :presentation_id, :query_id]
+    [:name, :description, :key, :presentation_id, :query_id]
   end
   def self.unique_attributes
     [[:name]]
   end
   def self.str_length_attributes
-    [[:name, 120], [:description, 256]]
+    [[:name, 120], [:key, 20], [:description, 256]]
   end
   def self.bad_attributes
     [[:presentation_id, -2]]

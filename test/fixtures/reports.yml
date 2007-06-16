@@ -12,6 +12,7 @@
 #
 r1:
   id: 1
+  key: 'SRxBNxW'
   name: 'Success Rate by Build Configuration by Day of Week Report'
   description: ''
   query_id: 1

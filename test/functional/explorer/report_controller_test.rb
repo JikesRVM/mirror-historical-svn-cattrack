@@ -67,7 +67,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   end
 
   def test_new_post
-    post(:new, {:report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1}}, session_data)
+    post(:new, {:report => {:name => 'X', :description => '', :query_id => 1, :presentation_id => 1, :key => 'x'}}, session_data)
     assert_redirected_to(:action => 'list')
     assert_assigns_count(1)
     assert_flash_count(1)
@@ -75,6 +75,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_equal(false, assigns(:report).new_record?)
     assert_equal(1, assigns(:report).query_id)
     assert_equal(1, assigns(:report).presentation_id)
+    assert_equal('x', assigns(:report).key)
     assert_flash(:notice, "Report named 'X' was successfully created.")
   end
 
