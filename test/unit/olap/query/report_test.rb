@@ -41,7 +41,7 @@ class Olap::Query::ReportTest < Test::Unit::TestCase
     [[:name, 120], [:key, 20], [:description, 256]]
   end
   def self.bad_attributes
-    [[:presentation_id, -2]]
+    [[:presentation_id, -2], [:key, '*']]
   end
 
   perform_basic_model_tests
