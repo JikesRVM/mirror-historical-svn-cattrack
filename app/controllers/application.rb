@@ -30,6 +30,9 @@ class ApplicationController < ActionController::Base
   # Add filter for authentication and authorization
   before_filter :check_authorization
 
+  # Add filter to setup audit log
+  before_filter :setup_audit_log_data
+
   # export functions to helpers
   helper_method :current_user, :is_authenticated?
 
@@ -103,6 +106,11 @@ class ApplicationController < ActionController::Base
 
     # call overwriteable reaction to unauthorized access
     access_denied! and return false
+  end
+
+  def setup_audit_log_data
+    AuditLog.current_user_id = current_user ? current_user.id : nil
+    AuditLog.current_ip_address = request.env['REMOTE_HOST']
   end
 
   # if an error occurs and it is a security error then redirect to access_denied page

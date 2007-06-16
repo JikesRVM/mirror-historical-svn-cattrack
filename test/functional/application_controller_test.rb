@@ -30,12 +30,29 @@ class ApplicationControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  self.auto_validate_excludes = [:test_allow_unauthenticated_access]
+  self.auto_validate_excludes = [:test_allow_unauthenticated_access, :test_access_allowed_when_authenticated, :test_audit_log_setup]
 
   def test_allow_unauthenticated_access
     get(:index, {}, {})
     assert_response(:success)
     assert_flash_count(0)
+  end
+
+  def test_access_allowed_when_authenticated
+    get(:index, {}, {:user_id => 1})
+    assert_response(:success)
+    assert_flash_count(0)
+  end
+
+  def test_audit_log_setup
+    AuditLog.current_user_id = nil
+    AuditLog.current_ip_address = nil
+    @request.env['REMOTE_HOST'] = '1.2.3.4'
+    get(:index, {}, {:user_id => 1})
+    assert_response(:success)
+    assert_flash_count(0)
+    assert_equal( 1, AuditLog.current_user_id )
+    assert_equal( '1.2.3.4', AuditLog.current_ip_address )
   end
 
   def test_access_denied_with_authenticated

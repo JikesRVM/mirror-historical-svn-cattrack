@@ -16,4 +16,10 @@ class AuditLog < ActiveRecord::Base
   validates_length_of :ip_address, :in => 0..24, :allow_nil => true
   validates_reference_exists :user_id, User
   belongs_to :user
+
+  cattr_accessor :current_user_id, :current_ip_address
+
+  def self.log(event, message = '')
+    AuditLog.create!(:name => event, :message => message, :user_id => current_user_id, :ip_address => current_ip_address)
+  end
 end
