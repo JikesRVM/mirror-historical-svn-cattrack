@@ -36,7 +36,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'admin/user/:action/:id', :controller => 'admin/user'
   map.connect 'security/:action/:id', :controller => 'security'
 
-  map.connect 'reports/:host_name/:test_run_name.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
+  map.connect 'reports/regression/:host_name/:test_run_name.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
+  map.connect 'reports/analysis', :controller => 'explorer/report', :action => 'public_list', :conditions => {:method => :get}
+  map.connect 'reports/analysis/:key', :controller => 'explorer/report', :action => 'show', :conditions => {:method => :get}
 
   map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index'
   map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'

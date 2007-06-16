@@ -35,7 +35,9 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/security/logout', :controller => 'security', :action => 'logout')
     assert_routing('/', :controller => 'dashboard', :action => 'index')
 
-    assert_routing('/reports/excalibur.watson.ibm.com/core.36', :host_name => 'excalibur.watson.ibm.com', :test_run_name => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
+    assert_routing('/reports/regression/excalibur.watson.ibm.com/core.36', :host_name => 'excalibur.watson.ibm.com', :test_run_name => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
+    assert_routing('/reports/analysis', :controller => 'explorer/report', :action => 'public_list')
+    assert_routing('/reports/analysis/foo', :controller => 'explorer/report', :action => 'show', :key => 'foo')
 
     [:show, :enable_admin, :disable_admin, :activate, :deactivate].each do |action|
       assert_routing("/admin/user/#{action}/1", :controller => 'admin/user', :action => action.to_s, :id => '1')
@@ -47,6 +49,5 @@ class RoutingTest < Test::Unit::TestCase
     # The following untested as they are likely to change in future
     # map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
     # map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
-    # map.connect 'explorer/summarizer/:action/:id', :controller => 'explorer/summarizer'
   end
 end
