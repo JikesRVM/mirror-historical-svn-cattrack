@@ -29,7 +29,9 @@
           %p
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
-            = link_to( 'Browse Hosts', :controller => '/results/host', :action => 'list' )
+            = link_to( 'Hosts', :controller => '/results/host', :action => 'list' )
+            |
+            = link_to('Reports', :controller => '/explorer/report', :action => 'public_list')
             %span#explorer_link
               |
               = link_to( 'Data Explorer', :controller => '/explorer/dashboard', :action => 'index')

@@ -7,4 +7,4 @@
     %tr
       %th.row= h(@results.row.label_for(r))
       - 0.upto(@results.column_headers.size - 1) do |c_index|
-        %td= h(@results.tabular_data[r_index][c_index])
+        = cell(@results.tabular_data[r_index][c_index].to_i)

@@ -11,6 +11,8 @@
 #  regarding copyright ownership.
 #
 module ApplicationHelper
+  include PresentationHelper
+  
   def link_for(object, options = {})
     label = options[:label] || object.label
     action = options[:action] || 'show'

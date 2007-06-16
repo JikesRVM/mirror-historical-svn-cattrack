@@ -1,7 +1,6 @@
-- @page_title = "Browse Reports"
-%h1.page-title= @page_title 
-%p
-  CatTrack has several saved reports as well as a mechanism for generating ad-hoc reports. Below is a list of global saved reports. A regression reports for a particular test run is also linked form the test run page.
+- @page_title = "Reports"
+%h1.page-title= @page_title
+%p= "CatTrack reports on the test results in a number of mechanisms. We have a regression report for every test run, a #{link_to('data explorer', :controller => 'explorer/report', :action => 'adhoc')} and a list of saved reports presented below."
 
 %table.list
   %tr
