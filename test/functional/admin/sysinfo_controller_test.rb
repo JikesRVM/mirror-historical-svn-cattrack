@@ -34,8 +34,11 @@ class Admin::SysinfoControllerTest < Test::Unit::TestCase
   end
 
   def test_purge_stale_sessions
-    time = Time.at(0)
-    CGI::Session::ActiveRecordStore::Session.create!( :sessid => 'abcde', :data => '', :created_on => time, :updated_on => time )
+    # Need to specify sql otherwise rails overides updated_on
+    sql = <<SQL
+    INSERT INTO sessions ("created_on", "updated_on", "sessid", "data") VALUES('1970-01-01 10:00:00.000000', '1970-01-01 10:00:00.000000', 'abcde', '')
+SQL
+    ActiveRecord::Base.connection.execute(sql)
     assert_equal(1, CGI::Session::ActiveRecordStore::Session.count)
     purge_log
     post(:purge_stale_sessions, {}, {:user_id => 1})
