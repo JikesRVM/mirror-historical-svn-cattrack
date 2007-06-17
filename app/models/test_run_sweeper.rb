@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 class TestRunSweeper < ActionController::Caching::Sweeper
-  observe TestRun
+  observe Tdm::TestRun
 
   def after_destroy(data)
     expire_about(data)
