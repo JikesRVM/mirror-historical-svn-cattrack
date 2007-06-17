@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Admin::AuditLogController < ApplicationController
+class Admin::AuditLogController < Admin::BaseController
   verify :method => :get, :only => [:list], :redirect_to => :access_denied_url
 
   def list
