@@ -37,7 +37,7 @@ class Admin::AuditLogControllerTest < Test::Unit::TestCase
     assert_assigned(:audit_logs)
     assert_assigned(:audit_log_pages)
 
-    assert_equal([2, 1, 3], assigns(:audit_logs).collect {|r| r.id} )
+    assert_equal([3, 1, 2], assigns(:audit_logs).collect {|r| r.id} )
     assert_equal(0, assigns(:audit_log_pages).current.offset)
     assert_equal(1, assigns(:audit_log_pages).page_count)
   end

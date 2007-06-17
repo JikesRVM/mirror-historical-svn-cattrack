@@ -15,7 +15,7 @@ class Admin::AuditLogController < ApplicationController
 
   def list
     options = {}
-    options[:order] = 'created_at'
+    options[:order] = 'created_at DESC'
     options[:per_page] = 30
     options[:conditions] = ['name LIKE ?', "%#{params[:q]}%"] if params[:q]
     @audit_log_pages, @audit_logs = paginate(:audit_log, options)
