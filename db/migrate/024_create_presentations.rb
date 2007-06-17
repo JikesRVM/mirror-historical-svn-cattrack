@@ -22,10 +22,6 @@ class CreatePresentations < ActiveRecord::Migration
     add_index :presentations, [:id], :unique => true
     add_index :presentations, [:key], :unique => true
     add_index :presentations, [:name], :unique => true
-
-    Presentation.create!(:name => 'Pivot Table', :key => 'pivot')
-    Presentation.create!(:name => 'Success Rate Table', :key => 'success')
-    Presentation.create!(:name => 'SQL + Raw Data', :key => 'raw')
   end
 
   def self.down
