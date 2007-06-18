@@ -126,12 +126,11 @@ class ApplicationController < ActionController::Base
 
   # As we now allow '.' in the path we need to make sure caching handles this gracefully
   # Usually caching will not add page_cache_extension if '.' present. To get around this
-  # assume that always add extension. WIll need to adjust this policy to skip images if we
-  # ever generate these.
+  # assume that always add extension unless it matches one of types we know we generate.
   def self.page_cache_file(path)
     name = ((path.empty? || path == "/") ? "/index" : URI.unescape(path))
     last_part = name.split('/').last || name
-    name << page_cache_extension # unless (last_part.include? '.' and not last_part =~ /\.\d+$/)
+    name << page_cache_extension unless (last_part.include? '.' and not last_part =~ /\.txt$/)
     return name
   end
 end
