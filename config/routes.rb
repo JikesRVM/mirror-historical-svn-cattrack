@@ -16,8 +16,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/Output.txt', :controller => 'results/test_case', :action => 'show_output', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name', :controller => 'results/test_case', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name', :controller => 'results/group', :action => 'show', :conditions => {:method => :get}
-  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name', :controller => 'results/test_configuration', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/Output.txt', :controller => 'results/build_configuration', :action => 'show_output', :conditions => {:method => :get}
+  map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name/:test_configuration_name', :controller => 'results/test_configuration', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id/:build_configuration_name', :controller => 'results/build_configuration', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_name.:test_run_id', :controller => 'results/test_run', :action => 'destroy', :conditions => {:method => :delete}
