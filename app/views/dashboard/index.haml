@@ -18,5 +18,5 @@
       %td= t.success_rate
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show Summary", :action => 'show_summary')
+          %li= link_for(t, :label => "Show", :action => 'show')
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
