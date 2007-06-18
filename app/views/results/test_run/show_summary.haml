@@ -19,6 +19,7 @@
   %h3 Unsuccessful Tests
   %table.list
     %tr
+      %th Build Configuration
       %th Test Configuration
       %th Group
       %th Test
@@ -27,6 +28,7 @@
       %th Operations
     - @record.non_successes.each do |t|
       %tr
+        %td= link_for(t.group.test_configuration.build_configuration)
         %td= link_for(t.group.test_configuration)
         %td= link_for(t.group)
         %td= h(t.name)
