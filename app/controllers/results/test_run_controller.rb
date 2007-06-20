@@ -14,7 +14,6 @@ class Results::TestRunController < Results::BaseController
   verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
   verify :method => :delete, :only => [:destroy], :redirect_to => :access_denied_url
   caches_page :show, :show_summary
-  cache_sweeper :test_run_sweeper, :only => [:destroy]
   session :off, :except => [:destroy]
 
   def show
@@ -32,6 +31,12 @@ class Results::TestRunController < Results::BaseController
     raise CatTrack::SecurityError unless current_user.admin?
     flash[:notice] = "#{@record.label} was successfully deleted."
     @record.destroy
+
+    base_url = url_for(params.merge(:action => 'show', :only_path => true))
+    path = File.expand_path("#{RAILS_ROOT}/public/#{base_url}")
+    FileUtils.rm_rf path
+    FileUtils.rm_rf "#{path}.html"
+
     AuditLog.log('test-run.deleted', @record)
     redirect_to(:controller => '/results/host', :action => 'show', :host_name => host_name)
   end
