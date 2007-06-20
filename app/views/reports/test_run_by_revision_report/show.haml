@@ -137,15 +137,16 @@
       - 0.upto(results.column_headers.size - 1) do |c_index|
         = cell(results.tabular_data[r_index][c_index].to_i)
 
-%h2 Test Case By Test Run
-%table.report
-  %tr
-    %th.pivot
-    - @report.tcn_by_tr_headers.each_with_index do |c, i|
-      - next if i == 0
-      %th.column= c
-  - @report.tcn_by_tr.each_with_index do |r,r_index|
+- if @report.tcn_by_tr.size > 0
+  %h2 Test Case By Test Run
+  %table.report
     %tr
-      %th.row= h(r[0])
-      - 1.upto(r.size - 2) do |c_index|
-        = cell(r[c_index].to_i)
+      %th.pivot
+      - @report.tcn_by_tr_headers.each_with_index do |c, i|
+        - next if i == 0
+        %th.column= c
+    - @report.tcn_by_tr.each_with_index do |r,r_index|
+      %tr
+        %th.row= h(r[0])
+        - 1.upto(r.size - 2) do |c_index|
+          = cell(r[c_index].to_i)
