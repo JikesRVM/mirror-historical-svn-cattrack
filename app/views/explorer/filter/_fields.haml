@@ -11,17 +11,6 @@
             = options_for_select(values, value)
 
   = dimension_footer(d)
-= dimension_header(Olap::TestCaseDimension)
-%table.search{:id => dimension_block_name(Olap::TestCaseDimension)}
-  %tr
-    %th Name
-    %td
-      %input{ :type => 'text', :name => 'filter[test_case_name]', :value => @filter.test_case_name }/
-  %tr
-    %th Group
-    %td
-      %input{ :type => 'text', :name => 'filter[test_case_group]', :value => @filter.test_case_group }/
-= dimension_footer(Olap::TestCaseDimension)
 = dimension_header(Olap::RevisionDimension)
 %table.search{:id => dimension_block_name(Olap::RevisionDimension)}
   %tr

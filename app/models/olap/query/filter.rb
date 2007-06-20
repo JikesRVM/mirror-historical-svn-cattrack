@@ -52,12 +52,12 @@ class Olap::Query::Filter < ActiveRecord::Base
   SearchField.new(Olap::TestConfigurationDimension, :mode),
 
   SearchField.new(Olap::ResultDimension, :name),
+
+  SearchField.new(Olap::TestCaseDimension, :name, :type => :string),
+  SearchField.new(Olap::TestCaseDimension, :group, :type => :string),
   ].freeze
 
   Fields = AutoFields | [
-  SearchField.new(Olap::TestCaseDimension, :name, :type => :string),
-  SearchField.new(Olap::TestCaseDimension, :group, :type => :string),
-
   SearchField.new(Olap::RevisionDimension, :before, :type => :integer, :synthetic => true),
   SearchField.new(Olap::RevisionDimension, :after, :type => :integer, :synthetic => true),
   SearchField.new(Olap::RevisionDimension, :revision, :type => :integer),
