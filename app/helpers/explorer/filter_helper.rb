@@ -25,7 +25,7 @@ module Explorer::FilterHelper
 
   def dimension_header(dimension)
     name = dimension_name(dimension)
-    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility\" onclick=\"#{dimension_to_javascript(dimension)}; return false;\">#{name.humanize}</a>"
+    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{dimension_to_javascript(dimension)}; return false;\">#{name.humanize}</a>"
   end
 
   def dimension_footer(dimension)
