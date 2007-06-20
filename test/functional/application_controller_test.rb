@@ -40,12 +40,17 @@ class ApplicationControllerTest < Test::Unit::TestCase
     get(:index, {}, {})
     assert_response(:success)
     assert_flash_count(0)
+    assert_equal( false, @controller.send(:is_authenticated?) )
+    assert_nil( @controller.send(:current_user) )
   end
 
   def test_access_allowed_when_authenticated
     get(:index, {}, {:user_id => 1})
     assert_response(:success)
     assert_flash_count(0)
+    assert_equal( true, @controller.send(:is_authenticated?) )
+    assert_not_nil( @controller.send(:current_user) )
+    assert_equal( 1, @controller.send(:current_user).id )
   end
 
   def test_audit_log_setup
