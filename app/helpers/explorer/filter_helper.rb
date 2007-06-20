@@ -19,9 +19,13 @@ module Explorer::FilterHelper
     "#{dimension_name(dimension)}_table"
   end
 
+  def dimension_to_javascript(dimension)
+    "Element.toggle('#{dimension_block_name(dimension)}'); Element.toggleClassName('#{dimension_name(dimension)}_toggle','open')"
+  end
+
   def dimension_header(dimension)
     name = dimension_name(dimension)
-    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility\" onclick=\"Element.toggle('#{dimension_block_name(dimension)}'); Element.toggleClassName('#{name}_toggle','open'); return false;\">#{name.humanize}</a>"
+    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility\" onclick=\"#{dimension_to_javascript(dimension)}; return false;\">#{name.humanize}</a>"
   end
 
   def dimension_footer(dimension)
@@ -29,8 +33,7 @@ module Explorer::FilterHelper
     Olap::Query::Filter::Fields.each do |f|
       show = true if ((f.dimension == dimension) and not Olap::Query::Filter.is_empty?(@filter, f.key))
     end
-
-    show ? '' : "<script type=\"text/javascript\">Element.hide('#{dimension_block_name(dimension)}')</script>"
+    show ? '' : "<script type=\"text/javascript\">#{dimension_to_javascript(dimension)}</script>"
   end
 
   def fk_select(key, options = {})
