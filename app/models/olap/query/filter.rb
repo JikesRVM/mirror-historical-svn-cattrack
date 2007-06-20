@@ -37,19 +37,19 @@ class Olap::Query::Filter < ActiveRecord::Base
   SearchField.new(Olap::TestRunDimension, :name),
 
   SearchField.new(Olap::BuildTargetDimension, :name),
-  SearchField.new(Olap::BuildTargetDimension, :arch, :size => 3),
-  SearchField.new(Olap::BuildTargetDimension, :address_size, :size => 3),
+  SearchField.new(Olap::BuildTargetDimension, :arch),
+  SearchField.new(Olap::BuildTargetDimension, :address_size),
   SearchField.new(Olap::BuildTargetDimension, :operating_system),
 
   SearchField.new(Olap::BuildConfigurationDimension, :name),
-  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_compiler, :size => 3),
-  SearchField.new(Olap::BuildConfigurationDimension, :runtime_compiler, :size => 3),
+  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_compiler),
+  SearchField.new(Olap::BuildConfigurationDimension, :runtime_compiler),
   SearchField.new(Olap::BuildConfigurationDimension, :mmtk_plan),
   SearchField.new(Olap::BuildConfigurationDimension, :assertion_level),
-  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_class_inclusion_policy, :size => 3),
+  SearchField.new(Olap::BuildConfigurationDimension, :bootimage_class_inclusion_policy),
 
   SearchField.new(Olap::TestConfigurationDimension, :name),
-  SearchField.new(Olap::TestConfigurationDimension, :mode, :size => 3),
+  SearchField.new(Olap::TestConfigurationDimension, :mode),
 
   SearchField.new(Olap::ResultDimension, :name),
   ].freeze

@@ -36,16 +36,16 @@
 %table.search{:id => dimension_block_name(Olap::TimeDimension)}
   %tr
     %th Year
-    %td= fk_select(:time_year, :multiple => true, :any => true, :size => 4, :values => ['2006','2007','2008'])
+    %td= fk_select(:time_year, :values => ['2006','2007','2008'])
   %tr
     %th Month
-    %td= fk_select(:time_month, :multiple => true, :any => true, :size => 4, :values => (1..12).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_MONTH_NAME)
+    %td= fk_select(:time_month, :values => (1..12).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_MONTH_NAME)
   %tr
     %th Week
-    %td= fk_select(:time_week, :multiple => true, :any => true, :size => 4, :values => (0..53).collect{|v|v} )
+    %td= fk_select(:time_week, :values => (0..53).collect{|v|v} )
   %tr
     %th Day Of Week
-    %td= fk_select(:time_day_of_week, :multiple => true, :any => true, :size => 4, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
+    %td= fk_select(:time_day_of_week, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
   %tr
     %th In Range
     %td{:class => class_for_attribute(@filter,:time_to,class_for_attribute(@filter,:time_from,''))}

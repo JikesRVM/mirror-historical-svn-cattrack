@@ -36,43 +36,7 @@ module Explorer::FilterHelper
   def fk_select(key, options = {})
     name = options[:name] ? options[:name] : 'filter'
     object = instance_variable_get("@#{name}")
-
-    selected = Olap::Query::Filter.is_empty?(object, key) ? ' selected="true"' : ''
-    is_multiple = (options[:multiple] and (options[:multiple] == true)) or (options[:multiple].nil? and options[:size])
-    multiple = is_multiple ? " multiple=\"multiple\"" : ''
-    name_suffix = is_multiple ? '[]' : ''
-    size = options[:size] ? " size=\"#{options[:size]}\"" : ''
-    str = "<select id=\"#{name}_#{key}\"#{multiple}#{size} name=\"#{name}[#{key}]#{name_suffix}\">"
-    if options[:any]
-      description = (options[:any] == true) ? 'Any' : options[:any]
-      str << draw_option('', Olap::Query::Filter.is_empty?(object, key), description)
-    end
     values = options[:values] ? options[:values] : instance_variable_get("@#{key.to_s.pluralize}")
-    values.each do |v|
-      id = label = v
-      if v.respond_to? :label
-        id = v.id
-        label = v.label
-      elsif options[:labels]
-        label = options[:labels][v]
-      end
-      str << draw_option(id, is_defined?(object, key, id), label)
-    end
-    str << '</select>'
-    str
-  end
-
-  def draw_option(key, selected, label)
-    selected_str = selected ? ' selected="selected"' : ''
-    "<option value=\"#{key}\"#{selected_str}>#{label}</option>"
-  end
-
-  def is_defined?(object, field_symbol, value)
-    v = object.send(field_symbol)
-    if v.instance_of?( Array )
-      return v.include?(value.to_s)
-    else
-      return v == value.to_s
-    end
+    "<select multiple=\"multiple\" size=\"4\" name=\"#{name}[#{key}][]\">#{options_for_select(values, object.send(key))}</select>"
   end
 end

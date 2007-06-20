@@ -19,7 +19,7 @@ class Olap::Query::SearchField
     @dimension_name = dimension.short_name.classify
     @key = "#{dimension.short_name}_#{name}".to_sym
     @key_name = @key.to_s
-    @options = {:any => true, :size => 4, :multiple => true}
+    @options = {}
     @options.merge!(options)
     @label = "#{dimension.short_name.humanize} #{@name.to_s.humanize}"
   end
