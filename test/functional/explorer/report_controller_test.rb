@@ -33,7 +33,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
 
   def test_adhoc
     get(:adhoc, {}, {:user_id => 1})
-    assert_normal_response('adhoc', 6 + 15)
+    assert_normal_response('adhoc', 6 + 17)
     assert_adhoc_params
 
     #defaults
@@ -60,7 +60,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   def test_adhoc_post
     purge_log
     post(:adhoc, {'presentation' => 1, :query => {:measure_id => 1, :primary_dimension => 'test_configuration_name', :secondary_dimension => 'test_case_name'} }, {:user_id => 1})
-    assert_normal_response('adhoc', 2 + 6 + 15)
+    assert_normal_response('adhoc', 2 + 6 + 17)
     assert_adhoc_params
 
     assert_equal(1, assigns(:query).measure.id )
@@ -90,7 +90,9 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     [:build_target_operating_systems, ["Linux"]],
     [:build_configuration_assertion_levels, ["normal"]],
     [:result_names, ["EXCLUDED", "FAILURE", "OVERTIME", "SUCCESS"]],
-    [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]]
+    [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]],
+    [:test_case_groups, ["basic"]],
+    [:test_case_names, ["ImageSizes", "TestSuspend"]]
     ].each do |v|
       assert_assigned(v[0])
       assert_equal(v[1], assigns(v[0]), "Values for assign #{v[0]}")

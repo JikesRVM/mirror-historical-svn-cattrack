@@ -60,7 +60,9 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
     [:build_target_operating_systems, ["Linux"]],
     [:build_configuration_assertion_levels, ["normal"]],
     [:result_names, ["EXCLUDED", "FAILURE", "OVERTIME", "SUCCESS"]],
-    [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]]
+    [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]],
+    [:test_case_groups, ["basic"]],
+    [:test_case_names, ["ImageSizes", "TestSuspend"]]
     ].each do |v|
       assert_assigned(v[0])
       assert_equal(v[1], assigns(v[0]), "Values for assign #{v[0]}")
@@ -69,14 +71,14 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
 
   def test_new_get
     get(:new, {}, session_data)
-    assert_normal_response('new', 1 + 15)
+    assert_normal_response('new', 1 + 17)
     assert_standard_edit_assigns
     assert_new_record(:filter)
   end
 
   def test_new_post_with_error
     post(:new, {:filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_normal_response('new', 1 + 15)
+    assert_normal_response('new', 1 + 17)
     assert_standard_edit_assigns
     assert_new_record(:filter)
     assert_error_on(:filter, :name)
@@ -98,14 +100,14 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   def test_edit_get
     get(:edit, {:id => 1}, session_data)
     assert_response(:success)
-    assert_normal_response('edit', 1 + 15)
+    assert_normal_response('edit', 1 + 17)
     assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
   end
 
   def test_edit_post_with_error
     post(:edit, {:id => 1, :filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_normal_response('edit', 1 + 15)
+    assert_normal_response('edit', 1 + 17)
     assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
     assert_error_on(:filter, :name)
