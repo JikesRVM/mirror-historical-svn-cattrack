@@ -4,7 +4,12 @@
     - Olap::Query::Filter::AutoFields.select{|f| f.dimension == d}.each do |f|
       %tr
         %th= f.name.to_s.humanize
-        %td= fk_select(f.key, f.options)
+        %td
+          %select{ :name => "filter[#{f.key}][]", :multiple => 'multiple', :size => 4 }
+            - value = @filter.send(f.key)
+            - values = instance_variable_get("@#{f.key.to_s.pluralize}")
+            = options_for_select(values, value)
+
   = dimension_footer(d)
 = dimension_header(Olap::TestCaseDimension)
 %table.search{:id => dimension_block_name(Olap::TestCaseDimension)}
@@ -36,16 +41,28 @@
 %table.search{:id => dimension_block_name(Olap::TimeDimension)}
   %tr
     %th Year
-    %td= fk_select(:time_year, :values => ['2006','2007','2008'])
+    %td
+      %select{ :name => 'filter[time_year][]', :multiple => 'multiple', :size => 4 }
+        = options_for_select(['2007','2008'], @filter.time_year)
   %tr
     %th Month
-    %td= fk_select(:time_month, :values => (1..12).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_MONTH_NAME)
+    %td
+      %select{ :name => 'filter[time_month][]', :multiple => 'multiple', :size => 4 }
+        - months = []
+        - Time::RFC2822_MONTH_NAME.each_with_index {|m,i| months << [m, (i + 1).to_s] }
+        = options_for_select(months, @filter.time_month)
   %tr
     %th Week
-    %td= fk_select(:time_week, :values => (0..53).collect{|v|v} )
+    %td
+      %select{ :name => 'filter[time_week][]', :multiple => 'multiple', :size => 4 }
+        = options_for_select((0..53).collect{|v|v.to_s}, @filter.time_week)
   %tr
     %th Day Of Week
-    %td= fk_select(:time_day_of_week, :values => (1..7).collect{|v|v}, :labels => [ '' ] | Time::RFC2822_DAY_NAME)
+    %td
+      %select{ :name => 'filter[time_day_of_week][]', :multiple => 'multiple', :size => 4 }
+        - days = []
+        - Time::RFC2822_DAY_NAME.each_with_index {|d,i| days << [d, (i + 1).to_s] }
+        = options_for_select(days, @filter.time_day_of_week)
   %tr
     %th In Range
     %td{:class => class_for_attribute(@filter,:time_to,class_for_attribute(@filter,:time_from,''))}

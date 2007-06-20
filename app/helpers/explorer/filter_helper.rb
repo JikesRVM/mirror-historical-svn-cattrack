@@ -11,21 +11,16 @@
 #  regarding copyright ownership.
 #
 module Explorer::FilterHelper
-  def dimension_name(dimension)
-    dimension.table_name
-  end
-
   def dimension_block_name(dimension)
-    "#{dimension_name(dimension)}_table"
+    "#{dimension.table_name}_table"
   end
 
-  def dimension_to_javascript(dimension)
-    "Element.toggle('#{dimension_block_name(dimension)}'); Element.toggleClassName('#{dimension_name(dimension)}_toggle','open')"
+  def hide_dimension_javascript(dimension)
+    "Element.toggle('#{dimension_block_name(dimension)}'); Element.toggleClassName('#{dimension.table_name}_toggle','open')"
   end
 
   def dimension_header(dimension)
-    name = dimension_name(dimension)
-    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{dimension_to_javascript(dimension)}; return false;\">#{name.humanize}</a>"
+    "<a href=\"#\" id=\"#{dimension.table_name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_dimension_javascript(dimension)}; return false;\">#{dimension.table_name.humanize}</a>"
   end
 
   def dimension_footer(dimension)
@@ -33,13 +28,6 @@ module Explorer::FilterHelper
     Olap::Query::Filter::Fields.each do |f|
       show = true if ((f.dimension == dimension) and not Olap::Query::Filter.is_empty?(@filter, f.key))
     end
-    show ? '' : "<script type=\"text/javascript\">#{dimension_to_javascript(dimension)}</script>"
-  end
-
-  def fk_select(key, options = {})
-    name = options[:name] ? options[:name] : 'filter'
-    object = instance_variable_get("@#{name}")
-    values = options[:values] ? options[:values] : instance_variable_get("@#{key.to_s.pluralize}")
-    "<select multiple=\"multiple\" size=\"4\" name=\"#{name}[#{key}][]\">#{options_for_select(values, object.send(key))}</select>"
+    show ? '' : "<script type=\"text/javascript\">#{hide_dimension_javascript(dimension)}</script>"
   end
 end
