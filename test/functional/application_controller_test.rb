@@ -21,6 +21,10 @@ class ApplicationController
   def raise_error
     raise CatTrack::SecurityError
   end
+
+  def self.pcf(path)
+    page_cache_file(path)
+  end
 end
 
 class ApplicationControllerTest < Test::Unit::TestCase
@@ -63,5 +67,12 @@ class ApplicationControllerTest < Test::Unit::TestCase
   def test_access_denied_with_unauthenticated
     get(:raise_error, {}, {})
     assert_normal_response('login_required', 0, 0, 403)
+  end
+
+
+  def test_page_cache_file
+    assert_equal('/index.html', ApplicationController.pcf('/'))
+    assert_equal('/results/excalibur.watson.ibm.com/core.36/production/Measure_Compilation_Opt_0/SPECjvm98/_200.check/Output.txt', ApplicationController.pcf('/results/excalibur.watson.ibm.com/core.36/production/Measure_Compilation_Opt_0/SPECjvm98/_200.check/Output.txt'))
+    assert_equal('/results/excalibur.watson.ibm.com/core.36/production/Measure_Compilation_Opt_0/SPECjvm98/_200.check.html', ApplicationController.pcf('/results/excalibur.watson.ibm.com/core.36/production/Measure_Compilation_Opt_0/SPECjvm98/_200.check'))
   end
 end
