@@ -11,11 +11,6 @@
 #  regarding copyright ownership.
 #
 module PresentationHelper
-  def test_run_column_header(value,test_runs)
-    test_run = test_runs.detect {|tr| tr.id.to_s == value.to_s}
-    "<th class=\"column\">#{test_run.label}</th>"
-  end
-
   def cell(value)
     "<td style=\"#{cell_style(value)}\">#{value}%</td>"
   end

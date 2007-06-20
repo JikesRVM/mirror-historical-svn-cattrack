@@ -130,7 +130,9 @@
   %tr
     %th.pivot
     - results.column_headers.each do |c|
-      = test_run_column_header(c,@report.test_runs)
+      %th.column
+        - test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s}
+        = test_run.label
   - results.row_headers.each_with_index do |r,r_index|
     %tr
       %th.row= h(results.row.label_for(r))

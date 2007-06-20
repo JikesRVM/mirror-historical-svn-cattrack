@@ -25,8 +25,4 @@ class PresentationHelperTest < Test::Unit::TestCase
     assert_equal('<td style="background-color: rgb(0,127,0);">35%</td>', MyClass.new.cell(35))
     assert_equal('<td style="background-color: rgb(255,0,0);">0%</td>', MyClass.new.cell(0))
   end
-
-  def test_column_header
-    assert_equal("<th class=\"column\">core-1</th>", MyClass.new.test_run_column_header('1',Tdm::TestRun.find(:all, :conditions => 'id = 1')))
-  end
 end
