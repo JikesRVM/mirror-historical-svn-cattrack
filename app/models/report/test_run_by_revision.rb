@@ -15,7 +15,7 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :test_case_name_by_test_run
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr
 
   def initialize(test_run, window_size = 6)
     @test_run = test_run
@@ -77,6 +77,12 @@ class Report::TestRunByRevision
     #order by occurred_at
     @build_configuration_name_by_test_run = query.perform_search
 
+    perform_test_case_name_by_test_run(valid_test_runs_ids)
+  end
+
+  private
+
+  def perform_test_case_name_by_test_run(valid_test_runs_ids)
     query = Olap::Query::Query.new
     query.filter = Olap::Query::Filter.new
     query.filter.name = '*'
@@ -85,12 +91,33 @@ class Report::TestRunByRevision
     query.primary_dimension = 'test_case_name'
     query.secondary_dimension = 'test_run_source_id'
     query.measure = Olap::Query::Measure.find(1)
-    # HAVING success_rate < 0
+
     @test_case_name_by_test_run = query.perform_search
 
-  end
+    column_count = @test_case_name_by_test_run.column_headers.size
+    @tcn_by_tr = []
+    @test_case_name_by_test_run.tabular_data.each_with_index do |row, i|
+      @tcn_by_tr[i] = []
+      @tcn_by_tr[i][column_count + 1] = row.inject(0.0) {| memo, value | memo + value.to_f }.to_i
+      row.each_with_index do |value, j|
+        @tcn_by_tr[i][1 + j] = value
+      end
+      @tcn_by_tr[i][0] = @test_case_name_by_test_run.row_headers[i]
+    end
 
-  private
+    column_count = @test_case_name_by_test_run.column_headers.size
+    max_value = @test_case_name_by_test_run.column_headers.size * 100
+    @tcn_by_tr = @tcn_by_tr.reject{|row| row[column_count + 1] == max_value}
+    @tcn_by_tr = @tcn_by_tr.sort_by{|row| row[column_count + 1]}
+    @tcn_by_tr_headers = []
+
+    @tcn_by_tr_headers[0] = nil
+    @test_case_name_by_test_run.column_headers.each_with_index do |c, i|
+      test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
+      raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
+      @tcn_by_tr_headers[i + 1] = test_run.label
+    end
+  end
 
   def count(test_run_ids, build_configuration_name, test_configuration_name, group_name, test_case_name)
     options = {}
