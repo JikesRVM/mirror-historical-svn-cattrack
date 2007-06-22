@@ -22,6 +22,11 @@
 %table.search
   %tr
     %th Measure
-    %td
+    %td{:class => class_for_attribute(@query,:measure_id,'')}
       %select{ :name => 'query[measure_id]' }
-        = options_from_collection_for_select(@measures, :id, :label, @query.measure_id)
+        %optgroup{ :label => 'Result Measures' }
+          = options_from_collection_for_select(@measures.select{|m|m.result_measure?}, :id, :label, @query.measure_id)
+        %optgroup{ :label => 'Statistic Measures' }
+          = options_from_collection_for_select(@measures.select{|m|not m.result_measure?}, :id, :label, @query.measure_id)
+      - if attribute_error?(@query, :measure_id)
+        .field_error= @query.errors[:measure_id]

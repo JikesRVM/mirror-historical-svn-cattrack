@@ -14,6 +14,7 @@ class Olap::Query::Filter < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_length_of :description, :in => 0..256
   validates_uniqueness_of :name
+  validates_inclusion_of :query_type, :in => ['result', 'statistic']
 
   has_params :params
 
@@ -53,8 +54,10 @@ class Olap::Query::Filter < ActiveRecord::Base
 
   SearchField.new(Olap::ResultDimension, :name),
 
-  SearchField.new(Olap::TestCaseDimension, :name, :type => :string),
-  SearchField.new(Olap::TestCaseDimension, :group, :type => :string),
+  SearchField.new(Olap::TestCaseDimension, :name),
+  SearchField.new(Olap::TestCaseDimension, :group),
+
+  SearchField.new(Olap::StatisticDimension, :name),
   ].freeze
 
   Fields = AutoFields | [
@@ -111,6 +114,18 @@ class Olap::Query::Filter < ActiveRecord::Base
     ( value.instance_of?( Array ) && ( (value.size == 1 and value[0].blank? ) || (value.size == 0)) )
   end
 
+  def query_type
+    params['query_type'] || 'result'
+  end
+
+  def query_type=(value)
+    params['query_type'] = value
+  end
+
+  def statistic_query?
+    query_type == 'statistic'
+  end
+
   protected
 
   def self.filter_criteria(search)
@@ -118,9 +133,11 @@ class Olap::Query::Filter < ActiveRecord::Base
     cond_params = {}
     joins = []
 
-    AutoFields.each {|f| add_search_term(search, f, conditions, cond_params, joins)}
-    add_search_term(search, field(Olap::TestCaseDimension, :name), conditions, cond_params, joins)
-    add_search_term(search, field(Olap::TestCaseDimension, :group), conditions, cond_params, joins)
+    AutoFields.each do |f|
+      if f.dimension == Olap::StatisticDimension or search.statistic_query?
+        add_search_term(search, f, conditions, cond_params, joins)
+      end
+    end
     add_revision_criteria(search, conditions, cond_params, joins)
     add_search_term(search, field(Olap::TimeDimension, :year), conditions, cond_params, joins)
     add_search_term(search, field(Olap::TimeDimension, :month), conditions, cond_params, joins)

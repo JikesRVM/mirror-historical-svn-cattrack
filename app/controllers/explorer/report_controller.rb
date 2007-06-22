@@ -28,7 +28,7 @@ class Explorer::ReportController < Explorer::BaseController
 
     if request.post?
       @presentation = Olap::Query::Presentation.find(params[:presentation])
-      if @presentation and query.measure.valid? and query.filter.valid?
+      if @presentation and query.measure.valid? and query.filter.valid? and query.valid?
         @results = query.perform_search
         parts = []
         parts << "measure_name = #{@query.measure.name}"

@@ -9,7 +9,6 @@
             - value = @filter.send(f.key)
             - values = instance_variable_get("@#{f.key.to_s.pluralize}")
             = options_for_select(values, value)
-
   = dimension_footer(d)
 = dimension_header(Olap::RevisionDimension)
 %table.search{:id => dimension_block_name(Olap::RevisionDimension)}
@@ -82,3 +81,10 @@
         .field_error= @filter.errors[:time_after]
       .explanation YYYY-MM-DD HH:MM:SS
 = dimension_footer(Olap::TimeDimension)
+.filter_type
+  %h2 Query Type
+  = "<input type=\"radio\" name=\"filter[query_type]\" value=\"result\"#{@filter.statistic_query? ? '' : ' checked="checked"'} />"
+  Query Result Fact table
+  %br/
+  = "<input type=\"radio\" name=\"filter[query_type]\" value=\"statistic\"#{@filter.statistic_query? ? ' checked="checked"' : ''} />"
+  Query Statistic Fact table

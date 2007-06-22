@@ -17,7 +17,7 @@ class Olap::Query::Query < ActiveRecord::Base
   validates_length_of :primary_dimension, :in => 1..256
   validates_length_of :secondary_dimension, :in => 1..256
 
-  validates_presence_of :measure_id, :filter_id
+  validates_presence_of :measure, :filter
   validates_reference_exists :measure_id, Olap::Query::Measure
   validates_reference_exists :filter_id, Olap::Query::Filter
 
@@ -32,6 +32,14 @@ class Olap::Query::Query < ActiveRecord::Base
 
   validates_each(:primary_dimension) do |record, attr, value|
     record.errors.add(attr, 'primary and secondary dimensions can not be the same.') if (not record.primary_dimension.nil? and record.primary_dimension == record.secondary_dimension)
+  end
+
+  def validate
+    if measure and filter
+      if measure.result_measure? == filter.statistic_query?
+        errors.add(:measure_id, 'measure is not applicable to this query type.')
+      end
+    end
   end
 
   def perform_search
@@ -52,13 +60,13 @@ class Olap::Query::Query < ActiveRecord::Base
     criteria = ActiveRecord::Base.send :sanitize_sql_array, conditions
     primary_dimension = "#{rf.dimension.table_name}.#{rf.name}"
     secondary_dimension = "#{cf.dimension.table_name}.#{cf.name}"
-    measure_sql = measure.sql.gsub(/\:primary_dimension/,primary_dimension).gsub(/\:secondary_dimension/,secondary_dimension)
+    measure_sql = measure.sql.gsub(/\:primary_dimension/, primary_dimension).gsub(/\:secondary_dimension/, secondary_dimension)
     sql = <<END_OF_SQL
 SELECT
  #{primary_dimension} AS primary_dimension,
  #{secondary_dimension} AS secondary_dimension,
  #{measure_sql}
-FROM result_facts
+FROM #{filter.query_type}_facts
  #{join_sql}
 WHERE #{criteria}
 GROUP BY #{primary_dimension}, #{secondary_dimension}
@@ -72,6 +80,6 @@ END_OF_SQL
   private
 
   def join(dimension, type = 'LEFT')
-    "#{type} JOIN #{dimension.table_name} ON result_facts.#{dimension.table_name[0, dimension.table_name.singularize.size - 10]}_id = #{dimension.table_name}.id"
+    "#{type} JOIN #{dimension.table_name} ON #{filter.query_type}_facts.#{dimension.short_name}_id = #{dimension.table_name}.id"
   end
 end
