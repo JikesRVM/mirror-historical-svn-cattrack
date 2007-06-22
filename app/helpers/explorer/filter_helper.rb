@@ -15,19 +15,26 @@ module Explorer::FilterHelper
     "#{dimension.table_name}_table"
   end
 
-  def hide_dimension_javascript(dimension)
-    "Element.toggle('#{dimension_block_name(dimension)}'); Element.toggleClassName('#{dimension.table_name}_toggle','open')"
+  def hide_dimension_javascript(dimension_name)
+    "Element.toggle('#{dimension_name}_table'); Element.toggleClassName('#{dimension_name}_toggle','open')"
   end
 
   def dimension_header(dimension)
-    "<a href=\"#\" id=\"#{dimension.table_name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_dimension_javascript(dimension)}; return false;\">#{dimension.table_name.humanize}</a>"
+    section_header(dimension.table_name)
+  end
+
+  def section_header(name)
+    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_dimension_javascript(name)}; return false;\">#{name.titleize}</a>"
   end
 
   def dimension_footer(dimension)
     show = false
     Olap::Query::Filter::Fields.each do |f|
-      show = true if ((f.dimension == dimension) and not Olap::Query::Filter.is_empty?(@filter, f.key))
+      if ((f.dimension == dimension) and not Olap::Query::Filter.is_empty?(@filter, f.key))
+        show = true
+        break
+      end
     end
-    show ? '' : "<script type=\"text/javascript\">#{hide_dimension_javascript(dimension)}</script>"
+    show ? '' : "<script type=\"text/javascript\">#{hide_dimension_javascript(dimension.table_name)}</script>"
   end
 end
