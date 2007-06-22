@@ -15,28 +15,34 @@ m1:
   name: Success Rate
   sql: case when :secondary_dimension IS NOT NULL then CAST(count(case when result_dimension.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end
   joins: result
-  grouping: ''
+  result_measure: true
 m2:
   id: 2
   name: Non-success Rate
   sql: CAST(count(case when result_dimension.name = 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
   joins: result
-  grouping: ''
+  result_measure: true
 m3:
   id: 3
   name: Failure Rate
   sql: CAST(count(case when result_dimension.name != 'FAILURE' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
   joins: result
-  grouping: ''
+  result_measure: true
 m4:
   id: 4
   name: Overtime Rate
   sql: CAST(count(case when result_dimension.name != 'OVERTIME' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
   joins: result
-  grouping: ''
+  result_measure: true
 m5:
   id: 5
   name: Excluded Rate
   sql: CAST(count(case when result_dimension.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
   joins: result
-  grouping: ''
+  result_measure: true
+m6:
+  id: 6
+  name: Average
+  sql: avg(statistic_facts.value)
+  joins: ''
+  result_measure: false

@@ -23,21 +23,21 @@ class Olap::Query::MeasureTest < Test::Unit::TestCase
     assert_equal( "Success Rate", measure.name )
     assert_equal( "case when :secondary_dimension IS NOT NULL then CAST(count(case when result_dimension.name != 'SUCCESS' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0 else NULL end", measure.sql )
     assert_equal( "result", measure.joins )
-    assert_equal( "", measure.grouping )
+    assert_equal( true, measure.result_measure? )
     assert_equal( [1, 2, 3], measure.presentation_ids )
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :sql => 'count(*)', :joins => '', :grouping => ''}
+    {:name => 'foo', :sql => 'count(*)', :joins => '', :result_measure => true}
   end
   def self.non_null_attributes
-    [:name, :sql, :joins, :grouping]
+    [:name, :sql, :joins, :result_measure]
   end
   def self.unique_attributes
     [[:name]]
   end
   def self.str_length_attributes
-    [[:name, 120], [:sql, 512], [:joins, 50], [:grouping, 50]]
+    [[:name, 120], [:sql, 512], [:joins, 50]]
   end
 
   perform_basic_model_tests

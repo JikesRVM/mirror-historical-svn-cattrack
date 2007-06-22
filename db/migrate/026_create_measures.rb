@@ -16,7 +16,7 @@ class CreateMeasures < ActiveRecord::Migration
       t.column :name, :string, :limit => 120, :null => false
       t.column :sql, :string, :limit => 512, :null => false
       t.column :joins, :string, :limit => 50, :null => false
-      t.column :grouping, :string, :limit => 50, :null => false
+      t.column :result_measure, :boolean, :null => false
     end
     add_index :measures, [:id], :unique => true
     add_index :measures, [:name], :unique => true

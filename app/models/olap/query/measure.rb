@@ -15,7 +15,7 @@ class Olap::Query::Measure < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_length_of :sql, :in => 1..512
   validates_length_of :joins, :in => 0..50
-  validates_length_of :grouping, :in => 0..50
+  validates_inclusion_of :result_measure, :in => [true, false], :message => ActiveRecord::Errors.default_error_messages[:blank]
 
   has_and_belongs_to_many :presentations, :class_name => 'Olap::Query::Presentation'
 
