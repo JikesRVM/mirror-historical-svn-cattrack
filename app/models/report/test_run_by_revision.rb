@@ -15,7 +15,7 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr, :perf_stats, :perf_stat_headers
 
   def initialize(test_run, window_size = 6)
     @test_run = test_run
@@ -73,14 +73,57 @@ class Report::TestRunByRevision
     query.filter.test_run_source_id = valid_test_runs_ids
     query.primary_dimension = 'build_configuration_name'
     query.secondary_dimension = 'test_run_source_id'
-    query.measure = Olap::Query::Measure.find(1)
+    query.measure = Olap::Query::Measure.find_by_name('Success Rate')
     #order by occurred_at
     @build_configuration_name_by_test_run = query.perform_search
 
+    gen_perf_stats(valid_test_runs_ids)
     perform_test_case_name_by_test_run(valid_test_runs_ids)
   end
 
   private
+
+  def gen_perf_stats(valid_test_runs_ids)
+    query = Olap::Query::Query.new
+    query.filter = Olap::Query::Filter.new
+    query.filter.name = '*'
+    query.filter.description = ''
+    query.filter.test_run_source_id = valid_test_runs_ids
+    query.filter.test_configuration_name = 'Performance'
+    query.filter.build_configuration_name = 'production'
+    query.filter.query_type = 'statistic'
+    query.filter.test_case_name = ['SPECjbb2005', 'SPECjvm98']
+    query.filter.statistic_name = ['aggregate.best.score', 'score']
+    query.primary_dimension = 'statistic_name'
+    query.secondary_dimension = 'test_run_source_id'
+    query.measure = Olap::Query::Measure.find_by_name('Maximum')
+    #order by occurred_at
+    query_result = query.perform_search
+
+    column_count = query_result.column_headers.size
+    @perf_stats = []
+    query_result.tabular_data.each_with_index do |row, i|
+      @perf_stats[i] = []
+      if query_result.row_headers[i] == 'aggregate.best.score'
+        @perf_stats[i][0] = 'SPECjvm98'
+      else
+        @perf_stats[i][0] = 'SPECjbb2005'
+      end
+      row.each_with_index do |value, j|
+        @perf_stats[i][1 + j] = value
+      end
+    end
+
+    @perf_stats = @perf_stats.reject{|row| row.inject(0) {|accum, e| e.nil? ? accum : accum + 1} == 0}
+    @perf_stat_headers = []
+
+    @perf_stat_headers[0] = nil
+    query_result.column_headers.each_with_index do |c, i|
+      test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
+      raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
+      @perf_stat_headers[i + 1] = test_run.label
+    end
+  end
 
   def perform_test_case_name_by_test_run(valid_test_runs_ids)
     query = Olap::Query::Query.new
@@ -90,7 +133,7 @@ class Report::TestRunByRevision
     query.filter.test_run_source_id = valid_test_runs_ids
     query.primary_dimension = 'test_case_name'
     query.secondary_dimension = 'test_run_source_id'
-    query.measure = Olap::Query::Measure.find(1)
+    query.measure = Olap::Query::Measure.find_by_name('Success Rate')
 
     @test_case_name_by_test_run = query.perform_search
 

@@ -124,6 +124,20 @@
         %ul.actions
           %li= link_for(t, :label => "Show Summary", :action => 'show_summary')
 
+- if @report.perf_stats.size > 0
+  %h2 Performance Statistics
+  %table.report
+    %tr
+      %th.pivot
+      - @report.perf_stat_headers.each_with_index do |c, i|
+        - next if i == 0
+        %th.column= c
+    - @report.perf_stats.each_with_index do |r,r_index|
+      %tr
+        %th.row= h(r[0])
+        - 1.upto(r.size - 2) do |c_index|
+          %td= h(r[c_index])
+
 - results = @report.build_configuration_name_by_test_run
 %h2 Build Configuration By Test Run
 %table.report
