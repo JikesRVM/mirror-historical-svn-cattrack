@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   # Turn of debug window displaying all assigns.
   # Can cause slowdown due massive tree of objects
   # that can be rendered.
-  self.view_debug_display_assigns = true
+  self.view_debug_display_assigns = false
 
   # Add filter for authentication and authorization
   before_filter :check_authorization
