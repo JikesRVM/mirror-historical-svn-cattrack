@@ -82,6 +82,18 @@ class Olap::Query::FilterTest < Test::Unit::TestCase
     assert_equal([Olap::HostDimension], join_sql)
   end
 
+  def test_search_filter_criteria_for_single_value_parameter_on_statistic_query
+    conditions, join_sql = Olap::Query::Filter.new(:statistic_name => 'ace', :query_type => 'statistic').filter_criteria
+    assert_equal(["statistic_dimension.name = :statistic_name", {:statistic_name=>"ace"}], conditions)
+    assert_equal([Olap::StatisticDimension], join_sql)
+  end
+
+  def test_search_filter_criteria_for_single_value_parameter_with_statistic_param_on_non_statistic_query
+    conditions, join_sql = Olap::Query::Filter.new(:host_name => 'ace', :statistic_name => "ace").filter_criteria
+    assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)
+    assert_equal([Olap::HostDimension], join_sql)
+  end
+
   def test_search_filter_criteria_for_single_value_parameter_in_array
     conditions, join_sql = Olap::Query::Filter.new(:host_name => ['ace']).filter_criteria
     assert_equal(["host_dimension.name = :host_name", {:host_name=>"ace"}], conditions)

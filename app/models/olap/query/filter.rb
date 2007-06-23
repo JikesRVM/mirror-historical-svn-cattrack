@@ -134,7 +134,7 @@ class Olap::Query::Filter < ActiveRecord::Base
     joins = []
 
     AutoFields.each do |f|
-      if f.dimension == Olap::StatisticDimension or search.statistic_query?
+      if f.dimension != Olap::StatisticDimension or search.statistic_query?
         add_search_term(search, f, conditions, cond_params, joins)
       end
     end
