@@ -11,10 +11,13 @@
 #  regarding copyright ownership.
 #
 class Admin::SysinfoController < Admin::BaseController
-  verify :method => :get, :only => [:show], :redirect_to => :access_denied_url
+  verify :method => :get, :only => [:show, :show_report_data], :redirect_to => :access_denied_url
   verify :method => :post, :only => [:purge_stale_sessions, :purge_historic_statistic_facts, :purge_historic_result_facts], :redirect_to => :access_denied_url
 
   def show
+  end
+
+  def show_report_data
     @orhpan_dimensions = dimension_data
   end
 

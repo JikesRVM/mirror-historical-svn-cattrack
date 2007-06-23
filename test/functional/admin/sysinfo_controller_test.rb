@@ -29,7 +29,12 @@ class Admin::SysinfoControllerTest < Test::Unit::TestCase
 
   def test_show
     get(:show, {}, {:user_id => 1})
-    assert_normal_response('show', 1)
+    assert_normal_response('show')
+  end
+
+  def test_show_report_data
+    get(:show_report_data, {}, {:user_id => 1})
+    assert_normal_response('show_report_data', 1)
     assert_assigned(:orhpan_dimensions)
   end
 
