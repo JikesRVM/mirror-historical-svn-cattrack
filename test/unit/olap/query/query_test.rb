@@ -36,7 +36,7 @@ class Olap::Query::QueryTest < Test::Unit::TestCase
     {:name => 'foo', :description => '', :primary_dimension => 'build_target_name', :secondary_dimension => 'time_day_of_week', :filter_id => 1, :measure_id => 1}
   end
   def self.non_null_attributes
-    [:name, :description, :primary_dimension, :secondary_dimension, :filter_id, :measure_id]
+    [:name, :description, :primary_dimension, :secondary_dimension]
   end
   def self.unique_attributes
     [[:name]]
