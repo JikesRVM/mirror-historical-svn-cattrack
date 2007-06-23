@@ -33,7 +33,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
 
   def test_adhoc
     get(:adhoc, {}, {:user_id => 1})
-    assert_normal_response('adhoc', 6 + 17)
+    assert_normal_response('adhoc', 6 + 18)
     assert_adhoc_params
 
     #defaults
@@ -53,14 +53,14 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     assert_assigned(:query)
 
     assert_equal([1, 3, 2], assigns(:presentations).collect {|r| r.id} )
-    assert_equal([5, 3, 2, 4, 1], assigns(:measures).collect {|r| r.id} )
+    assert_equal([6, 5, 3, 2, 4, 1], assigns(:measures).collect {|r| r.id} )
     assert_equal([2, 1], assigns(:filters).collect {|r| r.id} )
   end
 
   def test_adhoc_post
     purge_log
     post(:adhoc, {'presentation' => 1, :query => {:measure_id => 1, :primary_dimension => 'test_configuration_name', :secondary_dimension => 'test_case_name'} }, {:user_id => 1})
-    assert_normal_response('adhoc', 2 + 6 + 17)
+    assert_normal_response('adhoc', 2 + 6 + 18)
     assert_adhoc_params
 
     assert_equal(1, assigns(:query).measure.id )
@@ -92,7 +92,8 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
     [:result_names, ["EXCLUDED", "FAILURE", "OVERTIME", "SUCCESS"]],
     [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]],
     [:test_case_groups, ["basic"]],
-    [:test_case_names, ["ImageSizes", "TestSuspend"]]
+    [:test_case_names, ["ImageSizes", "TestSuspend"]],
+    [:statistic_names, ["score", "time"]]
     ].each do |v|
       assert_assigned(v[0])
       assert_equal(v[1], assigns(v[0]), "Values for assign #{v[0]}")
