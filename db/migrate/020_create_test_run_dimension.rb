@@ -19,7 +19,7 @@ class CreateTestRunDimension < ActiveRecord::Migration
     add_index :test_run_dimension, [:id], :unique => true
     add_index :test_run_dimension, [:name]
     add_index :test_run_dimension, [:source_id]
-    add_foreign_key :test_run_dimension, [:source_id], :test_cases, [:id], :on_delete => :set_null
+    add_foreign_key :test_run_dimension, [:source_id], :test_runs, [:id], :on_delete => :set_null
   end
 
   def self.down
