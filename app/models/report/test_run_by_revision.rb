@@ -15,7 +15,7 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr, :perf_stats, :perf_stat_headers
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr, :perf_stats, :perf_stat_headers
 
   def initialize(test_run, window_size = 6)
     @test_run = test_run

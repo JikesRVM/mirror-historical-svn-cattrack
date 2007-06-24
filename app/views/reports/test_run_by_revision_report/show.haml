@@ -18,6 +18,23 @@
     %th Success Rate
     %td= @report.test_run.success_rate
 
+- if @report.missing_tests.size > 0
+  = tests_header('missing_tests', pluralize(@report.missing_tests.size, 'Missing Tests'))
+  %table#missing_tests.list
+    %tr
+      %th Build Configuration
+      %th Test Configuration
+      %th Group
+      %th Test
+    - @report.missing_tests.each do |t|
+      %tr
+        %td= h(t['build_configuration_name'])
+        %td= h(t['test_configuration_name'])
+        %td= h(t['group_name'])
+        %td
+          = h(t['test_case_name'])
+          %script{ :type => 'text/javascript' } Element.toggleClassName('missing_tests_toggle','open');
+
 - if @report.new_failures.size > 0
   = tests_header('new_failures', pluralize(@report.new_failures.size, 'New Failures'))
   %table#new_failures.list
