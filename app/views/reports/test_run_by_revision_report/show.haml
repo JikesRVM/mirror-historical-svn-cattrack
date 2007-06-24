@@ -33,7 +33,6 @@
         %td= h(t['group_name'])
         %td
           = h(t['test_case_name'])
-          %script{ :type => 'text/javascript' } Element.toggleClassName('missing_tests_toggle','open');
 
 - if @report.new_failures.size > 0
   = tests_header('new_failures', pluralize(@report.new_failures.size, 'New Failures'))
@@ -55,11 +54,10 @@
         %td
           %ul.actions
             %li= test_link(t)
-          %script{ :type => 'text/javascript' } Element.toggleClassName('new_failures_toggle','open');
 
 - if @report.new_successes.size > 0
   = tests_header('new_successes', pluralize(@report.new_successes.size, 'New Successes'))
-  %table#new_failures.list
+  %table#new_successes.list
     %tr
       %th Build Configuration
       %th Test Configuration
@@ -75,7 +73,6 @@
         %td
           %ul.actions
             %li= test_link(t)
-          %script{ :type => 'text/javascript' } Element.toggleClassName('new_successes_toggle','open');
 
 - if @report.intermittent_failures.size > 0
   = tests_header('intermittent_failures', pluralize(@report.intermittent_failures.size, 'Intermittent Failures'))
@@ -97,7 +94,8 @@
         %td
           %ul.actions
             %li= test_link(t)
-          %script{ :type => 'text/javascript' } Element.hide('intermittent_failures');
+  %script{ :type => 'text/javascript' }
+    = hide_tests_javascript('intermittent_failures');
 
 - if @report.consistent_failures.size > 0
   = tests_header('consistent_failures', pluralize(@report.consistent_failures.size, 'Consistent Failures'))
@@ -119,7 +117,8 @@
         %td
           %ul.actions
             %li= test_link(t)
-          %script{ :type => 'text/javascript' } Element.hide('consistent_failures');
+  %script{ :type => 'text/javascript' }
+    = hide_tests_javascript('consistent_failures');
 
 - if @report.test_runs.size > 1
   %h2 Revisions Covered By Report

@@ -11,8 +11,13 @@
 #  regarding copyright ownership.
 #
 module Reports::TestRunByRevisionReportHelper
+
+  def hide_tests_javascript(name)
+    "Element.toggle('#{name}'); Element.toggleClassName('#{name}_toggle','open')"
+  end
+
   def tests_header(name, label)
-    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility\" onclick=\"Element.toggle('#{name}'); Element.toggleClassName('#{name}_toggle','open'); return false;\">#{label}</a>"
+    "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_tests_javascript(name)}; return false;\">#{label}</a>"
   end
 
   def test_link(row)

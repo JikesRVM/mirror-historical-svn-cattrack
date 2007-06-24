@@ -19,6 +19,10 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
   end
 
   def test_tests_header
-    assert_equal("<a href=\"#\" id=\"new_failures_toggle\" class=\"toggle_visibility\" onclick=\"Element.toggle('new_failures'); Element.toggleClassName('new_failures_toggle','open'); return false;\">3 New Failures</a>", MyClass.new.tests_header('new_failures', '3 New Failures'))
+    assert_equal("<a href=\"#\" id=\"new_failures_toggle\" class=\"toggle_visibility open\" onclick=\"Element.toggle('new_failures'); Element.toggleClassName('new_failures_toggle','open'); return false;\">3 New Failures</a>", MyClass.new.tests_header('new_failures', '3 New Failures'))
+  end
+
+  def test_hide_tests_javascript
+    assert_equal("Element.toggle('new_failures'); Element.toggleClassName('new_failures_toggle','open')", MyClass.new.hide_tests_javascript('new_failures'))
   end
 end
