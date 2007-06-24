@@ -46,3 +46,9 @@ m6:
   sql: avg(statistic_facts.value)
   joins: ''
   result_measure: false
+m7:
+  id: 7
+  name: Maximum
+  sql: max(statistic_facts.value)
+  joins: ''
+  result_measure: false

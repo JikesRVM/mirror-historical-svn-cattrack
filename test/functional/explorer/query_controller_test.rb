@@ -46,7 +46,7 @@ class Explorer::QueryControllerTest < Test::Unit::TestCase
     assert_assigned(:filters)
     assert_equal([2, 1], assigns(:filters).collect{|f|f.id})
     assert_assigned(:measures)
-    assert_equal([6, 5, 3, 2, 4, 1], assigns(:measures).collect{|m|m.id})
+    assert_equal([6, 5, 3, 7, 2, 4, 1], assigns(:measures).collect{|m|m.id})
   end
 
   def test_new_get
