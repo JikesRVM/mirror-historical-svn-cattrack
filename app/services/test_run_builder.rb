@@ -163,7 +163,12 @@ class TestRunBuilder
     end
 
     xml.elements.each("statistics/statistic") do |p_xml|
-      test_case.statistics[p_xml.attributes['key']] = p_xml.attributes['value']
+      v = p_xml.attributes['value']
+      begin
+        test_case.numerical_statistics[p_xml.attributes['key']] = Kernel.Float(v)
+      rescue ArgumentError, TypeError
+        test_case.statistics[p_xml.attributes['key']] = v
+      end
     end
 
     save!(test_case)

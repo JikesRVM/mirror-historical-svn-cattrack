@@ -37,6 +37,7 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     assert_equal( 1, tc.group_id )
     assert_equal( 1, tc.group.id )
     assert_equal( 0, tc.statistics.size )
+    assert_equal( 0, tc.numerical_statistics.size )
   end
 
   def test_load_with_statistics
@@ -45,6 +46,7 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     assert_equal( "caffeinemark", tc.name )
     assert_equal( 1, tc.statistics.size )
     assert_equal( '54', tc.statistics['caffeinemark'] )
+    assert_equal( '54', tc.numerical_statistics['caffeinemark_numerical'] )
   end
 
   def test_new_with_output

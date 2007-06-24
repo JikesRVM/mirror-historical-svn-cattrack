@@ -118,12 +118,7 @@ class TestRunTransformer
     sfact.value = t.time
     save!(sfact)
 
-    t.statistics.each_pair do |k, v|
-      begin
-        Kernel.Float(v)
-      rescue ArgumentError, TypeError
-        next
-      end
+    t.numerical_statistics.each_pair do |k, v|
       statistic = Olap::StatisticDimension.find_or_create_by_name(k)
       sfact = Olap::StatisticFact.new
       sfact.host_id = host.id

@@ -40,7 +40,7 @@ class TestRunTransformerTest < Test::Unit::TestCase
     results = Olap::StatisticFact.find_all_by_revision_id(revision.id)
     assert_equal( 14, results.size )
 
-    timings = results.select{|r| r.statistic.name != 'caffeinemark'}
+    timings = results.select{|r| r.statistic.name != 'caffeinemark_numerical'}
     assert_equal( 13, timings.size )
     assert_equal( [457, 914, 1371, 1828, 2285, 2742, 3199, 3656, 5941, 6398, 6855, 7312, 7769], timings.collect{|t|t.value}.sort )
     assert_equal( [1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17], timings.collect{|t|t.source_id}.sort )
@@ -50,12 +50,12 @@ class TestRunTransformerTest < Test::Unit::TestCase
     assert_equal( ['prototype', 'prototype-opt', 'prototype_V2'], timings.collect{|t|t.test_configuration.name}.uniq.sort )
     assert_equal( ['rvm.real.time'], timings.collect{|t|t.statistic.name}.uniq.sort )
 
-    caf = results.find{|r| r.statistic.name == 'caffeinemark'}
+    caf = results.find{|r| r.statistic.name == 'caffeinemark_numerical'}
     assert_not_nil( caf )
     assert_equal( 'caffeinemark', caf.test_case.group )
     assert_equal( 'caffeinemark', caf.test_case.name )
     assert_equal( 'prototype-opt', caf.test_configuration.name )
-    assert_equal( 'caffeinemark', caf.statistic.name )
+    assert_equal( 'caffeinemark_numerical', caf.statistic.name )
     assert_equal( 54, caf.value )
     assert_equal( 17, caf.source_id )
   end

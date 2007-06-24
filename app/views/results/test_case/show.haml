@@ -36,6 +36,10 @@
     %tr
       %th= h(k)
       %td= h(v)
+  - @record.numerical_statistics.each_pair do |k,v|
+    %tr
+      %th= h(k)
+      %td= h(v)
   %tr
     %th Output
     %td= link_for(@record, :label => '...Output...', :action => 'show_output')

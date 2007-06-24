@@ -29,6 +29,7 @@ class Tdm::TestCase < ActiveRecord::Base
 
   belongs_to :group
   has_params :statistics
+  has_params :numerical_statistics
   has_params :params
 
   after_save :update_output
