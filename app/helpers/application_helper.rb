@@ -12,7 +12,7 @@
 #
 module ApplicationHelper
   include PresentationHelper
-  
+
   def link_for(object, options = {})
     label = options[:label] || object.label
     action = options[:action] || 'show'
@@ -68,6 +68,10 @@ EOS
   end
 
   def revision_link(revision)
-    "<a href=\"#{h(SystemSetting['scm.url'].gsub(/@@revision@@/,revision.to_s))}\">#{h(revision)}</a>"
+    revision_link_for_url(SystemSetting['scm.url'],revision)
+  end
+
+  def revision_link_for_url(url,revision)
+    "<a href=\"#{h(url.gsub(/@@revision@@/,revision.to_s))}\">#{h(revision)}</a>"
   end
 end

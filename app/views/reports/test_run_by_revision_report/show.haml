@@ -1,4 +1,5 @@
 - @page_title = "Test Run Report: #{h(@report.test_run.name)}.#{@report.test_run.id}"
+- scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title
 
 %table.details
@@ -10,7 +11,7 @@
     %td= link_for(@report.test_run.build_target)
   %tr
     %th Revision
-    %td= revision_link(@report.test_run.revision)
+    %td= revision_link_for_url(scm_url, @report.test_run.revision)
   %tr
     %th Time
     %td= h(@report.test_run.occurred_at)
@@ -123,7 +124,7 @@
 - if @report.test_runs.size > 1
   %h2 Revisions Covered By Report
   %p
-    = ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link(r)}.join(', ')
+    = ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(', ')
 
 %h2 Test Runs Covered By Report
 %table.list
@@ -135,7 +136,7 @@
   - @report.test_runs.each do |t|
     %tr
       %td= h(t.label)
-      %td= revision_link(t.revision)
+      %td= revision_link_for_url(scm_url, t.revision)
       %td= t.occurred_at
       %td
         %ul.actions
