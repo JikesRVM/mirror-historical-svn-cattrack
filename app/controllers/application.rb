@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
      if e.is_a?(CatTrack::SecurityError)
         access_denied!
      else
-        ErrorMailer.deliver_error(e)
+        ErrorMailer.deliver_error(e) unless e.is_a?(ActionController::RoutingError)
         super
      end
   end
