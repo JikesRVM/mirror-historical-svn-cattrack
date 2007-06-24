@@ -152,7 +152,7 @@
     - @report.perf_stats.each_with_index do |r,r_index|
       %tr
         %th.row= h(r[0])
-        - 1.upto(r.size - 2) do |c_index|
+        - 1.upto(r.size - 1) do |c_index|
           %td= h(r[c_index])
 
 - results = @report.build_configuration_name_by_test_run
