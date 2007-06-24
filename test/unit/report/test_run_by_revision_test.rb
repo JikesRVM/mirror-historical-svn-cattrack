@@ -29,6 +29,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(6, report.window_size)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
@@ -46,6 +47,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']}.sort)
@@ -70,6 +72,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([test_case2.name], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([test_case1.name], report.new_failures.collect{|t| t['test_case_name']})
@@ -92,6 +95,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(Tdm::TestRun.find(test_run_1.id))
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
+    assert_equal([], report.perf_stats)
     assert_equal([test_case2.name], report.missing_tests.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
@@ -138,6 +142,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
       report = Report::TestRunByRevision.new(test_run)
     end
     assert_equal(test_run, report.test_run)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
@@ -151,7 +156,77 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     ], report.tcn_by_tr)
   end
 
+  def test_report_with_perf_stats
+    test_run = create_test_run_for_perf_tests
+    test_run_1 = clone_test_run(test_run, 10)
+
+    olappy(test_run.id)
+    olappy(test_run_1.id)
+    report = Report::TestRunByRevision.new(test_run)
+    assert_equal(test_run, report.test_run)
+    assert_equal(6, report.window_size)
+    assert_equal([['SPECjvm98','412','412'],['SPECjbb2005','22','22']], report.perf_stats)
+    assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
+    assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
+    assert_equal([], report.new_successes.collect{|t| t['test_case_id']})
+    assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
+    assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
+    assert_equal([nil, "core-1", "core-#{test_run_1.id}"], report.tcn_by_tr_headers)
+    assert_equal([], report.tcn_by_tr)
+  end
+
   private
+
+  def create_test_run_for_perf_tests
+    test_run = Tdm::TestRun.find(1)
+    test_run.build_configurations[1].destroy
+    build_configuration = test_run.build_configurations[0]
+    build_configuration.name = 'production'
+    build_configuration.save!
+    assert_equal(2, build_configuration.test_configurations.size)
+    build_configuration.test_configurations[1].destroy
+
+    test_configuration = build_configuration.test_configurations[0]
+    test_configuration.name = 'Performance'
+    test_configuration.save!
+    assert_equal(2, test_configuration.groups.size)
+    group = test_configuration.groups[1]
+    group.name = 'SPECjvm98'
+    group.save!
+    assert_equal(2, group.test_cases.size)
+    group.test_cases[1].destroy
+    group.test_cases[0].name = 'SPECjvm98'
+    group.test_cases[0].statistics.clear
+    group.test_cases[0].statistics['aggregate.best.score'] = '412'
+    group.test_cases[0].save!
+
+    group = test_configuration.groups[0]
+    group.name = 'SPECjbb2005'
+    group.save!
+    assert_equal(2, group.test_cases.size)
+    group.test_cases[1].destroy
+    group.test_cases[0].name = 'SPECjbb2005'
+    group.test_cases[0].statistics.clear
+    group.test_cases[0].statistics['score'] = '22'
+    group.test_cases[0].save!
+
+    test_run = Tdm::TestRun.find(1)
+    assert_equal(1, test_run.build_configurations.size)
+    assert_equal('production', test_run.build_configurations[0].name)
+    assert_equal(1, test_run.build_configurations[0].test_configurations.size)
+    assert_equal('Performance', test_run.build_configurations[0].test_configurations[0].name)
+    assert_equal(2, test_run.build_configurations[0].test_configurations[0].groups.size)
+
+    assert_equal('SPECjbb2005', test_run.build_configurations[0].test_configurations[0].groups[0].name)
+    assert_equal(1, test_run.build_configurations[0].test_configurations[0].groups[0].test_cases.size)
+    assert_equal('SPECjbb2005', test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0].name)
+
+    assert_equal('SPECjvm98', test_run.build_configurations[0].test_configurations[0].groups[1].name)
+    assert_equal(1, test_run.build_configurations[0].test_configurations[0].groups[1].test_cases.size)
+    assert_equal('SPECjvm98', test_run.build_configurations[0].test_configurations[0].groups[1].test_cases[0].name)
+
+    Tdm::TestRun.find(1)
+  end
 
   def clone_test_run(_test_run, offset)
     test_run = Tdm::TestRun.new(_test_run.attributes)
