@@ -34,3 +34,11 @@ s_scm_url:
   id: 6
   name: 'scm.url'
   value: 'http://svn.sourceforge.net/viewvc/jikesrvm?view=rev&revision=@@revision@@'
+s_mail_from:
+  id: 7
+  name: 'mail.from'
+  value: 'rvm-regression@cs.anu.edu.au'
+s_mail_on_error:
+  id: 8
+  name: 'mail.on.error'
+  value: 'peter@realityforge.org'

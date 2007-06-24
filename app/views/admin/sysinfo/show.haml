@@ -39,6 +39,14 @@
             Database
             = k.capitalize
           %td= v
+  %h2 Mail Configuration
+  %table
+    %tr
+      %th Mail From
+      %td= SystemSetting['mail.from']
+    %tr
+      %th Mail on Error
+      %td= SystemSetting['mail.on.error']
   %h2 Session Info
   %table
     %tr

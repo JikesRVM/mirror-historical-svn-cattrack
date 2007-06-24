@@ -23,6 +23,18 @@ Database Setup
  > u.admin = true
  > u.save!
 
+Mailer Setup
+------------
+
+1. Copy "config/local.example.rb" to "config/local.rb" and edit the mail
+   settings.
+2. Run "script/console -e production" so to setup system configuration defining
+   who the email comes from and where error mails will be sent. This can be
+   achieved via;
+
+ > SystemSetting.create!(:name => 'mail.from', :value => 'rvm-regression@cs.anu.edu.au')
+ > SystemSetting.create!(:name => 'mail.on.error', :value => 'cattrack.admin@example.com')
+
 Web Setup
 ---------
 
@@ -35,7 +47,7 @@ Web Setup
  > cd path/to/cattrack && /var/lib/gems/1.8/bin/mongrel_rails stop
 
 3. If you are not hosting cattrack at the root level of your web application
-   then you will need to create 'config/local.rb' that contains code such as
+   then you will need to edit "config/local.rb" so that contains code such as
 
    ActionController::AbstractRequest.relative_url_root = "/cattrack"
 
@@ -52,4 +64,4 @@ Cron Setup
 2. Edit crontab so that imports occur every 12 or so hours. Cron tab line follows;
 
  0 */12 * * * cd path/to/cattrack && ./script/runner -e production TestRunImporter.process_incoming_test_runs
- 
+

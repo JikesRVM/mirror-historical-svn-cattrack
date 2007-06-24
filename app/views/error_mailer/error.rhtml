@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h1><%= h(@exception.class.to_s) %></h1>
+<pre><%=h @exception.clean_message %></pre>
+<pre><%= @exception.clean_backtrace.join "\n" %></pre>
+</body>
+</html>
