@@ -30,19 +30,19 @@
       %th Operations
     - @report.new_failures.each do |t|
       %tr
-        %td= link_for(t.group.test_configuration.build_configuration)
-        %td= link_for(t.group.test_configuration)
-        %td= link_for(t.group)
-        %td= h(t.name)
-        %td= h(t.result)
+        %td= h(t['build_configuration_name'])
+        %td= h(t['test_configuration_name'])
+        %td= h(t['group_name'])
+        %td= h(t['test_case_name'])
+        %td= h(t['test_case_result'])
         %td
           %ul.actions
-            %li= link_for(t, :label => 'Show')
+            %li= test_link(t)
           %script{ :type => 'text/javascript' } Element.toggleClassName('new_failures_toggle','open');
 
 - if @report.new_successes.size > 0
   = tests_header('new_successes', pluralize(@report.new_successes.size, 'New Successes'))
-  %table#new_successes.list
+  %table#new_failures.list
     %tr
       %th Build Configuration
       %th Test Configuration
@@ -51,13 +51,13 @@
       %th Operations
     - @report.new_successes.each do |t|
       %tr
-        %td= link_for(t.group.test_configuration.build_configuration)
-        %td= link_for(t.group.test_configuration)
-        %td= link_for(t.group)
-        %td= h(t.name)
+        %td= h(t['build_configuration_name'])
+        %td= h(t['test_configuration_name'])
+        %td= h(t['group_name'])
+        %td= h(t['test_case_name'])
         %td
           %ul.actions
-            %li= link_for(t, :label => 'Show')
+            %li= test_link(t)
           %script{ :type => 'text/javascript' } Element.toggleClassName('new_successes_toggle','open');
 
 - if @report.intermittent_failures.size > 0
@@ -72,15 +72,15 @@
       %th Operations
     - @report.intermittent_failures.each do |t|
       %tr
-        %td= link_for(t.group.test_configuration.build_configuration)
-        %td= link_for(t.group.test_configuration)
-        %td= link_for(t.group)
-        %td= h(t.name)
-        %td= h(t.result)
+        %td= h(t['build_configuration_name'])
+        %td= h(t['test_configuration_name'])
+        %td= h(t['group_name'])
+        %td= h(t['test_case_name'])
+        %td= h(t['test_case_result'])
         %td
           %ul.actions
-            %li= link_for(t, :label => 'Show')
-          %script{ :type => 'text/javascript' } Element.hide('intermittent_failures')
+            %li= test_link(t)
+          %script{ :type => 'text/javascript' } Element.hide('intermittent_failures');
 
 - if @report.consistent_failures.size > 0
   = tests_header('consistent_failures', pluralize(@report.consistent_failures.size, 'Consistent Failures'))
@@ -94,15 +94,16 @@
       %th Operations
     - @report.consistent_failures.each do |t|
       %tr
-        %td= link_for(t.group.test_configuration.build_configuration)
-        %td= link_for(t.group.test_configuration)
-        %td= link_for(t.group)
-        %td= h(t.name)
-        %td= h(t.result)
+        %td= h(t['build_configuration_name'])
+        %td= h(t['test_configuration_name'])
+        %td= h(t['group_name'])
+        %td= h(t['test_case_name'])
+        %td= h(t['test_case_result'])
         %td
           %ul.actions
-            %li= link_for(t, :label => 'Show')
-          %script{ :type => 'text/javascript' } Element.hide('consistent_failures')
+            %li= test_link(t)
+          %script{ :type => 'text/javascript' } Element.hide('consistent_failures');
+
 - if @report.test_runs.size > 1
   %h2 Revisions Covered By Report
   %p

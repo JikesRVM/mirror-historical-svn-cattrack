@@ -33,38 +33,51 @@ class Report::TestRunByRevision
     options[:order] = 'occurred_at DESC'
     @past_test_runs = Tdm::TestRun.find(:all, options)
     test_run_ids = @past_test_runs.collect {|tr| tr.id}
-
-    @new_failures = []
-    @new_successes = []
-    @intermittent_failures = []
-    @consistent_failures = []
-
-    @test_run.build_configurations.each do |bc|
-      bc.test_configurations.each do |tc|
-        tc.build_configuration = bc # Avoid loads when rendering
-        tc.groups.each do |g|
-          g.test_configuration = tc # Avoid loads when rendering
-          g.test_cases.each do |t|
-            t.group = g # Avoid loads when rendering
-            success = t.result == 'SUCCESS'
-            test_count, success_count = count(test_run_ids, bc.name, tc.name, g.name, t.name)
-            #puts "#{bc.name}.#{tc.name}.#{g.name}.#{t.name} success=#{success}, test_count=#{test_count}, success_count=#{success_count} #{t.id}.result=#{t.result}"
-            if (success and success_count == 0)
-              @new_successes << t
-            elsif (not success and success_count == test_count)
-              @new_failures << t
-            elsif (not success and success_count == 0)
-              @consistent_failures << t
-            elsif (success_count != test_count)
-              @intermittent_failures << t
-            end
-          end
-        end
-      end
-    end
-
     @test_runs = [@test_run] + @past_test_runs
     valid_test_runs_ids = @test_runs.collect {|tr| tr.id}
+
+    sql = <<SQL
+SELECT
+    build_configurations.name AS build_configuration_name,
+    test_configurations.name AS test_configuration_name,
+    groups.name AS group_name,
+    test_cases.name AS test_case_name,
+    count(case when build_configurations.test_run_id = #{@test_run.id} then 1 else NULL end) AS current_run,
+    count(*) AS total_runs,
+    count(case when build_configurations.test_run_id = #{@test_run.id} AND test_cases.result = 'SUCCESS' then 1 else NULL end) AS current_success,
+    count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
+    max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.id else NULL end) AS test_case_id,
+    max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.result else NULL end) AS test_case_result
+FROM build_configurations
+    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    LEFT JOIN groups ON groups.test_configuration_id = test_configurations.id
+    LEFT JOIN test_cases ON test_cases.group_id = groups.id
+WHERE
+    build_configurations.test_run_id IN (#{valid_test_runs_ids.join(', ')})
+GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
+ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name
+SQL
+    #HAVING count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) != count(*)
+
+    @new_successes = []
+    @new_failures = []
+    @intermittent_failures = []
+    @consistent_failures = []
+    @missing_tests = []
+
+    ActiveRecord::Base.connection.select_all(sql).each do |r|
+      if r['test_case_id'].nil?
+        @missing_tests << r
+      elsif r['current_success'] == '1' and r['total_successes'] == '1'
+        @new_successes << r
+      elsif r['current_success'] == '0' and r['total_successes'] == @past_test_runs.size.to_s
+        @new_failures << r
+      elsif r['total_successes'] == '0'
+        @consistent_failures << r
+      elsif (r['total_successes'] != r['total_runs'])
+        @intermittent_failures << r
+      end
+    end
 
     query = Olap::Query::Query.new
     query.filter = Olap::Query::Filter.new

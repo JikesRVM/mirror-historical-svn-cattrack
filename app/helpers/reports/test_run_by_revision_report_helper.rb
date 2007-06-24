@@ -14,4 +14,17 @@ module Reports::TestRunByRevisionReportHelper
   def tests_header(name, label)
     "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility\" onclick=\"Element.toggle('#{name}'); Element.toggleClassName('#{name}_toggle','open'); return false;\">#{label}</a>"
   end
+
+  def test_link(row)
+    options = {:controller => "/results/test_case", :action => 'show'}
+    options[:host_name] = @report.test_run.host.name
+    options[:test_run_name] = @report.test_run.name
+    options[:test_run_id] = @report.test_run.id
+    options[:build_configuration_name] = row['build_configuration_name']
+    options[:test_configuration_name] = row['test_configuration_name']
+    options[:group_name] = row['group_name']
+    options[:test_case_name] = row['test_case_name']
+
+    link_to('Show', options)
+  end
 end
