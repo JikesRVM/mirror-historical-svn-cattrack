@@ -12,13 +12,11 @@
 #
 class ErrorMailer < ActionMailer::Base
   def error(exception)
-    @subject    = 'CatTrack Error'
-    @body       = {}
-    @body["exception"] = exception
-    @recipients = SystemSetting['mail.on.error']
-    @from       = SystemSetting['mail.from']
-    @sent_on    = Time.now
-    @headers    = {}
+    subject 'CatTrack Error'
+    b = {"exception" => exception}
+    body b
+    recipients SystemSetting['mail.on.error']
+    from SystemSetting['mail.from']
     content_type("text/html")
   end
 end

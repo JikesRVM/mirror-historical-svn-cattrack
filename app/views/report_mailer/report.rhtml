@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <style type="text/css">
+    body {
+      margin-left: 10px;
+      margin-top: 10px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-size: x-small;
+      font-weight: normal;
+      background-color: #FFFFFF;
+      color: #000000;
+    }
+
+    tr {
+      font-size: x-small;
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-weight: normal;
+      color: #000000;
+    }
+
+    td {
+      font-size: x-small;
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-weight: normal;
+      color: #000000;
+    }
+    h3.missing_tests { color: #FF8c00; }
+    h3.new_failures { color: #FF0000; }
+    h3.new_successes { color: #00FF00; }
+  </style>
+</head>
+<body>
+<h1>Regression summary for <%= h(@test_run.name) %> (r<%= h(@test_run.revision) %>) on <%= h(@host.name) %>, <%= h(@test_run.occurred_at) %></h1>
+<% report_url = url_for(:controller => 'reports/test_run_by_revision_report', :action => 'show', :host_name => @host.name, :test_run_name => @test_run.name, :test_run_id => @test_run.id, :only_path => false) %>
+<p>Full Report URL: <a href="<%= report_url %>"><%= report_url %></a></p>
+<% if @report.test_runs.size > 1 %>
+<% scm_url = SystemSetting['scm.url'] %>
+<p>Revisions covered by this test run: <%= ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(', ') %></p>
+<% end %>
+<p>Test Runs covered by this report: <%= @report.test_runs.collect do |t| link_for(t, :label => "#{t.label} (r#{t.revision})") end.join(', ') %></p>
+
+<h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.successes.size) %></h2>
+
+<h3 class="missing_tests"><%= h(@report.missing_tests.size) %> missing tests this run</h3>
+<% if @report.missing_tests.size > 0 %>
+<table class="list">
+<% @report.missing_tests.each do |t| %>
+  <tr>
+    <td><%= h(t['build_configuration_name']) %></td>
+    <td><%= h(t['test_configuration_name']) %></td>
+    <td><%= h(t['group_name']) %></td>
+    <td><%= h(t['test_case_name']) %></td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<h3 class="new_failures"><%= h(@report.new_failures.size) %> new failures this run</h3>
+<% if @report.new_failures.size > 0 %>
+<table class="list">
+<% @report.new_failures.each do |t| %>
+  <tr>
+    <td><%= h(t['build_configuration_name']) %></td>
+    <td><%= h(t['test_configuration_name']) %></td>
+    <td><%= h(t['group_name']) %></td>
+    <td><%= h(t['test_case_name']) %></td>
+    <td><%= h(t['test_case_result']) %></td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<h3 class="new_successes"><%= h(@report.new_successes.size) %> new successes this run</h3>
+<% if @report.new_successes.size > 0 %>
+<table class="list">
+<% @report.new_successes.each do |t| %>
+  <tr>
+    <td><%= h(t['build_configuration_name']) %></td>
+    <td><%= h(t['test_configuration_name']) %></td>
+    <td><%= h(t['group_name']) %></td>
+    <td><%= h(t['test_case_name']) %></td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<h3 class="intermittent_failures"><%= h(@report.intermittent_failures.size) %> intermittent failures over this week</h3>
+<h3 class="consistent_failures"><%= h(@report.consistent_failures.size) %> consistent failures over this week</h3>
+
+<% if @report.perf_stats.size > 0 %>
+<h2>Performance Statistics</h2>
+<table class="report">
+  <tr>
+    <th></th>
+    <% @report.perf_stat_headers.each_with_index do |c, i| %>
+      <% next if i == 0 %>
+      <th><%= h(c) %></th>
+    <% end %>
+  </tr>
+  <% @report.perf_stats.each_with_index do |r,r_index| %>
+    <tr>
+      <th><%= h(r[0]) %></th>
+      <% 1.upto(r.size - 1) do |c_index| %>
+        <th><%= h(r[c_index]) %></th>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<% end %>
+
+<% results = @report.build_configuration_name_by_test_run %>
+<h2>Build Configuration By Test Run</h2>
+<table class="report">
+  <tr>
+    <th></th>
+    <% results.column_headers.each do |c| %>
+      <% test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s} %>
+      <th><%= h(test_run.label) %></th>
+    <% end %>
+  </tr>
+  <% results.row_headers.each_with_index do |r,r_index| %>
+    <tr>
+      <th><%= h(results.row.label_for(r)) %></th>
+      <% 0.upto(results.column_headers.size - 1) do |c_index| %>
+        <%= cell(results.tabular_data[r_index][c_index].to_i) %>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<% if @report.tcn_by_tr.size > 0 %>
+<h2>Test Case By Test Run</h2>
+<table class="report">
+  <tr>
+    <th></th>
+    <% @report.tcn_by_tr_headers.each_with_index do |c, i| %>
+      <% next if i == 0 %>
+      <th><%= h(c) %></th>
+    <% end %>
+  </tr>
+  <% @report.tcn_by_tr.each_with_index do |r,r_index| %>
+    <tr>
+      <th><%= h(r[0]) %></th>
+      <% 1.upto(r.size - 2) do |c_index| %>
+        <%= cell(r[c_index].to_i) %>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<% end %>
+
+</body>
+</html>
