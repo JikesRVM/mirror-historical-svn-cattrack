@@ -17,8 +17,7 @@ class ReportMailerTest < Test::Unit::TestCase
     assert_equal(["rvm-regression@cs.anu.edu.au"], response.from)
     assert_equal("1.0", response.mime_version)
     assert_equal("text/html", response.content_type)
-    write_body('test_report', response.body)
-    assert_equal read_fixture('test_report'), response.body
+    assert_expected_body('test_report', response.body)
   end
 
   def test_report_minimal_history_new_successes_and_failures
@@ -37,8 +36,7 @@ class ReportMailerTest < Test::Unit::TestCase
 
     response = ReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('1 FAILURE', response.subject)
-    write_body('test_report_minimal_history_new_successes_and_failures', response.body)
-    assert_equal read_fixture('test_report_minimal_history_new_successes_and_failures'), response.body
+    assert_expected_body('test_report_minimal_history_new_successes_and_failures', response.body)
   end
 
   def test_report_minimal_history_missing_tests
@@ -51,8 +49,7 @@ class ReportMailerTest < Test::Unit::TestCase
     olappy(Tdm::TestRun.find(test_run_1.id))
     response = ReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
-    write_body('test_report_minimal_history_missing_tests', response.body)
-    assert_equal read_fixture('test_report_minimal_history_missing_tests'), response.body
+    assert_expected_body('test_report_minimal_history_missing_tests', response.body)
   end
 
   def test_report_minimal_history_consistent_and_intermitent_failures
@@ -90,8 +87,7 @@ class ReportMailerTest < Test::Unit::TestCase
 
     response = ReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('2 FAILURES', response.subject)
-    write_body('test_report_minimal_history_consistent_and_intermitent_failures', response.body)
-    assert_equal read_fixture('test_report_minimal_history_consistent_and_intermitent_failures'), response.body
+    assert_expected_body('test_report_minimal_history_consistent_and_intermitent_failures', response.body)
   end
 
   def test_report_with_perf_stats
@@ -103,10 +99,14 @@ class ReportMailerTest < Test::Unit::TestCase
 
     response = ReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
-    write_body('test_report_with_perf_stats', response.body)
-    assert_equal read_fixture('test_report_with_perf_stats'), response.body
+    assert_expected_body('test_report_with_perf_stats', response.body)
   end
   private
+
+  def assert_expected_body(action, body)
+    write_body(action, body)  if false
+    assert_equal read_fixture(action), body
+  end
 
   def read_fixture(action)
     IO.readlines("#{RAILS_ROOT}/test/fixtures/report_mailer/#{action}.html").join
@@ -115,6 +115,6 @@ class ReportMailerTest < Test::Unit::TestCase
   def write_body(name, body)
     File.open("#{name}.html", 'w+') do |f|
       f.write(body)
-    end if false
+    end
   end
 end
