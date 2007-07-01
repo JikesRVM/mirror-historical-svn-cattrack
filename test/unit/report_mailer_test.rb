@@ -13,7 +13,8 @@ class ReportMailerTest < Test::Unit::TestCase
   def test_report
     response = ReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
-    assert_equal(["peter@realityforge.org"], response.to)
+    assert_equal(["jikesrvm-regression@lists.sourceforge.net"], response.to)
+    assert_equal(["jikesrvm-core@lists.sourceforge.net"], response.reply_to)
     assert_equal(["rvm-regression@cs.anu.edu.au"], response.from)
     assert_equal("1.0", response.mime_version)
     assert_equal("text/html", response.content_type)

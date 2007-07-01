@@ -31,22 +31,29 @@
     - config = ActiveRecord::Base.configurations[RAILS_ENV]
     %tr
       %th Database Adapter
-      %td= config['adapter']
+      %td= h(config['adapter'])
     - config.each_pair do |k,v|
       - if ('password' != k and 'adapter' != k)
         %tr
           %th
             Database
-            = k.capitalize
-          %td= v
+            = h(k.capitalize)
+          %td= h(v)
   %h2 Mail Configuration
   %table
     %tr
       %th Mail From
-      %td= SystemSetting['mail.from']
+      %td= h(SystemSetting['mail.from'])
     %tr
       %th Mail on Error
-      %td= SystemSetting['mail.on.error']
+      %td= h(SystemSetting['mail.on.error'])
+    %tr
+      %th Report Mail To
+      %td= h(SystemSetting['report.mail.to'])
+    %tr
+      %th Report Reply To
+      %td= h(SystemSetting['report.reply.to'])
+
   %h2 Session Info
   %table
     %tr

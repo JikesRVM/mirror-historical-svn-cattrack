@@ -42,3 +42,11 @@ s_mail_on_error:
   id: 8
   name: 'mail.on.error'
   value: 'peter@realityforge.org'
+s_report_mail_to:
+  id: 9
+  name: 'report.mail.to'
+  value: 'jikesrvm-regression@lists.sourceforge.net'
+s_report_reply_to:
+  id: 10
+  name: 'report.reply.to'
+  value: 'jikesrvm-core@lists.sourceforge.net'

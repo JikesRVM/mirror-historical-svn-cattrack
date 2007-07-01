@@ -34,6 +34,8 @@ Mailer Setup
 
  > SystemSetting.create!(:name => 'mail.from', :value => 'rvm-regression@cs.anu.edu.au')
  > SystemSetting.create!(:name => 'mail.on.error', :value => 'cattrack.admin@example.com')
+ > SystemSetting.create!(:name => 'report.mail.to', :value => 'jikesrvm-regression@lists.sourceforge.net')
+ > SystemSetting.create!(:name => 'report.reply.to', :value => 'jikesrvm-core@lists.sourceforge.net')
 
 Web Setup
 ---------
