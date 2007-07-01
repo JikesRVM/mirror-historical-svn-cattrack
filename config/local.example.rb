@@ -23,5 +23,7 @@ ActionMailer::Base.server_settings = {
 
 ActionMailer::Base.default_charset = "utf-8"
 
+ActionMailer::Base.default_url_options = {:host => 'domain.of.http.server.net'}
+
 # Uncomment if not hosted at top level
 # ActionController::AbstractRequest.relative_url_root = "/cattrack"
