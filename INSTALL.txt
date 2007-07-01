@@ -63,5 +63,5 @@ Cron Setup
 
 2. Edit crontab so that imports occur every 12 or so hours. Cron tab line follows;
 
- 0 */12 * * * cd path/to/cattrack && ./script/runner -e production TestRunImporter.process_incoming_test_runs
+ 0 */12 * * * cd path/to/cattrack && ./script/runner -e production TestRunImporter.process_incoming_test_runs(true)
 

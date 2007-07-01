@@ -21,6 +21,11 @@ class TestRunImporterTest < Test::Unit::TestCase
     @host = "rvmx86lnx64.anu.edu.au"
     @host_dir = "#{@results_dir}/incoming/#{@host}"
     FileUtils.mkdir_p @host_dir
+
+    ActionMailer::Base.delivery_method = :test
+    ActionMailer::Base.perform_deliveries = true
+    ActionMailer::Base.deliveries = []
+    ActionMailer::Base.default_url_options = {:host => '127.0.0.1'}
   end
 
   def teardown
@@ -57,6 +62,34 @@ class TestRunImporterTest < Test::Unit::TestCase
     filename = "#{@host_dir}/Report.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", filename
     TestRunImporter.process_incoming_test_runs
+    assert_equal(0, ActionMailer::Base.deliveries.size)
+    assert_equal(initial + 1, Tdm::TestRun.count)
+    assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
+    assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
+
+    logs = AuditLog.find(:all, :order => 'created_at')
+    messages = logs.collect {|l| [l.name, l.message]}
+    assert_equal(6, messages.size)
+    assert_equal(["import.started", ""], messages[0])
+    assert_equal(["import.host", "rvmx86lnx64.anu.edu.au"], messages[1])
+    assert_equal(["import.file.started", filename], messages[2])
+    assert_equal("olap.import.test-run", messages[3][0])
+    assert_not_nil(messages[3][1] =~ /id=\d+ \(tiny\)/)
+    assert_equal(["import.file.success", filename], messages[4])
+    assert_equal(["import.completed", ""], messages[5])
+    logs.each do |l|
+      assert_equal(nil, l.user_id)
+      assert_equal(nil, l.ip_address)
+    end
+  end
+
+  def test_process_a_single_successful_file_and_perform_mailout
+    purge_log
+    initial = Tdm::TestRun.count
+    filename = "#{@host_dir}/Report.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", filename
+    TestRunImporter.process_incoming_test_runs(true)
+    assert_equal(1, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
@@ -83,6 +116,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     filename = "#{@host_dir}/Report.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", filename
     TestRunImporter.process_incoming_test_runs
+    assert_equal(0, ActionMailer::Base.deliveries.size)
     assert_equal(initial, Tdm::TestRun.count)
     assert_equal(false, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
@@ -100,7 +134,8 @@ class TestRunImporterTest < Test::Unit::TestCase
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", sfilename
     hfilename = "#{@host_dir}/HugeReport.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", hfilename
-    TestRunImporter.process_incoming_test_runs
+    TestRunImporter.process_incoming_test_runs(true)
+    assert_equal(1, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/HugeReport.xml.gz"))

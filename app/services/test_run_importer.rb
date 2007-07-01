@@ -18,7 +18,7 @@ end
 class TestRunImporter
   cattr_accessor :logger
 
-  def self.process_incoming_test_runs
+  def self.process_incoming_test_runs(perform_mailout=false)
     results_base_dir = SystemSetting['results.dir']
     raise ImportException.new("Missing 'results.dir' system setting") unless results_base_dir
     AuditLog.log('import.started')
@@ -50,6 +50,7 @@ class TestRunImporter
 
           test_run = TestRunBuilder.create_from(host, temp_filename)
           TestRunTransformer.build_olap_model_from(test_run)
+          ReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
           logger.info("Successfully processed file: #{f}")
           AuditLog.log('import.file.success', f)
           FileUtils.mkdir_p "#{processed_dir}/#{host}"
