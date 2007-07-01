@@ -22,7 +22,7 @@ class SeparateTestCaseStatistics < ActiveRecord::Migration
     add_index :test_case_numerical_statistics, [:owner_id, :key, :value]
     add_foreign_key :test_case_numerical_statistics, [:owner_id], :test_cases, [:id], :on_delete => :cascade
     ActiveRecord::Base.transaction do
-      sql <<SQL
+      sql = <<SQL
 INSERT INTO test_case_numerical_statistics
  SELECT test_case_statistics.owner_id, test_case_statistics.key, CAST(test_case_statistics.value AS float8) AS value
  FROM test_case_statistics
