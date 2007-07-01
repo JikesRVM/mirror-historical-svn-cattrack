@@ -28,9 +28,9 @@ INSERT INTO test_case_numerical_statistics
  FROM test_case_statistics
  WHERE test_case_statistics.value SIMILAR TO '^\\\\d+$|^\\\\d+\\.\\\\d+$'
 SQL
-      ActiveRecord::Base.execute(sql)
+      ActiveRecord::Base.connection.execute(sql)
       sql = "DELETE FROM test_case_statistics WHERE test_case_statistics.value SIMILAR TO '^\\\\d+$|^\\\\d+\\\\.\\\\d+$'"
-      ActiveRecord::Base.execute(sql)
+      ActiveRecord::Base.connection.execute(sql)
     end
   end
 
