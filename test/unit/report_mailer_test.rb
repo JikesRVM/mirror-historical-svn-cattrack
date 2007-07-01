@@ -104,7 +104,7 @@ class ReportMailerTest < Test::Unit::TestCase
   private
 
   def assert_expected_body(action, body)
-    write_body(action, body)  if false
+    write_body(action, body) if false
     assert_equal read_fixture(action), body
   end
 
