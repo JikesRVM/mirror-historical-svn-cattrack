@@ -30,7 +30,7 @@
   </style>
 </head>
 <body>
-<h2>Regression summary for <%= h(@test_run.name) %> (r<%= h(@test_run.revision) %>) on <%= h(@host.name) %>, <%= h(@test_run.occurred_at) %></h2>
+<h2>Regression summary for <%= h(@test_run.variant) %> (r<%= h(@test_run.revision) %>) on <%= h(@host.name) %>, <%= h(@test_run.occurred_at) %></h2>
 <% report_url = url_for(:controller => 'reports/test_run_by_revision_report', :action => 'show', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
 <p>See the <a href="<%= report_url %>">Full Report</a></p>
 <% if @report.test_runs.size > 1 %>

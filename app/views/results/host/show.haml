@@ -4,6 +4,7 @@
 %table.list
   %tr
     %th Name
+    %th Variant
     %th Success Rate
     %th Revision
     %th Time
@@ -11,6 +12,7 @@
   - @test_runs.each do |t|
     %tr
       %td= h(t.name)
+      %td= h(t.variant)
       %td= h(t.success_rate)
       %td= revision_link(t.revision)
       %td= h(t.occurred_at)
