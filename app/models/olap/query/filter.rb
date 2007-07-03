@@ -36,6 +36,7 @@ class Olap::Query::Filter < ActiveRecord::Base
   SearchField.new(Olap::HostDimension, :name),
 
   SearchField.new(Olap::TestRunDimension, :name),
+  SearchField.new(Olap::TestRunDimension, :variant),
 
   SearchField.new(Olap::BuildTargetDimension, :name),
   SearchField.new(Olap::BuildTargetDimension, :arch),

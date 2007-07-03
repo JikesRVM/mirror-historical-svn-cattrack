@@ -47,6 +47,7 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   def assert_standard_edit_assigns
     [
     [:test_run_names, ["core"]],
+    [:test_run_variants, ["core"]],
     [:build_target_names, ["ia32_linux"]],
     [:build_configuration_bootimage_class_inclusion_policies, ["complete", "minimal"]],
     [:build_target_address_sizes, ["32"]],
@@ -72,14 +73,14 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
 
   def test_new_get
     get(:new, {}, session_data)
-    assert_normal_response('new', 1 + 18)
+    assert_normal_response('new', 1 + 19)
     assert_standard_edit_assigns
     assert_new_record(:filter)
   end
 
   def test_new_post_with_error
     post(:new, {:filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_normal_response('new', 1 + 18)
+    assert_normal_response('new', 1 + 19)
     assert_standard_edit_assigns
     assert_new_record(:filter)
     assert_error_on(:filter, :name)
@@ -101,14 +102,14 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
   def test_edit_get
     get(:edit, {:id => 1}, session_data)
     assert_response(:success)
-    assert_normal_response('edit', 1 + 18)
+    assert_normal_response('edit', 1 + 19)
     assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
   end
 
   def test_edit_post_with_error
     post(:edit, {:id => 1, :filter => {:name => '', :description => '', :revision_after => '123'}}, session_data)
-    assert_normal_response('edit', 1 + 18)
+    assert_normal_response('edit', 1 + 19)
     assert_standard_edit_assigns
     assert_equal(1, assigns(:filter).id)
     assert_error_on(:filter, :name)

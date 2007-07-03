@@ -27,8 +27,8 @@ class Report::TestRunByRevision
 
   def perform
     options = {}
-    sql = 'host_id = ? AND occurred_at < ? AND name = ? AND id != ?'
-    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.name, @test_run.id ]
+    sql = 'host_id = ? AND occurred_at < ? AND variant = ? AND id != ?'
+    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant, @test_run.id ]
     options[:limit] = @window_size
     options[:order] = 'occurred_at DESC'
     @past_test_runs = Tdm::TestRun.find(:all, options)

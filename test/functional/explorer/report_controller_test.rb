@@ -33,7 +33,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
 
   def test_adhoc
     get(:adhoc, {}, {:user_id => 1})
-    assert_normal_response('adhoc', 6 + 18)
+    assert_normal_response('adhoc', 6 + 19)
     assert_adhoc_params
 
     #defaults
@@ -60,7 +60,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   def test_adhoc_post
     purge_log
     post(:adhoc, {'presentation' => 1, :query => {:measure_id => 1, :primary_dimension => 'test_configuration_name', :secondary_dimension => 'test_case_name'} }, {:user_id => 1})
-    assert_normal_response('adhoc', 2 + 6 + 18)
+    assert_normal_response('adhoc', 2 + 6 + 19)
     assert_adhoc_params
 
     assert_equal(1, assigns(:query).measure.id )
@@ -77,6 +77,7 @@ class Explorer::ReportControllerTest < Test::Unit::TestCase
   def assert_dimension_assigns
     [
     [:test_run_names, ["core"]],
+    [:test_run_variants, ["core"]],
     [:build_target_names, ["ia32_linux"]],
     [:build_configuration_bootimage_class_inclusion_policies, ["complete", "minimal"]],
     [:build_target_address_sizes, ["32"]],
