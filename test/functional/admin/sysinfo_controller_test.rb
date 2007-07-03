@@ -87,7 +87,7 @@ SQL
     ["TestCase", 2, Olap::TestCaseDimension],
     ["Time", 2, Olap::TimeDimension],
     ["Revision", 2, Olap::RevisionDimension],
-    ["Result", 2, Olap::ResultDimension],
+    ["Result", 1, Olap::ResultDimension],
     ["Statistic", 0, Olap::StatisticDimension],
     ],
     @controller.send(:dimension_data))

@@ -28,19 +28,11 @@ class Tdm::GroupTest < Test::Unit::TestCase
     assert_equal( 1, group.test_configuration_id )
     assert_equal( 1, group.test_configuration.id )
     assert_equal( [1 , 2], group.test_case_ids )
-    assert_equal( [], group.excluded_ids )
     assert_equal( [1 , 2], group.success_ids )
   end
 
   def test_success_rate
     assert_equal( "2/2", Tdm::Group.find(1).success_rate )
-    test_case = Tdm::TestCase.new
-    test_case.attributes = Tdm::TestCase.find(1).attributes
-    test_case.name = 'X'
-    test_case.result = 'EXCLUDED'
-    test_case.output = "X"
-    test_case.save!
-    assert_equal( "2/2 (1 excluded)", Tdm::Group.find(1).success_rate )
   end
 
   def self.attributes_for_new

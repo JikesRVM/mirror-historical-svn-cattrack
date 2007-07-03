@@ -79,9 +79,8 @@ class TestRunBuilderTest < Test::Unit::TestCase
     tc.groups.each do |g|
       if g.name == 'basic'
         assert_equal( 'basic', g.name )
-        assert_equal( 49, g.test_cases.size )
+        assert_equal( 48, g.test_cases.size )
         assert_equal( 45, g.successes.size )
-        assert_equal( 1, g.excluded.size )
 
         test_case = nil
         g.test_cases.each { |tc| test_case = tc if tc.name == 'ImageSizes' }
@@ -115,7 +114,6 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_equal( 'opttests', g.name )
         assert_equal( 1, g.test_cases.size )
         assert_equal( 1, g.successes.size )
-        assert_equal( 0, g.excluded.size )
       end
     end
 
@@ -149,14 +147,12 @@ class TestRunBuilderTest < Test::Unit::TestCase
     tc.groups.each do |g|
       if g.name == 'basic'
         assert_equal( 'basic', g.name )
-        assert_equal( 49, g.test_cases.size )
+        assert_equal( 48, g.test_cases.size )
         assert_equal( 45, g.successes.size )
-        assert_equal( 1, g.excluded.size )
       else
         assert_equal( 'opttests', g.name )
         assert_equal( 1, g.test_cases.size )
         assert_equal( 1, g.successes.size )
-        assert_equal( 0, g.excluded.size )
       end
     end
     test_run
@@ -214,9 +210,8 @@ class TestRunBuilderTest < Test::Unit::TestCase
     tc.groups.each do |g|
       if g.name == 'basic'
         assert_equal( 'basic', g.name )
-        assert_equal( 49, g.test_cases.size )
+        assert_equal( 48, g.test_cases.size )
         assert_equal( 45, g.successes.size )
-        assert_equal( 1, g.excluded.size )
 
         test_case = nil
         g.test_cases.each { |tc| test_case = tc if tc.name == 'ImageSizes' }
@@ -250,7 +245,6 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_equal( 'opttests', g.name )
         assert_equal( 1, g.test_cases.size )
         assert_equal( 1, g.successes.size )
-        assert_equal( 0, g.excluded.size )
       end
     end
 

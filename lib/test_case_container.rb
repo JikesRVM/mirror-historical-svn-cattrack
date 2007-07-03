@@ -12,9 +12,6 @@
 #
 module TestCaseContainer
   def success_rate
-    excluded = self.excluded.count
-    total = self.test_cases.count - excluded
-    postfix = (excluded > 0) ? " (#{excluded} excluded)" : ''
-    "#{self.successes.count}/#{total}#{postfix}"
+    "#{self.successes.count}/#{self.test_cases.count}"
   end
 end

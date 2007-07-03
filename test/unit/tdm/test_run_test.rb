@@ -41,8 +41,6 @@ class Tdm::TestRunTest < Test::Unit::TestCase
     #
     assert_equal( 13, test_run.successes.size )
     assert_equal( [1, 2, 4, 3, 5, 6, 8, 7, 13, 14, 17, 16, 15], test_run.success_ids )
-    assert_equal( 0, test_run.excluded.size )
-    assert_equal( [], test_run.excluded_ids )
     assert_equal( 13, test_run.test_cases.size )
     assert_equal( [1, 2, 4, 3, 5, 6, 8, 7, 13, 14, 17, 16, 15], test_run.test_case_ids )
     assert_equal( 0, test_run.non_successes.size )

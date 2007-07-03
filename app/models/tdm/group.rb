@@ -21,7 +21,6 @@ class Tdm::Group < ActiveRecord::Base
 
   has_many :test_cases, :order => 'name', :dependent => :destroy
   has_many :successes, :order => 'name', :class_name => 'TestCase', :conditions => "result = 'SUCCESS'"
-  has_many :excluded, :order => 'name', :class_name => 'TestCase', :conditions => "result = 'EXCLUDED'"
 
   include TestCaseContainer
 

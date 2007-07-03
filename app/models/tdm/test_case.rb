@@ -22,7 +22,7 @@ class Tdm::TestCase < ActiveRecord::Base
   validates_presence_of :command
   validates_numericality_of :exit_code, :only_integer => true
   validates_numericality_of :time, :only_integer => true
-  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE EXCLUDED OVERTIME )
+  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE OVERTIME )
   validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
   validates_not_null :output
   validates_positiveness_of :time

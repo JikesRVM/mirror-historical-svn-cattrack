@@ -44,7 +44,6 @@ class Tdm::TestRun < ActiveRecord::Base
 
   test_case_rel :successes, "test_cases.result = 'SUCCESS'"
   test_case_rel :non_successes, "test_cases.result != 'SUCCESS'"
-  test_case_rel :excluded, "test_cases.result = 'EXCLUDED'"
   test_case_rel :test_cases
 
   include TestCaseContainer

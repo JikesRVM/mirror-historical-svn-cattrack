@@ -1127,26 +1127,6 @@ main:
 <output>test/org/jikesrvm/basic/core/threads/TestStop</output>
 </test>
 <test>
-<id>TestSuspend</id>
-<class>test.org.jikesrvm.basic.core.threads.TestSuspend</class>
-<args/>
-<working-directory>/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic</working-directory>
-<command>/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms20M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic/classes" test.org.jikesrvm.basic.core.threads.TestSuspend </command>
-<rvm-parameters>
-    <parameter key="initial.heapsize" value="20"/>
-    <parameter key="max.heapsize" value="150"/>
-    <parameter key="time.limit" value="20"/>
-    <parameter key="extra.args" value=""/>
-    <parameter key="processors" value="all"/>
-    <parameter key="max.opt.level" value=""/>
-  </rvm-parameters>
-<exit-code>${test.TestSuspend.exit.code}</exit-code>
-<time>12</time>
-<result>EXCLUDED</result>
-<result-explanation>Test excluded.</result-explanation>
-<output>test/org/jikesrvm/basic/core/threads/TestSuspend</output>
-</test>
-<test>
 <id>TestTimeSlicing</id>
 <class>test.org.jikesrvm.basic.core.threads.TestTimeSlicing</class>
 <args/>
@@ -2168,26 +2148,6 @@ Total Size: 17511987
 <result>SUCCESS</result>
 <result-explanation/>
 <output>test/org/jikesrvm/basic/core/threads/TestStop</output>
-</test>
-<test>
-<id>TestSuspend</id>
-<class>test.org.jikesrvm.basic.core.threads.TestSuspend</class>
-<args/>
-<working-directory>/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic</working-directory>
-<command>/home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms50M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic/classes" test.org.jikesrvm.basic.core.threads.TestSuspend </command>
-<rvm-parameters>
-    <parameter key="initial.heapsize" value="50"/>
-    <parameter key="max.heapsize" value="150"/>
-    <parameter key="time.limit" value="20"/>
-    <parameter key="extra.args" value=""/>
-    <parameter key="processors" value="all"/>
-    <parameter key="max.opt.level" value=""/>
-  </rvm-parameters>
-<exit-code>${test.TestSuspend.exit.code}</exit-code>
-<time>11</time>
-<result>EXCLUDED</result>
-<result-explanation>Test excluded.</result-explanation>
-<output>test/org/jikesrvm/basic/core/threads/TestSuspend</output>
 </test>
 <test>
 <id>TestTimeSlicing</id>

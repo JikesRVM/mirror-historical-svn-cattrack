@@ -60,7 +60,7 @@ class Explorer::FilterControllerTest < Test::Unit::TestCase
     [:build_configuration_runtime_compilers, ["base", "opt"]],
     [:build_target_operating_systems, ["Linux"]],
     [:build_configuration_assertion_levels, ["normal"]],
-    [:result_names, ["EXCLUDED", "FAILURE", "OVERTIME", "SUCCESS"]],
+    [:result_names, ["FAILURE", "OVERTIME", "SUCCESS"]],
     [:build_configuration_mmtk_plans, ["org.mmtk.plan.generational.marksweep.GenMS"]],
     [:test_case_groups, ["basic"]],
     [:test_case_names, ["ImageSizes", "TestSuspend"]],

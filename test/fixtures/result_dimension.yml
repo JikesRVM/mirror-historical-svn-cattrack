@@ -18,7 +18,4 @@ r2:
   name: 'FAILURE'
 r3:
   id: 3
-  name: 'EXCLUDED'
-r4:
-  id: 4
   name: 'OVERTIME'

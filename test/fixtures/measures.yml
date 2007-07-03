@@ -36,18 +36,12 @@ m4:
   result_measure: true
 m5:
   id: 5
-  name: Excluded Rate
-  sql: CAST(count(case when result_dimension.name != 'EXCLUDED' then NULL else 1 end) AS double precision) / CAST(count(*) AS double precision) * 100.0
-  joins: result
-  result_measure: true
-m6:
-  id: 6
   name: Average
   sql: avg(statistic_facts.value)
   joins: ''
   result_measure: false
-m7:
-  id: 7
+m6:
+  id: 6
   name: Maximum
   sql: max(statistic_facts.value)
   joins: ''
