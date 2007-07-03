@@ -25,8 +25,8 @@ class RemoveExcludedTests < ActiveRecord::Migration
       if result
         ActiveRecord::Base.connection.execute("DELETE FROM result_facts WHERE result_id = #{result.id}")
         ActiveRecord::Base.connection.execute("DELETE FROM statistic_facts WHERE result_id = #{result.id}")
+        result.destroy
       end
-      result.destroy
       measure = Measure.find_by_name("Excluded Rate")
       measure.destroy if measure
     end
