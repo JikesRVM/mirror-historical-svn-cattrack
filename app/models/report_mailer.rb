@@ -2,6 +2,7 @@ class ReportMailer < ActionMailer::Base
 
   helper ApplicationHelper
   helper PresentationHelper
+  helper ReportMailerHelper
 
   def report(test_run)
     report = Report::TestRunByRevision.new(test_run)

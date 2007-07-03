@@ -96,7 +96,8 @@
     <td></td>
     <% @report.perf_stat_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
-      <td><%= h(c) %></td>
+      <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
+      <td><%= h(test_run_label(test_run, @report.test_runs)) %></td>
     <% end %>
   </tr>
   <% @report.perf_stats.each_with_index do |r,r_index| %>
@@ -117,7 +118,7 @@
     <td></td>
     <% results.column_headers.each do |c| %>
       <% test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s} %>
-      <td><%= h(test_run.label) %></td>
+      <td><%= h(test_run_label(test_run, @report.test_runs)) %></td>
     <% end %>
   </tr>
   <% results.row_headers.each_with_index do |r,r_index| %>
@@ -137,7 +138,8 @@
     <td></td>
     <% @report.tcn_by_tr_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
-      <td><%= h(c) %></td>
+      <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
+      <td><%= h(test_run_label(test_run, @report.test_runs)) %></td>
     <% end %>
   </tr>
   <% @report.tcn_by_tr.each_with_index do |r,r_index| %>
