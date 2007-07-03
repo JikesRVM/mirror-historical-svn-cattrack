@@ -41,7 +41,7 @@
   link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_name => t.name, :test_run_id => t.id, :only_path => false)
   end.join(",\n") %></p>
 
-<h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.successes.size) %></h2>
+<h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_cases.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_cases.size.to_f * 100.0).to_i %>%)</h2>
 
 <h3 style="color: #FF8c00;"><%= h(@report.missing_tests.size) %> missing tests this run</h3>
 <% if @report.missing_tests.size > 0 %>
