@@ -14,11 +14,18 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TestRunBuilderTest < Test::Unit::TestCase
   def test_create_from_gzipped
-    do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz")
+    test_run = do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz")
+    assert_equal( test_run.name, test_run.variant )
   end
 
   def test_create_from
-    do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml")
+    test_run = do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/Report.xml")
+    assert_equal( test_run.name, test_run.variant )
+  end
+
+  def test_create_from_results_with_variant
+    test_run = do_create_from_test("#{RAILS_ROOT}/test/fixtures/data/ReportWithVariant.xml")
+    assert_equal( 'tiny-sse', test_run.variant )
   end
 
   def do_create_from_test(filename)
@@ -152,6 +159,7 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_equal( 0, g.excluded.size )
       end
     end
+    test_run
   end
 
   def test_create_from_with_failed_build_run
