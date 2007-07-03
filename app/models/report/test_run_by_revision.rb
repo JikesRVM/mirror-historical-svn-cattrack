@@ -115,15 +115,31 @@ SQL
 
     column_count = query_result.column_headers.size
     @perf_stats = []
+
+    test_runs = @test_runs.reverse
+
+    @perf_stats[0] = []
+    @perf_stats[0][0] = 'Success Rate'
+    if query_result.column_headers.size > 0
+      query_result.column_headers.each_with_index do |c, i|
+        test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
+        @perf_stats[0][i + 1] = "#{test_run.successes.size}/#{test_run.test_cases.size}"
+      end
+    else
+      (0..(test_runs.size-1)).each do |i|
+        @perf_stats[0][i + 1] = "#{test_runs[i].successes.size}/#{test_runs[i].test_cases.size}"
+      end
+    end
+
     query_result.tabular_data.each_with_index do |row, i|
-      @perf_stats[i] = []
+      @perf_stats[i + 1] = []
       if query_result.row_headers[i] == 'aggregate.best.score'
-        @perf_stats[i][0] = 'SPECjvm98'
+        @perf_stats[i + 1][0] = 'SPECjvm98'
       else
-        @perf_stats[i][0] = 'SPECjbb2005'
+        @perf_stats[i + 1][0] = 'SPECjbb2005'
       end
       row.each_with_index do |value, j|
-        @perf_stats[i][1 + j] = value
+        @perf_stats[i + 1][1 + j] = value
       end
     end
 

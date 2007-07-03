@@ -89,7 +89,7 @@
 <h3 class="intermittent_failures"><%= h(@report.intermittent_failures.size) %> intermittent failures over this week</h3>
 <h3 class="consistent_failures"><%= h(@report.consistent_failures.size) %> consistent failures over this week</h3>
 
-<% if @report.perf_stats.size > 0 %>
+<% if @report.perf_stats.size > 1 or @report.test_runs.size > 1 %>
 <h2>Performance Statistics</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
