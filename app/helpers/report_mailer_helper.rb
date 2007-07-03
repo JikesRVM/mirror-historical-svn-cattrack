@@ -16,7 +16,7 @@ module ReportMailerHelper
       tr != test_run and tr.occurred_at.yday == test_run.occurred_at.yday and tr.occurred_at.year == test_run.occurred_at.year
     end.size > 0
     if include_time
-      test_run.occurred_at.strftime('%d/%m %H:%M')
+      test_run.occurred_at.strftime('%d/%m<br/>%H:%M')
     else
       test_run.occurred_at.strftime('%d/%m')
     end

@@ -25,7 +25,7 @@ class ReportMailerHelperTest < Test::Unit::TestCase
     assert_equal(["20/10", "07/11"], do_label_test(test_runs))
     test_run_1 = clone_test_run(Tdm::TestRun.find(1), -120)
     test_runs << test_run_1
-    assert_equal(["20/10 00:00", "07/11", "20/10 00:02"], do_label_test(test_runs))
+    assert_equal(["20/10<br/>00:00", "07/11", "20/10<br/>00:02"], do_label_test(test_runs))
   end
 
   def do_label_test(test_runs)
