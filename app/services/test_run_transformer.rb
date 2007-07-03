@@ -16,7 +16,7 @@ class TestRunTransformer
   def self.build_olap_model_from(test_run)
     Tdm::TestRun.transaction do
       host = Olap::HostDimension.find_or_create_by_name(test_run.host.name)
-      tr = Olap::TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name)
+      tr = Olap::TestRunDimension.create!(:source_id => test_run.id, :name => test_run.name, :variant => test_run.variant)
       build_target = create_build_target(test_run.build_target)
       revision = Olap::RevisionDimension.find_or_create_by_revision(test_run.revision)
 

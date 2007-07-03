@@ -15,6 +15,9 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Tdm::TestRunTest < Test::Unit::TestCase
   def test_label
     assert_equal('core-1', Tdm::TestRun.find(1).label)
+    tr = Tdm::TestRun.find(1)
+    tr.variant = 'coreV'
+    assert_equal('coreV-1', tr.label)
   end
 
   def test_parent_node
@@ -27,6 +30,7 @@ class Tdm::TestRunTest < Test::Unit::TestCase
     assert_equal( 1234, test_run.revision )
     assert_equal( "2005-10-20T00:00:00Z", test_run.occurred_at.xmlschema )
     assert_equal( 'core', test_run.name )
+    assert_equal( 'core', test_run.variant )
     assert_equal( 1, test_run.host_id )
     assert_equal( 1, test_run.host.id )
     assert_equal( 1, test_run.build_target.id )
@@ -50,16 +54,16 @@ class Tdm::TestRunTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :host_id => 1, :revision => 123, :occurred_at => Time.now}
+    {:name => 'foo', :variant => 'fooV', :host_id => 1, :revision => 123, :occurred_at => Time.now}
   end
   def self.non_null_attributes
-    [:name, :host_id, :revision, :occurred_at]
+    [:name, :variant, :host_id, :revision, :occurred_at]
   end
   def self.str_length_attributes
-    [[:name, 76]]
+    [[:name, 75],[:variant, 75]]
   end
   def self.bad_attributes
-    [[:revision, -1],[:name, '.']]
+    [[:revision, -1],[:name, '.'],[:variant, '.']]
   end
 
   perform_basic_model_tests

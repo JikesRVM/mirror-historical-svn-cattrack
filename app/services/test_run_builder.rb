@@ -35,6 +35,13 @@ class TestRunBuilder
         test_run.name = test_run_name
         test_run.revision = xml.elements['/report/revision'].text.to_i
         test_run.occurred_at = Time.parse(xml.elements['/report/time'].text).getutc
+
+        if xml.elements['/report/variant']
+          test_run.variant = xml.elements['/report/variant'].text
+        else
+          test_run.variant = test_run_name
+        end
+
         save!(test_run)
         test_run_id = test_run.id
         test_run = nil

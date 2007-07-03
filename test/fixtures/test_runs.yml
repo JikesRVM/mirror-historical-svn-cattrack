@@ -15,6 +15,7 @@ tr_1:
   host_id: 1
   revision: 1234
   name: 'core'
+  variant: 'core'
   occurred_at: '2005-10-20 00:00:00'
   created_at: '2005-10-20 00:15:35'
 tr_2:
@@ -22,5 +23,6 @@ tr_2:
   host_id: 2
   revision: 201
   name: 'sanity'
+  variant: 'sanity'
   occurred_at: '2006-11-07 00:00:00'
   created_at: '2006-11-08 00:00:00'

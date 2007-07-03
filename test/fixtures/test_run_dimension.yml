@@ -13,4 +13,5 @@
 tr1:
   id: 1
   name: core
+  variant: core
   source_id: 1

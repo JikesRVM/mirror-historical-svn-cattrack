@@ -17,17 +17,18 @@ class Olap::TestRunDimensionTest < Test::Unit::TestCase
     object = Olap::TestRunDimension.find(1)
     assert_equal( 1, object.id )
     assert_equal( 'core', object.name )
+    assert_equal( 'core', object.variant )
     assert_equal( 1, object.source_id )
   end
 
   def self.attributes_for_new
-    {:source_id => 1, :name => 'core'}
+    {:source_id => 1, :name => 'core', :variant => 'core-sse'}
   end
   def self.non_null_attributes
-    [:name]
+    [:name, :variant]
   end
   def self.str_length_attributes
-    [[:name, 75]]
+    [[:name, 75],[:variant, 75]]
   end
 
   perform_basic_model_tests(:skip => [:destroy])
