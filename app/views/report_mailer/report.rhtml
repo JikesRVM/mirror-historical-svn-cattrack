@@ -43,20 +43,6 @@
 
 <h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_cases.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_cases.size.to_f * 100.0).to_i %>%)</h2>
 
-<h3 style="color: #FF8c00;"><%= h(@report.missing_tests.size) %> missing tests this run</h3>
-<% if @report.missing_tests.size > 0 %>
-<table style="border-collapse: collapse; font-weight: normal;">
-<% @report.missing_tests.each do |t| %>
-  <tr>
-    <td><%= h(t['build_configuration_name']) %></td>
-    <td><%= h(t['test_configuration_name']) %></td>
-    <td><%= h(t['group_name']) %></td>
-    <td><%= h(t['test_case_name']) %></td>
-  </tr>
-<% end %>
-</table>
-<% end %>
-
 <h3 style="color: #FF0000;"><%= h(@report.new_failures.size) %> new failures this run</h3>
 <% if @report.new_failures.size > 0 %>
 <table style="border-collapse: collapse; font-weight: normal;">
@@ -67,6 +53,20 @@
     <td><%= h(t['group_name']) %></td>
     <td><%= h(t['test_case_name']) %></td>
     <td><%= h(t['test_case_result']) %></td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<h3 style="color: #FF8c00;"><%= h(@report.missing_tests.size) %> missing tests this run</h3>
+<% if @report.missing_tests.size > 0 %>
+<table style="border-collapse: collapse; font-weight: normal;">
+<% @report.missing_tests.each do |t| %>
+  <tr>
+    <td><%= h(t['build_configuration_name']) %></td>
+    <td><%= h(t['test_configuration_name']) %></td>
+    <td><%= h(t['group_name']) %></td>
+    <td><%= h(t['test_case_name']) %></td>
   </tr>
 <% end %>
 </table>
