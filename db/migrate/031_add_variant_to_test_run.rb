@@ -150,6 +150,14 @@ SQL
 SQL
     end
 
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_run_dimension
+        SET variant = test_runs.variant
+        FROM test_runs
+        WHERE test_runs.id = test_run_dimension.source_id
+SQL
+    end
   end
 
   def self.down
