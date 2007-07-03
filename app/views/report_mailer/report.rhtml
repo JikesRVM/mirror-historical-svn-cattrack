@@ -48,11 +48,11 @@
 <table style="border-collapse: collapse; font-weight: normal;">
 <% @report.new_failures.each do |t| %>
   <tr>
-    <td><%= h(t['build_configuration_name']) %></td>
-    <td><%= h(t['test_configuration_name']) %></td>
-    <td><%= h(t['group_name']) %></td>
-    <td><%= h(t['test_case_name']) %></td>
-    <td><%= h(t['test_case_result']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['build_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['group_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_case_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_case_result']) %></td>
   </tr>
 <% end %>
 </table>
@@ -63,10 +63,10 @@
 <table style="border-collapse: collapse; font-weight: normal;">
 <% @report.missing_tests.each do |t| %>
   <tr>
-    <td><%= h(t['build_configuration_name']) %></td>
-    <td><%= h(t['test_configuration_name']) %></td>
-    <td><%= h(t['group_name']) %></td>
-    <td><%= h(t['test_case_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['build_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['group_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_case_name']) %></td>
   </tr>
 <% end %>
 </table>
@@ -77,10 +77,10 @@
 <table style="border-collapse: collapse; font-weight: normal;">
 <% @report.new_successes.each do |t| %>
   <tr>
-    <td><%= h(t['build_configuration_name']) %></td>
-    <td><%= h(t['test_configuration_name']) %></td>
-    <td><%= h(t['group_name']) %></td>
-    <td><%= h(t['test_case_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['build_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_configuration_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['group_name']) %></td>
+    <td style="padding-right: 0.2em;"><%= h(t['test_case_name']) %></td>
   </tr>
 <% end %>
 </table>
