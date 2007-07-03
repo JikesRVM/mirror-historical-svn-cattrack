@@ -97,7 +97,7 @@
     <% @report.perf_stat_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
       <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
-      <td style="padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= h(test_run_label(test_run, @report.test_runs)) %></td>
+      <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
@@ -119,7 +119,7 @@
     <td></td>
     <% results.column_headers.each do |c| %>
       <% test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s} %>
-      <td style="padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= h(test_run_label(test_run, @report.test_runs)) %></td>
+      <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
@@ -141,7 +141,7 @@
     <% @report.tcn_by_tr_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
       <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
-      <td style="padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= h(test_run_label(test_run, @report.test_runs)) %></td>
+      <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
