@@ -34,6 +34,8 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
   def test_show
     id = 1
     test_run = Tdm::TestRun.find(id)
+    test_run.variant = 'boo'
+    test_run.save!    
     get(:show, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_normal_response('show', 1)
     assert_assigned(:record)

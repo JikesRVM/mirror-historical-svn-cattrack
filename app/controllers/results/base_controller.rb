@@ -16,11 +16,15 @@ class Results::BaseController < ApplicationController
   protected
 
   def host
-    Tdm::Host.find_by_name(params[:host_name])
+    host = Tdm::Host.find_by_name(params[:host_name])
+    raise CatTrack::SecurityError unless host
+    host
   end
 
   def test_run
-    host.test_runs.find_by_id_and_name(params[:test_run_id],params[:test_run_variant])
+    test_run = host.test_runs.find_by_id_and_variant(params[:test_run_id],params[:test_run_variant])
+    raise CatTrack::SecurityError unless test_run
+    test_run
   end
 
   def build_target
