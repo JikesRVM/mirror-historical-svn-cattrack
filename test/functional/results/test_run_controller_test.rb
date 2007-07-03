@@ -35,7 +35,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     id = 1
     test_run = Tdm::TestRun.find(id)
     test_run.variant = 'boo'
-    test_run.save!    
+    test_run.save!
     get(:show, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_normal_response('show', 1)
     assert_assigned(:record)
@@ -76,7 +76,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     assert_equal(true, assigns(:record).frozen?)
     assert_flash_count(1)
     assert_equal("#{label} was successfully deleted.", flash[:notice])
-    assert_logs([["test-run.deleted", 'id=1 (core-1)']], 1)
+    assert_logs([["test-run.deleted", 'id=1 (core.1)']], 1)
     assert(!File.exists?(path))
     assert(!File.exists?(file))
   end

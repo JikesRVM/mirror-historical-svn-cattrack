@@ -14,10 +14,10 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Tdm::TestRunTest < Test::Unit::TestCase
   def test_label
-    assert_equal('core-1', Tdm::TestRun.find(1).label)
+    assert_equal('core.1', Tdm::TestRun.find(1).label)
     tr = Tdm::TestRun.find(1)
     tr.variant = 'coreV'
-    assert_equal('coreV-1', tr.label)
+    assert_equal('coreV.1', tr.label)
   end
 
   def test_parent_node

@@ -49,7 +49,7 @@ class Tdm::TestRun < ActiveRecord::Base
   include TestCaseContainer
 
   def label
-    "#{variant}-#{id}"
+    "#{variant}.#{id}"
   end
 
   def parent_node

@@ -31,7 +31,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal([nil, "core-1"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1"], report.tcn_by_tr_headers)
     assert_equal([], report.tcn_by_tr)
   end
 
@@ -49,7 +49,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']}.sort)
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
-    assert_equal([nil, "core-1", "core-#{test_run_1.id}"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1", "core.#{test_run_1.id}"], report.tcn_by_tr_headers)
     assert_equal([], report.tcn_by_tr)
   end
 
@@ -74,7 +74,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([test_case1.name], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal([nil, "core-1", "core-#{test_run_1.id}"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1", "core.#{test_run_1.id}"], report.tcn_by_tr_headers)
     assert_equal([
     ["TestClassLoading", "66.6666666666667", "100", 166],
     ["TestCompares", "100", "66.6666666666667", 166]
@@ -97,7 +97,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal([nil, "core-1", "core-#{test_run_1.id}"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1", "core.#{test_run_1.id}"], report.tcn_by_tr_headers)
     assert_equal([], report.tcn_by_tr)
   end
 
@@ -144,7 +144,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([test_case1.name], report.consistent_failures.collect{|t| t['test_case_name']})
     assert_equal([test_case2b.name, test_case_Y.name], report.intermittent_failures.collect{|t| t['test_case_name']}.sort)
-    assert_equal([nil, "core-1", "core-#{test_run_1.id}", "core-#{test_run_2.id}"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1", "core.#{test_run_1.id}", "core.#{test_run_2.id}"], report.tcn_by_tr_headers)
     assert_equal([
     ["TestClassLoading", "66.6666666666667", "66.6666666666667", "66.6666666666667", 200],
     ["TestLotsOfLoops", "66.6666666666667", "66.6666666666667", "100", 233],
@@ -167,7 +167,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal([nil, "core-1", "core-#{test_run_1.id}"], report.tcn_by_tr_headers)
+    assert_equal([nil, "core.1", "core.#{test_run_1.id}"], report.tcn_by_tr_headers)
     assert_equal([], report.tcn_by_tr)
   end
 end
