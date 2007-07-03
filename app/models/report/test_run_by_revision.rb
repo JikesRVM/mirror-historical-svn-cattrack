@@ -147,10 +147,16 @@ SQL
     @perf_stat_headers = []
 
     @perf_stat_headers[0] = nil
+    if query_result.column_headers.size > 0
     query_result.column_headers.each_with_index do |c, i|
       test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
       raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
       @perf_stat_headers[i + 1] = test_run.label
+    end
+      else
+      (0..(test_runs.size-1)).each do |i|
+        @perf_stat_headers[i + 1] = test_runs[i].label
+      end
     end
   end
 

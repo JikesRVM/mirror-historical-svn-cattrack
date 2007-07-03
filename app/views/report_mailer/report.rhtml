@@ -93,17 +93,17 @@
 <h2>Performance Statistics</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
-    <th></th>
+    <td></td>
     <% @report.perf_stat_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
-      <th><%= h(c) %></th>
+      <td><%= h(c) %></td>
     <% end %>
   </tr>
   <% @report.perf_stats.each_with_index do |r,r_index| %>
     <tr>
-      <th style="text-align: right;"><%= h(r[0]) %></th>
+      <td style="text-align: right;"><%= h(r[0]) %></td>
       <% 1.upto(r.size - 1) do |c_index| %>
-        <th><%= h(r[c_index]) %></th>
+        <td style="background-color: silver;"><%= h(r[c_index]) %></td>
       <% end %>
     </tr>
   <% end %>
@@ -114,15 +114,15 @@
 <h2>Build Configuration By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
-    <th></th>
+    <td></td>
     <% results.column_headers.each do |c| %>
       <% test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s} %>
-      <th><%= h(test_run.label) %></th>
+      <td><%= h(test_run.label) %></td>
     <% end %>
   </tr>
   <% results.row_headers.each_with_index do |r,r_index| %>
     <tr>
-      <th style="text-align: right;"><%= h(results.row.label_for(r)) %></th>
+      <td style="text-align: right;"><%= h(results.row.label_for(r)) %></td>
       <% 0.upto(results.column_headers.size - 1) do |c_index| %>
         <%= cell(results.tabular_data[r_index][c_index].to_i) %>
       <% end %>
@@ -134,15 +134,15 @@
 <h2>Test Case By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
-    <th></th>
+    <td></td>
     <% @report.tcn_by_tr_headers.each_with_index do |c, i| %>
       <% next if i == 0 %>
-      <th><%= h(c) %></th>
+      <td><%= h(c) %></td>
     <% end %>
   </tr>
   <% @report.tcn_by_tr.each_with_index do |r,r_index| %>
     <tr>
-      <th style="text-align: right;"><%= h(r[0]) %></th>
+      <td style="text-align: right;"><%= h(r[0]) %></td>
       <% 1.upto(r.size - 2) do |c_index| %>
         <%= cell(r[c_index].to_i) %>
       <% end %>
