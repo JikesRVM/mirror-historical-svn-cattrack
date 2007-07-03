@@ -84,7 +84,7 @@ SQL
         FROM build_targets
         WHERE
           test_runs.name = 'core' AND
-          build_targets.test_run_id = test_run.id AND
+          build_targets.test_run_id = test_runs.id AND
           build_targets.name = 'ppc64-aix'
 SQL
     end
@@ -96,7 +96,7 @@ SQL
         FROM build_targets
         WHERE
           test_runs.name = 'sanity' AND
-          build_targets.test_run_id = test_run.id AND
+          build_targets.test_run_id = test_runs.id AND
           build_targets.name = 'ppc32-aix'
 SQL
     end
@@ -108,7 +108,7 @@ SQL
         FROM build_targets
         WHERE
           test_runs.name = 'core' AND
-          build_targets.test_run_id = test_run.id AND
+          build_targets.test_run_id = test_runs.id AND
           build_targets.name = 'ppc32-aix'
 SQL
     end
@@ -126,7 +126,7 @@ SQL
           test_runs.name = 'commit' AND
           test_runs.occurred_at > '2007-06-12 03:00:59' AND
           test_runs.occurred_at < '2007-06-25 06:00:46' AND
-          build_targets.test_run_id = test_run.id AND
+          build_targets.test_run_id = test_runs.id AND
           build_targets.name = 'ia32-linux' AND
           build_target_params.owner_id = build_targets.id AND
           build_target_params.key = 'target.arch.sse2' AND
