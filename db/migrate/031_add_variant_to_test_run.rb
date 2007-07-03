@@ -65,6 +65,91 @@ SQL
     add_index :test_run_dimension, [:source_id]
     add_foreign_key :test_run_dimension, [:source_id], :test_runs, [:id], :on_delete => :set_null
 
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'sanity-ppc64'
+        FROM build_targets
+        WHERE
+          test_runs.name = 'sanity' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ppc64-aix'
+SQL
+    end
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'core-ppc64'
+        FROM build_targets
+        WHERE
+          test_runs.name = 'core' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ppc64-aix'
+SQL
+    end
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'sanity-ppc32'
+        FROM build_targets
+        WHERE
+          test_runs.name = 'sanity' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ppc32-aix'
+SQL
+    end
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'core-ppc32'
+        FROM build_targets
+        WHERE
+          test_runs.name = 'core' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ppc32-aix'
+SQL
+    end
+
+    # On rvmx86lnx32 box;
+    # Added commit-sse on 2007-06-11 07:33:02 -0700 (Mon, 11 Jun 2007)
+    # Replaced with commit-x87 on 2007-06-24 21:09:18 -0700 (Sun, 24 Jun 2007)
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'commit-sse'
+        FROM build_targets, build_target_params
+        WHERE
+          test_runs.name = 'commit' AND
+          test_runs.occurred_at > '2007-06-12 03:00:59' AND
+          test_runs.occurred_at < '2007-06-25 06:00:46' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ia32-linux' AND
+          build_target_params.owner_id = build_targets.id AND
+          build_target_params.key = 'target.arch.sse2' AND
+          build_target_params.value = 'full'
+SQL
+    end
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute(<<SQL)
+      UPDATE test_runs
+        SET variant = 'commit-x87'
+        FROM build_targets, build_target_params
+        WHERE
+          test_runs.name = 'commit' AND
+          test_runs.occurred_at > '2007-06-25 06:00:46' AND
+          build_targets.test_run_id = test_run.id AND
+          build_targets.name = 'ia32-linux' AND
+          build_target_params.owner_id = build_targets.id AND
+          build_target_params.key = 'target.arch.sse2' AND
+          build_target_params.value = 'none'
+SQL
+    end
+
   end
 
   def self.down
