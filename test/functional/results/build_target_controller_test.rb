@@ -37,7 +37,7 @@ class Results::BuildTargetControllerTest < Test::Unit::TestCase
     test_run = build_target.test_run
     host = test_run.host
     params = {:host_name => host.name}
-    params.merge!(:test_run_name => test_run.name, :test_run_id => test_run.id)
+    params.merge!(:test_run_variant => test_run.variant, :test_run_id => test_run.id)
 
     get(:show, params, session_data)
     assert_normal_response('show', 1)

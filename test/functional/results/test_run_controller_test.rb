@@ -34,7 +34,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
   def test_show
     id = 1
     test_run = Tdm::TestRun.find(id)
-    get(:show, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
+    get(:show, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_normal_response('show', 1)
     assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
@@ -43,7 +43,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
   def test_show_summary
     id = 1
     test_run = Tdm::TestRun.find(id)
-    get(:show_summary, {:host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
+    get(:show_summary, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_normal_response('show_summary', 1)
     assert_assigned(:record)
     assert_equal(id, assigns(:record).id)
@@ -66,7 +66,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     assert(File.exists?(path))
     assert(File.exists?(file))
 
-    delete(:destroy, {:host_name => host_name, :test_run_name => test_run.name, :test_run_id => test_run.id}, session_data)
+    delete(:destroy, {:host_name => host_name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_redirected_to(:controller => 'results/host', :action => 'show', :host_name => host_name)
     assert(!Tdm::TestRun.exists?(id))
     assert_assigned(:record)

@@ -63,7 +63,7 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
   end
 
   class FakeTestRun < Tdm::TestRun
-    attr_accessor :label, :id, :name, :parent_node
+    attr_accessor :label, :id, :name, :parent_node, :variant
     def self.table_name
       'test_run'
     end
@@ -95,6 +95,7 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
     test_run.id = 1
     test_run.label = "RunLikeWind-1"
     test_run.name = "RunLikeWind"
+    test_run.variant = "RunLikeWind"
     test_run.parent_node = host
     build_target = FakeBuildTarget.new
     build_target.name = 'ia32'

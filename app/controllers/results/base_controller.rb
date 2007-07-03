@@ -20,7 +20,7 @@ class Results::BaseController < ApplicationController
   end
 
   def test_run
-    host.test_runs.find_by_id_and_name(params[:test_run_id],params[:test_run_name])
+    host.test_runs.find_by_id_and_name(params[:test_run_id],params[:test_run_variant])
   end
 
   def build_target

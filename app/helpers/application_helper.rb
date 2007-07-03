@@ -24,9 +24,9 @@ module ApplicationHelper
     options = {}
     breadcrumbs(object).each do |o|
       if o.is_a? Tdm::TestRun
-        options["#{o.class.table_name.singularize}_id".to_sym] = o.id
-      end
-      if not o.is_a? Tdm::BuildTarget
+        options[:test_run_id] = o.id
+        options[:test_run_variant] = o.variant
+      elsif not o.is_a? Tdm::BuildTarget
         options["#{o.class.table_name.singularize}_name".to_sym] = o.name
       end
     end
@@ -57,7 +57,7 @@ module ApplicationHelper
   end
 
   def test_run_delete_link(test_run)
-    params = {:controller => '/results/test_run', :action => 'destroy', :host_name => test_run.host.name, :test_run_name => test_run.name, :test_run_id => test_run.id}
+    params = {:controller => '/results/test_run', :action => 'destroy', :host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}
     options = {:method => :delete, :confirm => "Are you sure you want to delete the #{test_run.name} test-run?"}
     link = link_to('Delete', params, options)
     s = <<EOS

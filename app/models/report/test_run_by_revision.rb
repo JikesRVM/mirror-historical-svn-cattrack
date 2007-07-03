@@ -200,7 +200,7 @@ SQL
   def count(test_run_ids, build_configuration_name, test_configuration_name, group_name, test_case_name)
     options = {}
     options[:test_run_id] = @test_run.id
-    options[:test_run_name] = @test_run.name
+    options[:test_run_variant] = @test_run.variant
     options[:build_configuration_name] = build_configuration_name
     options[:test_configuration_name] = test_configuration_name
     options[:group_name] = group_name
@@ -217,7 +217,7 @@ SELECT
   count(*) AS test_count,
   count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS success_count
 #{Tdm::TestRun::TEST_RUN_TO_TESTCASE_SQL} WHERE
-  test_runs.name = :test_run_name AND
+  test_runs.variant = :test_run_variant AND
   test_runs.id != :test_run_id AND
   build_configurations.name = :build_configuration_name AND
   test_configurations.name = :test_configuration_name AND

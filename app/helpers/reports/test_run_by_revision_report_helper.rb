@@ -23,7 +23,7 @@ module Reports::TestRunByRevisionReportHelper
   def test_link(row)
     options = {:controller => "/results/test_case", :action => 'show'}
     options[:host_name] = @report.test_run.host.name
-    options[:test_run_name] = @report.test_run.name
+    options[:test_run_variant] = @report.test_run.variant
     options[:test_run_id] = @report.test_run.id
     options[:build_configuration_name] = row['build_configuration_name']
     options[:test_configuration_name] = row['test_configuration_name']

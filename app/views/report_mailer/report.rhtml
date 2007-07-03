@@ -31,14 +31,14 @@
 </head>
 <body>
 <h2>Regression summary for <%= h(@test_run.name) %> (r<%= h(@test_run.revision) %>) on <%= h(@host.name) %>, <%= h(@test_run.occurred_at) %></h2>
-<% report_url = url_for(:controller => 'reports/test_run_by_revision_report', :action => 'show', :host_name => @host.name, :test_run_name => @test_run.name, :test_run_id => @test_run.id, :only_path => false) %>
+<% report_url = url_for(:controller => 'reports/test_run_by_revision_report', :action => 'show', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
 <p>See the <a href="<%= report_url %>">Full Report</a></p>
 <% if @report.test_runs.size > 1 %>
 <% scm_url = SystemSetting['scm.url'] %>
 <p>Revisions covered by this test run: <%= ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(",\n") %></p>
 <% end %>
 <p>Test Runs covered by this report: <%= @report.test_runs.collect do |t|
-  link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_name => t.name, :test_run_id => t.id, :only_path => false)
+  link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_variant => t.variant, :test_run_id => t.id, :only_path => false)
   end.join(",\n") %></p>
 
 <h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_cases.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_cases.size.to_f * 100.0).to_i %>%)</h2>
