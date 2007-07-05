@@ -94,21 +94,22 @@
 <% if @report.perf_stats.size > 0 or @report.test_runs.size > 1 %>
 <h2>Performance Statistics</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
-  <tr>
+  <tr style="text-align: center;">
     <td></td>
     <% @report.test_runs.each do |tr| %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(tr, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
-  <tr>
+  <tr style="text-align: center;">
     <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;">Success Rate</td>
     <% @report.success_rates.each do |sr| %>
-      <td style="background-color: silver;">h(sr)</td>
+      <td style="background-color: silver;"><%= h(sr) %></td>
       <% reset_cycle('rows') %>
     <% end %>
-  </tr>  <% @report.perf_stats.each do |r| %>
-    <tr>
+  </tr>
+  <% @report.perf_stats.each do |r| %>
+    <tr style="text-align: center;">
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <td style="background-color: silver;"><%= perf_stat(tr.id, r) %></td>
@@ -121,7 +122,7 @@
 <% if @report.bc_by_tr.size > 0 %>
 <h2>Build Configuration By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
-  <tr>
+  <tr style="text-align: center;">
     <td></td>
     <% @report.test_runs.each do |test_run| %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
@@ -129,7 +130,7 @@
     <% end %>
   </tr>
   <% @report.bc_by_tr.each do |r| %>
-    <tr>
+    <tr style="text-align: center;">
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['build_configuration_name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <%= cell(r["test_run_#{tr.id}"].to_i) %>
@@ -142,7 +143,7 @@
 <% if @report.tc_by_tr.size > 0 %>
 <h2>Test Case By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
-  <tr>
+  <tr style="text-align: center;">
     <td></td>
     <% @report.test_runs.each do |test_run| %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
@@ -150,7 +151,7 @@
     <% end %>
   </tr>
   <% @report.tc_by_tr.each do |r| %>
-    <tr>
+    <tr style="text-align: center;">
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['test_case_name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <%= cell(r["test_run_#{tr.id}"].to_i) %>
