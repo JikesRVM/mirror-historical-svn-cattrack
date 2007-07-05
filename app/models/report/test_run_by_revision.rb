@@ -196,38 +196,4 @@ SQL
       @tcn_by_tr_headers[i + 1] = test_run.label
     end
   end
-
-  def count(test_run_ids, build_configuration_name, test_configuration_name, group_name, test_case_name)
-    options = {}
-    options[:test_run_id] = @test_run.id
-    options[:test_run_variant] = @test_run.variant
-    options[:build_configuration_name] = build_configuration_name
-    options[:test_configuration_name] = test_configuration_name
-    options[:group_name] = group_name
-    options[:test_case_name] = test_case_name
-    if test_run_ids.size > 0
-      options[:test_run_ids] = test_run_ids
-      extra = 'AND test_runs.id IN (:test_run_ids)'
-    else
-      extra = ''
-    end
-
-    sql = <<-SQL
-SELECT
-  count(*) AS test_count,
-  count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS success_count
-#{Tdm::TestRun::TEST_RUN_TO_TESTCASE_SQL} WHERE
-  test_runs.variant = :test_run_variant AND
-  test_runs.id != :test_run_id AND
-  build_configurations.name = :build_configuration_name AND
-  test_configurations.name = :test_configuration_name AND
-  groups.name = :group_name AND
-  test_cases.name = :test_case_name #{extra}
-SQL
-    sql = ActiveRecord::Base.send :sanitize_sql_array, [sql, options]
-    values = Tdm::TestRun.connection.select_one(sql)
-    #puts "values=#{values.inspect}"
-    return values['test_count'].to_i, values['success_count'].to_i
-  end
-
 end
