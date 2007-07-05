@@ -114,44 +114,42 @@
 </table>
 <% end %>
 
-<% results = @report.build_configuration_name_by_test_run %>
+<% if @report.bc_by_tr.size > 0 %>
 <h2>Build Configuration By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
     <td></td>
-    <% results.column_headers.each do |c| %>
-      <% test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s} %>
+    <% @report.test_runs.each do |test_run| %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
-  <% results.row_headers.each_with_index do |r,r_index| %>
+  <% @report.bc_by_tr.each do |r| %>
     <tr>
-      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(results.row.label_for(r)) %></td>
-      <% 0.upto(results.column_headers.size - 1) do |c_index| %>
-        <%= cell(results.tabular_data[r_index][c_index].to_i) %>
+      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['build_configuration_name']) %></td>
+      <% @report.test_runs.each do |tr| %>
+        <%= cell(r["test_run_#{tr.id}"].to_i) %>
       <% end %>
     </tr>
   <% end %>
 </table>
+<% end %>
 
-<% if @report.tcn_by_tr.size > 0 %>
+<% if @report.tc_by_tr.size > 0 %>
 <h2>Test Case By Test Run</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
     <td></td>
-    <% @report.tcn_by_tr_headers.each_with_index do |c, i| %>
-      <% next if i == 0 %>
-      <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
+    <% @report.test_runs.each do |test_run| %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
-  <% @report.tcn_by_tr.each_with_index do |r,r_index| %>
+  <% @report.tc_by_tr.each do |r| %>
     <tr>
-      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r[0]) %></td>
-      <% 1.upto(r.size - 2) do |c_index| %>
-        <%= cell(r[c_index].to_i) %>
+      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['test_case_name']) %></td>
+      <% @report.test_runs.each do |tr| %>
+        <%= cell(r["test_run_#{tr.id}"].to_i) %>
       <% end %>
     </tr>
   <% end %>

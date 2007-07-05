@@ -15,7 +15,7 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :build_configuration_name_by_test_run, :tcn_by_tr_headers, :tcn_by_tr, :perf_stats, :perf_stat_headers
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :perf_stats, :perf_stat_headers, :bc_by_tr, :tc_by_tr
 
   def initialize(test_run, window_size = 6)
     @test_run = test_run
@@ -33,8 +33,8 @@ class Report::TestRunByRevision
     options[:order] = 'occurred_at DESC'
     @past_test_runs = Tdm::TestRun.find(:all, options)
     test_run_ids = @past_test_runs.collect {|tr| tr.id}
-    @test_runs = [@test_run] + @past_test_runs
-    valid_test_runs_ids = @test_runs.collect {|tr| tr.id}
+    @test_runs = @past_test_runs + [@test_run]
+    valid_test_run_ids = @test_runs.collect {|tr| tr.id}
 
     sql = <<SQL
 SELECT
@@ -53,7 +53,7 @@ FROM build_configurations
     LEFT JOIN groups ON groups.test_configuration_id = test_configurations.id
     LEFT JOIN test_cases ON test_cases.group_id = groups.id
 WHERE
-    build_configurations.test_run_id IN (#{valid_test_runs_ids.join(', ')})
+    build_configurations.test_run_id IN (#{valid_test_run_ids.join(', ')})
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
 ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name
 SQL
@@ -79,29 +79,74 @@ SQL
       end
     end
 
-    query = Olap::Query::Query.new
-    query.filter = Olap::Query::Filter.new
-    query.filter.name = '*'
-    query.filter.description = ''
-    query.filter.test_run_source_id = valid_test_runs_ids
-    query.primary_dimension = 'build_configuration_name'
-    query.secondary_dimension = 'test_run_source_id'
-    query.measure = Olap::Query::Measure.find_by_name('Success Rate')
-    #order by occurred_at
-    @build_configuration_name_by_test_run = query.perform_search
-
-    gen_perf_stats(valid_test_runs_ids)
-    perform_test_case_name_by_test_run(valid_test_runs_ids)
+    gen_bc_by_tr(valid_test_run_ids)
+    gen_tc_by_tr
+    gen_perf_stats(valid_test_run_ids)
   end
 
   private
 
-  def gen_perf_stats(valid_test_runs_ids)
+  def gen_bc_by_tr(valid_test_run_ids)
+    columns = valid_test_run_ids.collect do |id|
+      "MAX(case when test_run_id = #{id} then success_rate else 0 end) AS test_run_#{id}"
+    end.join(', ')
+    sql = <<SQL
+SELECT
+    build_configuration_name,
+    #{columns}
+FROM
+  (SELECT
+    test_runs.id AS test_run_id,
+    build_configurations.name AS build_configuration_name,
+    CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as success_rate
+  FROM test_cases
+    RIGHT JOIN groups ON test_cases.group_id = groups.id
+    RIGHT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+    RIGHT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
+  WHERE test_runs.id IN (#{valid_test_run_ids.join(', ')})
+  GROUP BY test_runs.id, build_configurations.name) t
+GROUP BY build_configuration_name
+HAVING SUM(success_rate) < #{@test_runs.size} * 100
+ORDER BY SUM(success_rate), build_configuration_name
+SQL
+    @bc_by_tr = ActiveRecord::Base.connection.select_all(sql)
+  end
+
+  def gen_tc_by_tr
+    columns = @test_runs.collect do |tr|
+      "MAX(case when test_run_id = #{tr.id} then success_rate else 0 end) AS test_run_#{tr.id}"
+    end.join(', ')
+    sql = <<SQL
+SELECT
+    test_case_name,
+    #{columns}
+FROM
+  (SELECT
+    test_runs.id AS test_run_id,
+    test_cases.name AS test_case_name,
+    CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as success_rate
+  FROM test_cases
+    RIGHT JOIN groups ON test_cases.group_id = groups.id
+    RIGHT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+    RIGHT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
+  WHERE test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')})
+  GROUP BY test_runs.id, test_cases.name) t
+GROUP BY test_case_name
+HAVING SUM(success_rate) < #{@test_runs.size} * 100
+ORDER BY SUM(success_rate), test_case_name
+SQL
+    @tc_by_tr = ActiveRecord::Base.connection.select_all(sql)
+  end
+
+
+  def gen_perf_stats(valid_test_run_ids)
     query = Olap::Query::Query.new
     query.filter = Olap::Query::Filter.new
     query.filter.name = '*'
     query.filter.description = ''
-    query.filter.test_run_source_id = valid_test_runs_ids
+    query.filter.test_run_source_id = valid_test_run_ids
     query.filter.test_configuration_name = 'Performance'
     query.filter.build_configuration_name = 'production'
     query.filter.query_type = 'statistic'
@@ -148,52 +193,15 @@ SQL
 
     @perf_stat_headers[0] = nil
     if query_result.column_headers.size > 0
-    query_result.column_headers.each_with_index do |c, i|
-      test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
-      raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
-      @perf_stat_headers[i + 1] = test_run.label
-    end
-      else
+      query_result.column_headers.each_with_index do |c, i|
+        test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
+        raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
+        @perf_stat_headers[i + 1] = test_run.label
+      end
+    else
       (0..(test_runs.size-1)).each do |i|
         @perf_stat_headers[i + 1] = test_runs[i].label
       end
-    end
-  end
-
-  def perform_test_case_name_by_test_run(valid_test_runs_ids)
-    query = Olap::Query::Query.new
-    query.filter = Olap::Query::Filter.new
-    query.filter.name = '*'
-    query.filter.description = ''
-    query.filter.test_run_source_id = valid_test_runs_ids
-    query.primary_dimension = 'test_case_name'
-    query.secondary_dimension = 'test_run_source_id'
-    query.measure = Olap::Query::Measure.find_by_name('Success Rate')
-
-    @test_case_name_by_test_run = query.perform_search
-
-    column_count = @test_case_name_by_test_run.column_headers.size
-    @tcn_by_tr = []
-    @test_case_name_by_test_run.tabular_data.each_with_index do |row, i|
-      @tcn_by_tr[i] = []
-      @tcn_by_tr[i][column_count + 1] = row.inject(0.0) {| memo, value | memo + value.to_f }.to_i
-      row.each_with_index do |value, j|
-        @tcn_by_tr[i][1 + j] = value
-      end
-      @tcn_by_tr[i][0] = @test_case_name_by_test_run.row_headers[i]
-    end
-
-    column_count = @test_case_name_by_test_run.column_headers.size
-    max_value = @test_case_name_by_test_run.column_headers.size * 100
-    @tcn_by_tr = @tcn_by_tr.reject{|row| row[column_count + 1] == max_value}
-    @tcn_by_tr = @tcn_by_tr.sort_by{|row| row[column_count + 1]}
-    @tcn_by_tr_headers = []
-
-    @tcn_by_tr_headers[0] = nil
-    @test_case_name_by_test_run.column_headers.each_with_index do |c, i|
-      test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
-      raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
-      @tcn_by_tr_headers[i + 1] = test_run.label
     end
   end
 end

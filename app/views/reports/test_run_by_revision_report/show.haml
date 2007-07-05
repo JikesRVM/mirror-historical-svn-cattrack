@@ -156,31 +156,28 @@
         - 1.upto(r.size - 1) do |c_index|
           %td= h(r[c_index])
 
-- results = @report.build_configuration_name_by_test_run
-%h2 Build Configuration By Test Run
-%table.report
-  %tr
-    %th.pivot
-    - results.column_headers.each do |c|
-      %th.column
-        - test_run = @report.test_runs.detect {|tr| tr.id.to_s == c.to_s}
-        = test_run.label
-  - results.row_headers.each_with_index do |r,r_index|
+- if @report.bc_by_tr.size > 0
+  %h2 Build Configuration By Test Run
+  %table.report
     %tr
-      %th.row= h(results.row.label_for(r))
-      - 0.upto(results.column_headers.size - 1) do |c_index|
-        = cell(results.tabular_data[r_index][c_index].to_i)
+      %th.pivot
+      - @report.test_runs.each do |tr|
+        %th.column= tr.label
+    - @report.bc_by_tr.each do |r|
+      %tr
+        %th.row= h(r['build_configuration_name'])
+        - @report.test_runs.each do |tr|
+          = cell(r["test_run_#{tr.id}"].to_i)
 
-- if @report.tcn_by_tr.size > 0
+- if @report.tc_by_tr.size > 0
   %h2 Test Case By Test Run
   %table.report
     %tr
       %th.pivot
-      - @report.tcn_by_tr_headers.each_with_index do |c, i|
-        - next if i == 0
-        %th.column= c
-    - @report.tcn_by_tr.each_with_index do |r,r_index|
+      - @report.test_runs.each do |tr|
+        %th.column= tr.label
+    - @report.tc_by_tr.each do |r|
       %tr
-        %th.row= h(r[0])
-        - 1.upto(r.size - 2) do |c_index|
-          = cell(r[c_index].to_i)
+        %th.row= h(r['test_case_name'])
+        - @report.test_runs.each do |tr|
+          = cell(r["test_run_#{tr.id}"].to_i)
