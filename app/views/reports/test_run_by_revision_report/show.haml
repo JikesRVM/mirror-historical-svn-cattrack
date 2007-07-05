@@ -124,7 +124,7 @@
 - if @report.test_runs.size > 1
   %h2 Revisions Covered By Report
   %p
-    = ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(', ')
+    = ((@report.test_runs[@report.test_runs.size - 2].revision)..(@report.test_runs[@report.test_runs.size - 1].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(', ')
 
 %h2 Test Runs Covered By Report
 %table.list

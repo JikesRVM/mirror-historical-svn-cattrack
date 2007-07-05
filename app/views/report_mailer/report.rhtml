@@ -35,7 +35,7 @@
 <p>See the <a href="<%= report_url %>">Full Report</a></p>
 <% if @report.test_runs.size > 1 %>
 <% scm_url = SystemSetting['scm.url'] %>
-<p>Revisions covered by this test run: <%= ((@report.test_runs[1].revision)..(@report.test_runs[0].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(",\n") %></p>
+<p>Revisions covered by this test run: <%= ((@report.test_runs[@report.test_runs.size - 2].revision)..(@report.test_runs[@report.test_runs.size - 1].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(",\n") %></p>
 <% end %>
 <p>Test Runs covered by this report: <%= @report.test_runs.collect do |t|
   link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_variant => t.variant, :test_run_id => t.id, :only_path => false)
