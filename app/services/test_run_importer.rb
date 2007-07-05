@@ -29,7 +29,6 @@ class TestRunImporter
 
     Dir.glob("#{incoming_dir}/*").each do |d|
       host = File.basename(d)
-      AuditLog.log('import.host', host)
       logger.info("Processing host '#{host}' in dir #{d}")
       Dir.glob("#{d}/*.xml.gz").each do |f|
         next unless File.exists?(f)
