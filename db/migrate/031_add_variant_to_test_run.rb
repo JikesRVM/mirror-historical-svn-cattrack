@@ -65,6 +65,10 @@ SQL
     add_index :test_run_dimension, [:source_id]
     add_foreign_key :test_run_dimension, [:source_id], :test_runs, [:id], :on_delete => :set_null
 
+    # need to reset the sequence for primary key or else we will run into issues during inserts
+    ActiveRecord::Base.connection.execute("SELECT setval('test_runs_id_seq1', 500)")
+    ActiveRecord::Base.connection.execute("SELECT setval('test_run_dimension_id_seq1', 500)")
+
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.connection.execute(<<SQL)
       UPDATE test_runs
