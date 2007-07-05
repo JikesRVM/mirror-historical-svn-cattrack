@@ -46,12 +46,16 @@ module Reports::TestRunByRevisionReportHelper
     elsif value > (best_score - (std_deviation * 0.4))
       style = 'color: green;'
     elsif value > (best_score - (std_deviation * 0.8))
+      include_suffix = true
       style = ''
     elsif value > (best_score - (std_deviation * 1.2))
+      include_suffix = true
       style = 'color: red;'
     elsif value < (best_score - (std_deviation * 1.6))
+      include_suffix = true
       style = 'color: red; font-weight: bold;'
     end
-    "<span style=\"#{style}\">#{str_value}</span>"
+    suffix = include_suffix ? " (-#{((best_score-value)/best_score*100).to_i}%)" : ''
+    "<span style=\"#{style}\">#{str_value}#{suffix}</span>"
   end
 end

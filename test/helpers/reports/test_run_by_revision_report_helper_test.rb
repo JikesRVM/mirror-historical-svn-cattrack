@@ -31,9 +31,9 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
     assert_equal("", MyClass.new.perf_stat(1, row.merge({"test_run_1" => nil})))
     assert_equal("<span style=\"color: green; font-weight: bold;\">2</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '2'})))
     assert_equal("<span style=\"color: green;\">1.9</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.9'})))
-    assert_equal("<span style=\"\">1.5</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.5'})))
-    assert_equal("<span style=\"color: red;\">1.1</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.1'})))
-    assert_equal("<span style=\"color: red; font-weight: bold;\">0.2</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '0.2'})))
+    assert_equal("<span style=\"\">1.5 (-25%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.5'})))
+    assert_equal("<span style=\"color: red;\">1.1 (-44%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.1'})))
+    assert_equal("<span style=\"color: red; font-weight: bold;\">0.2 (-90%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '0.2'})))
   end
 
 end
