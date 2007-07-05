@@ -100,9 +100,9 @@ FROM
     #{dimension} AS #{label},
     CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as value
   FROM test_cases
-    RIGHT JOIN groups ON test_cases.group_id = groups.id
-    RIGHT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
-    RIGHT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    LEFT JOIN groups ON test_cases.group_id = groups.id
+    LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+    LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
     LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
   WHERE test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')})
   GROUP BY test_runs.id, #{dimension}) t
