@@ -77,52 +77,25 @@ SQL
       end
     end
 
-    gen_bc_by_tr(valid_test_run_ids)
-    gen_tc_by_tr
+    @bc_by_tr = gen_x_by_tr('build_configurations.name','build_configuration_name')
+    @tc_by_tr = gen_x_by_tr('test_cases.name','test_case_name')
     gen_perf_stats(valid_test_run_ids)
   end
 
   private
 
-  def gen_bc_by_tr(valid_test_run_ids)
-    columns = valid_test_run_ids.collect do |id|
-      "MAX(case when test_run_id = #{id} then success_rate else 0 end) AS test_run_#{id}"
-    end.join(', ')
-    sql = <<SQL
-SELECT
-    build_configuration_name,
-    #{columns}
-FROM
-  (SELECT
-    test_runs.id AS test_run_id,
-    build_configurations.name AS build_configuration_name,
-    CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as success_rate
-  FROM test_cases
-    RIGHT JOIN groups ON test_cases.group_id = groups.id
-    RIGHT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
-    RIGHT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
-    LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
-  WHERE test_runs.id IN (#{valid_test_run_ids.join(', ')})
-  GROUP BY test_runs.id, build_configurations.name) t
-GROUP BY build_configuration_name
-HAVING SUM(success_rate) < #{@test_runs.size} * 100
-ORDER BY SUM(success_rate), build_configuration_name
-SQL
-    @bc_by_tr = ActiveRecord::Base.connection.select_all(sql)
-  end
-
-  def gen_tc_by_tr
+  def gen_x_by_tr(dimension, label)
     columns = @test_runs.collect do |tr|
       "MAX(case when test_run_id = #{tr.id} then success_rate else 0 end) AS test_run_#{tr.id}"
     end.join(', ')
     sql = <<SQL
 SELECT
-    test_case_name,
+    #{label},
     #{columns}
 FROM
   (SELECT
     test_runs.id AS test_run_id,
-    test_cases.name AS test_case_name,
+    #{dimension} AS #{label},
     CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as success_rate
   FROM test_cases
     RIGHT JOIN groups ON test_cases.group_id = groups.id
@@ -130,12 +103,12 @@ FROM
     RIGHT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
     LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
   WHERE test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')})
-  GROUP BY test_runs.id, test_cases.name) t
-GROUP BY test_case_name
+  GROUP BY test_runs.id, #{dimension}) t
+GROUP BY #{label}
 HAVING SUM(success_rate) < #{@test_runs.size} * 100
-ORDER BY SUM(success_rate), test_case_name
+ORDER BY SUM(success_rate), #{label}
 SQL
-    @tc_by_tr = ActiveRecord::Base.connection.select_all(sql)
+    ActiveRecord::Base.connection.select_all(sql)
   end
 
 
