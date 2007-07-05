@@ -15,7 +15,7 @@ class ReportMailer < ActionMailer::Base
     reply_to = SystemSetting['report.reply.to']
     headers({'Reply-To' => reply_to}) if reply_to
     recipients(SystemSetting['report.mail.to'])
-    f = "\"[#{test_run.build_target.name}][#{test_run.name}]\" <#{SystemSetting['mail.from']}>"
+    f = "\"[#{test_run.build_target.name}][#{test_run.variant}]\" <#{SystemSetting['mail.from']}>"
     from(f)
     content_type("text/html")
   end
