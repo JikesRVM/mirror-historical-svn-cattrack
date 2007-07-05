@@ -24,7 +24,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
-    assert_equal(6, report.window_size)
+    assert_equal(10, report.window_size)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)

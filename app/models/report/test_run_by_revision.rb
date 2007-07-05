@@ -17,7 +17,7 @@ class Report::TestRunByRevision
   # Output parameters
   attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :perf_stats, :bc_by_tr, :tc_by_tr, :success_rates
 
-  def initialize(test_run, window_size = 6)
+  def initialize(test_run, window_size = 10)
     @test_run = test_run
     @window_size = window_size
     perform
