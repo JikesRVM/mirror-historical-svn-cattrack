@@ -30,9 +30,8 @@ class Report::TestRunByRevision
     sql = 'host_id = ? AND occurred_at <= ? AND variant = ?'
     options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant]
     options[:limit] = @window_size
-    options[:order] = 'occurred_at ASC'
-    @test_runs = Tdm::TestRun.find(:all, options)
-    valid_test_run_ids = @test_runs.collect {|tr| tr.id}
+    options[:order] = 'occurred_at DESC'
+    @test_runs = Tdm::TestRun.find(:all, options).reverse
 
     sql = <<SQL
 SELECT
@@ -51,7 +50,7 @@ FROM build_configurations
     LEFT JOIN groups ON groups.test_configuration_id = test_configurations.id
     LEFT JOIN test_cases ON test_cases.group_id = groups.id
 WHERE
-    build_configurations.test_run_id IN (#{valid_test_run_ids.join(', ')})
+    build_configurations.test_run_id IN (#{@test_runs.collect {|tr| tr.id}.join(', ')})
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
 ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name
 SQL
