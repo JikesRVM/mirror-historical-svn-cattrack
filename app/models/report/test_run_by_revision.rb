@@ -27,13 +27,11 @@ class Report::TestRunByRevision
 
   def perform
     options = {}
-    sql = 'host_id = ? AND occurred_at < ? AND variant = ? AND id != ?'
-    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant, @test_run.id ]
+    sql = 'host_id = ? AND occurred_at <= ? AND variant = ?'
+    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant]
     options[:limit] = @window_size
     options[:order] = 'occurred_at DESC'
-    @past_test_runs = Tdm::TestRun.find(:all, options)
-    test_run_ids = @past_test_runs.collect {|tr| tr.id}
-    @test_runs = @past_test_runs + [@test_run]
+    @test_runs = Tdm::TestRun.find(:all, options)
     valid_test_run_ids = @test_runs.collect {|tr| tr.id}
 
     sql = <<SQL
@@ -70,7 +68,7 @@ SQL
         @missing_tests << r
       elsif r['current_success'] == '1' and r['total_successes'] == '1'
         @new_successes << r
-      elsif r['current_success'] == '0' and r['total_successes'] == @past_test_runs.size.to_s
+      elsif r['current_success'] == '0' and r['total_successes'] == (test_runs.size - 1).to_s
         @new_failures << r
       elsif r['total_successes'] == '0'
         @consistent_failures << r

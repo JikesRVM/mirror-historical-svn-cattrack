@@ -93,7 +93,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(Tdm::TestRun.find(test_run_1.id))
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "12/12", "13/13"]], report.perf_stats)
+    assert_equal([["Success Rate", "13/13", "12/12"]], report.perf_stats)
     assert_equal([test_case2.name], report.missing_tests.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
@@ -140,7 +140,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
       report = Report::TestRunByRevision.new(test_run)
     end
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "11/13", "12/13", "10/13"]], report.perf_stats)
+    assert_equal([["Success Rate", "12/13", "10/13", "11/13"]], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
