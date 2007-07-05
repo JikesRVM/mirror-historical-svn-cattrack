@@ -176,7 +176,7 @@ class TestRunBuilder
       rescue ArgumentError, TypeError
         test_case.statistics[p_xml.attributes['key']] = v
       end
-    end
+    end if test_case.result == 'SUCCESS'
 
     save!(test_case)
   end
