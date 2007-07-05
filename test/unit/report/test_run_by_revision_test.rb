@@ -101,7 +101,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal(["12/12", "13/13"], report.success_rates)
+    assert_equal(["13/13","12/12"], report.success_rates)
     assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
@@ -150,7 +150,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([test_case1.name], report.consistent_failures.collect{|t| t['test_case_name']})
     assert_equal([test_case2b.name, test_case_Y.name], report.intermittent_failures.collect{|t| t['test_case_name']}.sort)
 
-    assert_equal(["11/13", "10/13", "12/13"], report.success_rates)
+    assert_equal(["12/13", "10/13", "11/13"], report.success_rates)
     assert_equal([], report.perf_stats)
     assert_equal([
     {"test_run_#{test_run_1.id}"=>"67", "test_run_#{test_run_2.id}"=>"67", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},

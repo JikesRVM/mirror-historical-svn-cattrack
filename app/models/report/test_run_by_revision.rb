@@ -30,7 +30,7 @@ class Report::TestRunByRevision
     sql = 'host_id = ? AND occurred_at <= ? AND variant = ?'
     options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant]
     options[:limit] = @window_size
-    options[:order] = 'occurred_at DESC'
+    options[:order] = 'occurred_at ASC'
     @test_runs = Tdm::TestRun.find(:all, options)
     valid_test_run_ids = @test_runs.collect {|tr| tr.id}
 
