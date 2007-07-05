@@ -11,9 +11,16 @@
 #  regarding copyright ownership.
 #
 class RemoveStatisticsFromFailedTests < ActiveRecord::Migration
+  class ResultDimension < ActiveRecord::Base
+    set_table_name 'result_dimension'
+  end
+
   def self.up
     ActiveRecord::Base.connection.execute("DELETE FROM test_case_numerical_statistics USING test_cases WHERE test_cases.result != 'SUCCESS' AND test_case_numerical_statistics.owner_id = test_cases.id")
     ActiveRecord::Base.connection.execute("DELETE FROM test_case_statistics USING test_cases WHERE test_cases.result != 'SUCCESS' AND test_case_statistics.owner_id = test_cases.id")
+
+    result = ResultDimension.find_by_name('SUCCESS')
+    ActiveRecord::Base.connection.execute("DELETE FROM statistic_facts WHERE result_id != #{result.id}") if result
   end
 
   def self.down
