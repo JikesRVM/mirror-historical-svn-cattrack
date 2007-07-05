@@ -91,23 +91,27 @@
 <h3 class="intermittent_failures"><%= h(@report.intermittent_failures.size) %> intermittent failures over this week</h3>
 <h3 class="consistent_failures"><%= h(@report.consistent_failures.size) %> consistent failures over this week</h3>
 
-<% if @report.perf_stats.size > 1 or @report.test_runs.size > 1 %>
+<% if @report.perf_stats.size > 0 or @report.test_runs.size > 1 %>
 <h2>Performance Statistics</h2>
 <table style="border-collapse: collapse; font-weight: normal;">
   <tr>
     <td></td>
-    <% @report.perf_stat_headers.each_with_index do |c, i| %>
-      <% next if i == 0 %>
-      <% test_run = @report.test_runs.find {|tr| tr.label == c} %>
-      <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
+    <% @report.test_runs.each do |tr| %>
+      <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(tr, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
-  <% @report.perf_stats.each_with_index do |r,r_index| %>
+  <tr>
+    <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;">Success Rate</td>
+    <% @report.success_rates.each do |sr| %>
+      <td style="background-color: silver;">h(sr)</td>
+      <% reset_cycle('rows') %>
+    <% end %>
+  </tr>  <% @report.perf_stats.each do |r| %>
     <tr>
-      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r[0]) %></td>
-      <% 1.upto(r.size - 1) do |c_index| %>
-        <td style="background-color: silver;"><%= h(r[c_index]) %></td>
+      <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['name']) %></td>
+      <% @report.test_runs.each do |tr| %>
+        <td style="background-color: silver;"><%= perf_stat(tr.id, r) %></td>
       <% end %>
     </tr>
   <% end %>

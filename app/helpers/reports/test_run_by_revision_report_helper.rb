@@ -33,4 +33,25 @@ module Reports::TestRunByRevisionReportHelper
 
     link_to('Show', options)
   end
+
+  def perf_stat(test_run_id, row)
+    str_value = row["test_run_#{test_run_id}"]
+    return '' unless str_value
+    value = Kernel.Float(str_value)
+    std_deviation = Kernel.Float(row["std_deviation"])
+    best_score = Kernel.Float(row["best_score"])
+    style = nil
+    if value == best_score
+      style = 'color: green; font-weight: bold;'
+    elsif value > (best_score - (std_deviation * 0.4))
+      style = 'color: green;'
+    elsif value > (best_score - (std_deviation * 0.8))
+      style = ''
+    elsif value > (best_score - (std_deviation * 1.2))
+      style = 'color: red;'
+    elsif value < (best_score - (std_deviation * 1.6))
+      style = 'color: red; font-weight: bold;'
+    end
+    "<span style=\"#{style}\">#{str_value}</span>"
+  end
 end

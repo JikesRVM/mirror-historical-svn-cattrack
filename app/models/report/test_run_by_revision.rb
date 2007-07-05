@@ -15,7 +15,7 @@ class Report::TestRunByRevision
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :perf_stats, :perf_stat_headers, :bc_by_tr, :tc_by_tr
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :perf_stats, :bc_by_tr, :tc_by_tr, :success_rates
 
   def initialize(test_run, window_size = 6)
     @test_run = test_run
@@ -55,7 +55,6 @@ WHERE
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
 ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name
 SQL
-    #HAVING count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) != count(*)
 
     @new_successes = []
     @new_failures = []
@@ -77,26 +76,30 @@ SQL
       end
     end
 
-    @bc_by_tr = gen_x_by_tr('build_configurations.name','build_configuration_name')
-    @tc_by_tr = gen_x_by_tr('test_cases.name','test_case_name')
-    gen_perf_stats(valid_test_run_ids)
+    @bc_by_tr = gen_x_by_tr('build_configurations.name', 'build_configuration_name')
+    @tc_by_tr = gen_x_by_tr('test_cases.name', 'test_case_name')
+    @perf_stats = gen_perf_stats
+    @success_rates = gen_success_rates
   end
 
   private
 
-  def gen_x_by_tr(dimension, label)
+  def rows_to_columns
     columns = @test_runs.collect do |tr|
-      "MAX(case when test_run_id = #{tr.id} then success_rate else 0 end) AS test_run_#{tr.id}"
+      "MAX(case when test_run_id = #{tr.id} then value else NULL end) AS test_run_#{tr.id}"
     end.join(', ')
+  end
+
+  def gen_x_by_tr(dimension, label)
     sql = <<SQL
 SELECT
     #{label},
-    #{columns}
+    #{rows_to_columns}
 FROM
   (SELECT
     test_runs.id AS test_run_id,
     #{dimension} AS #{label},
-    CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as success_rate
+    CAST((CAST(count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as value
   FROM test_cases
     RIGHT JOIN groups ON test_cases.group_id = groups.id
     RIGHT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
@@ -105,74 +108,71 @@ FROM
   WHERE test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')})
   GROUP BY test_runs.id, #{dimension}) t
 GROUP BY #{label}
-HAVING SUM(success_rate) < #{@test_runs.size} * 100
-ORDER BY SUM(success_rate), #{label}
+HAVING SUM(value) < #{@test_runs.size} * 100
+ORDER BY SUM(value), #{label}
 SQL
     ActiveRecord::Base.connection.select_all(sql)
   end
 
+  def gen_perf_stats
+    filter_criteria = <<SQL
+    build_configurations.name = 'production' AND
+    test_configurations.name = 'Performance' AND
+    (
+        (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
+        (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
+    )
+SQL
 
-  def gen_perf_stats(valid_test_run_ids)
-    query = Olap::Query::Query.new
-    query.filter = Olap::Query::Filter.new
-    query.filter.name = '*'
-    query.filter.description = ''
-    query.filter.test_run_source_id = valid_test_run_ids
-    query.filter.test_configuration_name = 'Performance'
-    query.filter.build_configuration_name = 'production'
-    query.filter.query_type = 'statistic'
-    query.filter.test_case_name = ['SPECjbb2005', 'SPECjvm98']
-    query.filter.statistic_name = ['aggregate.best.score', 'score']
-    query.primary_dimension = 'statistic_name'
-    query.secondary_dimension = 'test_run_source_id'
-    query.measure = Olap::Query::Measure.find_by_name('Maximum')
-    #order by occurred_at
-    query_result = query.perform_search
+    best_score_sql = <<SQL
+SELECT groups.name as stat_name, MAX(test_case_numerical_statistics.value) as score
+FROM hosts
+RIGHT JOIN test_runs ON test_runs.host_id = hosts.id
+RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
+RIGHT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
+RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
+RIGHT JOIN test_cases ON test_cases.group_id = groups.id
+RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
+WHERE
+    hosts.name = '#{@test_run.host.name}' AND
+    test_runs.variant = '#{@test_run.variant}' AND
+    test_runs.occurred_at <= '#{@test_run.occurred_at}' AND
+    #{filter_criteria}
+GROUP BY groups.name, test_case_numerical_statistics.key
+SQL
 
-    column_count = query_result.column_headers.size
-    @perf_stats = []
+    results_sql = <<SQL
+SELECT
+    test_runs.id AS test_run_id,
+    groups.name AS stat_name,
+    test_case_numerical_statistics.value AS value
+FROM test_runs
+    RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
+    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
+    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
+    RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
+WHERE
+    test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
+    #{filter_criteria}
+SQL
 
-    test_runs = @test_runs.reverse
+    sql = <<SQL
+    SELECT
+    results.stat_name as name,
+    #{rows_to_columns},
+    stddev(results.value) AS std_deviation,
+    best_scores.score as best_score
+FROM
+  (#{results_sql}) results,
+  (#{best_score_sql}) best_scores
+WHERE best_scores.stat_name = results.stat_name
+GROUP BY results.stat_name, best_scores.score
+SQL
+    ActiveRecord::Base.connection.select_all(sql)
+  end
 
-    @perf_stats[0] = []
-    @perf_stats[0][0] = 'Success Rate'
-    if query_result.column_headers.size > 0
-      query_result.column_headers.each_with_index do |c, i|
-        test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
-        @perf_stats[0][i + 1] = "#{test_run.successes.size}/#{test_run.test_cases.size}"
-      end
-    else
-      (0..(test_runs.size-1)).each do |i|
-        @perf_stats[0][i + 1] = "#{test_runs[i].successes.size}/#{test_runs[i].test_cases.size}"
-      end
-    end
-
-    query_result.tabular_data.each_with_index do |row, i|
-      @perf_stats[i + 1] = []
-      if query_result.row_headers[i] == 'aggregate.best.score'
-        @perf_stats[i + 1][0] = 'SPECjvm98'
-      else
-        @perf_stats[i + 1][0] = 'SPECjbb2005'
-      end
-      row.each_with_index do |value, j|
-        @perf_stats[i + 1][1 + j] = value
-      end
-    end
-
-    @perf_stats = @perf_stats.reject{|row| row.inject(0) {|accum, e| e.nil? ? accum : accum + 1} == 0}
-    @perf_stat_headers = []
-
-    @perf_stat_headers[0] = nil
-    if query_result.column_headers.size > 0
-      query_result.column_headers.each_with_index do |c, i|
-        test_run = @test_runs.detect {|tr| tr.id.to_s == c.to_s}
-        raise "Missing #{c} in #{@test_runs.collect{|tr|tr.id}.join(',')}" unless test_run
-        @perf_stat_headers[i + 1] = test_run.label
-      end
-    else
-      (0..(test_runs.size-1)).each do |i|
-        @perf_stat_headers[i + 1] = test_runs[i].label
-      end
-    end
+  def gen_success_rates
+    @test_runs.collect {|tr| "#{tr.successes.size}/#{tr.test_cases.size}"}
   end
 end

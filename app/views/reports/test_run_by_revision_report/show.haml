@@ -147,14 +147,17 @@
   %table.report
     %tr
       %th.pivot
-      - @report.perf_stat_headers.each_with_index do |c, i|
-        - next if i == 0
-        %th.column= c
-    - @report.perf_stats.each_with_index do |r,r_index|
+      - @report.test_runs.each do |tr|
+        %th.column= tr.label
+    %tr
+      %th.row Success Rate
+      - @report.success_rates.each do |sr|
+        %td= h(sr)
+    - @report.perf_stats.each do |r|
       %tr
-        %th.row= h(r[0])
-        - 1.upto(r.size - 1) do |c_index|
-          %td= h(r[c_index])
+        %th.row= h(r['name'])
+        - @report.test_runs.each do |tr|
+          %td= perf_stat(tr.id, r)
 
 - if @report.bc_by_tr.size > 0
   %h2 Build Configuration By Test Run

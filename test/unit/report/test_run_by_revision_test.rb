@@ -25,12 +25,13 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(6, report.window_size)
-    assert_equal([["Success Rate", "13/13"]], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
+    assert_equal(["13/13"], report.success_rates)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
   end
@@ -43,12 +44,13 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "13/13", "13/13"]], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']}.sort)
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
+    assert_equal(["13/13", "13/13"], report.success_rates)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
   end
@@ -68,12 +70,13 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "12/13", "12/13"]], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([test_case2.name], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([test_case1.name], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
+    assert_equal(["12/13", "12/13"], report.success_rates)
+    assert_equal([], report.perf_stats)
     assert_equal([
     {"test_run_#{test_run_1.id}"=>"100", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},
     {"test_run_#{test_run_1.id}"=>"67", "test_case_name"=>"TestCompares", "test_run_1"=>"100"}
@@ -93,12 +96,13 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(Tdm::TestRun.find(test_run_1.id))
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "13/13", "12/12"]], report.perf_stats)
     assert_equal([test_case2.name], report.missing_tests.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
+    assert_equal(["12/12", "13/13"], report.success_rates)
+    assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
   end
@@ -140,20 +144,21 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
       report = Report::TestRunByRevision.new(test_run)
     end
     assert_equal(test_run, report.test_run)
-    assert_equal([["Success Rate", "12/13", "10/13", "11/13"]], report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_name']}.sort)
     assert_equal([test_case1.name], report.consistent_failures.collect{|t| t['test_case_name']})
     assert_equal([test_case2b.name, test_case_Y.name], report.intermittent_failures.collect{|t| t['test_case_name']}.sort)
 
+    assert_equal(["11/13", "10/13", "12/13"], report.success_rates)
+    assert_equal([], report.perf_stats)
     assert_equal([
-    {"test_run_3"=>"67", "test_run_4"=>"67", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},
-    {"test_run_3"=>"67", "test_run_4"=>"100", "test_case_name"=>"TestLotsOfLoops", "test_run_1"=>"67"},
-    {"test_run_3"=>"67","test_run_4"=>"100","test_case_name"=>"TestCompares","test_run_1"=>"100"}
+    {"test_run_#{test_run_1.id}"=>"67", "test_run_#{test_run_2.id}"=>"67", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},
+    {"test_run_#{test_run_1.id}"=>"67", "test_run_#{test_run_2.id}"=>"100", "test_case_name"=>"TestLotsOfLoops", "test_run_1"=>"67"},
+    {"test_run_#{test_run_1.id}"=>"67","test_run_#{test_run_2.id}"=>"100","test_case_name"=>"TestCompares","test_run_1"=>"100"}
     ], report.tc_by_tr)
     assert_equal([
-    {"test_run_3"=>"62","test_run_4"=>"88","test_run_1"=>"75","build_configuration_name"=>"prototype"}
+    {"test_run_#{test_run_1.id}"=>"62","test_run_#{test_run_2.id}"=>"88","test_run_1"=>"75","build_configuration_name"=>"prototype"}
     ], report.bc_by_tr)
   end
 
@@ -166,7 +171,11 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(6, report.window_size)
-    assert_equal([["Success Rate", "2/2", "2/2"], ['SPECjvm98', '412', '412'], ['SPECjbb2005', '22', '22']], report.perf_stats)
+    assert_equal(["2/2", "2/2"], report.success_rates)
+    assert_equal([
+    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22"},
+    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412"}
+    ],report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']})
