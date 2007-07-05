@@ -20,7 +20,7 @@ module Reports::TestRunByRevisionReportHelper
     "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_tests_javascript(name)}; return false;\">#{label}</a>"
   end
 
-  def test_link(row)
+  def test_link(row, only_path = true)
     options = {:controller => "/results/test_case", :action => 'show'}
     options[:host_name] = @report.test_run.host.name
     options[:test_run_variant] = @report.test_run.variant
@@ -29,6 +29,7 @@ module Reports::TestRunByRevisionReportHelper
     options[:test_configuration_name] = row['test_configuration_name']
     options[:group_name] = row['group_name']
     options[:test_case_name] = row['test_case_name']
+    options[:only_path] = only_path
 
     link_to('Show', options)
   end
