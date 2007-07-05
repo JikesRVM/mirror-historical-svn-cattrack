@@ -170,7 +170,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
-    assert_equal(6, report.window_size)
+    assert_equal(10, report.window_size)
     assert_equal(["2/2", "2/2"], report.success_rates)
     assert_equal([
     {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22"},
