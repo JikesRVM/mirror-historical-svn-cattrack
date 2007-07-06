@@ -45,14 +45,15 @@ module Reports::TestRunByRevisionReportHelper
     render_limits = [0.0, 0.8, 1.6, 2.4, 3].collect {|r| r*std_deviation }
 
     if row["less_is_more"] == '1'
+      ratio = "+#{((value - best_score)/best_score*100).to_i}"
       if value == best_score
         style = render_map[0]
-      elsif value < (best_score + render_limits[1])
+      elsif value <= (best_score + render_limits[1])
         style = render_map[1]
-      elsif value < (best_score + render_limits[2])
+      elsif value <= (best_score + render_limits[2])
         include_suffix = true
         style = render_map[2]
-      elsif value < (best_score + render_limits[3])
+      elsif value <= (best_score + render_limits[3])
         include_suffix = true
         style = render_map[3]
       else
@@ -60,14 +61,15 @@ module Reports::TestRunByRevisionReportHelper
         style = render_map[4]
       end
     else
+      ratio = "-#{((best_score - value)/best_score*100).to_i}"
       if value == best_score
         style = render_map[0]
-      elsif value > (best_score - render_limits[1])
+      elsif value >= (best_score - render_limits[1])
         style = render_map[1]
-      elsif value > (best_score - render_limits[2])
+      elsif value >= (best_score - render_limits[2])
         include_suffix = true
         style = render_map[2]
-      elsif value > (best_score - render_limits[3])
+      elsif value >= (best_score - render_limits[3])
         include_suffix = true
         style = render_map[3]
       else
@@ -75,11 +77,7 @@ module Reports::TestRunByRevisionReportHelper
         style = render_map[4]
       end
     end
-    suffix = ''
-    if include_suffix
-      change = ((value-best_score)/best_score*100).to_i
-      suffix = " (#{(change > 0) ? '+':''}#{change}%)"
-    end
+    suffix = include_suffix ? " (#{ratio}%)" : ''
     "<span style=\"#{style}\">#{str_value}#{suffix}</span>"
   end
 end

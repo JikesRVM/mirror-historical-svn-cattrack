@@ -27,13 +27,25 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
   end
 
   def test_perf_stat
-    row = {'std_deviation' => '1', 'best_score' => '2'}
+    assert_equal("", MyClass.new.perf_stat(1, {}))
+
+    values = [0.0, 0.8, 1.6, 2.4, 3].collect {|v| (4 - v).to_s }
+    row = {'std_deviation' => '1', 'best_score' => '4', "less_is_more" => '0'}
     assert_equal("", MyClass.new.perf_stat(1, row.merge({"test_run_1" => nil})))
-    assert_equal("<span style=\"color: green; font-weight: bold;\">2</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '2'})))
-    assert_equal("<span style=\"color: green;\">1.9</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.9'})))
-    assert_equal("<span style=\"\">1.5 (-25%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.5'})))
-    assert_equal("<span style=\"color: red;\">1.1 (-44%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '1.1'})))
-    assert_equal("<span style=\"color: red; font-weight: bold;\">0.2 (-90%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '0.2'})))
+    assert_equal("<span style=\"color: green; font-weight: bold;\">4</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '4'})))
+    assert_equal("<span style=\"color: green;\">#{values[1]}</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[1]})))
+    assert_equal("<span style=\"\">#{values[2]} (-40%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[2]})))
+    assert_equal("<span style=\"color: red;\">#{values[3]} (-60%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[3]})))
+    assert_equal("<span style=\"color: red; font-weight: bold;\">#{values[4]} (-75%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[4]})))
+
+    values = [0.0, 0.8, 1.6, 2.4, 3].collect {|v| (4 + v).to_s }
+    row = {'std_deviation' => '1', 'best_score' => '4', "less_is_more" => '1'}
+    assert_equal("", MyClass.new.perf_stat(1, row.merge({"test_run_1" => nil})))
+    assert_equal("<span style=\"color: green; font-weight: bold;\">4</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => '4'})))
+    assert_equal("<span style=\"color: green;\">#{values[1]}</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[1]})))
+    assert_equal("<span style=\"\">#{values[2]} (+39%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[2]})))
+    assert_equal("<span style=\"color: red;\">#{values[3]} (+60%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[3]})))
+    assert_equal("<span style=\"color: red; font-weight: bold;\">#{values[4]} (+75%)</span>", MyClass.new.perf_stat(1, row.merge({"test_run_1" => values[4]})))
   end
 
 end
