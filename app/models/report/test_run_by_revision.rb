@@ -116,15 +116,25 @@ SQL
   def gen_perf_stats
     filter_criteria = <<SQL
     build_configurations.name = 'production' AND
-    test_configurations.name = 'Performance' AND
     (
-        (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
-        (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
+      (
+        test_configurations.name = 'Performance' AND
+        (
+          (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
+          (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
+        )
+      )
+      OR
+      (
+        test_configurations.name = 'default' AND
+        groups.name = 'dacapo' AND
+        test_case_numerical_statistics.key = 'time'
+      )
     )
 SQL
 
     best_score_sql = <<SQL
-SELECT groups.name as stat_name, MAX(test_case_numerical_statistics.value) as score
+SELECT test_cases.name as stat_name, MAX(test_case_numerical_statistics.value) as score
 FROM hosts
 RIGHT JOIN test_runs ON test_runs.host_id = hosts.id
 RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
@@ -137,13 +147,14 @@ WHERE
     test_runs.variant = '#{@test_run.variant}' AND
     test_runs.occurred_at <= '#{@test_run.occurred_at}' AND
     #{filter_criteria}
-GROUP BY groups.name, test_case_numerical_statistics.key
+GROUP BY test_cases.name, test_case_numerical_statistics.key
 SQL
 
     results_sql = <<SQL
 SELECT
     test_runs.id AS test_run_id,
-    groups.name AS stat_name,
+    groups.name as suite_name,
+    test_cases.name AS stat_name,
     test_case_numerical_statistics.value AS value
 FROM test_runs
     RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
@@ -166,7 +177,8 @@ FROM
   (#{results_sql}) results,
   (#{best_score_sql}) best_scores
 WHERE best_scores.stat_name = results.stat_name
-GROUP BY results.stat_name, best_scores.score
+GROUP BY results.suite_name, results.stat_name, best_scores.score
+ORDER BY results.suite_name, results.stat_name
 SQL
     ActiveRecord::Base.connection.select_all(sql)
   end
