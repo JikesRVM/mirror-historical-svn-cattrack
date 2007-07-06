@@ -41,21 +41,45 @@ module Reports::TestRunByRevisionReportHelper
     std_deviation = row["std_deviation"] ? Kernel.Float(row["std_deviation"]) : 0
     best_score = row["best_score"] ? Kernel.Float(row["best_score"]) : 0
     style = nil
-    if value == best_score
-      style = 'color: green; font-weight: bold;'
-    elsif value > (best_score - (std_deviation * 0.4))
-      style = 'color: green;'
-    elsif value > (best_score - (std_deviation * 0.8))
-      include_suffix = true
-      style = ''
-    elsif value > (best_score - (std_deviation * 1.2))
-      include_suffix = true
-      style = 'color: red;'
-    elsif value < (best_score - (std_deviation * 1.6))
-      include_suffix = true
-      style = 'color: red; font-weight: bold;'
+    render_map = ['color: green; font-weight: bold;','color: green;','', 'color: red;','color: red; font-weight: bold;']
+    render_limits = [0.0, 0.8, 1.6, 2.4, 3].collect {|r| r*std_deviation }
+
+    if row["less_is_more"] == '1'
+      if value == best_score
+        style = render_map[0]
+      elsif value < (best_score + render_limits[1])
+        style = render_map[1]
+      elsif value < (best_score + render_limits[2])
+        include_suffix = true
+        style = render_map[2]
+      elsif value < (best_score + render_limits[3])
+        include_suffix = true
+        style = render_map[3]
+      else
+        include_suffix = true
+        style = render_map[4]
+      end
+    else
+      if value == best_score
+        style = render_map[0]
+      elsif value > (best_score - render_limits[1])
+        style = render_map[1]
+      elsif value > (best_score - render_limits[2])
+        include_suffix = true
+        style = render_map[2]
+      elsif value > (best_score - render_limits[3])
+        include_suffix = true
+        style = render_map[3]
+      else
+        include_suffix = true
+        style = render_map[4]
+      end
     end
-    suffix = include_suffix ? " (-#{((best_score-value)/best_score*100).to_i}%)" : ''
+    suffix = ''
+    if include_suffix
+      change = ((value-best_score)/best_score*100).to_i
+      suffix = " (#{(change > 0) ? '+':''}#{change}%)"
+    end
     "<span style=\"#{style}\">#{str_value}#{suffix}</span>"
   end
 end

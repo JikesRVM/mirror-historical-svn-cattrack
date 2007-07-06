@@ -114,27 +114,27 @@ SQL
   end
 
   def gen_perf_stats
-    filter_criteria = <<SQL
+    maxs_filter_criteria = <<SQL
     build_configurations.name = 'production' AND
+    test_configurations.name = 'Performance' AND
     (
-      (
-        test_configurations.name = 'Performance' AND
-        (
-          (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
-          (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
-        )
-      )
-      OR
-      (
-        test_configurations.name = 'default' AND
-        groups.name = 'dacapo' AND
-        test_case_numerical_statistics.key = 'time'
-      )
+      (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
+      (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
     )
 SQL
+    mins_filter_criteria = <<SQL
+    build_configurations.name = 'production' AND
+    test_configurations.name = 'default' AND
+    groups.name = 'dacapo' AND
+    test_case_numerical_statistics.key = 'time'
+SQL
+    filter_criteria = "(#{maxs_filter_criteria}) OR (#{mins_filter_criteria})"
 
     best_score_sql = <<SQL
-SELECT test_cases.name as stat_name, MAX(test_case_numerical_statistics.value) as score
+SELECT
+  test_cases.name as stat_name,
+  MAX(test_case_numerical_statistics.value) as max_score,
+  MIN(test_case_numerical_statistics.value) as min_score
 FROM hosts
 RIGHT JOIN test_runs ON test_runs.host_id = hosts.id
 RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
@@ -155,7 +155,8 @@ SELECT
     test_runs.id AS test_run_id,
     groups.name as suite_name,
     test_cases.name AS stat_name,
-    test_case_numerical_statistics.value AS value
+    test_case_numerical_statistics.value AS value,
+    0 AS less_is_more
 FROM test_runs
     RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
     LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
@@ -164,20 +165,37 @@ FROM test_runs
     RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
-    #{filter_criteria}
+    #{maxs_filter_criteria}
+UNION
+SELECT
+    test_runs.id AS test_run_id,
+    groups.name as suite_name,
+    test_cases.name AS stat_name,
+    test_case_numerical_statistics.value AS value,
+    1 AS less_is_more
+FROM test_runs
+    RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
+    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
+    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
+    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
+    RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
+WHERE
+    test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
+    #{mins_filter_criteria}
 SQL
 
     sql = <<SQL
     SELECT
     results.stat_name as name,
     #{rows_to_columns},
+    results.less_is_more as less_is_more,
     stddev(results.value) AS std_deviation,
-    best_scores.score as best_score
+    max(case when results.less_is_more = 1 then min_score else max_score end) as best_score
 FROM
   (#{results_sql}) results,
   (#{best_score_sql}) best_scores
 WHERE best_scores.stat_name = results.stat_name
-GROUP BY results.suite_name, results.stat_name, best_scores.score
+GROUP BY results.suite_name, results.stat_name, results.less_is_more
 ORDER BY results.suite_name, results.stat_name
 SQL
     ActiveRecord::Base.connection.select_all(sql)

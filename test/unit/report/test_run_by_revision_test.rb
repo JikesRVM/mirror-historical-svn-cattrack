@@ -173,8 +173,8 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal(10, report.window_size)
     assert_equal(["2/2", "2/2"], report.success_rates)
     assert_equal([
-    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22"},
-    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412"}
+    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22", "less_is_more"=>"0",},
+    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412", "less_is_more"=>"0",}
     ],report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
