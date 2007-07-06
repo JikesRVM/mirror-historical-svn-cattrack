@@ -38,8 +38,8 @@ module Reports::TestRunByRevisionReportHelper
     str_value = row["test_run_#{test_run_id}"]
     return '' unless str_value
     value = Kernel.Float(str_value)
-    std_deviation = Kernel.Float(row["std_deviation"])
-    best_score = Kernel.Float(row["best_score"])
+    std_deviation = row["std_deviation"] ? Kernel.Float(row["std_deviation"]) : 0
+    best_score = row["best_score"] ? Kernel.Float(row["best_score"]) : 0
     style = nil
     if value == best_score
       style = 'color: green; font-weight: bold;'
