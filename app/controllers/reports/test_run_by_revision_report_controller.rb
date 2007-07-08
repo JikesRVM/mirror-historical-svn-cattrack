@@ -17,7 +17,9 @@ class Reports::TestRunByRevisionReportController < ApplicationController
 
   def show
     host = Tdm::Host.find_by_name(params[:host_name])
-    test_run = host.test_runs.find_by_id_and_name(params[:test_run_id], params[:test_run_variant])
+    raise CatTrack::SecurityError unless host
+    test_run = host.test_runs.find_by_id_and_variant(params[:test_run_id], params[:test_run_variant])
+    raise CatTrack::SecurityError unless test_run
     test_run.host = host # Avoid loads when rendering
     @report = Report::TestRunByRevision.new(test_run)
   end
