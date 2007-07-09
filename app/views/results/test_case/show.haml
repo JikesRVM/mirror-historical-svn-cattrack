@@ -1,4 +1,4 @@
-- @content_for_breadcrumbs = draw_breadcrumbs(@record.parent_node)
+- @content_for_breadcrumbs = draw_breadcrumbs(@record.parent_node, h(@record.name))
 - @page_title = "Test Case: #{h(@record.name)}"
 %h1.page-title= @page_title
 

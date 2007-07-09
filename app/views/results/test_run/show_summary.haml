@@ -1,20 +1,8 @@
-- @content_for_breadcrumbs = draw_breadcrumbs(@record)
-- @page_title = "Test Run Summary: #{h(@record.name)}.#{@record.id}"
+- @content_for_breadcrumbs = draw_breadcrumbs(@record, 'summary')
+- @page_title = "Test Run Summary: #{h(@record.label)}"
 %h1.page-title= @page_title
 
 %table.details
-  %tr
-    %th Name
-    %td= h(@record.name)
-  %tr
-    %th Build Target
-    %td= link_for(@record.build_target)
-  %tr
-    %th Revision
-    %td= revision_link(@record.revision)
-  %tr
-    %th Time
-    %td= h(@record.occurred_at)
   %tr
     %th Success Rate
     %td= @record.success_rate

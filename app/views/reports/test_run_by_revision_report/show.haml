@@ -1,4 +1,4 @@
-- @content_for_breadcrumbs = draw_breadcrumbs(@report.test_run)
+- @content_for_breadcrumbs = draw_breadcrumbs(@report.test_run, 'regression_report')
 - @page_title = "Regression Report: #{h(@report.test_run.label)}"
 - scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title

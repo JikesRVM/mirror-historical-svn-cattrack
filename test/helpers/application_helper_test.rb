@@ -102,6 +102,6 @@ class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
     build_target.parent_node = test_run
     assert_equal("<a href=\"/results/MyHost/RunLikeWind.1\">RunLikeWind-1</a>", MyClass.new.link_for(test_run))
     assert_equal("<a href=\"/results/MyHost/RunLikeWind.1/build_target\">ia32</a>", MyClass.new.link_for(build_target))
-    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind.1\">RunLikeWind-1</a>", MyClass.new.draw_breadcrumbs(test_run))
+    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind.1\">RunLikeWind-1</a> &gt; test_run", MyClass.new.draw_breadcrumbs(test_run, 'test_run'))
   end
 end

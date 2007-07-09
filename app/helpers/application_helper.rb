@@ -33,9 +33,11 @@ module ApplicationHelper
     options
   end
 
-  def draw_breadcrumbs(object)
+  def draw_breadcrumbs(object, current_page)
     bc = breadcrumbs(object).reverse
-    bc.collect {|o| "#{link_for(o)}"}.join(' &gt; ')
+    bc = bc.collect {|o| "#{link_for(o)}"}
+    bc << current_page
+    bc.join(' &gt; ')
   end
 
   def breadcrumbs(object)
