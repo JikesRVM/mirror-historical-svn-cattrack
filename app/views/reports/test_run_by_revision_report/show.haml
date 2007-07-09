@@ -1,23 +1,7 @@
-- @page_title = "Test Run Report: #{h(@report.test_run.label)}"
+- @content_for_breadcrumbs = draw_breadcrumbs(@report.test_run)
+- @page_title = "Regression Report: #{h(@report.test_run.label)}"
 - scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title
-
-%table.details
-  %tr
-    %th Test Run
-    %td= link_for(@report.test_run)
-  %tr
-    %th Build Target
-    %td= link_for(@report.test_run.build_target)
-  %tr
-    %th Revision
-    %td= revision_link_for_url(scm_url, @report.test_run.revision)
-  %tr
-    %th Time
-    %td= h(@report.test_run.occurred_at)
-  %tr
-    %th Success Rate
-    %td= @report.test_run.success_rate
 
 - if @report.missing_tests.size > 0
   = tests_header('missing_tests', pluralize(@report.missing_tests.size, 'Missing Tests'))
