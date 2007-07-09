@@ -175,16 +175,16 @@ FROM test_case_numerical_statistics
 LEFT JOIN test_cases ON test_case_numerical_statistics.owner_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+LEFT JOIN test_configuration_params ON test_configurations.id = test_configuration_params.owner_id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
 LEFT JOIN hosts ON test_runs.host_id = hosts.id
-LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_numerical_statistics.key = statistics_name_map.key)
+LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
-    (
-      groups.name = 'dacapo' OR
-      (groups.name IN ('SPECjvm98', 'SPECjbb2000', 'SPECjbb2005') and test_configurations.name = 'Performance')
-    )
+    build_configurations.name = 'production' AND
+    groups.name IN ('dacapo', 'SPECjvm98', 'SPECjbb2000', 'SPECjbb2005') AND
+    statistics_name_map.label IS NOT NULL
 SQL
 
     sql = <<SQL

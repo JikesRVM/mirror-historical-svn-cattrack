@@ -118,6 +118,7 @@ class Test::Unit::TestCase
 
     test_configuration = build_configuration.test_configurations[0]
     test_configuration.name = 'Performance'
+    test_configuration.params['mode'] = 'performance'
     test_configuration.save!
     assert_equal(2, test_configuration.groups.size)
     group = test_configuration.groups[1]
