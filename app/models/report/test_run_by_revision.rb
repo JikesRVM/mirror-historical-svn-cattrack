@@ -45,10 +45,10 @@ SELECT
     count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
     max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.id else NULL end) AS test_case_id,
     max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.result else NULL end) AS test_case_result
-FROM build_configurations
-    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
-    LEFT JOIN groups ON groups.test_configuration_id = test_configurations.id
-    LEFT JOIN test_cases ON test_cases.group_id = groups.id
+FROM test_cases
+    LEFT JOIN groups ON test_cases.group_id = groups.id
+    LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+    LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 WHERE
     build_configurations.test_run_id IN (#{@test_runs.collect {|tr| tr.id}.join(', ')})
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
