@@ -2,11 +2,9 @@
 - @page_title = "Test Run Summary: #{h(@record.label)}"
 %h1.page-title= @page_title
 
-%table.details
-  %tr
-    %th Success Rate
-    %td= @record.success_rate
-- if @record.non_successes.size > 0
+- if @record.non_successes.size == 0
+%h3 No Unsuccessful Tests
+- else
   %h3 Unsuccessful Tests
   %table.list
     %tr
