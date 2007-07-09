@@ -38,7 +38,7 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/security/logout', :controller => 'security', :action => 'logout')
     assert_routing('/', :controller => 'dashboard', :action => 'index')
 
-    assert_routing('/reports/regression/excalibur.watson.ibm.com/core.36', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
+    assert_routing('/results/excalibur.watson.ibm.com/core.36/regression_report', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
     assert_routing('/reports/analysis', :controller => 'explorer/report', :action => 'public_list')
     assert_routing('/reports/analysis/foo', :controller => 'explorer/report', :action => 'show', :key => 'foo')
 

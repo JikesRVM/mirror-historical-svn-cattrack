@@ -13,6 +13,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name/:test_run_variant.:test_run_id/build_target', :controller => 'results/build_target', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant.:test_run_id/summary', :controller => 'results/test_run', :action => 'show_summary', :conditions => {:method => :get}
+  map.connect 'results/:host_name/:test_run_variant.:test_run_id/regression_report', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/Output.txt', :controller => 'results/test_case', :action => 'show_output', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name', :controller => 'results/test_case', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant.:test_run_id/:build_configuration_name/:test_configuration_name/:group_name', :controller => 'results/group', :action => 'show', :conditions => {:method => :get}
