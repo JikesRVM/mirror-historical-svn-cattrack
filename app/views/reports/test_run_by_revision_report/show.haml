@@ -140,7 +140,7 @@
       %td= t.occurred_at
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show Summary", :action => 'show_summary')
+          %li= link_for(t, :label => "Show")
 
 - if @report.perf_stats.size > 0 or @report.test_runs.size > 1
   %h2 Performance Statistics
