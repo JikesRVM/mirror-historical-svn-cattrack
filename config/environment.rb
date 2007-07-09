@@ -109,6 +109,7 @@ OrderedTables = [
 'reports',
 'audit_logs',
 'test_case_numerical_statistics',
+'statistics_name_map',
 ]
 
 ENV['FIXTURES'] = OrderedTables.join(',')

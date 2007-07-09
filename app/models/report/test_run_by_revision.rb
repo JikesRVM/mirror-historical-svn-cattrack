@@ -137,89 +137,69 @@ SQL
   end
 
   def gen_perf_stats
-    maxs_filter_criteria = <<SQL
-    build_configurations.name = 'production' AND
-    test_configurations.name = 'Performance' AND
-    (
-      (groups.name = 'SPECjbb2005' AND test_case_numerical_statistics.key = 'score') OR
-      (groups.name = 'SPECjvm98'  AND test_case_numerical_statistics.key = 'aggregate.best.score')
-    )
-SQL
-    mins_filter_criteria = <<SQL
-    build_configurations.name = 'production' AND
-    test_configurations.name = 'default' AND
-    groups.name = 'dacapo' AND
-    test_case_numerical_statistics.key = 'time'
-SQL
-    filter_criteria = "(#{maxs_filter_criteria}) OR (#{mins_filter_criteria})"
-
     best_score_sql = <<SQL
 SELECT
-  test_cases.name as stat_name,
+    stat_name,
+    less_is_more,
+    case when less_is_more = true then min_score else max_score end as best_score
+FROM (
+SELECT
+  statistics_name_map.label as stat_name,
+  statistics_name_map.less_is_more as less_is_more,
   MAX(test_case_numerical_statistics.value) as max_score,
   MIN(test_case_numerical_statistics.value) as min_score
-FROM hosts
-RIGHT JOIN test_runs ON test_runs.host_id = hosts.id
-RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
-RIGHT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
-RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
-RIGHT JOIN test_cases ON test_cases.group_id = groups.id
-RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
+FROM test_case_numerical_statistics
+LEFT JOIN test_cases ON test_case_numerical_statistics.owner_id = test_cases.id
+LEFT JOIN groups ON test_cases.group_id = groups.id
+LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
+LEFT JOIN hosts ON test_runs.host_id = hosts.id
+LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_numerical_statistics.key = statistics_name_map.key)
 WHERE
     hosts.name = '#{@test_run.host.name}' AND
     test_runs.variant = '#{@test_run.variant}' AND
     test_runs.occurred_at <= '#{@test_run.occurred_at}' AND
-    #{filter_criteria}
-GROUP BY test_cases.name, test_case_numerical_statistics.key
+    build_configurations.name = 'production' AND
+    statistics_name_map.label IS NOT NULL
+GROUP BY statistics_name_map.label, statistics_name_map.less_is_more
+) f
 SQL
 
     results_sql = <<SQL
 SELECT
     test_runs.id AS test_run_id,
-    groups.name as suite_name,
-    test_cases.name AS stat_name,
-    test_case_numerical_statistics.value AS value,
-    0 AS less_is_more
-FROM test_runs
-    RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
-    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
-    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
-    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
-    RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
+    statistics_name_map.label AS stat_name,
+    test_case_numerical_statistics.value AS value
+FROM test_case_numerical_statistics
+LEFT JOIN test_cases ON test_case_numerical_statistics.owner_id = test_cases.id
+LEFT JOIN groups ON test_cases.group_id = groups.id
+LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
+LEFT JOIN hosts ON test_runs.host_id = hosts.id
+LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_numerical_statistics.key = statistics_name_map.key)
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
-    #{maxs_filter_criteria}
-UNION
-SELECT
-    test_runs.id AS test_run_id,
-    groups.name as suite_name,
-    test_cases.name AS stat_name,
-    test_case_numerical_statistics.value AS value,
-    1 AS less_is_more
-FROM test_runs
-    RIGHT JOIN build_configurations ON build_configurations.test_run_id = test_runs.id
-    LEFT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
-    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
-    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
-    RIGHT JOIN test_case_numerical_statistics ON test_case_numerical_statistics.owner_id = test_cases.id
-WHERE
-    test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
-    #{mins_filter_criteria}
+    (
+      groups.name = 'dacapo' OR
+      (groups.name IN ('SPECjvm98', 'SPECjbb2000', 'SPECjbb2005') and test_configurations.name = 'Performance')
+    )
 SQL
 
     sql = <<SQL
     SELECT
     results.stat_name as name,
     #{rows_to_columns},
-    results.less_is_more as less_is_more,
+    case when less_is_more = true then 1 else 0 end as less_is_more,
     stddev(results.value) AS std_deviation,
-    max(case when results.less_is_more = 1 then min_score else max_score end) as best_score
+    best_score
 FROM
   (#{results_sql}) results,
   (#{best_score_sql}) best_scores
 WHERE best_scores.stat_name = results.stat_name
-GROUP BY results.suite_name, results.stat_name, results.less_is_more
-ORDER BY results.suite_name, results.stat_name
+GROUP BY results.stat_name, less_is_more, best_score
+ORDER BY results.stat_name
 SQL
     ActiveRecord::Base.connection.select_all(sql)
   end
