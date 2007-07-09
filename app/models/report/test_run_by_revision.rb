@@ -33,6 +33,8 @@ class Report::TestRunByRevision
     options[:order] = 'occurred_at DESC'
     @test_runs = Tdm::TestRun.find(:all, options).reverse
 
+    previous_id = (@test_runs.size > 1) ? @test_runs[@test_runs.size - 2].id : 0
+
     sql = <<SQL
 SELECT
     build_configurations.name AS build_configuration_name,
@@ -40,6 +42,7 @@ SELECT
     groups.name AS group_name,
     test_cases.name AS test_case_name,
     count(case when build_configurations.test_run_id = #{@test_run.id} then 1 else NULL end) AS current_run,
+    count(case when build_configurations.test_run_id = #{previous_id} then 1 else NULL end) AS in_last_run,
     count(*) AS total_runs,
     count(case when build_configurations.test_run_id = #{@test_run.id} AND test_cases.result = 'SUCCESS' then 1 else NULL end) AS current_success,
     count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
@@ -52,29 +55,49 @@ FROM test_cases
 WHERE
     build_configurations.test_run_id IN (#{@test_runs.collect {|tr| tr.id}.join(', ')})
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
-ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name
 SQL
 
-    @new_successes = []
-    @new_failures = []
-    @intermittent_failures = []
-    @consistent_failures = []
-    @missing_tests = []
+    missing_tests_sql = <<SQL
+SELECT * FROM (#{sql}) f
+WHERE test_case_id IS NULL AND in_last_run = 1
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+SQL
 
-    ActiveRecord::Base.connection.select_all(sql).each do |r|
-      if r['test_case_id'].nil?
-        @missing_tests << r
-      elsif r['current_success'] == '1' and r['total_successes'] == '1'
-        @new_successes << r
-      elsif r['current_success'] == '0' and r['total_successes'] == (test_runs.size - 1).to_s
-        @new_failures << r
-      elsif r['total_successes'] == '0'
-        @consistent_failures << r
-      elsif (r['total_successes'] != r['total_runs'])
-        @intermittent_failures << r
-      end
-    end
+    new_successes_sql = <<SQL
+SELECT * FROM (#{sql}) f
+WHERE test_case_id IS NOT NULL AND current_success = 1 AND total_successes = 1
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+SQL
 
+    new_failures_sql = <<SQL
+SELECT * FROM (#{sql}) f
+WHERE test_case_id IS NOT NULL AND current_success = 0 AND total_successes = #{test_runs.size - 1}
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+SQL
+
+    consistent_failures_sql = <<SQL
+SELECT * FROM (#{sql}) f
+WHERE test_case_id IS NOT NULL AND total_successes = 0
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+SQL
+
+    intermittent_failures_sql = <<SQL
+SELECT * FROM (#{sql}) f
+WHERE
+  test_case_id IS NOT NULL AND
+  (
+    (current_success != 1 OR total_successes != 1) AND
+    (current_success != 0 OR total_successes != #{test_runs.size - 1}) AND
+    (total_successes != 0)
+  ) AND total_successes != total_runs
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+SQL
+
+    @new_successes = ActiveRecord::Base.connection.select_all(new_successes_sql)
+    @new_failures = ActiveRecord::Base.connection.select_all(new_failures_sql)
+    @intermittent_failures = ActiveRecord::Base.connection.select_all(intermittent_failures_sql)
+    @consistent_failures = ActiveRecord::Base.connection.select_all(consistent_failures_sql)
+    @missing_tests = ActiveRecord::Base.connection.select_all(missing_tests_sql)
     @bc_by_tr = gen_x_by_tr('build_configurations.name', 'build_configuration_name')
     @tc_by_tr = gen_x_by_tr('test_cases.name', 'test_case_name')
     @perf_stats = gen_perf_stats
