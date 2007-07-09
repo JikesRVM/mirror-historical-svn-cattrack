@@ -230,14 +230,13 @@ div.main-copy h1, div.main-copy h2, div.main-copy h3, div.main-copy h4 {
 }
 
 div.main-copy h1 {
-   margin: 1em 0 0 0;
+   margin: 1em 0 1em 0;
    padding: 1em 0 0 0;
    font-size: 175%;
    border-top: 1px solid rgb(216,210,195);
 }
 
 div.main-copy h1.page-title {
-   margin: 1em 0 0 0;
    border-top: none;
    padding-top: 0;
 }
