@@ -21,7 +21,6 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
 
   def test_report_with_no_history
     test_run = Tdm::TestRun.find(1)
-    olappy(test_run.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(10, report.window_size)
@@ -30,7 +29,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal(report.test_run.test_case_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal(["13/13"], report.success_rates)
+    assert_equal([test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
@@ -40,8 +39,6 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
@@ -49,7 +46,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']}.sort)
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
-    assert_equal(["13/13", "13/13"], report.success_rates)
+    assert_equal([test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
@@ -66,8 +63,6 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_case2.result = 'FAILURE'
     test_case2.save!
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
@@ -75,7 +70,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([test_case1.name], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal(["12/13", "12/13"], report.success_rates)
+    assert_equal([test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([], report.perf_stats)
     assert_equal([
     {"test_run_#{test_run_1.id}"=>"100", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},
@@ -92,8 +87,6 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_case2 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
     assert(test_case2.destroy)
 
-    olappy(Tdm::TestRun.find(1))
-    olappy(Tdm::TestRun.find(test_run_1.id))
     report = Report::TestRunByRevision.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
     assert_equal([test_case2.name], report.missing_tests.collect{|t| t['test_case_name']})
@@ -101,7 +94,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([], report.new_failures.collect{|t| t['test_case_name']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
-    assert_equal(["13/13","12/12"], report.success_rates)
+    assert_equal([test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([], report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
@@ -136,9 +129,6 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_case_Y.result = 'FAILURE'
     test_case_Y.save!
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
-    olappy(test_run_2.id)
     report = nil
     Tdm::TestRun.transaction do
       report = Report::TestRunByRevision.new(test_run)
@@ -150,7 +140,7 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     assert_equal([test_case1.name], report.consistent_failures.collect{|t| t['test_case_name']})
     assert_equal([test_case2b.name, test_case_Y.name], report.intermittent_failures.collect{|t| t['test_case_name']}.sort)
 
-    assert_equal(["12/13", "10/13", "11/13"], report.success_rates)
+    assert_equal([test_run_2.id, test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([], report.perf_stats)
     assert_equal([
     {"test_run_#{test_run_1.id}"=>"67", "test_run_#{test_run_2.id}"=>"67", "test_case_name"=>"TestClassLoading", "test_run_1"=>"67"},
@@ -166,21 +156,19 @@ class Report::TestRunByRevisionTest < Test::Unit::TestCase
     test_run = create_test_run_for_perf_tests
     test_run_1 = clone_test_run(test_run, 10)
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
     report = Report::TestRunByRevision.new(test_run)
     assert_equal(test_run, report.test_run)
     assert_equal(10, report.window_size)
-    assert_equal(["2/2", "2/2"], report.success_rates)
-    assert_equal([
-    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22", "less_is_more"=>"0",},
-    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412", "less_is_more"=>"0",}
-    ],report.perf_stats)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.new_successes.collect{|t| t['test_case_id']})
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
+    assert_equal([test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
+    assert_equal([
+    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22", "less_is_more"=>"0",},
+    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412", "less_is_more"=>"0",}
+    ],report.perf_stats)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
   end

@@ -135,8 +135,8 @@
         %th.column= tr.label
     %tr
       %th.row Success Rate
-      - @report.success_rates.each do |sr|
-        %td= h(sr)
+      - @report.test_runs.each do |tr|
+        %td= h("#{tr.successes.size}/#{tr.test_cases.size}")
     - @report.perf_stats.each do |r|
       %tr
         %th.row= h(r['name'])
