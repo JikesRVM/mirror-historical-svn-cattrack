@@ -21,7 +21,6 @@ class TestRunImporter
   def self.process_incoming_test_runs(perform_mailout=false)
     results_base_dir = SystemSetting['results.dir']
     raise ImportException.new("Missing 'results.dir' system setting") unless results_base_dir
-    AuditLog.log('import.started')
     logger.info("Import starting with results.dir='#{results_base_dir}'")
     incoming_dir = "#{results_base_dir}/incoming"
     processed_dir = "#{results_base_dir}/processed"
@@ -64,6 +63,5 @@ class TestRunImporter
         end
       end
     end
-    AuditLog.log('import.completed')
   end
 end
