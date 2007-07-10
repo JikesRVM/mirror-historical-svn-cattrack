@@ -65,9 +65,13 @@ SQL
   end
 
   def gen_perf_stats(stats)
+    stat_names = if stats
+      "IN (#{stats.collect{|s| "'#{s}'"}.join(', ')})"
+    else
+      "IS NOT NULL"
+    end
     filter = <<SQL
-  build_configurations.name = 'production' AND
-  statistics_name_map.label IN (#{stats.collect{|s| "'#{s}'"}.join(', ')})
+  build_configurations.name = 'production' AND statistics_name_map.label #{stat_names}
 SQL
     best_score_sql = <<SQL
 SELECT

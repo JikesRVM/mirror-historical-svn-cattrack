@@ -24,6 +24,14 @@ class Results::TestRunController < Results::BaseController
     @record = test_run
   end
 
+  def regression_report
+    @report = Report::RegressionReport.new(test_run)
+  end
+
+  def performance_report
+    @report = Report::PerformanceReport.new(test_run)
+  end
+
   def destroy
     raise CatTrack::SecurityError unless is_authenticated?
     @record = test_run

@@ -22,6 +22,8 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/results/excalibur.watson.ibm.com/core.36/production/Output.txt', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :build_configuration_name => 'production', :controller => 'results/build_configuration', :action => 'show_output')
     assert_routing('/results/excalibur.watson.ibm.com/core.36/production', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :build_configuration_name => 'production', :controller => 'results/build_configuration', :action => 'show')
     assert_routing('/results/excalibur.watson.ibm.com/core.36/summary', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'show_summary')
+    assert_routing('/results/excalibur.watson.ibm.com/core.36/regression_report', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'regression_report')
+    assert_routing('/results/excalibur.watson.ibm.com/core.36/performance_report', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'performance_report')
     assert_routing('/results/excalibur.watson.ibm.com/core.36/build_target', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/build_target', :action => 'show')
     assert_routing('/results/excalibur.watson.ibm.com/core.36', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'show')
     assert_routing('/results/excalibur.watson.ibm.com', :host_name => 'excalibur.watson.ibm.com', :controller => 'results/host', :action => 'show')
@@ -38,7 +40,6 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/security/logout', :controller => 'security', :action => 'logout')
     assert_routing('/', :controller => 'dashboard', :action => 'index')
 
-    assert_routing('/results/excalibur.watson.ibm.com/core.36/regression_report', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'reports/test_run_by_revision_report', :action => 'show')
     assert_routing('/reports/analysis', :controller => 'explorer/report', :action => 'public_list')
     assert_routing('/reports/analysis/foo', :controller => 'explorer/report', :action => 'show', :key => 'foo')
 

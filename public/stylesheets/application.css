@@ -569,6 +569,7 @@ table.report {
    width: 100%;
    border: 1px solid black;
    clear: both;
+   font-size: x-small;
 }
 
 table.report th {

@@ -1,0 +1,37 @@
+- @content_for_breadcrumbs = draw_breadcrumbs(@report.test_run, 'performance_report')
+- @page_title = "Performance Report: #{h(@report.test_run.label)}"
+- scm_url = SystemSetting['scm.url']
+%h1.page-title= @page_title
+
+%h2 Test Runs Covered By Report
+%table.list
+  %tr
+    %th Name
+    %th Revision
+    %th Time
+    %th Operations
+  - @report.test_runs.each do |t|
+    %tr
+      %td= h(t.label)
+      %td= revision_link_for_url(scm_url, t.revision)
+      %td= t.occurred_at
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show")
+
+- if @report.statistics.size > 0 or @report.test_runs.size > 1
+  %h2 Performance Statistics
+  %table.report
+    %tr
+      %th.pivot
+      - @report.test_runs.each do |tr|
+        %th.column= tr.label
+    %tr
+      %th.row Success Rate
+      - @report.test_runs.each do |tr|
+        %td= h("#{tr.successes.size}/#{tr.test_cases.size}")
+    - @report.statistics.each do |r|
+      %tr
+        %th.row= h(r['name'])
+        - @report.test_runs.each do |tr|
+          %td= perf_stat(tr.id, r)

@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module Reports::TestRunByRevisionReportHelper
+module Results::TestRunHelper
 
   def hide_tests_javascript(name)
     "Element.toggle('#{name}'); Element.toggleClassName('#{name}_toggle','open')"
@@ -78,6 +78,6 @@ module Reports::TestRunByRevisionReportHelper
       end
     end
     suffix = include_suffix ? " (#{ratio}%)" : ''
-    "<span style=\"#{style}\">#{str_value}#{suffix}</span>"
+    "<span style=\"#{style}\" title=\"#{h(str_value)}\">#{truncate(str_value,8)}#{suffix}</span>"
   end
 end

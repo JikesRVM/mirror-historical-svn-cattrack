@@ -51,6 +51,24 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     assert_equal(id, assigns(:record).id)
   end
 
+  def test_regression_report
+    id = 1
+    test_run = Tdm::TestRun.find(id)
+    get(:regression_report, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
+    assert_normal_response('regression_report', 1)
+    assert_assigned(:report)
+    assert_equal(id, assigns(:report).test_run.id)
+  end
+
+  def test_performance_report
+    id = 1
+    test_run = Tdm::TestRun.find(id)
+    get(:performance_report, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
+    assert_normal_response('performance_report', 1)
+    assert_assigned(:report)
+    assert_equal(id, assigns(:report).test_run.id)
+  end
+
   def test_destroy
     id = 1
     assert(Tdm::TestRun.exists?(id))

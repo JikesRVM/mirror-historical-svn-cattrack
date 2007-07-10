@@ -22,8 +22,11 @@ class Results::BaseController < ApplicationController
   end
 
   def test_run
-    test_run = host.test_runs.find_by_id_and_variant(params[:test_run_id],params[:test_run_variant])
+    h = host
+    test_run = h.test_runs.find_by_id_and_variant(params[:test_run_id],params[:test_run_variant])
     raise CatTrack::SecurityError unless test_run
+    # reducing the number of database hits.
+    test_run.host = h
     test_run
   end
 

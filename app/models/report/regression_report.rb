@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Report::TestRunByRevision < Report::BaseTestRunByRevision
+class Report::RegressionReport < Report::BaseTestRunByRevision
   # Input parameters
   attr_reader :test_run, :window_size
 
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :perf_stats, :bc_by_tr, :tc_by_tr
+  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :statistics, :bc_by_tr, :tc_by_tr
 
   def initialize(test_run, window_size = 10)
     super
@@ -100,7 +100,7 @@ SQL
     'dacapo: lusearch', 'dacapo: pmd', 'dacapo: sunflow', 'dacapo: xalan',
     'SPECjvm98', 'SPECjbb2000', 'SPECjbb2005' ]
 
-    @perf_stats = gen_perf_stats(stats)
+    @statistics = gen_perf_stats(stats)
   end
 
 end
