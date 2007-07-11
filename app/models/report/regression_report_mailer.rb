@@ -1,8 +1,8 @@
-class ReportMailer < ActionMailer::Base
+class Report::RegressionReportMailer < ActionMailer::Base
 
   helper ApplicationHelper
   helper PresentationHelper
-  helper ReportMailerHelper
+  helper Report::RegressionReportMailerHelper
   helper Results::TestRunHelper
 
   def report(test_run)

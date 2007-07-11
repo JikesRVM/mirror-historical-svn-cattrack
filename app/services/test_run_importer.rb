@@ -48,7 +48,7 @@ class TestRunImporter
 
           test_run = TestRunBuilder.create_from(host, temp_filename)
           TestRunTransformer.build_olap_model_from(test_run)
-          ReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
+          Report::RegressionReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
           logger.info("Successfully processed file: #{f}")
           AuditLog.log('import.file.success', f)
           FileUtils.mkdir_p "#{processed_dir}/#{host}"

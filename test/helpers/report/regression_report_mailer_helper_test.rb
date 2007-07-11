@@ -10,12 +10,12 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class ReportMailerHelperTest < Test::Unit::TestCase
+class Report::RegressionReportMailerHelperTest < Test::Unit::TestCase
 
   class MyClass
-    include ReportMailerHelper
+    include Report::RegressionReportMailerHelper
   end
 
   def test_test_run_label

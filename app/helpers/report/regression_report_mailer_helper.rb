@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module ReportMailerHelper
+module Report::RegressionReportMailerHelper
   def test_run_label(test_run,test_runs)
     include_time = test_runs.find_all do |tr|
       tr != test_run and tr.occurred_at.yday == test_run.occurred_at.yday and tr.occurred_at.year == test_run.occurred_at.year

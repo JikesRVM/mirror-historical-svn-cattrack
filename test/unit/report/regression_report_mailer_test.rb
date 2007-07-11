@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
-class ReportMailerTest < Test::Unit::TestCase
+class Report::RegressionReportMailerTest < Test::Unit::TestCase
   def setup
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
@@ -11,7 +11,7 @@ class ReportMailerTest < Test::Unit::TestCase
   end
 
   def test_report
-    response = ReportMailer.create_report(Tdm::TestRun.find(1))
+    response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
     assert_equal(["jikesrvm-regression@lists.sourceforge.net"], response.to)
     assert_equal(["jikesrvm-core@lists.sourceforge.net"], response.reply_to)
@@ -32,10 +32,7 @@ class ReportMailerTest < Test::Unit::TestCase
     test_case2.result = 'FAILURE'
     test_case2.save!
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
-
-    response = ReportMailer.create_report(Tdm::TestRun.find(1))
+    response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('1 FAILURE', response.subject)
     assert_expected_body('test_report_minimal_history_new_successes_and_failures', response.body)
   end
@@ -46,9 +43,7 @@ class ReportMailerTest < Test::Unit::TestCase
     test_case2 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
     assert(test_case2.destroy)
 
-    olappy(Tdm::TestRun.find(1))
-    olappy(Tdm::TestRun.find(test_run_1.id))
-    response = ReportMailer.create_report(Tdm::TestRun.find(1))
+    response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
     assert_expected_body('test_report_minimal_history_missing_tests', response.body)
   end
@@ -82,11 +77,7 @@ class ReportMailerTest < Test::Unit::TestCase
     test_case_Y.result = 'FAILURE'
     test_case_Y.save!
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
-    olappy(test_run_2.id)
-
-    response = ReportMailer.create_report(Tdm::TestRun.find(1))
+    response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('2 FAILURES', response.subject)
     assert_expected_body('test_report_minimal_history_consistent_and_intermitent_failures', response.body)
   end
@@ -95,10 +86,7 @@ class ReportMailerTest < Test::Unit::TestCase
     test_run = create_test_run_for_perf_tests
     test_run_1 = clone_test_run(test_run, 10)
 
-    olappy(test_run.id)
-    olappy(test_run_1.id)
-
-    response = ReportMailer.create_report(Tdm::TestRun.find(1))
+    response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('SUCCESS', response.subject)
     assert_expected_body('test_report_with_perf_stats', response.body)
   end
