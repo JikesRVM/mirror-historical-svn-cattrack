@@ -12,7 +12,7 @@
 #
 require File.dirname(__FILE__) + '/../test_helper'
 
-class Reports::TestRunByRevisionReportHelperTest < Test::Unit::TestCase
+class ApplicationHelperTest < Test::Unit::TestCase
 
   class MyClass
     include ERB::Util
