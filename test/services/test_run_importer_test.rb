@@ -69,11 +69,10 @@ class TestRunImporterTest < Test::Unit::TestCase
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}
-    assert_equal(3, messages.size)
-    assert_equal(["import.file.started", filename], messages[0])
-    assert_equal("olap.import.test-run", messages[1][0])
-    assert_not_nil(messages[1][1] =~ /id=\d+ \(tiny\)/)
-    assert_equal(["import.file.success", filename], messages[2])
+    assert_equal(2, messages.size)
+    assert_equal("olap.import.test-run", messages[0][0])
+    assert_not_nil(messages[0][1] =~ /id=\d+ \(tiny\)/)
+    assert_equal(["import.file.success", filename], messages[1])
     logs.each do |l|
       assert_equal(nil, l.user_id)
       assert_equal(nil, l.ip_address)
@@ -93,11 +92,10 @@ class TestRunImporterTest < Test::Unit::TestCase
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}
-    assert_equal(3, messages.size)
-    assert_equal(["import.file.started", filename], messages[0])
-    assert_equal("olap.import.test-run", messages[1][0])
-    assert_not_nil(messages[1][1] =~ /id=\d+ \(tiny\)/)
-    assert_equal(["import.file.success", filename], messages[2])
+    assert_equal(2, messages.size)
+    assert_equal("olap.import.test-run", messages[0][0])
+    assert_not_nil(messages[0][1] =~ /id=\d+ \(tiny\)/)
+    assert_equal(["import.file.success", filename], messages[1])
     logs.each do |l|
       assert_equal(nil, l.user_id)
       assert_equal(nil, l.ip_address)
@@ -114,7 +112,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     assert_equal(initial, Tdm::TestRun.count)
     assert_equal(false, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
-    assert_logs([["import.file.started", filename],
+    assert_logs([
     ["import.file.error", "Failed to process file #{filename} due to Unzipping #{filename} produced too large a file 114381038"],
     ], nil, nil)
   end
@@ -134,13 +132,11 @@ class TestRunImporterTest < Test::Unit::TestCase
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}
-    assert_equal(5, messages.size)
-    assert_equal(["import.file.started", hfilename], messages[0])
-    assert_equal(["import.file.error", "Failed to process file #{hfilename} due to Unzipping #{hfilename} produced too large a file 114381038"], messages[1])
-    assert_equal(["import.file.started", sfilename], messages[2])
-    assert_equal("olap.import.test-run", messages[3][0])
-    assert_not_nil(messages[3][1] =~ /id=\d+ \(tiny\)/)
-    assert_equal(["import.file.success", sfilename], messages[4])
+    assert_equal(3, messages.size)
+    assert_equal(["import.file.error", "Failed to process file #{hfilename} due to Unzipping #{hfilename} produced too large a file 114381038"], messages[0])
+    assert_equal("olap.import.test-run", messages[1][0])
+    assert_not_nil(messages[1][1] =~ /id=\d+ \(tiny\)/)
+    assert_equal(["import.file.success", sfilename], messages[2])
     logs.each do |l|
       assert_equal(nil, l.user_id)
       assert_equal(nil, l.ip_address)

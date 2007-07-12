@@ -31,7 +31,6 @@ class TestRunImporter
       logger.info("Processing host '#{host}' in dir #{d}")
       Dir.glob("#{d}/*.xml.gz").each do |f|
         next unless File.exists?(f)
-        AuditLog.log('import.file.started', f)
         logger.info("Processing file: #{f}")
         intermediate_filename = "#{f}.processing"
         temp_filename = "#{f}.tmp"
