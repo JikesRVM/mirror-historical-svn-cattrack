@@ -39,18 +39,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'admin/audit_log', :controller => 'admin/audit_log', :action => 'list'
   map.connect 'security/:action/:id', :controller => 'security'
 
-  map.connect 'reports/regression/:host_name/:test_run_variant.:test_run_id', :controller => 'reports/test_run_by_revision_report', :action => 'show', :conditions => {:method => :get}
-  map.connect 'reports/explorer', :controller => 'explorer/report', :action => 'adhoc'
-  map.connect 'reports/analysis', :controller => 'explorer/report', :action => 'public_list', :conditions => {:method => :get}
-  map.connect 'reports/analysis/:key', :controller => 'explorer/report', :action => 'show', :conditions => {:method => :get}
-
-  map.connect 'explorer', :controller => 'explorer/dashboard', :action => 'index'
-  map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
-  map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
-  map.connect 'explorer/query/:action/:id', :controller => 'explorer/query'
   if RAILS_ENV == 'test'
     map.connect 'application/:action', :controller => 'application'
-    map.connect 'explorer/base/:action', :controller => 'explorer/base'
     map.connect 'admin/base/:action', :controller => 'admin/base'
   end
 end
