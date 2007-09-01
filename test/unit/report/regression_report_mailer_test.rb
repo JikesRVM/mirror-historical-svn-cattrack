@@ -10,7 +10,7 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
 
   def test_report
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
-    assert_equal('SUCCESS', response.subject)
+    assert_equal('[core] SUCCESS', response.subject)
     assert_equal(["jikesrvm-regression@lists.sourceforge.net"], response.to)
     assert_equal(["jikesrvm-core@lists.sourceforge.net"], response.reply_to)
     assert_equal(["rvm-regression@cs.anu.edu.au"], response.from)
@@ -31,7 +31,7 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     test_case2.save!
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
-    assert_equal('1 FAILURE', response.subject)
+    assert_equal('[core] 1 FAILURE', response.subject)
     assert_expected_body('test_report_minimal_history_new_successes_and_failures', response.body)
   end
 
@@ -42,7 +42,7 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     assert(test_case2.destroy)
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
-    assert_equal('SUCCESS', response.subject)
+    assert_equal('[core] SUCCESS', response.subject)
     assert_expected_body('test_report_minimal_history_missing_tests', response.body)
   end
 
@@ -76,7 +76,7 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     test_case_Y.save!
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
-    assert_equal('2 FAILURES', response.subject)
+    assert_equal('[core] 2 FAILURES', response.subject)
     assert_expected_body('test_report_minimal_history_consistent_and_intermitent_failures', response.body)
   end
 
@@ -85,7 +85,7 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     test_run_1 = clone_test_run(test_run, 10)
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
-    assert_equal('SUCCESS', response.subject)
+    assert_equal('[core] SUCCESS', response.subject)
     assert_expected_body('test_report_with_perf_stats', response.body)
   end
   private

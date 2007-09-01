@@ -9,13 +9,15 @@ class Report::RegressionReportMailer < ActionMailer::Base
     report = Report::RegressionReport.new(test_run)
     error_count = report.test_run.test_cases.size - report.test_run.successes.size
 
-    subject((error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}")
+    error_description = (error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
+    s = "[#{test_run.variant}] #{error_description}"
+    subject(s)
     b = {"host" => test_run.host, "test_run" => test_run, "report" => report}
     body(b)
     reply_to = SystemSetting['report.reply.to']
     headers({'Reply-To' => reply_to}) if reply_to
     recipients(SystemSetting['report.mail.to'])
-    f = "\"[#{test_run.build_target.name}][#{test_run.variant}]\" <#{SystemSetting['mail.from']}>"
+    f = "\"[#{test_run.host}]\" <#{SystemSetting['mail.from']}>"
     from(f)
     content_type("text/html")
   end
