@@ -1,4 +1,0 @@
-- @page_title = "Edit Report"
-%h1.page-title= @page_title
-%form{:action => url_for(:action => 'edit', :id => @report.id), :method => 'post' }
-  = render(:partial => 'form', :locals => {:save_label => 'Save'})

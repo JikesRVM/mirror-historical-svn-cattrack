@@ -6,8 +6,6 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
     ActionMailer::Base.default_url_options = {:host => '127.0.0.1'}
-    Olap::ResultFact.destroy_all
-    Olap::StatisticFact.destroy_all
   end
 
   def test_report

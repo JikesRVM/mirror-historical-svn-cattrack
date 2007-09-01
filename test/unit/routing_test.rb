@@ -30,7 +30,7 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/results/hosts', :controller => 'results/host', :action => 'list')
     assert_routing('/admin', :controller => 'admin/dashboard', :action => 'index')
     assert_routing('/admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show')
-    assert_routing('admin/audit_log', :controller => 'admin/audit_log', :action => 'list')
+    assert_routing('/admin/audit_log', :controller => 'admin/audit_log', :action => 'list')
     assert_routing('/admin/sysinfo/purge_historic_result_facts', :controller => 'admin/sysinfo', :action => 'purge_historic_result_facts')
     assert_routing('/admin/sysinfo/purge_historic_statistic_facts', :controller => 'admin/sysinfo', :action => 'purge_historic_statistic_facts')
     assert_routing('/admin/sysinfo/purge_stale_sessions', :controller => 'admin/sysinfo', :action => 'purge_stale_sessions')
@@ -40,18 +40,10 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/security/logout', :controller => 'security', :action => 'logout')
     assert_routing('/', :controller => 'dashboard', :action => 'index')
 
-    assert_routing('/reports/analysis', :controller => 'explorer/report', :action => 'public_list')
-    assert_routing('/reports/analysis/foo', :controller => 'explorer/report', :action => 'show', :key => 'foo')
-
     [:show, :enable_admin, :disable_admin, :activate, :deactivate].each do |action|
       assert_routing("/admin/user/#{action}/1", :controller => 'admin/user', :action => action.to_s, :id => '1')
     end
 
     assert_routing("/admin/user/list", :controller => 'admin/user', :action => 'list')
-
-    assert_routing('/explorer', :controller => 'explorer/dashboard', :action => 'index')
-    # The following untested as they are likely to change in future
-    # map.connect 'explorer/filter/:action/:id', :controller => 'explorer/filter'
-    # map.connect 'explorer/report/:action/:id', :controller => 'explorer/report'
   end
 end

@@ -14,11 +14,6 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Report::RegressionReportTest < Test::Unit::TestCase
 
-  def setup
-    Olap::ResultFact.destroy_all
-    Olap::StatisticFact.destroy_all
-  end
-
   def test_report_with_no_history
     test_run = Tdm::TestRun.find(1)
     report = Report::RegressionReport.new(test_run)

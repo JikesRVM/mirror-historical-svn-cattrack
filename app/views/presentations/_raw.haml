@@ -1,7 +1,0 @@
-%table.report
-  - @results.data.each do |d|
-    %tr
-      - d.each_pair do |k,v|
-        %td= h(v)
-%h2 SQL
-%pre= @results.sql

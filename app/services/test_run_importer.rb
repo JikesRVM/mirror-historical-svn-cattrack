@@ -46,7 +46,6 @@ class TestRunImporter
           raise ImportException.new("Unzipping #{f} produced too large a file #{File.size(temp_filename)}") unless File.size(temp_filename) < (1024 * 1024 * 30)
 
           test_run = TestRunBuilder.create_from(host, temp_filename)
-          TestRunTransformer.build_olap_model_from(test_run)
           Report::RegressionReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
           logger.info("Successfully processed file: #{f}")
           AuditLog.log('import.file.success', f)
