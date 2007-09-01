@@ -56,14 +56,10 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     test_case = g.test_cases[0]
     assert_equal( 'ImageSizes', test_case.name )
-    assert_equal( 0, test_case.exit_code )
-    assert_equal( 833, test_case.time )
     assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
     assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.rmap.image', test_case.args )
     assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic', test_case.working_directory )
     assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms50M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.rmap.image', test_case.command )
-    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case.output )
-
     assert_equal( 6, test_case.params.size)
     assert_equal( '50', test_case.params['initial.heapsize'])
     assert_equal( '150', test_case.params['max.heapsize'])
@@ -72,9 +68,14 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( 'all', test_case.params['processors'])
     assert_equal( '', test_case.params['max.opt.level'])
 
-    assert_equal( 'FAILURE', test_case.result )
-    assert_equal( 0, test_case.statistics.size)
-    assert_equal( 0, test_case.numerical_statistics.size)
+    test_case_result = test_case.test_case_results[0]
+    assert_equal( 0, test_case_result.exit_code )
+    assert_equal( 833, test_case_result.time )
+    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case_result.output )
+
+    assert_equal( 'FAILURE', test_case_result.result )
+    assert_equal( 0, test_case_result.statistics.size)
+    assert_equal( 0, test_case_result.numerical_statistics.size)
   end
 
   def test_statistics_included_if_test_case_succeeds
@@ -109,13 +110,10 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     test_case = g.test_cases[0]
     assert_equal( 'ImageSizes', test_case.name )
-    assert_equal( 0, test_case.exit_code )
-    assert_equal( 833, test_case.time )
     assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
     assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.rmap.image', test_case.args )
     assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic', test_case.working_directory )
     assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms50M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.rmap.image', test_case.command )
-    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case.output )
 
     assert_equal( 6, test_case.params.size)
     assert_equal( '50', test_case.params['initial.heapsize'])
@@ -125,15 +123,18 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( 'all', test_case.params['processors'])
     assert_equal( '', test_case.params['max.opt.level'])
 
-
-    assert_equal( 'SUCCESS', test_case.result )
-    assert_equal( 1, test_case.statistics.size)
-    assert_equal( 'Boo!', test_case.statistics['fake-string-stat'])
-    assert_equal( 4, test_case.numerical_statistics.size)
-    assert_equal( '7100184', test_case.numerical_statistics['code.size'])
-    assert_equal( '23482080', test_case.numerical_statistics['data.size'])
-    assert_equal( '565623', test_case.numerical_statistics['rmap.size'])
-    assert_equal( '31147887', test_case.numerical_statistics['total.size'])
+    test_case_result = test_case.test_case_results[0]
+    assert_equal( 0, test_case_result.exit_code )
+    assert_equal( 833, test_case_result.time )
+    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case_result.output )
+    assert_equal( 'SUCCESS', test_case_result.result )
+    assert_equal( 1, test_case_result.statistics.size)
+    assert_equal( 'Boo!', test_case_result.statistics['fake-string-stat'])
+    assert_equal( 4, test_case_result.numerical_statistics.size)
+    assert_equal( '7100184', test_case_result.numerical_statistics['code.size'])
+    assert_equal( '23482080', test_case_result.numerical_statistics['data.size'])
+    assert_equal( '565623', test_case_result.numerical_statistics['rmap.size'])
+    assert_equal( '31147887', test_case_result.numerical_statistics['total.size'])
   end
 
   def do_create_from_test(filename)
@@ -195,14 +196,10 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_not_nil(test_case)
         test_case = Tdm::TestCase.find(test_case.id)
         assert_equal( 'ImageSizes', test_case.name )
-        assert_equal( 'SUCCESS', test_case.result )
-        assert_equal( 0, test_case.exit_code )
-        assert_equal( 446, test_case.time )
         assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
         assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.args )
         assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic', test_case.working_directory )
         assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms20M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.command )
-        assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case.output )
 
         assert_equal( 6, test_case.params.size)
         assert_equal( '20', test_case.params['initial.heapsize'])
@@ -212,12 +209,17 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_equal( 'all', test_case.params['processors'])
         assert_equal( '', test_case.params['max.opt.level'])
 
-        assert_equal( 0, test_case.statistics.size)
-        assert_equal( 4, test_case.numerical_statistics.size)
-        assert_equal( '2938156', test_case.numerical_statistics['code.size'])
-        assert_equal( '14243924', test_case.numerical_statistics['data.size'])
-        assert_equal( '329907', test_case.numerical_statistics['rmap.size'])
-        assert_equal( '17511987', test_case.numerical_statistics['total.size'])
+        test_case_result = test_case.test_case_results[0]
+        assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case_result.output )
+        assert_equal( 'SUCCESS', test_case_result.result )
+        assert_equal( 0, test_case_result.exit_code )
+        assert_equal( 446, test_case_result.time )
+        assert_equal( 0, test_case_result.statistics.size)
+        assert_equal( 4, test_case_result.numerical_statistics.size)
+        assert_equal( '2938156', test_case_result.numerical_statistics['code.size'])
+        assert_equal( '14243924', test_case_result.numerical_statistics['data.size'])
+        assert_equal( '329907', test_case_result.numerical_statistics['rmap.size'])
+        assert_equal( '17511987', test_case_result.numerical_statistics['total.size'])
       else
         assert_equal( 'opttests', g.name )
         assert_equal( 1, g.test_cases.size )
@@ -326,14 +328,10 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_not_nil(test_case)
         test_case = Tdm::TestCase.find(test_case.id)
         assert_equal( 'ImageSizes', test_case.name )
-        assert_equal( 'SUCCESS', test_case.result )
-        assert_equal( 0, test_case.exit_code )
-        assert_equal( 446, test_case.time )
         assert_equal( 'test.org.jikesrvm.basic.stats.JikesImageSizes', test_case.classname )
         assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.args )
         assert_equal( '/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic', test_case.working_directory )
         assert_equal( '/home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms20M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype_ia32-linux/RVM.rmap.image', test_case.command )
-        assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case.output )
 
         assert_equal( 6, test_case.params.size)
         assert_equal( '20', test_case.params['initial.heapsize'])
@@ -343,12 +341,17 @@ class TestRunBuilderTest < Test::Unit::TestCase
         assert_equal( 'all', test_case.params['processors'])
         assert_equal( '', test_case.params['max.opt.level'])
 
-        assert_equal( 0, test_case.statistics.size)
-        assert_equal( 4, test_case.numerical_statistics.size)
-        assert_equal( '2938156', test_case.numerical_statistics['code.size'])
-        assert_equal( '14243924', test_case.numerical_statistics['data.size'])
-        assert_equal( '329907', test_case.numerical_statistics['rmap.size'])
-        assert_equal( '17511987', test_case.numerical_statistics['total.size'])
+        test_case_result = test_case.test_case_results[0]
+        assert_equal( 'SUCCESS', test_case_result.result )
+        assert_equal( "Code Size: 2938156\nData Size: 14243924\nRmap Size: 329907\nTotal Size: 17511987\n", test_case_result.output )
+        assert_equal( 0, test_case_result.exit_code )
+        assert_equal( 446, test_case_result.time )
+        assert_equal( 0, test_case_result.statistics.size)
+        assert_equal( 4, test_case_result.numerical_statistics.size)
+        assert_equal( '2938156', test_case_result.numerical_statistics['code.size'])
+        assert_equal( '14243924', test_case_result.numerical_statistics['data.size'])
+        assert_equal( '329907', test_case_result.numerical_statistics['rmap.size'])
+        assert_equal( '17511987', test_case_result.numerical_statistics['total.size'])
       else
         assert_equal( 'opttests', g.name )
         assert_equal( 1, g.test_cases.size )

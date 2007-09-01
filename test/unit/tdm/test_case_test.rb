@@ -29,39 +29,9 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     assert_equal( "", tc.args )
     assert_equal( "/home/regression/peterd/jikesrvm/results/test/local/basic", tc.working_directory )
     assert_equal( "/home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....", tc.command )
-    assert_equal( "SUCCESS", tc.result )
-    assert_equal( "", tc.result_explanation )
-    assert_equal( 0, tc.exit_code )
-    assert_equal( 457, tc.time )
-    assert_equal( '1 times around the merry go round', tc.output )
     assert_equal( 1, tc.group_id )
     assert_equal( 1, tc.group.id )
-    assert_equal( 0, tc.statistics.size )
-    assert_equal( 0, tc.numerical_statistics.size )
-  end
-
-  def test_load_with_statistics
-    tc = Tdm::TestCase.find(17)
-    assert_equal( 17, tc.id )
-    assert_equal( "caffeinemark", tc.name )
-    assert_equal( 1, tc.statistics.size )
-    assert_equal( '54', tc.statistics['caffeinemark'] )
-    assert_equal( '54', tc.numerical_statistics['caffeinemark_numerical'] )
-  end
-
-  def test_new_with_output
-    tc = Tdm::TestCase.new(self.class.attributes_for_new)
-    tc.save!
-    tc2 = Tdm::TestCase.find(tc.id)
-    assert_equal( 'foooish!', tc2.output )
-  end
-
-  def test_new_with_success_and_result_explanation
-    attrs = self.class.attributes_for_new
-    attrs[:result_explanation] = 'foo'
-    tc = Tdm::TestCase.new(attrs)
-    assert(!tc.valid?)
-    assert_not_nil( tc.errors[:result_explanation] )
+    assert_equal( 1, tc.test_case_results.size )
   end
 
   def self.attributes_for_new
@@ -71,25 +41,20 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     :classname => 'Class foo',
     :args => '',
     :working_directory => '/home/peter',
-    :command => 'rvm',
-    :result => 'SUCCESS',
-    :result_explanation => '',
-    :exit_code => 0,
-    :time => 142,
-    :output => 'foooish!'
+    :command => 'rvm'
     }
   end
   def self.non_null_attributes
-    [:group_id, :output, :name, :classname, :working_directory, :command, :result, :exit_code, :time]
+    [:group_id, :name, :classname, :working_directory, :command]
   end
   def self.unique_attributes
     [[:group_id, :name]]
   end
   def self.str_length_attributes
-    [[:name, 76],[:classname, 76],[:working_directory, 257],[:result, 16],[:result_explanation, 257]]
+    [[:name, 76],[:classname, 76],[:working_directory, 257]]
   end
   def self.bad_attributes
-    [[:result, 'FOO'],[:time, -1],[:name, '*']]
+    [[:name, '*']]
   end
 
   perform_basic_model_tests

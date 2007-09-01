@@ -7,7 +7,7 @@ class Report::RegressionReportMailer < ActionMailer::Base
 
   def report(test_run)
     report = Report::RegressionReport.new(test_run)
-    error_count = report.test_run.test_cases.size - report.test_run.successes.size
+    error_count = report.test_run.test_case_results.size - report.test_run.successes.size
 
     error_description = (error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
     s = "[#{test_run.variant}] #{error_description}"

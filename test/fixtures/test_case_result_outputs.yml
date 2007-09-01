@@ -10,8 +10,8 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module TestCaseContainer
-  def success_rate
-    "#{self.successes.count}/#{self.test_case_results.count}"
-  end
-end
+<% 1.upto(22) do |i| %>
+content_<%= i %>:
+  owner_id: <%= i %>
+  output: '<%= i %> times around the merry go round'
+<% end %>

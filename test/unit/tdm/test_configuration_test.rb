@@ -33,7 +33,7 @@ class Tdm::TestConfigurationTest < Test::Unit::TestCase
 
     assert_equal( [1, 2], tc.group_ids )
     assert_equal( [1, 2, 4, 3], tc.success_ids )
-    assert_equal( [1, 2, 4, 3], tc.test_case_ids )
+    assert_equal( [1, 2, 4, 3], tc.test_case_result_ids )
   end
 
   def test_success_rate

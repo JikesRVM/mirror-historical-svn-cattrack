@@ -12,17 +12,19 @@
       %th Test Configuration
       %th Group
       %th Test
+      %th Name
       %th Result
       %th Reason
       %th Operations
     - @record.non_successes.each do |t|
       %tr
-        %td= link_for(t.group.test_configuration.build_configuration)
-        %td= link_for(t.group.test_configuration)
-        %td= link_for(t.group)
+        %td= link_for(t.test_case.group.test_configuration.build_configuration)
+        %td= link_for(t.test_case.group.test_configuration)
+        %td= link_for(t.test_case.group)
+        %td= h(t.test_case.name)
         %td= h(t.name)
         %td= h(t.result)
         %td= h(t.result_explanation)
         %td
           %ul.actions
-            %li= link_for(t, :label => 'Show')
+            %li= link_for(t.test_case, :label => 'Show')

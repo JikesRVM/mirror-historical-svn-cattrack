@@ -43,7 +43,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
   end
 
   def test_show_summary
-    id = 1
+    id = 2
     test_run = Tdm::TestRun.find(id)
     get(:show_summary, {:host_name => test_run.host.name, :test_run_variant => test_run.variant, :test_run_id => test_run.id}, session_data)
     assert_normal_response('show_summary', 1)

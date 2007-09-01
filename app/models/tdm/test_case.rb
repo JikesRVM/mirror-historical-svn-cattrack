@@ -18,49 +18,16 @@ class Tdm::TestCase < ActiveRecord::Base
   validates_reference_exists :group_id, Tdm::Group
   validates_length_of :classname, :in => 1..75
   validates_length_of :working_directory, :in => 1..256
-  validates_length_of :result_explanation, :in => 0..256
   validates_presence_of :command
-  validates_numericality_of :exit_code, :only_integer => true
-  validates_numericality_of :time, :only_integer => true
-  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE OVERTIME )
-  validates_non_presence_of :result_explanation, :if => Proc.new {|o| o.result == 'SUCCESS'}
-  validates_not_null :output
-  validates_positiveness_of :time
 
   belongs_to :group
-  has_params :statistics
-  has_params :numerical_statistics
+  has_many :test_case_results, :order => 'name', :dependent => :destroy
+  has_many :successes, :class_name => 'Tdm::TestCaseResult', :order => 'name', :conditions => "test_case_results.result = 'SUCCESS'"
   has_params :params
 
-  after_save :update_output
-
-  def output=(output)
-    @output = output
-    @output_modified = true
-  end
-
-  def output
-    if @output.nil?
-      if id
-        sql = "SELECT output FROM test_case_outputs WHERE test_case_id = #{self.id}"
-        @output = self.connection.select_value(sql)
-        @output_modified = false
-      end
-    end
-    @output
-  end
+  include TestCaseContainer
 
   def parent_node
     group
-  end
-
-  private
-
-  def update_output
-    if @output_modified
-      self.connection.execute("DELETE FROM test_case_outputs WHERE test_case_id = #{id}")
-      sql = "INSERT INTO test_case_outputs (test_case_id,output) VALUES (#{id},#{ActiveRecord::Base.quote_value(@output)})"
-      self.connection.execute(sql)
-    end
   end
 end

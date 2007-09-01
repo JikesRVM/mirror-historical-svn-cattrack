@@ -10,8 +10,13 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-<% 1.upto(22) do |i| %>
-content_<%= i %>:
-  test_case_id: <%= i %>
-  output: '<%= i %> times around the merry go round'
-<% end %>
+class Results::TestCaseResultController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show
+  session :off
+
+  def show
+    headers['Content-Type'] = 'text/plain'
+    render(:text => test_case_result.output, :layout => false)
+  end
+end

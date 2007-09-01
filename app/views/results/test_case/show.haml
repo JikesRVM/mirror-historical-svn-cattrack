@@ -21,25 +21,26 @@
       %th= h(k.humanize)
       %td= h(v)
 
-%h3 Test Output
-%table.details
+%h3 Results
+%table.list
   %tr
+    %th Name
     %th Result
-    %td= "#{h(@record.result)} #{h(@record.result_explanation)}"
-  %tr
     %th Exit Code
-    %td= h(@record.exit_code)
-  %tr
     %th Running Time
-    %td= "#{h(@record.time)} ms"
-  - @record.statistics.each_pair do |k,v|
+    %th Statistics
+    %th Operations
+  - @record.test_case_results.each do |r|
     %tr
-      %th= h(k)
-      %td= h(v)
-  - @record.numerical_statistics.each_pair do |k,v|
-    %tr
-      %th= h(k)
-      %td= h(v)
-  %tr
-    %th Output
-    %td= link_for(@record, :label => '...Output...', :action => 'show_output')
+      %td= h(r.name)
+      %td= "#{h(r.result)} #{h(r.result_explanation)}"
+      %td= h(r.exit_code)
+      %td= "#{h(r.time)} ms"
+      %td
+        - if r.statistics.size > 0 or r.numerical_statistics.size > 0
+          %ul
+            - r.statistics.each_pair do |k,v|
+              %li= "#{h(k)}=#{h(v)}"
+            - r.numerical_statistics.each_pair do |k,v|
+              %li= "#{h(k)}=#{h(v)}"
+      %td= link_for(r, :label => 'Show Output')

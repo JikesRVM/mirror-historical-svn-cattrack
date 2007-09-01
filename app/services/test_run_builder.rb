@@ -157,28 +157,38 @@ class TestRunBuilder
     test_case.args = "" if test_case.args.nil?
     test_case.working_directory = xml.elements['working-directory'].text
     test_case.command = xml.elements['command'].text
-    test_case.exit_code = xml.elements['exit-code'].text.to_i
-    test_case.time = xml.elements['time'].text.to_i
-    test_case.result = xml.elements['result'].text
-    test_case.result_explanation = xml.elements['result-explanation'].text
-    test_case.result_explanation = "" if test_case.result_explanation.nil?
-    test_case.output = xml.elements['output'].text
-    test_case.output = "" if test_case.output.nil?
 
     xml.elements.each("rvm-parameters/parameter") do |p_xml|
       test_case.params[p_xml.attributes['key']] = p_xml.attributes['value']
     end
+    save!(test_case)
+
+    build_test_case_result(xml, test_case.id)
+  end
+
+  def self.build_test_case_result(xml, test_case_id)
+    test_case_result = Tdm::TestCaseResult.new
+
+    test_case_result.name = 'default'
+    test_case_result.test_case_id = test_case_id
+    test_case_result.exit_code = xml.elements['exit-code'].text.to_i
+    test_case_result.time = xml.elements['time'].text.to_i
+    test_case_result.result = xml.elements['result'].text
+    test_case_result.result_explanation = xml.elements['result-explanation'].text
+    test_case_result.result_explanation = "" if test_case_result.result_explanation.nil?
+    test_case_result.output = xml.elements['output'].text
+    test_case_result.output = "" if test_case_result.output.nil?
 
     xml.elements.each("statistics/statistic") do |p_xml|
       v = p_xml.attributes['value']
       begin
-        test_case.numerical_statistics[p_xml.attributes['key']] = Kernel.Float(v)
+        test_case_result.numerical_statistics[p_xml.attributes['key']] = Kernel.Float(v)
       rescue ArgumentError, TypeError
-        test_case.statistics[p_xml.attributes['key']] = v
+        test_case_result.statistics[p_xml.attributes['key']] = v
       end
-    end if test_case.result == 'SUCCESS'
+    end if test_case_result.result == 'SUCCESS'
 
-    save!(test_case)
+    save!(test_case_result)
   end
 
 

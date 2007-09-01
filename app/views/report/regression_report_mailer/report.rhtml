@@ -14,7 +14,7 @@
   link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_variant => t.variant, :test_run_id => t.id, :only_path => false)
   end.join(",\n") %></p>
 
-<h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_cases.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_cases.size.to_f * 100.0).to_i %>%)</h2>
+<h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_case_results.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_case_results.size.to_f * 100.0).to_i %>%)</h2>
 
 <h3 style="color: #FF0000;"><%= h(@report.new_failures.size) %> new failures this run</h3>
 <% if @report.new_failures.size > 0 %>
@@ -77,7 +77,7 @@
   <tr style="text-align: center;">
     <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;">Success Rate</td>
     <% @report.test_runs.each do |tr| %>
-      <td style="background-color: silver;"><%= h("#{tr.successes.size}/#{tr.test_cases.size}") %></td>
+      <td style="background-color: silver;"><%= h("#{tr.successes.size}/#{tr.test_case_results.size}") %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>

@@ -49,4 +49,8 @@ class Results::BaseController < ApplicationController
   def test_case
     group.test_cases.find_by_name(params[:test_case_name])
   end
+
+  def test_case_result
+    test_case.test_case_results.find_by_name(params[:test_case_result_name])
+  end
 end

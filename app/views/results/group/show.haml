@@ -5,14 +5,12 @@
 %table.list
   %tr
     %th Test
-    %th Result
-    %th Reason
+    %th Success Rate
     %th Operations
   - @record.test_cases.each do |t|
     %tr
       %td= h(t.name)
-      %td= h(t.result)
-      %td= h(t.result_explanation)
+      %td= h(t.success_rate)
       %td
         %ul.actions
           %li= link_for(t, :label => 'Show')

@@ -11,18 +11,18 @@
 #  regarding copyright ownership.
 #
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'results/test_case_controller'
+require 'results/test_case_result_controller'
 
-class Results::TestCaseController
+class Results::TestCaseResultController
   # Re-raise errors caught by the controller.
   def rescue_action(e)
     raise e
   end
 end
 
-class Results::TestCaseControllerTest < Test::Unit::TestCase
+class Results::TestCaseResultControllerTest < Test::Unit::TestCase
   def setup
-    @controller = Results::TestCaseController.new
+    @controller = Results::TestCaseResultController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
@@ -32,15 +32,17 @@ class Results::TestCaseControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    id = 1
-    params = gen_params(Tdm::TestCase.find(id))
-    get(:show, params, session_data)
-    assert_normal_response('show', 1)
-    assert_assigned(:record)
-    assert_equal(id, assigns(:record).id)
+    get(:show, gen_params(Tdm::TestCaseResult.find(1)), session_data)
+    assert_response(:success)
+    assert_template(nil)
+    assert_equal('text/plain; charset=utf-8',@response.headers['Content-Type'])
+    assert_equal('1 times around the merry go round',@response.body)
+    assert_assigns_count(0)
+    assert_flash_count(0)
   end
 
-  def gen_params(test_case)
+  def gen_params(test_case_result)
+    test_case = test_case_result.test_case
     group = test_case.group
     test_configuration = group.test_configuration
     build_configuration = test_configuration.build_configuration
@@ -52,6 +54,7 @@ class Results::TestCaseControllerTest < Test::Unit::TestCase
     params.merge!(:test_configuration_name => test_configuration.name)
     params.merge!(:group_name => group.name)
     params.merge!(:test_case_name => test_case.name)
+    params.merge!(:test_case_result_name => test_case_result.name)
     params
   end
 end

@@ -32,19 +32,20 @@ class Tdm::TestRun < ActiveRecord::Base
    RIGHT JOIN test_configurations ON test_configurations.build_configuration_id = build_configurations.id
    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
+   RIGHT JOIN test_case_results ON test_case_results.test_case_id = test_cases.id
   END_SQL
-  TESTCASE_SQL_PREFIX =  "SELECT test_cases.* #{TEST_RUN_TO_TESTCASE_SQL} WHERE test_runs.id = \#{id}"
+  TESTCASE_SQL_PREFIX =  "SELECT test_case_results.* #{TEST_RUN_TO_TESTCASE_SQL} WHERE test_runs.id = \#{id}"
 
   def self.test_case_rel(name, sql = nil)
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql
     finder_sql = common_sql + " ORDER BY build_configurations.name, test_configurations.name, groups.name, test_cases.name"
     counter_sql = "SELECT COUNT(*) FROM (#{common_sql}) f"
-    has_many name, :class_name => 'TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
+    has_many name, :class_name => 'Tdm::TestCaseResult', :finder_sql => finder_sql, :counter_sql => counter_sql
   end
 
-  test_case_rel :successes, "test_cases.result = 'SUCCESS'"
-  test_case_rel :non_successes, "test_cases.result != 'SUCCESS'"
-  test_case_rel :test_cases
+  test_case_rel :successes, "test_case_results.result = 'SUCCESS'"
+  test_case_rel :non_successes, "test_case_results.result != 'SUCCESS'"
+  test_case_rel :test_case_results
 
   include TestCaseContainer
 

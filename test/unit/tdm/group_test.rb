@@ -29,6 +29,7 @@ class Tdm::GroupTest < Test::Unit::TestCase
     assert_equal( 1, group.test_configuration.id )
     assert_equal( [1 , 2], group.test_case_ids )
     assert_equal( [1 , 2], group.success_ids )
+    assert_equal( [1 , 2], group.successes.collect{|t| t.id} )
   end
 
   def test_success_rate

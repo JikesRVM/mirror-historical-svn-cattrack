@@ -24,8 +24,9 @@ class Tdm::TestConfiguration < ActiveRecord::Base
   TESTCASE_SQL_PREFIX = <<-END_SQL
    SELECT test_cases.*
    FROM test_configurations
-   LEFT OUTER JOIN groups ON groups.test_configuration_id = test_configurations.id
-   LEFT OUTER JOIN test_cases ON test_cases.group_id = groups.id
+   RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
+   RIGHT JOIN test_cases ON test_cases.group_id = groups.id
+   RIGHT JOIN test_case_results ON test_case_results.test_case_id = test_cases.id
    WHERE test_configurations.id = \#{id}
   END_SQL
 
@@ -33,11 +34,11 @@ class Tdm::TestConfiguration < ActiveRecord::Base
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql
     finder_sql = common_sql + " ORDER BY test_configurations.name, groups.name, test_cases.name"
     counter_sql = "SELECT COUNT(*) FROM (#{common_sql}) f"
-    has_many name, :class_name => 'TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
+    has_many name, :class_name => 'Tdm::TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
   end
 
-  test_case_rel :successes, "test_cases.result = 'SUCCESS'"
-  test_case_rel :test_cases
+  test_case_rel :successes, "test_case_results.result = 'SUCCESS'"
+  test_case_rel :test_case_results
 
   include TestCaseContainer
 

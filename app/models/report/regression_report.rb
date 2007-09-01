@@ -34,44 +34,46 @@ SELECT
     test_configurations.name AS test_configuration_name,
     groups.name AS group_name,
     test_cases.name AS test_case_name,
+    test_case_results.name AS test_case_result_name,
     count(case when build_configurations.test_run_id = #{@test_run.id} then 1 else NULL end) AS current_run,
     count(case when build_configurations.test_run_id = #{previous_id} then 1 else NULL end) AS in_last_run,
     count(*) AS total_runs,
-    count(case when build_configurations.test_run_id = #{@test_run.id} AND test_cases.result = 'SUCCESS' then 1 else NULL end) AS current_success,
-    count(case when test_cases.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
+    count(case when build_configurations.test_run_id = #{@test_run.id} AND test_case_results.result = 'SUCCESS' then 1 else NULL end) AS current_success,
+    count(case when test_case_results.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
     max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.id else NULL end) AS test_case_id,
-    max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.result else NULL end) AS test_case_result
-FROM test_cases
+    max(case when build_configurations.test_run_id = #{@test_run.id} then test_case_results.result else NULL end) AS test_case_result
+FROM test_case_results
+    LEFT JOIN test_cases ON test_case_results.test_case_id = test_cases.id
     LEFT JOIN groups ON test_cases.group_id = groups.id
     LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
     LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 WHERE
     build_configurations.test_run_id IN (#{@test_runs.collect {|tr| tr.id}.join(', ')})
-GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name
+GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_result_name
 SQL
 
     missing_tests_sql = <<SQL
 SELECT * FROM (#{sql}) f
 WHERE test_case_id IS NULL AND in_last_run = 1
-ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_result_name
 SQL
 
     new_successes_sql = <<SQL
 SELECT * FROM (#{sql}) f
 WHERE test_case_id IS NOT NULL AND current_success = 1 AND total_successes = 1
-ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_result_name
 SQL
 
     new_failures_sql = <<SQL
 SELECT * FROM (#{sql}) f
 WHERE test_case_id IS NOT NULL AND current_success = 0 AND total_successes = #{test_runs.size - 1}
-ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_result_name
 SQL
 
     consistent_failures_sql = <<SQL
 SELECT * FROM (#{sql}) f
 WHERE test_case_id IS NOT NULL AND total_successes = 0
-ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name
+ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_result_name
 SQL
 
     intermittent_failures_sql = <<SQL
