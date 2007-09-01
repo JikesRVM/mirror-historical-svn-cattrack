@@ -30,11 +30,11 @@ class TestRunImporter
       host = File.basename(d)
       logger.info("Processing host '#{host}' in dir #{d}")
       Dir.glob("#{d}/*.xml.gz").each do |f|
-        next unless File.exists?(f)
-        logger.info("Processing file: #{f}")
-        intermediate_filename = "#{f}.processing"
-        temp_filename = "#{f}.tmp"
         begin
+          next unless File.exists?(f)
+          logger.info("Processing file: #{f}")
+          intermediate_filename = "#{f}.processing"
+          temp_filename = "#{f}.tmp"
           FileUtils.mv(f, intermediate_filename)
           Zlib::GzipReader.open(intermediate_filename) do |fin|
             File.open(temp_filename, "w+") do |fout|
