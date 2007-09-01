@@ -12,7 +12,7 @@
 #
 class RemoveOlapTables < ActiveRecord::Migration
   def self.up
-    sql = "DELETE FROM audit_logs WHERE name LIKE \"report.%\" OR name LIKE \"filter.%\" OR name LIKE \"query.%\""
+    sql = "DELETE FROM audit_logs WHERE name LIKE 'report.%' OR name LIKE 'filter.%' OR name LIKE 'query.%'"
     ActiveRecord::Base.connection.execute(sql)
     drop_table :reports
     drop_table :queries
