@@ -53,6 +53,7 @@ class TestRunImporter
           FileUtils.mv(intermediate_filename, "#{processed_dir}/#{host}/#{File.basename(f)}")
         rescue Object => e
           logger.info("Failed to process file: #{f} due to: #{e.message}")
+          ErrorMailer.deliver_error(e)
           AuditLog.log('import.file.error', "Failed to process file #{f} due to #{e.message}")
           FileUtils.mkdir_p "#{failed_dir}/#{host}"
           FileUtils.mv(intermediate_filename, "#{failed_dir}/#{host}/#{File.basename(f)}")

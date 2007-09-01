@@ -104,7 +104,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     filename = "#{@host_dir}/Report.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", filename
     TestRunImporter.process_incoming_test_runs
-    assert_equal(0, ActionMailer::Base.deliveries.size)
+    assert_equal(1, ActionMailer::Base.deliveries.size)
     assert_equal(initial, Tdm::TestRun.count)
     assert_equal(false, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
@@ -121,7 +121,7 @@ class TestRunImporterTest < Test::Unit::TestCase
     hfilename = "#{@host_dir}/HugeReport.xml.gz"
     FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", hfilename
     TestRunImporter.process_incoming_test_runs(true)
-    assert_equal(1, ActionMailer::Base.deliveries.size)
+    assert_equal(2, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
     assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
     assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/HugeReport.xml.gz"))
