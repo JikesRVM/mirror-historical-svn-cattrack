@@ -17,7 +17,7 @@ class Report::RegressionReportMailer < ActionMailer::Base
     reply_to = SystemSetting['report.reply.to']
     headers({'Reply-To' => reply_to}) if reply_to
     recipients(SystemSetting['report.mail.to'])
-    f = "\"[#{test_run.host}]\" <#{SystemSetting['mail.from']}>"
+    f = "\"[#{test_run.host.name}]\" <#{SystemSetting['mail.from']}>"
     from(f)
     content_type("text/html")
   end
