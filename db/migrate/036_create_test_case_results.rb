@@ -29,7 +29,7 @@ class CreateTestCaseResults < ActiveRecord::Migration
 
       ActiveRecord::Base.connection.execute(<<SQL)
 INSERT INTO test_case_results
-  SELECT id, '1' AS name, id AS test_case_id, result, result_explanation, exit_code, time
+  SELECT id, 'default' AS name, id AS test_case_id, result, result_explanation, exit_code, time
   FROM test_cases
 SQL
       remove_column :test_cases, :result
