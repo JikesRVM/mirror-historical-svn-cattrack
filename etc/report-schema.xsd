@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="variant" type="xs:string"/>
+        <xs:element name="revision" type="xs:string"/>
+        <xs:element name="start-time" type="xs:dateTime"/>
+        <xs:element name="end-time" type="xs:dateTime"/>  
+        <xs:element ref="parameters"/>
+        <xs:element ref="host"/>
+        <xs:element ref="build-target"/>
+      </xs:sequence>
+      <xs:attribute fixed="1.1" name="version" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- A list of parameter key/value pairs -->
+  <xs:element name="parameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- The host information -->
+  <xs:element name="host">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="parameters"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="build-target">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="parameters"/>
+        <xs:element ref="build-configuration" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="build-configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="parameters"/>
+        <xs:element name="duration" type="xs:decimal"/>
+        <xs:element name="result" type="xs:string"/>
+        <xs:element name="output" type="xs:string"/>
+        <xs:element ref="test-configuration" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="test-configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="parameters"/>
+        <xs:element ref="group" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="test" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="test">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="command" type="xs:string"/>
+        <xs:element ref="parameters"/>
+        <xs:element ref="test-execution" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="test-execution">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="exit-code" type="xs:integer"/>
+        <xs:element name="duration" type="xs:decimal"/>
+        <xs:element name="result" type="xs:string"/>
+        <xs:element name="result-explanation" type="xs:string"/>
+        <xs:element name="statistics">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="statistic">
+                <xs:complexType>
+                  <xs:attribute name="key" type="xs:string"/>
+                  <xs:attribute name="value" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="output" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
