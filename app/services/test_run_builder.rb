@@ -140,26 +140,26 @@ class TestRunBuilder
   end
 
   def self.build_test_case_execution(xml, test_case_id)
-    test_case_result = Tdm::TestCaseResult.new
+    test_case_execution = Tdm::TestCaseExecution.new
 
-    test_case_result.name = xml.elements['name'].text
-    test_case_result.test_case_id = test_case_id
-    test_case_result.exit_code = xml.elements['exit-code'].text.to_i
-    test_case_result.time = xml.elements['duration'].text.to_i
-    test_case_result.result = xml.elements['result'].text
-    test_case_result.result_explanation = xml.elements['result-explanation'].text || ""
-    test_case_result.output = xml.elements['output'].text || ""
+    test_case_execution.name = xml.elements['name'].text
+    test_case_execution.test_case_id = test_case_id
+    test_case_execution.exit_code = xml.elements['exit-code'].text.to_i
+    test_case_execution.time = xml.elements['duration'].text.to_i
+    test_case_execution.result = xml.elements['result'].text
+    test_case_execution.result_explanation = xml.elements['result-explanation'].text || ""
+    test_case_execution.output = xml.elements['output'].text || ""
 
     xml.elements.each("statistics/statistic") do |p_xml|
       v = p_xml.attributes['value']
       begin
-        test_case_result.numerical_statistics[p_xml.attributes['key']] = Kernel.Float(v)
+        test_case_execution.numerical_statistics[p_xml.attributes['key']] = Kernel.Float(v)
       rescue ArgumentError, TypeError
-        test_case_result.statistics[p_xml.attributes['key']] = v
+        test_case_execution.statistics[p_xml.attributes['key']] = v
       end
-    end if test_case_result.result == 'SUCCESS'
+    end if test_case_execution.result == 'SUCCESS'
 
-    save!(test_case_result)
+    save!(test_case_execution)
   end
 
   def self.save!(object)

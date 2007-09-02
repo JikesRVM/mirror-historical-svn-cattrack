@@ -92,33 +92,33 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( 'all', test_case.params['processors'])
     assert_equal( '', test_case.params['max.opt.level'])
 
-    assert_equal( 2, test_case.test_case_results.size )
+    assert_equal( 2, test_case.test_case_executions.size )
 
-    test_case_result = test_case.test_case_results[0]
-    assert_equal( 'default', test_case_result.name )
-    assert_equal( 0, test_case_result.exit_code )
-    assert_equal( 'SUCCESS', test_case_result.result )
-    assert_equal( '', test_case_result.result_explanation )
-    assert_equal( 2303, test_case_result.time )
-    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case_result.output )
+    test_case_execution = test_case.test_case_executions[0]
+    assert_equal( 'default', test_case_execution.name )
+    assert_equal( 0, test_case_execution.exit_code )
+    assert_equal( 'SUCCESS', test_case_execution.result )
+    assert_equal( '', test_case_execution.result_explanation )
+    assert_equal( 2303, test_case_execution.time )
+    assert_equal( "Code Size: 7100184\nData Size: 23482080\nRmap Size: 565623\nTotal Size: 31147887\n", test_case_execution.output )
 
-    assert_equal( 1, test_case_result.statistics.size)
-    assert_equal( 'Boo!', test_case_result.statistics['myTextStatistic'] )
-    assert_equal( 4, test_case_result.numerical_statistics.size)
-    assert_equal( '7100184', test_case_result.numerical_statistics['code.size'].to_s )
-    assert_equal( '23482080', test_case_result.numerical_statistics['data.size'].to_s )
-    assert_equal( '565623', test_case_result.numerical_statistics['rmap.size'].to_s )
-    assert_equal( '31147887', test_case_result.numerical_statistics['total.size'].to_s )
+    assert_equal( 1, test_case_execution.statistics.size)
+    assert_equal( 'Boo!', test_case_execution.statistics['myTextStatistic'] )
+    assert_equal( 4, test_case_execution.numerical_statistics.size)
+    assert_equal( '7100184', test_case_execution.numerical_statistics['code.size'].to_s )
+    assert_equal( '23482080', test_case_execution.numerical_statistics['data.size'].to_s )
+    assert_equal( '565623', test_case_execution.numerical_statistics['rmap.size'].to_s )
+    assert_equal( '31147887', test_case_execution.numerical_statistics['total.size'].to_s )
 
-    test_case_result = test_case.test_case_results[1]
-    assert_equal( 'default_not', test_case_result.name )
-    assert_equal( 16, test_case_result.exit_code )
-    assert_equal( 'FAILURE', test_case_result.result )
-    assert_equal( 'Bad exit code', test_case_result.result_explanation )
-    assert_equal( 2303, test_case_result.time )
-    assert_equal( "Oh no! Beta!", test_case_result.output )
+    test_case_execution = test_case.test_case_executions[1]
+    assert_equal( 'default_not', test_case_execution.name )
+    assert_equal( 16, test_case_execution.exit_code )
+    assert_equal( 'FAILURE', test_case_execution.result )
+    assert_equal( 'Bad exit code', test_case_execution.result_explanation )
+    assert_equal( 2303, test_case_execution.time )
+    assert_equal( "Oh no! Beta!", test_case_execution.output )
 
-    assert_equal( 0, test_case_result.statistics.size)
-    assert_equal( 0, test_case_result.numerical_statistics.size)
+    assert_equal( 0, test_case_execution.statistics.size)
+    assert_equal( 0, test_case_execution.numerical_statistics.size)
   end
 end

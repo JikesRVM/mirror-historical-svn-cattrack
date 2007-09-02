@@ -25,7 +25,7 @@ class Tdm::Group < ActiveRecord::Base
    SELECT test_cases.*
    FROM groups
    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
-   RIGHT JOIN test_case_results ON test_case_results.test_case_id = test_cases.id
+   RIGHT JOIN test_case_executions ON test_case_executions.test_case_id = test_cases.id
    WHERE groups.id = \#{id}
   END_SQL
 
@@ -33,11 +33,11 @@ class Tdm::Group < ActiveRecord::Base
     common_sql = sql.nil? ? TESTCASE_SQL_PREFIX : TESTCASE_SQL_PREFIX + ' AND ' + sql
     finder_sql = common_sql + " ORDER BY groups.name, test_cases.name"
     counter_sql = "SELECT COUNT(*) FROM (#{common_sql}) f"
-    has_many name, :class_name => 'Tdm::TestCaseResult', :finder_sql => finder_sql, :counter_sql => counter_sql
+    has_many name, :class_name => 'Tdm::TestCaseExecution', :finder_sql => finder_sql, :counter_sql => counter_sql
   end
 
-  test_case_rel :successes, "test_case_results.result = 'SUCCESS'"
-  test_case_rel :test_case_results
+  test_case_rel :successes, "test_case_executions.result = 'SUCCESS'"
+  test_case_rel :test_case_executions
 
   include TestCaseContainer
 

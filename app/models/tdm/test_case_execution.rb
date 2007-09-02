@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Tdm::TestCaseResult < ActiveRecord::Base
+class Tdm::TestCaseExecution < ActiveRecord::Base
   validates_format_of :name, :with => /^[\.\-a-zA-Z_0-9]+$/
   validates_length_of :name, :in => 1..75
   validates_uniqueness_of :name, :scope => [:test_case_id]
@@ -41,7 +41,7 @@ class Tdm::TestCaseResult < ActiveRecord::Base
   def output
     if @output.nil?
       if id
-        sql = "SELECT output FROM test_case_result_outputs WHERE owner_id = #{self.id}"
+        sql = "SELECT output FROM test_case_execution_outputs WHERE owner_id = #{self.id}"
         @output = self.connection.select_value(sql)
         @output_modified = false
       end
@@ -53,8 +53,8 @@ class Tdm::TestCaseResult < ActiveRecord::Base
 
   def update_output
     if @output_modified
-      self.connection.execute("DELETE FROM test_case_result_outputs WHERE owner_id = #{id}")
-      sql = "INSERT INTO test_case_result_outputs (owner_id,output) VALUES (#{id},#{ActiveRecord::Base.quote_value(@output)})"
+      self.connection.execute("DELETE FROM test_case_execution_outputs WHERE owner_id = #{id}")
+      sql = "INSERT INTO test_case_execution_outputs (owner_id,output) VALUES (#{id},#{ActiveRecord::Base.quote_value(@output)})"
       self.connection.execute(sql)
     end
   end

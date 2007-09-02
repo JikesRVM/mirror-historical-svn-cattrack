@@ -93,8 +93,8 @@ class Test::Unit::TestCase
             end
             t.group_id = g.id
             t.save!
-            _t.test_case_results.each do |_tcr|
-              tcr = Tdm::TestCaseResult.new(_tcr.attributes)
+            _t.test_case_executions.each do |_tcr|
+              tcr = Tdm::TestCaseExecution.new(_tcr.attributes)
               tcr.test_case_id = t.id
               tcr.output = 'X'
               _tcr.numerical_statistics.each_pair do |k, v|
@@ -133,9 +133,9 @@ class Test::Unit::TestCase
     group.test_cases[1].destroy
     group.test_cases[0].name = 'SPECjvm98'
     group.test_cases[0].save!
-    group.test_cases[0].test_case_results[0].numerical_statistics.clear
-    group.test_cases[0].test_case_results[0].numerical_statistics['aggregate.best.score'] = '412'
-    group.test_cases[0].test_case_results[0].save!
+    group.test_cases[0].test_case_executions[0].numerical_statistics.clear
+    group.test_cases[0].test_case_executions[0].numerical_statistics['aggregate.best.score'] = '412'
+    group.test_cases[0].test_case_executions[0].save!
 
     group = test_configuration.groups[0]
     group.name = 'SPECjbb2005'
@@ -144,9 +144,9 @@ class Test::Unit::TestCase
     group.test_cases[1].destroy
     group.test_cases[0].name = 'SPECjbb2005'
     group.test_cases[0].save!
-    group.test_cases[0].test_case_results[0].numerical_statistics.clear
-    group.test_cases[0].test_case_results[0].numerical_statistics['score'] = '22'
-    group.test_cases[0].test_case_results[0].save!
+    group.test_cases[0].test_case_executions[0].numerical_statistics.clear
+    group.test_cases[0].test_case_executions[0].numerical_statistics['score'] = '22'
+    group.test_cases[0].test_case_executions[0].save!
 
     test_run = Tdm::TestRun.find(1)
     assert_equal(1, test_run.build_configurations.size)

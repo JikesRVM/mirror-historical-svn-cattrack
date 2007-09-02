@@ -26,7 +26,7 @@ class Tdm::TestConfiguration < ActiveRecord::Base
    FROM test_configurations
    RIGHT JOIN groups ON groups.test_configuration_id = test_configurations.id
    RIGHT JOIN test_cases ON test_cases.group_id = groups.id
-   RIGHT JOIN test_case_results ON test_case_results.test_case_id = test_cases.id
+   RIGHT JOIN test_case_executions ON test_case_executions.test_case_id = test_cases.id
    WHERE test_configurations.id = \#{id}
   END_SQL
 
@@ -37,8 +37,8 @@ class Tdm::TestConfiguration < ActiveRecord::Base
     has_many name, :class_name => 'Tdm::TestCase', :finder_sql => finder_sql, :counter_sql => counter_sql
   end
 
-  test_case_rel :successes, "test_case_results.result = 'SUCCESS'"
-  test_case_rel :test_case_results
+  test_case_rel :successes, "test_case_executions.result = 'SUCCESS'"
+  test_case_rel :test_case_executions
 
   include TestCaseContainer
 

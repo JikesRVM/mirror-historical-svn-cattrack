@@ -35,7 +35,7 @@
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
         %td= h(t['test_case_name'])
-        %td= h(t['test_case_result'])
+        %td= h(t['test_case_execution'])
         %td
           %ul.actions
             %li= test_link(t)
@@ -75,7 +75,7 @@
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
         %td= h(t['test_case_name'])
-        %td= h(t['test_case_result'])
+        %td= h(t['test_case_execution'])
         %td
           %ul.actions
             %li= test_link(t)
@@ -98,7 +98,7 @@
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
         %td= h(t['test_case_name'])
-        %td= h(t['test_case_result'])
+        %td= h(t['test_case_execution'])
         %td
           %ul.actions
             %li= test_link(t)
@@ -136,7 +136,7 @@
     %tr
       %th.row Success Rate
       - @report.test_runs.each do |tr|
-        %td= h("#{tr.successes.size}/#{tr.test_case_results.size}")
+        %td= h("#{tr.successes.size}/#{tr.test_case_executions.size}")
     - @report.statistics.each do |r|
       %tr
         %th.row= h(r['name'])

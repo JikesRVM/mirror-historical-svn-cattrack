@@ -30,7 +30,7 @@
     %th Running Time
     %th Statistics
     %th Operations
-  - @record.test_case_results.each do |r|
+  - @record.test_case_executions.each do |r|
     %tr
       %td= h(r.name)
       %td= "#{h(r.result)} #{h(r.result_explanation)}"

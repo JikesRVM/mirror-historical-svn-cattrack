@@ -49,9 +49,9 @@ FROM
   (SELECT
     test_runs.id AS test_run_id,
     #{dimension} AS #{label},
-    CAST((CAST(count(case when test_case_results.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as value
-  FROM test_case_results
-    LEFT JOIN test_cases ON test_case_results.test_case_id = test_cases.id
+    CAST((CAST(count(case when test_case_executions.result = 'SUCCESS' then 1 else NULL end) AS double precision)/count(*) * 100.0) AS int4) as value
+  FROM test_case_executions
+    LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
     LEFT JOIN groups ON test_cases.group_id = groups.id
     LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
     LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
@@ -83,18 +83,18 @@ FROM (
 SELECT
   statistics_name_map.label as stat_name,
   statistics_name_map.less_is_more as less_is_more,
-  MAX(test_case_result_numerical_statistics.value) as max_score,
-  MIN(test_case_result_numerical_statistics.value) as min_score
-FROM test_case_result_numerical_statistics
-LEFT JOIN test_case_results ON test_case_result_numerical_statistics.owner_id = test_case_results.id
-LEFT JOIN test_cases ON test_case_results.test_case_id = test_cases.id
+  MAX(test_case_execution_numerical_statistics.value) as max_score,
+  MIN(test_case_execution_numerical_statistics.value) as min_score
+FROM test_case_execution_numerical_statistics
+LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
 LEFT JOIN test_configuration_params ON test_configurations.id = test_configuration_params.owner_id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
 LEFT JOIN hosts ON test_runs.host_id = hosts.id
-LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_result_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
+LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_execution_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
 WHERE
     hosts.name = '#{@test_run.host.name}' AND
     test_runs.variant = '#{@test_run.variant}' AND
@@ -108,17 +108,17 @@ SQL
 SELECT
     test_runs.id AS test_run_id,
     statistics_name_map.label AS stat_name,
-    test_case_result_numerical_statistics.value AS value
-FROM test_case_result_numerical_statistics
-LEFT JOIN test_case_results ON test_case_result_numerical_statistics.owner_id = test_case_results.id
-LEFT JOIN test_cases ON test_case_results.test_case_id = test_cases.id
+    test_case_execution_numerical_statistics.value AS value
+FROM test_case_execution_numerical_statistics
+LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
 LEFT JOIN test_configuration_params ON test_configurations.id = test_configuration_params.owner_id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
 LEFT JOIN hosts ON test_runs.host_id = hosts.id
-LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_result_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
+LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_execution_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
     #{filter}

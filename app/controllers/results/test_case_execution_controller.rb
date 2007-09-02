@@ -10,8 +10,13 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-module TestCaseContainer
-  def success_rate
-    "#{self.successes.count}/#{self.test_case_executions.count}"
+class Results::TestCaseExecutionController < Results::BaseController
+  verify :method => :get, :redirect_to => :access_denied_url
+  caches_page :show
+  session :off
+
+  def show
+    headers['Content-Type'] = 'text/plain'
+    render(:text => test_case_execution.output, :layout => false)
   end
 end

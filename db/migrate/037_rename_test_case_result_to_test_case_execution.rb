@@ -10,13 +10,13 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Results::TestCaseResultController < Results::BaseController
-  verify :method => :get, :redirect_to => :access_denied_url
-  caches_page :show
-  session :off
-
-  def show
-    headers['Content-Type'] = 'text/plain'
-    render(:text => test_case_result.output, :layout => false)
+class RenameTestCaseResultToTestCaseExecution < ActiveRecord::Migration
+  def self.up
+    rename_table :test_case_results, :test_case_executions
+    rename_table :test_case_result_outputs, :test_case_execution_outputs
+    rename_table :test_case_result_statistics, :test_case_execution_statistics
+    rename_table :test_case_result_numerical_statistics, :test_case_execution_numerical_statistics
+  end
+  def self.down
   end
 end

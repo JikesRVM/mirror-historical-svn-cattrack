@@ -21,7 +21,7 @@ class Report::RegressionReportTest < Test::Unit::TestCase
     assert_equal(10, report.window_size)
     assert_equal([], report.missing_tests.collect{|t| t['test_case_id']})
     assert_equal([], report.new_failures.collect{|t| t['test_case_id']})
-    assert_equal(report.test_run.test_case_result_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
+    assert_equal(report.test_run.test_case_execution_ids.sort, report.new_successes.collect{|t| t['test_case_id'].to_i}.sort)
     assert_equal([], report.intermittent_failures.collect{|t| t['test_case_id']})
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
     assert_equal([test_run.id], report.test_runs.collect{|tr| tr.id})
@@ -51,12 +51,12 @@ class Report::RegressionReportTest < Test::Unit::TestCase
     test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
     test_case1 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case1.test_case_results[0].result = 'OVERTIME'
-    test_case1.test_case_results[0].save!
+    test_case1.test_case_executions[0].result = 'OVERTIME'
+    test_case1.test_case_executions[0].save!
 
     test_case2 = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
-    test_case2.test_case_results[0].result = 'FAILURE'
-    test_case2.test_case_results[0].save!
+    test_case2.test_case_executions[0].result = 'FAILURE'
+    test_case2.test_case_executions[0].save!
 
     report = Report::RegressionReport.new(Tdm::TestRun.find(1))
     assert_equal(test_run, report.test_run)
@@ -101,28 +101,28 @@ class Report::RegressionReportTest < Test::Unit::TestCase
     test_run_2 = clone_test_run(test_run, 20)
 
     test_case1 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case1.test_case_results[0].result = 'OVERTIME'
-    test_case1.test_case_results[0].save!
+    test_case1.test_case_executions[0].result = 'OVERTIME'
+    test_case1.test_case_executions[0].save!
 
     test_case2 = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case2.test_case_results[0].result = 'OVERTIME'
-    test_case2.test_case_results[0].save!
+    test_case2.test_case_executions[0].result = 'OVERTIME'
+    test_case2.test_case_executions[0].save!
 
     test_case3 = test_run_2.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case3.test_case_results[0].result = 'OVERTIME'
-    test_case3.test_case_results[0].save!
+    test_case3.test_case_executions[0].result = 'OVERTIME'
+    test_case3.test_case_executions[0].save!
 
     test_case2b = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
-    test_case2b.test_case_results[0].result = 'FAILURE'
-    test_case2b.test_case_results[0].save!
+    test_case2b.test_case_executions[0].result = 'FAILURE'
+    test_case2b.test_case_executions[0].save!
 
     test_case_X = test_run_1.build_configurations[0].test_configurations[0].groups[1].test_cases[0]
-    test_case_X.test_case_results[0].result = 'FAILURE'
-    test_case_X.test_case_results[0].save!
+    test_case_X.test_case_executions[0].result = 'FAILURE'
+    test_case_X.test_case_executions[0].save!
 
     test_case_Y = test_run.build_configurations[0].test_configurations[0].groups[1].test_cases[0]
-    test_case_Y.test_case_results[0].result = 'FAILURE'
-    test_case_Y.test_case_results[0].save!
+    test_case_Y.test_case_executions[0].result = 'FAILURE'
+    test_case_Y.test_case_executions[0].save!
 
     report = nil
     Tdm::TestRun.transaction do

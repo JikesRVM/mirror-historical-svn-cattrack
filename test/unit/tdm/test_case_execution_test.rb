@@ -12,13 +12,13 @@
 #
 require File.dirname(__FILE__) + '/../../test_helper'
 
-class Tdm::TestCaseResultTest < Test::Unit::TestCase
+class Tdm::TestCaseExecutionTest < Test::Unit::TestCase
   def test_label
-    assert_equal( Tdm::TestCaseResult.find(1).name, Tdm::TestCaseResult.find(1).label )
+    assert_equal( Tdm::TestCaseExecution.find(1).name, Tdm::TestCaseExecution.find(1).label )
   end
 
   def test_basic_load
-    tc = Tdm::TestCaseResult.find(1)
+    tc = Tdm::TestCaseExecution.find(1)
     assert_equal( 1, tc.id )
     assert_equal( "1", tc.name )
     assert_equal( "SUCCESS", tc.result )
@@ -33,7 +33,7 @@ class Tdm::TestCaseResultTest < Test::Unit::TestCase
   end
 
   def test_load_with_statistics
-    tc = Tdm::TestCaseResult.find(17)
+    tc = Tdm::TestCaseExecution.find(17)
     assert_equal( 17, tc.id )
     assert_equal( 1, tc.statistics.size )
     assert_equal( '54', tc.statistics['caffeinemark'] )
@@ -41,16 +41,16 @@ class Tdm::TestCaseResultTest < Test::Unit::TestCase
   end
 
   def test_new_with_output
-    tc = Tdm::TestCaseResult.new(self.class.attributes_for_new)
+    tc = Tdm::TestCaseExecution.new(self.class.attributes_for_new)
     tc.save!
-    tc2 = Tdm::TestCaseResult.find(tc.id)
+    tc2 = Tdm::TestCaseExecution.find(tc.id)
     assert_equal('foooish!', tc2.output )
   end
 
   def test_new_with_success_and_result_explanation
     attrs = self.class.attributes_for_new
     attrs[:result_explanation] = 'foo'
-    tc = Tdm::TestCaseResult.new(attrs)
+    tc = Tdm::TestCaseExecution.new(attrs)
     assert(!tc.valid?)
     assert_not_nil(tc.errors[:result_explanation])
   end

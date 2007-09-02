@@ -90,7 +90,7 @@ OrderedTables = [
 'test_configurations', 'test_configuration_params',
 'groups',
 'test_cases',
-'test_case_results','test_case_result_outputs','test_case_result_statistics','test_case_result_numerical_statistics',
+'test_case_executions','test_case_execution_outputs','test_case_execution_statistics','test_case_execution_numerical_statistics',
 'audit_logs',
 'statistics_name_map',
 ]

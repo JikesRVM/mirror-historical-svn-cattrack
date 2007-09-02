@@ -21,8 +21,8 @@ class Tdm::TestCase < ActiveRecord::Base
   validates_presence_of :command
 
   belongs_to :group
-  has_many :test_case_results, :order => 'name', :dependent => :destroy
-  has_many :successes, :class_name => 'Tdm::TestCaseResult', :order => 'name', :conditions => "test_case_results.result = 'SUCCESS'"
+  has_many :test_case_executions, :order => 'name', :dependent => :destroy
+  has_many :successes, :class_name => 'Tdm::TestCaseExecution', :order => 'name', :conditions => "test_case_executions.result = 'SUCCESS'"
   has_params :params
 
   include TestCaseContainer

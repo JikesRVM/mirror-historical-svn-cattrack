@@ -23,12 +23,12 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     test_run = Tdm::TestRun.find(1)
     test_run_1 = clone_test_run(test_run, 10)
     test_case1 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case1.test_case_results[0].result = 'OVERTIME'
-    test_case1.test_case_results[0].save!
+    test_case1.test_case_executions[0].result = 'OVERTIME'
+    test_case1.test_case_executions[0].save!
 
     test_case2 = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
-    test_case2.test_case_results[0].result = 'FAILURE'
-    test_case2.test_case_results[0].save!
+    test_case2.test_case_executions[0].result = 'FAILURE'
+    test_case2.test_case_executions[0].save!
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('[core] 1 FAILURE', response.subject)
@@ -52,28 +52,28 @@ class Report::RegressionReportMailerTest < Test::Unit::TestCase
     test_run_2 = clone_test_run(test_run, 20)
 
     test_case1 = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case1.test_case_results[0].result = 'OVERTIME'
-    test_case1.test_case_results[0].save!
+    test_case1.test_case_executions[0].result = 'OVERTIME'
+    test_case1.test_case_executions[0].save!
 
     test_case2 = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case2.test_case_results[0].result = 'OVERTIME'
-    test_case2.test_case_results[0].save!
+    test_case2.test_case_executions[0].result = 'OVERTIME'
+    test_case2.test_case_executions[0].save!
 
     test_case3 = test_run_2.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
-    test_case3.test_case_results[0].result = 'OVERTIME'
-    test_case3.test_case_results[0].save!
+    test_case3.test_case_executions[0].result = 'OVERTIME'
+    test_case3.test_case_executions[0].save!
 
     test_case2b = test_run_1.build_configurations[0].test_configurations[0].groups[0].test_cases[1]
-    test_case2b.test_case_results[0].result = 'FAILURE'
-    test_case2b.test_case_results[0].save!
+    test_case2b.test_case_executions[0].result = 'FAILURE'
+    test_case2b.test_case_executions[0].save!
 
     test_case_X = test_run_1.build_configurations[0].test_configurations[0].groups[1].test_cases[0]
-    test_case_X.test_case_results[0].result = 'FAILURE'
-    test_case_X.test_case_results[0].save!
+    test_case_X.test_case_executions[0].result = 'FAILURE'
+    test_case_X.test_case_executions[0].save!
 
     test_case_Y = test_run.build_configurations[0].test_configurations[0].groups[1].test_cases[0]
-    test_case_Y.test_case_results[0].result = 'FAILURE'
-    test_case_Y.test_case_results[0].save!
+    test_case_Y.test_case_executions[0].result = 'FAILURE'
+    test_case_Y.test_case_executions[0].save!
 
     response = Report::RegressionReportMailer.create_report(Tdm::TestRun.find(1))
     assert_equal('[core] 2 FAILURES', response.subject)
