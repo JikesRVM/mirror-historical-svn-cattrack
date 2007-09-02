@@ -15,7 +15,7 @@ class Tdm::Host < ActiveRecord::Base
   validates_length_of :name, :in => 1..100
   validates_uniqueness_of :name
 
-  has_many :test_runs, :order => 'occurred_at DESC', :dependent => :destroy
+  has_many :test_runs, :order => 'start_time DESC', :dependent => :destroy
 
   def parent_node
     nil

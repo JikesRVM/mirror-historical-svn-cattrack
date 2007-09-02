@@ -56,7 +56,7 @@ class Test::Unit::TestCase
   def clone_test_run(_test_run, offset)
     test_run = Tdm::TestRun.new(_test_run.attributes)
     test_run.revision -= offset
-    test_run.occurred_at = test_run.occurred_at - offset
+    test_run.start_time = test_run.start_time - offset
     test_run.save!
 
     bt = Tdm::BuildTarget.new(_test_run.build_target.attributes)

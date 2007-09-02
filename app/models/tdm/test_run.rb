@@ -13,14 +13,14 @@
 class Tdm::TestRun < ActiveRecord::Base
   validates_length_of :name, :in => 1..75
   validates_length_of :variant, :in => 1..75
-  validates_uniqueness_of :name, :scope => [:host_id, :occurred_at]
+  validates_uniqueness_of :name, :scope => [:host_id, :start_time]
   validates_format_of :name, :with => /^[\-a-zA-Z_0-9]+$/
   validates_format_of :variant, :with => /^[\-a-zA-Z_0-9]+$/
   validates_presence_of :host_id
   validates_reference_exists :host_id, Tdm::Host
   validates_positiveness_of :revision
   validates_numericality_of :revision, :only_integer => true
-  validates_presence_of :occurred_at
+  validates_presence_of :start_time
 
   belongs_to :host
   has_one :build_target, :dependent => :destroy

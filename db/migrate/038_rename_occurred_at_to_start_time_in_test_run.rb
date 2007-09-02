@@ -10,16 +10,11 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Results::HostController < Results::BaseController
-  verify :method => :get, :redirect_to => :access_denied_url
-
-  def show
-    @record = host
-    @test_run_pages, @test_runs =
-      paginate(Tdm::TestRun, :per_page => 20, :order => 'start_time DESC', :conditions => ['host_id = ?', @record.id])
+class RenameOccurredAtToStartTimeInTestRun < ActiveRecord::Migration
+  def self.up
+    rename_column :test_runs, :occurred_at, :start_time
   end
 
-  def list
-    @record_pages, @records = paginate(Tdm::Host, :per_page => 20, :order => 'name')
+  def self.down
   end
 end

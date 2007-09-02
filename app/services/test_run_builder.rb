@@ -35,7 +35,7 @@ class TestRunBuilder
         test_run.host = Tdm::Host.find_or_create_by_name(host_name)
         test_run.variant = xml.elements['/report/variant'].text
         test_run.revision = xml.elements['/report/revision'].text.to_i
-        test_run.occurred_at = Time.parse(xml.elements['/report/start-time'].text).getutc
+        test_run.start_time = Time.parse(xml.elements['/report/start-time'].text).getutc
 
         # TODO: stop ignoring end-time
         # TODO: stop ignoring test-run parameters

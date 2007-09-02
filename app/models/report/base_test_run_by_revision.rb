@@ -27,10 +27,10 @@ class Report::BaseTestRunByRevision
 
   def perform
     options = {}
-    sql = 'host_id = ? AND occurred_at <= ? AND variant = ?'
-    options[:conditions] = [ sql, @test_run.host.id, @test_run.occurred_at, @test_run.variant]
+    sql = 'host_id = ? AND start_time <= ? AND variant = ?'
+    options[:conditions] = [ sql, @test_run.host.id, @test_run.start_time, @test_run.variant]
     options[:limit] = @window_size
-    options[:order] = 'occurred_at DESC'
+    options[:order] = 'start_time DESC'
     @test_runs = Tdm::TestRun.find(:all, options).reverse
   end
 
@@ -98,7 +98,7 @@ LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_cas
 WHERE
     hosts.name = '#{@test_run.host.name}' AND
     test_runs.variant = '#{@test_run.variant}' AND
-    test_runs.occurred_at <= '#{@test_run.occurred_at}' AND
+    test_runs.start_time <= '#{@test_run.start_time}' AND
     #{filter}
 GROUP BY statistics_name_map.label, statistics_name_map.less_is_more
 ) f

@@ -13,12 +13,12 @@
 module Report::RegressionReportMailerHelper
   def test_run_label(test_run,test_runs)
     include_time = test_runs.find_all do |tr|
-      tr != test_run and tr.occurred_at.yday == test_run.occurred_at.yday and tr.occurred_at.year == test_run.occurred_at.year
+      tr != test_run and tr.start_time.yday == test_run.start_time.yday and tr.start_time.year == test_run.start_time.year
     end.size > 0
     if include_time
-      test_run.occurred_at.strftime('%d/%m<br/>%H:%M')
+      test_run.start_time.strftime('%d/%m<br/>%H:%M')
     else
-      test_run.occurred_at.strftime('%d/%m')
+      test_run.start_time.strftime('%d/%m')
     end
   end
 end
