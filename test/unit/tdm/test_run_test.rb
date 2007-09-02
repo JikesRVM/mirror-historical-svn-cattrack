@@ -29,6 +29,7 @@ class Tdm::TestRunTest < Test::Unit::TestCase
     assert_equal( 1, test_run.id )
     assert_equal( 1234, test_run.revision )
     assert_equal( "2005-10-20T00:00:00Z", test_run.start_time.xmlschema )
+    assert_equal( "2005-10-20T10:00:00Z", test_run.end_time.xmlschema )
     assert_equal( 'core', test_run.name )
     assert_equal( 'core', test_run.variant )
     assert_equal( 1, test_run.host_id )
@@ -52,10 +53,10 @@ class Tdm::TestRunTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    {:name => 'foo', :variant => 'fooV', :host_id => 1, :revision => 123, :start_time => Time.now}
+    {:name => 'foo', :variant => 'fooV', :host_id => 1, :revision => 123, :start_time => Time.now, :end_time => Time.now + 20}
   end
   def self.non_null_attributes
-    [:name, :variant, :host_id, :revision, :start_time]
+    [:name, :variant, :host_id, :revision, :start_time, :end_time]
   end
   def self.str_length_attributes
     [[:name, 75],[:variant, 75]]

@@ -36,8 +36,8 @@ class TestRunBuilder
         test_run.variant = xml.elements['/report/variant'].text
         test_run.revision = xml.elements['/report/revision'].text.to_i
         test_run.start_time = Time.parse(xml.elements['/report/start-time'].text).getutc
+        test_run.end_time = Time.parse(xml.elements['/report/end-time'].text).getutc
 
-        # TODO: stop ignoring end-time
         # TODO: stop ignoring test-run parameters
 
         save!(test_run)

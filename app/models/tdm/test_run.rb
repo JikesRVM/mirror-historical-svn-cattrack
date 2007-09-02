@@ -21,6 +21,7 @@ class Tdm::TestRun < ActiveRecord::Base
   validates_positiveness_of :revision
   validates_numericality_of :revision, :only_integer => true
   validates_presence_of :start_time
+  validates_presence_of :end_time
 
   belongs_to :host
   has_one :build_target, :dependent => :destroy
