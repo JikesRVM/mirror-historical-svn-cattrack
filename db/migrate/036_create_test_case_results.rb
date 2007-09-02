@@ -36,6 +36,7 @@ SQL
       remove_column :test_cases, :result_explanation
       remove_column :test_cases, :exit_code
       remove_column :test_cases, :time
+      ActiveRecord::Base.connection.execute("SELECT setval('test_case_results_id_seq', 715874)")
 
       # Copy old output to new table linking to results
       create_table :test_case_result_outputs, :id => false do |t|
