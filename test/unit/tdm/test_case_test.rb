@@ -29,6 +29,11 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     assert_equal( 1, tc.group_id )
     assert_equal( 1, tc.group.id )
     assert_equal( 1, tc.test_case_executions.size )
+
+    tc = Tdm::TestCase.find(17)
+    assert_equal( 17, tc.id )
+    assert_equal( 1, tc.statistics.size )
+    assert_equal( '54', tc.statistics['caffeinemark'] )
   end
 
   def self.attributes_for_new

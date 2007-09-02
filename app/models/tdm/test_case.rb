@@ -23,6 +23,8 @@ class Tdm::TestCase < ActiveRecord::Base
   has_many :successes, :class_name => 'Tdm::TestCaseExecution', :order => 'name', :conditions => "test_case_executions.result = 'SUCCESS'"
   has_params :params
 
+  has_params :statistics
+  
   include TestCaseContainer
 
   def parent_node
