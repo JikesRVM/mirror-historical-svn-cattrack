@@ -15,7 +15,7 @@
 - if @record.statistics.size > 0
   %h3 Test Statistics
   %table.details
-    - r.statistics.each_pair do |k,v|
+    - @record.statistics.each_pair do |k,v|
       %tr
         %th= h(k)
         %td= h(v)
