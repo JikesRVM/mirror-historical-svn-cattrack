@@ -83,11 +83,10 @@ FROM (
 SELECT
   statistics_map.label as stat_name,
   statistics_map.less_is_more as less_is_more,
-  MAX(test_case_execution_numerical_statistics.value) as max_score,
-  MIN(test_case_execution_numerical_statistics.value) as min_score
-FROM test_case_execution_numerical_statistics
-LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
-LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
+  MAX(test_case_statistics.value) as max_score,
+  MIN(test_case_statistics.value) as min_score
+FROM test_cases
+LEFT JOIN test_case_statistics ON test_case_statistics.owner_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
@@ -99,7 +98,7 @@ LEFT JOIN statistics_map ON (
   (test_configurations.name = statistics_map.test_configuration_name OR statistics_map.test_configuration_name IS NULL) AND
   groups.name = statistics_map.group_name AND
   test_cases.name = statistics_map.test_case_name AND
-  test_case_execution_numerical_statistics.key = statistics_map.statistic_key
+  test_case_statistics.key = statistics_map.name
   )
 WHERE
     hosts.name = '#{@test_run.host.name}' AND
@@ -114,10 +113,9 @@ SQL
 SELECT
     test_runs.id AS test_run_id,
     statistics_map.label AS stat_name,
-    test_case_execution_numerical_statistics.value AS value
-FROM test_case_execution_numerical_statistics
-LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
-LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
+    test_case_statistics.value AS value
+FROM test_cases
+LEFT JOIN test_case_statistics ON test_case_statistics.owner_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
@@ -129,7 +127,7 @@ LEFT JOIN statistics_map ON (
   (test_configurations.name = statistics_map.test_configuration_name OR statistics_map.test_configuration_name IS NULL) AND
   groups.name = statistics_map.group_name AND
   test_cases.name = statistics_map.test_case_name AND
-  test_case_execution_numerical_statistics.key = statistics_map.statistic_key
+  test_case_statistics.key = statistics_map.name
   )
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND

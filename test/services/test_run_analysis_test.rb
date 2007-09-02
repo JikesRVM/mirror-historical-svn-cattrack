@@ -16,6 +16,7 @@ class TestRunAnalysisTest < Test::Unit::TestCase
   def test_analysis
     test_run = create_test_run_for_perf_tests
     test_case = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
+    test_case.test_case_executions.clear
     execution = Tdm::TestCaseExecution.new
     execution.test_case_id = test_case.id
     execution.name = 'a'
@@ -30,6 +31,17 @@ class TestRunAnalysisTest < Test::Unit::TestCase
     execution = Tdm::TestCaseExecution.new
     execution.test_case_id = test_case.id
     execution.name = 'b'
+    execution.time = 10
+    execution.exit_code = 0
+    execution.result = 'SUCCESS'
+    execution.result_explanation = ''
+    execution.output = '...'
+    execution.numerical_statistics['score'] = '22'
+    execution.save!
+
+    execution = Tdm::TestCaseExecution.new
+    execution.test_case_id = test_case.id
+    execution.name = 'c'
     execution.time = 10
     execution.exit_code = 0
     execution.result = 'FAILURE'

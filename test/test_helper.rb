@@ -91,6 +91,9 @@ class Test::Unit::TestCase
             _t.params.each_pair do |k, v|
               t.params[k] = v
             end
+            _t.statistics.each_pair do |k, v|
+              t.statistics[k] = v
+            end
             t.group_id = g.id
             t.save!
             _t.test_case_executions.each do |_tcr|
@@ -132,10 +135,9 @@ class Test::Unit::TestCase
     assert_equal(2, group.test_cases.size)
     group.test_cases[1].destroy
     group.test_cases[0].name = 'SPECjvm98'
+    group.test_cases[0].statistics.clear
+    group.test_cases[0].statistics['aggregate.best.score'] = '412'
     group.test_cases[0].save!
-    group.test_cases[0].test_case_executions[0].numerical_statistics.clear
-    group.test_cases[0].test_case_executions[0].numerical_statistics['aggregate.best.score'] = '412'
-    group.test_cases[0].test_case_executions[0].save!
 
     group = test_configuration.groups[0]
     group.name = 'SPECjbb2005'
@@ -143,10 +145,9 @@ class Test::Unit::TestCase
     assert_equal(2, group.test_cases.size)
     group.test_cases[1].destroy
     group.test_cases[0].name = 'SPECjbb2005'
+    group.test_cases[0].statistics.clear
+    group.test_cases[0].statistics['score'] = '22'
     group.test_cases[0].save!
-    group.test_cases[0].test_case_executions[0].numerical_statistics.clear
-    group.test_cases[0].test_case_executions[0].numerical_statistics['score'] = '22'
-    group.test_cases[0].test_case_executions[0].save!
 
     test_run = Tdm::TestRun.find(1)
     assert_equal(1, test_run.build_configurations.size)
