@@ -29,6 +29,31 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="buildresults">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="build-target"/>
+      </xs:sequence>
+      <xs:attribute fixed="1.1" name="version" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="results">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="variant" type="xs:string"/>
+        <xs:element name="revision" type="xs:string"/>
+        <xs:element name="start-time" type="xs:dateTime"/>
+        <xs:element name="end-time" type="xs:dateTime"/>
+        <xs:element ref="parameters"/>
+        <xs:element ref="host"/>
+        <xs:element ref="test-configuration" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute fixed="1.1" name="version" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <!-- A list of parameter key/value pairs -->
   <xs:element name="parameters">
     <xs:complexType>
@@ -79,6 +104,7 @@
   <xs:element name="test-configuration">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="build-configuration" type="xs:string" minOccurs="0"/>
         <xs:element name="name" type="xs:string"/>
         <xs:element ref="parameters"/>
         <xs:element ref="group" minOccurs="0" maxOccurs="unbounded"/>
@@ -109,10 +135,6 @@
   <xs:element name="test-execution">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="exit-code" type="xs:integer"/>
-        <xs:element name="duration" type="xs:decimal"/>
-        <xs:element name="result" type="xs:string"/>
-        <xs:element name="result-explanation" type="xs:string"/>
         <xs:element name="statistics">
           <xs:complexType>
             <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -125,6 +147,10 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="exit-code" type="xs:integer"/>
+        <xs:element name="duration" type="xs:decimal"/>
+        <xs:element name="result" type="xs:string"/>
+        <xs:element name="result-explanation" type="xs:string"/>
         <xs:element name="output" type="xs:string"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string"/>
