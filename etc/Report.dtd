@@ -1,0 +1,51 @@
+<!--
+ ~  This file is part of the Jikes RVM project (http://jikesrvm.org).
+ ~
+ ~  This file is licensed to You under the Common Public License (CPL);
+ ~  You may not use this file except in compliance with the License. You
+ ~  may obtain a copy of the License at
+ ~
+ ~      http://www.opensource.org/licenses/cpl1.0.php
+ ~
+ ~  See the COPYRIGHT.txt file distributed with this work for information
+ ~  regarding copyright ownership.
+ -->
+
+ <!-- Report is the top level element -->
+<!ELEMENT report (name, variant, revision, start-time, end-time, parameters?, host, build-target) >
+<!ATTLIST report version CDATA #FIXED "1.1" >
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT variant (#PCDATA)>
+<!ELEMENT revision (#PCDATA)>
+<!ELEMENT start-time (#PCDATA)>
+<!ELEMENT end-time (#PCDATA)>
+
+<!ELEMENT host (name, parameters)>
+<!ELEMENT build-target (name, parameters, build-configuration*)>
+<!ELEMENT build-configuration (name, parameters, duration, result, output, test-configuration*)>
+<!ELEMENT test-configuration (name, parameters, group*)>
+<!ELEMENT group (name, test*)>
+<!ELEMENT test (name, command, parameters, test-execution*)>
+<!ELEMENT test-execution (name, exit-code, duration, result, result-explanation, statistics, output)>
+
+<!-- Elements appear as children of build-configuration or test elements -->
+<!ELEMENT duration (#PCDATA)>
+<!ELEMENT result (#PCDATA)>
+<!ELEMENT output (#PCDATA)>
+
+<!-- Elements appear as children of test elements -->
+<!ELEMENT command (#PCDATA)>
+<!ELEMENT result-explanation (#PCDATA)>
+<!ELEMENT exit-code (#PCDATA)>
+
+<!-- statistics part of test section -->
+<!ELEMENT statistics (statistic*)>
+<!ELEMENT statistic EMPTY>
+<!ATTLIST statistic key CDATA #REQUIRED>
+<!ATTLIST statistic value CDATA #REQUIRED>
+
+<!-- parameters common to many sections -->
+<!ELEMENT parameters (parameter*)>
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter key CDATA #REQUIRED>
+<!ATTLIST parameter value CDATA #REQUIRED>

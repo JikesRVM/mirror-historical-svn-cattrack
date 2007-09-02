@@ -1,0 +1,113 @@
+<!DOCTYPE report SYSTEM "Report.dtd">
+<report version="1.1">
+  <name>tiny</name>
+  <variant>tiny-sse</variant>
+  <revision>12200</revision>
+  <start-time>Sun May 20 05:50:50 UTC 2007</start-time>
+  <end-time>Sun May 20 15:50:50 UTC 2007</end-time>
+
+  <!-- test-run parameters -->
+  <parameters>
+    <parameter key="X" value="Y"/>
+  </parameters>
+
+  <!-- host definition and parameters -->
+  <host>
+    <name>rvmx86lnx32.anu.edu.au</name>
+    <parameters>
+      <parameter key="cpu.count" value="1"/>
+    </parameters>
+  </host>
+
+  <build-target>
+    <name>ia32-linux</name>
+    <parameters>
+      <parameter key="arch" value="ia32"/>
+      <parameter key="address.size" value="32"/>
+      <parameter key="os" value="Linux"/>
+      <parameter key="bootimage.code.address" value="0x5B000000"/>
+      <parameter key="bootimage.data.address" value="0x57000000"/>
+      <parameter key="bootimage.rmap.address" value="0x5E000000"/>
+      <parameter key="max-mappable.address" value="0xb0000000"/>
+    </parameters>
+    <build-configuration>
+      <name>prototype</name>
+      <parameters>
+        <parameter key="variant" value="prototype"/>
+        <parameter key="runtime.compiler" value="base"/>
+        <parameter key="bootimage.compiler" value="base"/>
+        <parameter key="mmtk.plan" value="org.mmtk.plan.generational.marksweep.GenMS"/>
+        <parameter key="include.aos" value="false"/>
+      </parameters>
+      <duration>78607</duration>
+      <result>FAILURE</result>
+      <output>...</output>
+    </build-configuration>
+    <build-configuration>
+      <name>prototype-opt</name>
+      <parameters>
+        <parameter key="variant" value="prototype-opt"/>
+        <parameter key="runtime.compiler" value="opt"/>
+        <parameter key="bootimage.compiler" value="base"/>
+        <parameter key="mmtk.plan" value="org.mmtk.plan.generational.marksweep.GenMS"/>
+        <parameter key="include.aos" value="false"/>
+      </parameters>
+      <duration>78607</duration>
+      <result>SUCCESS</result>
+      <output>...</output>
+      <test-configuration>
+        <name>default</name>
+        <parameters>
+          <parameter key="mode" value=""/>
+          <parameter key="extra.args" value=""/>
+        </parameters>
+        <group>
+          <name>basic</name>
+          <test>
+            <name>ImageSizes</name>
+            <command><![CDATA[cd /home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic && /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/rvm -X:vm:errorsFatal=true -X:processors=all -Xms50M -Xmx150M    -classpath "/home/peter/Research/clean_jikesrvm/target/tests/tiny/prototype-opt/basic/classes" test.org.jikesrvm.basic.stats.JikesImageSizes /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.code.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.data.image /home/peter/Research/clean_jikesrvm/dist/prototype-opt_ia32-linux/RVM.rmap.image]]></command>
+            <parameters>
+              <parameter key="initial.heapsize" value="50"/>
+              <parameter key="max.heapsize" value="150"/>
+              <parameter key="time.limit" value="400"/>
+              <parameter key="extra.args" value=""/>
+              <parameter key="processors" value="all"/>
+              <parameter key="max.opt.level" value=""/>
+            </parameters>
+            <test-execution>
+              <name>default</name>
+              <exit-code>0</exit-code>
+              <duration>2303</duration>
+              <result>SUCCESS</result>
+              <result-explanation/>
+              <statistics>
+                <statistic key="myTextStatistic" value="Boo!"/>
+                <statistic key="code.size" value="7100184"/>
+                <statistic key="data.size" value="23482080"/>
+                <statistic key="rmap.size" value="565623"/>
+                <statistic key="total.size" value="31147887"/>
+              </statistics>
+              <output><![CDATA[Code Size: 7100184
+Data Size: 23482080
+Rmap Size: 565623
+Total Size: 31147887
+]]></output>
+            </test-execution>
+            <test-execution>
+              <name>default_not</name>
+              <exit-code>16</exit-code>
+              <duration>2303</duration>
+              <result>FAILURE</result>
+              <result-explanation>Bad exit code</result-explanation>
+              <statistics>
+                <statistic key="myTextStatistic" value="Boo!"/>
+                <statistic key="code.size" value="7100184"/>
+              </statistics>
+              <output><![CDATA[Oh no! Beta!]]></output>
+            </test-execution>
+          </test>
+        </group>
+      </test-configuration>
+    </build-configuration>
+  </build-target>
+</report>

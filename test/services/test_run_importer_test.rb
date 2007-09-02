@@ -18,9 +18,8 @@ class TestRunImporterTest < Test::Unit::TestCase
     @results_dir = "#{File.expand_path(RAILS_ROOT)}/tmp/importer_test"
     SystemSetting['results.dir'] = @results_dir
     FileUtils.mkdir_p @results_dir
-    @host = "rvmx86lnx64.anu.edu.au"
-    @host_dir = "#{@results_dir}/incoming/#{@host}"
-    FileUtils.mkdir_p @host_dir
+    @incoming_dir = "#{@results_dir}/incoming"
+    FileUtils.mkdir_p @incoming_dir
 
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
@@ -50,7 +49,7 @@ class TestRunImporterTest < Test::Unit::TestCase
   def test_process_with_non_matching_file
     purge_log
     initial = Tdm::TestRun.count
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", "#{@host_dir}/foo.bar.baz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/Report.xml.gz", "#{@incoming_dir}/foo.bar.baz"
     TestRunImporter.process_incoming_test_runs
     assert_equal(initial, Tdm::TestRun.count)
     assert_logs([], nil, nil)
@@ -59,13 +58,13 @@ class TestRunImporterTest < Test::Unit::TestCase
   def test_process_a_single_successful_file
     purge_log
     initial = Tdm::TestRun.count
-    filename = "#{@host_dir}/Report.xml.gz"
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", filename
+    filename = "#{@incoming_dir}/Report.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/Report.xml.gz", filename
     TestRunImporter.process_incoming_test_runs
     assert_equal(0, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
-    assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
-    assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
+    assert_equal(true, File.exist?("#{@results_dir}/processed/Report.xml.gz"))
+    assert_equal(false, File.exist?("#{@results_dir}/failed/Report.xml.gz"))
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}
@@ -80,13 +79,13 @@ class TestRunImporterTest < Test::Unit::TestCase
   def test_process_a_single_successful_file_and_perform_mailout
     purge_log
     initial = Tdm::TestRun.count
-    filename = "#{@host_dir}/Report.xml.gz"
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", filename
+    filename = "#{@incoming_dir}/Report.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/Report.xml.gz", filename
     TestRunImporter.process_incoming_test_runs(true)
     assert_equal(1, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
-    assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
-    assert_equal(false, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
+    assert_equal(true, File.exist?("#{@results_dir}/processed/Report.xml.gz"))
+    assert_equal(false, File.exist?("#{@results_dir}/failed/Report.xml.gz"))
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}
@@ -101,13 +100,13 @@ class TestRunImporterTest < Test::Unit::TestCase
   def test_process_a_single_file_that_is_too_large
     purge_log
     initial = Tdm::TestRun.count
-    filename = "#{@host_dir}/Report.xml.gz"
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", filename
+    filename = "#{@incoming_dir}/Report.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/HugeReport.xml.gz", filename
     TestRunImporter.process_incoming_test_runs
     assert_equal(1, ActionMailer::Base.deliveries.size)
     assert_equal(initial, Tdm::TestRun.count)
-    assert_equal(false, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
-    assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/Report.xml.gz"))
+    assert_equal(false, File.exist?("#{@results_dir}/processed/Report.xml.gz"))
+    assert_equal(true, File.exist?("#{@results_dir}/failed/Report.xml.gz"))
     assert_logs([
     ["import.file.error", "Failed to process file #{filename} due to Unzipping #{filename} produced too large a file 114381038"],
     ], nil, nil)
@@ -116,15 +115,15 @@ class TestRunImporterTest < Test::Unit::TestCase
   def test_process_multiple_files
     purge_log
     initial = Tdm::TestRun.count
-    sfilename = "#{@host_dir}/Report.xml.gz"
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/Report.xml.gz", sfilename
-    hfilename = "#{@host_dir}/HugeReport.xml.gz"
-    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/data/HugeReport.xml.gz", hfilename
+    sfilename = "#{@incoming_dir}/Report.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/Report.xml.gz", sfilename
+    hfilename = "#{@incoming_dir}/HugeReport.xml.gz"
+    FileUtils.cp "#{RAILS_ROOT}/test/fixtures/import_data/HugeReport.xml.gz", hfilename
     TestRunImporter.process_incoming_test_runs(true)
     assert_equal(2, ActionMailer::Base.deliveries.size)
     assert_equal(initial + 1, Tdm::TestRun.count)
-    assert_equal(true, File.exist?("#{@results_dir}/processed/#{@host}/Report.xml.gz"))
-    assert_equal(true, File.exist?("#{@results_dir}/failed/#{@host}/HugeReport.xml.gz"))
+    assert_equal(true, File.exist?("#{@results_dir}/processed/Report.xml.gz"))
+    assert_equal(true, File.exist?("#{@results_dir}/failed/HugeReport.xml.gz"))
 
     logs = AuditLog.find(:all, :order => 'created_at')
     messages = logs.collect {|l| [l.name, l.message]}

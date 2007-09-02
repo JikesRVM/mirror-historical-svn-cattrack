@@ -26,40 +26,36 @@ class TestRunImporter
     processed_dir = "#{results_base_dir}/processed"
     failed_dir = "#{results_base_dir}/failed"
 
-    Dir.glob("#{incoming_dir}/*").each do |d|
-      host = File.basename(d)
-      logger.info("Processing host '#{host}' in dir #{d}")
-      Dir.glob("#{d}/*.xml.gz").each do |f|
-        begin
-          next unless File.exists?(f)
-          logger.info("Processing file: #{f}")
-          intermediate_filename = "#{f}.processing"
-          temp_filename = "#{f}.tmp"
-          FileUtils.mv(f, intermediate_filename)
-          Zlib::GzipReader.open(intermediate_filename) do |fin|
-            File.open(temp_filename, "w+") do |fout|
-              fout.write(fin.read)
-            end
+    Dir.glob("#{incoming_dir}/*.xml.gz").each do |f|
+      begin
+        next unless File.exists?(f)
+        logger.info("Processing file: #{f}")
+        intermediate_filename = "#{f}.processing"
+        temp_filename = "#{f}.tmp"
+        FileUtils.mv(f, intermediate_filename)
+        Zlib::GzipReader.open(intermediate_filename) do |fin|
+          File.open(temp_filename, "w+") do |fout|
+            fout.write(fin.read)
           end
-          logger.info("Unzipped file to #{temp_filename}. Size= #{File.size(temp_filename)}")
-
-          raise ImportException.new("Unzipping #{f} produced too large a file #{File.size(temp_filename)}") unless File.size(temp_filename) < (1024 * 1024 * 30)
-
-          test_run = TestRunBuilder.create_from(host, temp_filename)
-          Report::RegressionReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
-          logger.info("Successfully processed file: #{f}")
-          AuditLog.log('import.file.success', f)
-          FileUtils.mkdir_p "#{processed_dir}/#{host}"
-          FileUtils.mv(intermediate_filename, "#{processed_dir}/#{host}/#{File.basename(f)}")
-        rescue Object => e
-          logger.info("Failed to process file: #{f} due to: #{e.message}")
-          ErrorMailer.deliver_error(e)
-          AuditLog.log('import.file.error', "Failed to process file #{f} due to #{e.message}")
-          FileUtils.mkdir_p "#{failed_dir}/#{host}"
-          FileUtils.mv(intermediate_filename, "#{failed_dir}/#{host}/#{File.basename(f)}")
-        ensure
-          FileUtils.rm_rf(temp_filename)
         end
+        logger.info("Unzipped file to #{temp_filename}. Size= #{File.size(temp_filename)}")
+
+        raise ImportException.new("Unzipping #{f} produced too large a file #{File.size(temp_filename)}") unless File.size(temp_filename) < (1024 * 1024 * 30)
+
+        test_run = TestRunBuilder.create_from(temp_filename)
+        Report::RegressionReportMailer.deliver_report(Tdm::TestRun.find(test_run.id)) if perform_mailout
+        logger.info("Successfully processed file: #{f}")
+        AuditLog.log('import.file.success', f)
+        FileUtils.mkdir_p "#{processed_dir}"
+        FileUtils.mv(intermediate_filename, "#{processed_dir}/#{File.basename(f)}")
+      rescue Object => e
+        logger.info("Failed to process file: #{f} due to: #{e.message}")
+        ErrorMailer.deliver_error(e)
+        AuditLog.log('import.file.error', "Failed to process file #{f} due to #{e.message}")
+        FileUtils.mkdir_p "#{failed_dir}"
+        FileUtils.mv(intermediate_filename, "#{failed_dir}/#{File.basename(f)}")
+      ensure
+        FileUtils.rm_rf(temp_filename)
       end
     end
   end
