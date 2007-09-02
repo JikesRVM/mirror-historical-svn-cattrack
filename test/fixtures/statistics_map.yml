@@ -17,6 +17,8 @@ s1:
   group_name: 'SPECjbb2005'
   test_case_name: 'SPECjbb2005'
   statistic_key: 'score'
+  name: 'score'
+  statistic_function: 'average'
   less_is_more: false
   label: 'SPECjbb2005'
 s2:
@@ -27,5 +29,7 @@ s2:
   group_name: 'SPECjvm98'
   test_case_name: 'SPECjvm98'
   statistic_key: 'aggregate.best.score'
+  name: 'aggregate.best.score'
+  statistic_function: 'average'
   less_is_more: false
   label: 'SPECjvm98'

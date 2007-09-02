@@ -101,6 +101,7 @@ import_logger.level = (RAILS_ENV == 'production') ? Logger::INFO : Logger::DEBUG
 
 TestRunImporter.logger = import_logger
 TestRunBuilder.logger = import_logger
+TestRunAnalysis.logger = import_logger
 
 LocalConfig = File.join(File.dirname(__FILE__), 'local')
 require LocalConfig if File.exist?("#{LocalConfig}.rb")
