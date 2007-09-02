@@ -3,8 +3,8 @@
   <name>tiny</name>
   <variant>tiny-sse</variant>
   <revision>12200</revision>
-  <start-time>Sun May 20 05:50:50 UTC 2007</start-time>
-  <end-time>Sun May 20 15:50:50 UTC 2007</end-time>
+  <start-time>2007-05-20T05:50:50Z</start-time>
+  <end-time>2007-05-20T15:50:50Z</end-time>
 
   <!-- test-run parameters -->
   <parameters>
