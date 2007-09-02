@@ -12,17 +12,20 @@
 #
 s1:
   id: 1
+  build_configuration_name: 'production'
+  test_configuration_name: 'Performance'
   group_name: 'SPECjbb2005'
   test_case_name: 'SPECjbb2005'
-  key: 'score'
+  statistic_key: 'score'
   less_is_more: false
   label: 'SPECjbb2005'
-  mode: 'performance'
 s2:
   id: 2
+  test_run_name:
+  build_configuration_name: 'production'
+  test_configuration_name: 'Performance'
   group_name: 'SPECjvm98'
   test_case_name: 'SPECjvm98'
-  key: 'aggregate.best.score'
+  statistic_key: 'aggregate.best.score'
   less_is_more: false
   label: 'SPECjvm98'
-  mode: 'performance'

@@ -72,7 +72,7 @@ SQL
       "IS NOT NULL"
     end
     filter = <<SQL
-  build_configurations.name = 'production' AND statistics_name_map.label #{stat_names}
+  statistics_map.label #{stat_names}
 SQL
     best_score_sql = <<SQL
 SELECT
@@ -81,8 +81,8 @@ SELECT
     case when less_is_more = true then min_score else max_score end as best_score
 FROM (
 SELECT
-  statistics_name_map.label as stat_name,
-  statistics_name_map.less_is_more as less_is_more,
+  statistics_map.label as stat_name,
+  statistics_map.less_is_more as less_is_more,
   MAX(test_case_execution_numerical_statistics.value) as max_score,
   MIN(test_case_execution_numerical_statistics.value) as min_score
 FROM test_case_execution_numerical_statistics
@@ -90,35 +90,47 @@ LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner
 LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
-LEFT JOIN test_configuration_params ON test_configurations.id = test_configuration_params.owner_id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
 LEFT JOIN hosts ON test_runs.host_id = hosts.id
-LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_execution_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
+LEFT JOIN statistics_map ON (
+  (test_runs.name = statistics_map.test_run_name OR statistics_map.test_run_name IS NULL) AND
+  (build_configurations.name = statistics_map.build_configuration_name OR statistics_map.build_configuration_name IS NULL) AND
+  (test_configurations.name = statistics_map.test_configuration_name OR statistics_map.test_configuration_name IS NULL) AND
+  groups.name = statistics_map.group_name AND
+  test_cases.name = statistics_map.test_case_name AND
+  test_case_execution_numerical_statistics.key = statistics_map.statistic_key
+  )
 WHERE
     hosts.name = '#{@test_run.host.name}' AND
     test_runs.variant = '#{@test_run.variant}' AND
     test_runs.start_time <= '#{@test_run.start_time}' AND
     #{filter}
-GROUP BY statistics_name_map.label, statistics_name_map.less_is_more
+GROUP BY statistics_map.label, statistics_map.less_is_more
 ) f
 SQL
 
     results_sql = <<SQL
 SELECT
     test_runs.id AS test_run_id,
-    statistics_name_map.label AS stat_name,
+    statistics_map.label AS stat_name,
     test_case_execution_numerical_statistics.value AS value
 FROM test_case_execution_numerical_statistics
 LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
 LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
-LEFT JOIN test_configuration_params ON test_configurations.id = test_configuration_params.owner_id
 LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
 LEFT JOIN test_runs ON build_configurations.test_run_id = test_runs.id
 LEFT JOIN hosts ON test_runs.host_id = hosts.id
-LEFT JOIN statistics_name_map ON (test_cases.name = statistics_name_map.test_case_name AND groups.name = statistics_name_map.group_name AND test_case_execution_numerical_statistics.key = statistics_name_map.key AND test_configuration_params.key = 'mode' AND test_configuration_params.value = statistics_name_map.mode)
+LEFT JOIN statistics_map ON (
+  (test_runs.name = statistics_map.test_run_name OR statistics_map.test_run_name IS NULL) AND
+  (build_configurations.name = statistics_map.build_configuration_name OR statistics_map.build_configuration_name IS NULL) AND
+  (test_configurations.name = statistics_map.test_configuration_name OR statistics_map.test_configuration_name IS NULL) AND
+  groups.name = statistics_map.group_name AND
+  test_cases.name = statistics_map.test_case_name AND
+  test_case_execution_numerical_statistics.key = statistics_map.statistic_key
+  )
 WHERE
     test_runs.id IN (#{@test_runs.collect{|tr|tr.id}.join(', ')}) AND
     #{filter}
