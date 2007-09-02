@@ -165,8 +165,4 @@ class Test::Unit::TestCase
 
     Tdm::TestRun.find(1)
   end
-
-  def olappy(id)
-    TestRunTransformer.build_olap_model_from(Tdm::TestRun.find(id))
-  end
 end
