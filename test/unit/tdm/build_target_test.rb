@@ -38,7 +38,7 @@ class Tdm::BuildTargetTest < Test::Unit::TestCase
   end
 
   def self.attributes_for_new
-    test_run = Tdm::TestRun.create!(:name => 'foo', :variant => 'foo', :host_id => 1, :revision => 123, :start_time => Time.now)
+    test_run = Tdm::TestRun.create!(:name => 'foo', :variant => 'foo', :host_id => 1, :revision => 123, :start_time => Time.now, :end_time => Time.now)
     {:name => 'foo', :test_run_id => test_run.id}
   end
   def self.non_null_attributes
