@@ -31,10 +31,7 @@ tc_<%= index %>:
   id: <%= index %>
   group_id: <%= group_index %>
   name: <%= test_case %>
-  classname: <%= test_case %>
-  args: ''
-  working_directory: '/home/regression/peterd/jikesrvm/results/test/local/<%= v %>'
-  command: '/home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....'
+  command: 'cd /home/regression/peterd/jikesrvm/results/test/local/<%= v %> && /home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....'
 <%
       end
     end
@@ -49,10 +46,7 @@ tc_<%= index %>:
   id: <%= index %>
   group_id: <%= group_index %>
   name: <%= test_case %>
-  classname: <%= test_case %>
-  args: ''
-  working_directory: '/home/regression/peterd/jikesrvm/results/test/local/<%= v %>'
-  command: '/home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....'
+  command: 'cd /home/regression/peterd/jikesrvm/results/test/local/<%= v %> && /home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....'
 <%
       end
     end

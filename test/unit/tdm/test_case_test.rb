@@ -25,10 +25,7 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     tc = Tdm::TestCase.find(1)
     assert_equal( 1, tc.id )
     assert_equal( "TestClassLoading", tc.name )
-    assert_equal( "TestClassLoading", tc.classname )
-    assert_equal( "", tc.args )
-    assert_equal( "/home/regression/peterd/jikesrvm/results/test/local/basic", tc.working_directory )
-    assert_equal( "/home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....", tc.command )
+    assert_equal( "cd /home/regression/peterd/jikesrvm/results/test/local/basic && /home/regression/peterd/jikesrvm/dist/protottype-opt_linux-ia32/rvm -classpath ....", tc.command )
     assert_equal( 1, tc.group_id )
     assert_equal( 1, tc.group.id )
     assert_equal( 1, tc.test_case_executions.size )
@@ -38,20 +35,17 @@ class Tdm::TestCaseTest < Test::Unit::TestCase
     {
     :group_id => 1,
     :name => 'foo',
-    :classname => 'Class foo',
-    :args => '',
-    :working_directory => '/home/peter',
     :command => 'rvm'
     }
   end
   def self.non_null_attributes
-    [:group_id, :name, :classname, :working_directory, :command]
+    [:group_id, :name, :command]
   end
   def self.unique_attributes
     [[:group_id, :name]]
   end
   def self.str_length_attributes
-    [[:name, 76],[:classname, 76],[:working_directory, 257]]
+    [[:name, 75]]
   end
   def self.bad_attributes
     [[:name, '*']]

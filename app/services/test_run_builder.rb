@@ -125,9 +125,6 @@ class TestRunBuilder
     test_case.group_id = group_id
     test_case.name = xml.elements['name'].text
     test_case.command = xml.elements['command'].text
-    test_case.args = 'Fix me!'
-    test_case.working_directory = 'Fix me!'
-    test_case.classname = 'Fix me!'
     xml.elements.each("parameters/parameter") do |p_xml|
       test_case.params[p_xml.attributes['key']] = p_xml.attributes['value']
     end

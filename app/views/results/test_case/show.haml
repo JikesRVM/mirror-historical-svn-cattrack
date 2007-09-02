@@ -5,15 +5,6 @@
 %h3 Test Parameters
 %table.details
   %tr
-    %th Classname
-    %td= h(@record.classname)
-  %tr
-    %th Args
-    %td= h(@record.args)
-  %tr
-    %th Working Directory
-    %td= h(@record.working_directory)
-  %tr
     %th Command
     %td= h(@record.command)
   - @record.params.each_pair do |k,v|
