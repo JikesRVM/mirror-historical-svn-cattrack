@@ -135,6 +135,7 @@
   <xs:element name="test-execution">
     <xs:complexType>
       <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
         <xs:element name="statistics">
           <xs:complexType>
             <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -153,7 +154,6 @@
         <xs:element name="result-explanation" type="xs:string"/>
         <xs:element name="output" type="xs:string"/>
       </xs:sequence>
-      <xs:attribute name="name" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>
