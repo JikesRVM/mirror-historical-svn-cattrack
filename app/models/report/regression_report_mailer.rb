@@ -10,7 +10,7 @@ class Report::RegressionReportMailer < ActionMailer::Base
     error_count = report.test_run.test_case_executions.size - report.test_run.successes.size
 
     error_description = (error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
-    s = "[#{test_run.variant}] #{error_description}"
+    s = "[#{test_run.label}] #{error_description}"
     subject(s)
     b = {"host" => test_run.host, "test_run" => test_run, "report" => report}
     body(b)
