@@ -417,20 +417,14 @@ table.details {
 
 table.details td, table.details th {
   padding-left: 0.5em;
+  padding: 0.2em;
+  vertical-align: top;
 }
 
 table.details th {
    font-weight: bold;
-   padding: 0.2em;
-   padding-left: 0.5em;
    text-align: right;
-   vertical-align: top;
    width: 8em;
-}
-
-table.details td {
-  padding-left: 0.5em;
-  padding-right: 1.5em;
 }
 
 table.details td.help {
