@@ -431,7 +431,6 @@ table.details th {
 table.details td {
   padding-left: 0.5em;
   padding-right: 1.5em;
-  width: 10em;
 }
 
 table.details td.help {
