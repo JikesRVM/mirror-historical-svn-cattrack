@@ -333,6 +333,13 @@ table.list td {
    padding-bottom: 0.2em;
 }
 
+table.list tr.odd {
+}
+
+table.list tr.even {
+   background-color: rgb( 240,233,217 );
+}
+
 /* Table :: Pagination */
 
 div.pagination {
