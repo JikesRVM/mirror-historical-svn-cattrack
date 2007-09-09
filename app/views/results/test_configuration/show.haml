@@ -15,7 +15,7 @@
     %th Success Rate
     %th Operations
   - @record.groups.each do |g|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(g.label)
       %td= g.success_rate
       %td= link_for(g, :label => 'Show')

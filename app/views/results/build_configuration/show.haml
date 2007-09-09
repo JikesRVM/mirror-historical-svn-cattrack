@@ -16,7 +16,7 @@
 %h3 Configuration Parameters
 %table.details
   - @record.params.each_pair do |k,v|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %th= h(k)
       %td= h(v)
 
@@ -27,7 +27,7 @@
     %th Success Rate
     %th Operations
   - @record.test_configurations.each do |tc|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(tc.name)
       %td= h(tc.success_rate)
       %td

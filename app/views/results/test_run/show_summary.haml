@@ -17,7 +17,7 @@
       %th Reason
       %th Operations
     - @record.non_successes.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= link_for(t.test_case.group.test_configuration.build_configuration)
         %td= link_for(t.test_case.group.test_configuration)
         %td= link_for(t.test_case.group)

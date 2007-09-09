@@ -36,7 +36,7 @@
     %th Result
     %th Operations
   - @record.build_configurations.each do |bc|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(bc.label)
       %td= h(bc.result)
       %td= link_for(bc, :label => 'Show')
@@ -50,7 +50,7 @@
     %th Operations
   - @record.build_configurations.each do |bc|
     - bc.test_configurations.each do |tc|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= link_for(bc)
         %td= h(tc.label)
         %td= tc.success_rate

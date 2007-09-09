@@ -12,7 +12,7 @@
       %th Group
       %th Test
     - @report.missing_tests.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -30,7 +30,7 @@
       %th Result
       %th Operations
     - @report.new_failures.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -50,7 +50,7 @@
       %th Test
       %th Operations
     - @report.new_successes.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -70,7 +70,7 @@
       %th Result
       %th Operations
     - @report.intermittent_failures.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -93,7 +93,7 @@
       %th Result
       %th Operations
     - @report.consistent_failures.each do |t|
-      %tr
+      %tr{:class => cycle('odd','even')}
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -118,7 +118,7 @@
     %th Time
     %th Operations
   - @report.test_runs.each do |t|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(t.label)
       %td= revision_link_for_url(scm_url, t.revision)
       %td= t.start_time

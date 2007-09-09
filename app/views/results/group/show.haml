@@ -8,7 +8,7 @@
     %th Success Rate
     %th Operations
   - @record.test_cases.each do |t|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(t.name)
       %td= h(t.success_rate)
       %td

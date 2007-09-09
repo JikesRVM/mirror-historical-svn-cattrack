@@ -10,7 +10,7 @@
     %th Success Rate
     %th Operations
   - @test_runs.each do |t|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= link_for(t.host)
       %td= h(t.variant)
       %td= revision_link(t.revision)

@@ -10,7 +10,7 @@
     %th Time
     %th Operations
   - @test_runs.each do |t|
-    %tr
+    %tr{:class => cycle('odd','even')}
       %td= h(t.name)
       %td= h(t.variant)
       %td= h(t.success_rate)
