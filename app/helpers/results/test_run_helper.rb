@@ -38,8 +38,10 @@ module Results::TestRunHelper
     str_value = row["test_run_#{test_run_id}"]
     return '' unless str_value
     value = Kernel.Float(str_value)
+    return '' unless value > 0.0
     std_deviation = row["std_deviation"] ? Kernel.Float(row["std_deviation"]) : 0
     best_score = row["best_score"] ? Kernel.Float(row["best_score"]) : 0
+    return '' unless best_score > 0.0
     style = nil
     render_map = ['color: green; font-weight: bold;','color: green;','', 'color: red;','color: red; font-weight: bold;']
     render_limits = [0.0, 0.8, 1.6, 2.4, 3].collect {|r| r*std_deviation }

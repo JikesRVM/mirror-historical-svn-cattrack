@@ -73,6 +73,8 @@ SQL
       logger.debug( "Performing '#{f}' for test_case #{r['test_case_id']} on statistic #{r['statistic_key']}")
       if 'average' == f
         do_average(r['test_case_id'], r['statistic_key'], r['name'])
+      elsif 'average_middle' == f
+        do_average_middle(r['test_case_id'], r['statistic_key'], r['name'])
       else
         raise "Unknown function for statistic: #{f}"
       end
@@ -92,6 +94,29 @@ SQL
     if value
       test_case = Tdm::TestCase.find(test_case_id)
       test_case.statistics[name] = value
+      test_case.save!
+    end
+  end
+  
+  def self.do_average_middle(test_case_id, statistic_key, name)
+    rawvalues = ActiveRecord::Base.connection.select_all(<<SQL)
+    SELECT value
+    FROM test_case_execution_numerical_statistics
+    LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+    WHERE
+      test_case_id = #{test_case_id} AND
+      key = '#{statistic_key}' AND
+      result = 'SUCCESS'
+    ORDER BY value
+SQL
+    count = rawvalues.length - 2
+    if (count >= 3)
+      total = 0.0
+      for i in (1..count)
+        total += rawvalues[i]['value'].to_f
+      end
+      test_case = Tdm::TestCase.find(test_case_id)
+      test_case.statistics[name] = (total / count)
       test_case.save!
     end
   end
