@@ -88,7 +88,6 @@ FROM
     hosts,
     statistics_map
 WHERE
-    test_runs.start_time <= '#{@test_run.start_time}' AND
     hosts.name = '#{@test_run.host.name}' AND
     test_runs.variant = '#{@test_run.variant}' AND
     test_runs.start_time <= '#{@test_run.start_time}' AND
