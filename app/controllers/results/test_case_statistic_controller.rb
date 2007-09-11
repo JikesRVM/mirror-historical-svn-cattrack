@@ -18,8 +18,7 @@ class Results::TestCaseStatisticController < Results::BaseController
   def show
     # NOTE: statistic includes .png extension
     statistic = params[:statistic_key]
-    report = Report::PerformanceReport.new(test_run)
-    image = Report::PerformanceReportStatisticRenderer.new(report,statistic[0,-4]).to_image
+    image = Report::PerformanceReportStatisticRenderer.new(test_run, statistic[0,statistic.length-4]).to_image
     send_data(image, :type => 'image/png', :filename => statistic, :disposition => 'inline')
   end
 end

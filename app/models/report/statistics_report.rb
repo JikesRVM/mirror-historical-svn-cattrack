@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-class Report::PerformanceReport < Report::BaseTestRunByRevision
+class Report::StatisticsReport < Report::BaseTestRunByRevision
   # Input parameters
   attr_reader :test_run, :window_size
 
@@ -25,8 +25,6 @@ class Report::PerformanceReport < Report::BaseTestRunByRevision
 
   def perform
     super
-    if not (@test_run['variant'] == 'perf') then 
-      @statistics = get_perf_stats(nil)
-    end
+    @statistics = gen_perf_stats(nil)
   end
 end

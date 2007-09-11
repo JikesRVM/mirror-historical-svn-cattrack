@@ -32,6 +32,10 @@ class Results::TestRunController < Results::BaseController
     @report = Report::PerformanceReport.new(test_run)
   end
 
+  def statistics_report
+    @report = Report::StatisticsReport.new(test_run)
+  end
+
   def destroy
     raise CatTrack::SecurityError unless is_authenticated?
     @record = test_run

@@ -340,6 +340,46 @@ table.list tr.even {
    background-color: rgb( 240,233,217 );
 }
 
+/* Table */
+table.perf {
+   margin: 0;
+   margin-top: 1em;
+   padding: 0;
+   border: 1px solid black;
+   clear: both;
+}
+
+/* Table :: Column Headers  */
+table.perf th {
+   background-color: rgb( 230, 223, 207 );
+   text-align: center;
+   vertical-align: center;
+   padding-left: 0.4em;
+   padding-top: 0.4em;
+   padding-bottom: 0.4em;
+   padding-right: 0.4em;
+   font: bold 14px verdana, sans-serif;
+   border-bottom: 1px solid black;
+   border-right: 1px solid black;
+}
+
+table.perf th.benchmark {
+   width: 10em;
+}
+
+table.perf td {
+   padding-top: 0.2em;
+   padding-left: 0.4em;
+   padding-bottom: 0.2em;
+}
+
+table.perf tr.odd {
+}
+
+table.perf tr.even {
+   background-color: rgb( 240,233,217 );
+}
+
 /* Table :: Pagination */
 
 div.pagination {

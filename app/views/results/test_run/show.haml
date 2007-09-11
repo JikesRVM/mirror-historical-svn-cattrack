@@ -27,7 +27,9 @@
 %ul.actions
   %li= link_for(@record, :label => 'Summary', :action => 'show_summary')
   %li= link_for(@record, :label => 'Regression Report', :controller => '/results/test_run', :action => 'regression_report')
-  %li= link_for(@record, :label => 'Performance Report', :controller => '/results/test_run', :action => 'performance_report')
+  %li= link_for(@record, :label => 'Statistics Report', :controller => '/results/test_run', :action => 'statistics_report')
+  - if @record.variant == 'perf'
+    %li= link_for(@record, :label => 'Performance Report', :controller => '/results/test_run', :action => 'performance_report')
 .clearer
 %h3 Build Runs
 %table.list

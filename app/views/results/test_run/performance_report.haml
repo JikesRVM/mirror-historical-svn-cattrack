@@ -1,37 +1,126 @@
 - @content_for_breadcrumbs = draw_breadcrumbs(@report.test_run, 'performance_report')
 - @page_title = "Performance Report: #{h(@report.test_run.label)}"
+- dacapo_bm = ['antlr','bloat','chart','eclipse','fop','hsqldb','jython','luindex','lusearch','pmd','xalan']
+- spec_bm = ['compress','jess','db','javac','mpegaudio','mtrt','jack']
 - scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title
 
-%h2 Test Runs Covered By Report
-%table.list
+%h2 Scores for SPECjbb2000/2005
+%table.perf
   %tr
-    %th Name
-    %th Revision
-    %th Time
-    %th Operations
-  - @report.test_runs.each do |t|
-    %tr{:class => cycle('odd','even')}
-      %td= h(t.label)
-      %td= revision_link_for_url(scm_url, t.revision)
-      %td= t.start_time
-      %td
-        %ul.actions
-          %li= link_for(t, :label => "Show")
+    %th
+    %th Large Heap
+    %th Small Heap
+  %tr
+    %th.benchmark jbb2005
+    %td
+      %img{:src => "production/default/perf-jbb2005/jbb2005/jbb2005-score.png"}
+    %td
+      %img{:src => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC-score.png"}
+  %tr
+    %th.benchmark jbb2000
+    %td
+      %img{:src => "production/default/perf-jbb2000/jbb2000/jbb2000-score.png"}
+    %td
+      %img{:src => "production/default/perf-jbb2000/jbb2000GC/jbb2000GC-score.png"}
 
-- if @report.statistics.size > 0 or @report.test_runs.size > 1
-  %h2 Performance Statistics
-  %table.report
-    %tr
-      %th.pivot
-      - @report.test_runs.each do |tr|
-        %th.column= tr.label
-    %tr
-      %th.row Success Rate
-      - @report.test_runs.each do |tr|
-        %td= h("#{tr.successes.size}/#{tr.test_case_executions.size}")
-    - @report.statistics.each do |r|
-      %tr
-        %th.row= h(r['name'])
-        - @report.test_runs.each do |tr|
-          %td= perf_stat(tr.id, r)
+%h2 Total Time for DaCapo/SPECjvm98
+%table.perf
+  %tr
+    %th
+    %th 1st Iteration
+    %th 3rd Iteration
+    %th 10th Iteration
+  - dacapo_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.png"}
+  - spec_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.png"}
+%h2 Mutator Time for DaCapo/SPECjvm98
+%table.perf
+  %tr
+    %th
+    %th 1st Iteration
+    %th 3rd Iteration
+    %th 10th Iteration
+  - dacapo_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.mu.png"}
+  - spec_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.mu.png"}
+%h2 GC Time for DaCapo/SPECjvm98
+%table.perf
+  %tr
+    %th
+    %th 1st Iteration
+    %th 3rd Iteration
+    %th 10th Iteration
+  - dacapo_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.gc.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.gc.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.gc.png"}
+  - spec_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.gc.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.gc.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.gc.png"}
+%h2 GC Performance Numbers (Tight Heap)
+%table.perf
+  %tr
+    %th
+    %th Total Time
+    %th Mutator Time
+    %th GC Time
+  - dacapo_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.gc.png"}
+  - spec_bm.each do |bm|
+    %tr{:class => cycle('odd','even')}
+      %th.benchmark=bm
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.mu.png"}
+      %td
+        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.gc.png"}
