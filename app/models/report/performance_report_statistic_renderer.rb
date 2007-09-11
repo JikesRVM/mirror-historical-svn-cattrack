@@ -164,6 +164,10 @@ SQL
                 score_color = 'green'
                 score_style = 'bold'
               end
+              if latest > (best + 1 * std_dev) then
+                canvas.line(190, 30, 230, 30).styles(:stroke=>'red', :stroke_width => 1.00)
+                canvas.line(190, 10, 230, 10).styles(:stroke=>'red', :stroke_width => 1.00)
+              end
             else
               if latest > (avg + 1 * std_dev) then
                 score_color = 'green' 
@@ -171,6 +175,10 @@ SQL
               elsif latest < (avg - 1 * std_dev)
                 score_color = 'red' if 
                 score_style = 'bold'
+              end
+              if latest < (best - 1 * std_dev) then
+                canvas.line(190, 30, 230, 30).styles(:stroke=>'red', :stroke_width => 1.00)
+                canvas.line(190, 10, 230, 10).styles(:stroke=>'red', :stroke_width => 1.00)
               end
             end
           end
@@ -196,12 +204,12 @@ SQL
           if (value == best and max_x == nil) then
             max_x = end_x 
             max_rev = r['revision']
-            canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'white')
+            canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'transparent')
           end
           if (value == worst and not (best == worst) and min_x == nil) then
             min_x = end_x 
             min_rev = r['revision']
-            canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'white')
+            canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'transparent')
           end
           canvas.line(start_x, start_y, end_x, end_y).styles(:stroke=>'black', :stroke_width => 1.00)
           start_x = end_x
