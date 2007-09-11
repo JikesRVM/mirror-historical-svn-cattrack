@@ -24,7 +24,7 @@
     %td
       %img{:src => "production/default/perf-jbb2000/jbb2000GC/jbb2000GC.png"}
 
-%h2 Total Time for DaCapo/SPECjvm98
+%h2 Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
     %th
@@ -49,7 +49,7 @@
         %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.png"}
       %td
         %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.png"}
-%h2 Mutator Time for DaCapo/SPECjvm98
+%h2 Mutator Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
     %th
@@ -74,7 +74,7 @@
         %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.mu.png"}
       %td
         %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.mu.png"}
-%h2 GC Time for DaCapo/SPECjvm98
+%h2 GC Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
     %th
@@ -103,9 +103,9 @@
 %table.perf
   %tr
     %th
-    %th Total Time
-    %th Mutator Time
-    %th GC Time
+    %th Total
+    %th Mutator
+    %th GC
   - dacapo_bm.each do |bm|
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
