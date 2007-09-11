@@ -72,7 +72,7 @@ SQL
       "IS NOT NULL"
     end
     filter = <<SQL
-  statistics_map.key #{stat_names}
+  statistics_map.statistic_key #{stat_names}
 SQL
     best_score_sql = <<SQL
 SELECT
