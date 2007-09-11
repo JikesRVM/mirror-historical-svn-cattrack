@@ -364,7 +364,9 @@ table.perf th {
 }
 
 table.perf th.benchmark {
-   width: 10em;
+   font: bold 18px verdana, sans-serif;
+   width: 8em;
+   text-align: right;
 }
 
 table.perf td {
