@@ -134,7 +134,15 @@ SQL
     n = (step * 10.0) / (0.5848932)
     Math.log10(val.to_f + n) - Math.log10(n)
   end
-
+  
+  def get_stddev(values, start_index, length, avg)
+    sum_squares = 0.0
+    for i in 0..length-1 do
+      sum_squares += (values[i]['value'].to_f - avg)**2
+    end
+    (sum_squares / length)**0.5
+  end
+  
   def to_image
     require 'RMagick.rb'
     require 'rvg/rvg'
@@ -149,7 +157,6 @@ SQL
         worst = limits['worst'].to_f
         count = limits['count'].to_i
         step = oldest.to_f / count.to_f
-        std_dev = limits['std_dev'].to_f
         less_is_more = limits['less_is_more'].to_i == 1
         worst_score = get_score(worst, best, less_is_more)
         worst_score = 95.0 if worst_score == 100.0
@@ -168,7 +175,7 @@ SQL
         latest_score = get_score(latest, best, less_is_more)
         latest_score = 100 if latest_score == 100.0
         # print the most recent score
-        moving_avg_length = 5
+        moving_avg_length = 10
         moving_avg = 0.0
         if (failed) then
           canvas.text(210, 35) do |result|
@@ -181,6 +188,7 @@ SQL
             for i in (1..moving_avg_length)
               moving_avg += (results[i]['value'].to_f / moving_avg_length)
             end
+            std_dev = get_stddev(results, 1, moving_avg_length, moving_avg)
             if (less_is_more) then
               if latest > (moving_avg + 1 * std_dev) then
                 score_color = 'red'
@@ -222,8 +230,11 @@ SQL
         start_y = y_off - ((latest_score - worst_score) * y_scale)
         first_x = start_x
         first_y = start_y
-        last_avg_high = y_off - (get_score(moving_avg + std_dev, best, less_is_more) - worst_score) * y_scale
-        last_avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
+        if results.length > moving_avg_length then
+          last_avg_high = y_off - (get_score(moving_avg + std_dev, best, less_is_more) - worst_score) * y_scale
+          last_avg_mid = y_off - (get_score(moving_avg, best, less_is_more) - worst_score) * y_scale
+          last_avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
+        end
         last_avg = moving_avg
         last_drawn = 100000.0
         average_index = moving_avg_length + 1
@@ -234,35 +245,38 @@ SQL
           end_y = y_off - (score - worst_score) * y_scale
           revision = r['revision']
           if (average_index < results.length) then
+            std_dev = get_stddev(results, average_index - moving_avg_length - 1, moving_avg_length, moving_avg)
             avg_high = y_off - (get_score(moving_avg + std_dev, best, less_is_more) - worst_score) * y_scale
+            avg_mid = y_off - (get_score(moving_avg, best, less_is_more) - worst_score) * y_scale
             avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
             canvas.polygon(start_x, last_avg_high, end_x, avg_high, end_x, avg_low, start_x, last_avg_low).styles(:fill=>'blue', :opacity => 0.1, :stroke_opacity => 0)
+            canvas.line(start_x, last_avg_mid, end_x, avg_mid).styles(:stroke=>'blue', :opacity => 0.0, :stroke_opacity => 0.2, :stroke_width => 1)
             last_avg_high = avg_high
+            last_avg_mid = avg_mid
             last_avg_low = avg_low
             last_avg = moving_avg
             moving_avg -= results[average_index - moving_avg_length]['value'].to_f / moving_avg_length.to_f
             moving_avg += results[average_index]['value'].to_f / moving_avg_length.to_f
             average_index += 1
           end
-          canvas.circle(1.5, start_x, start_y).styles(:fill=>'black') if @large
           if (value == best and max_x == nil) then
             max_x = end_x 
             max_rev = revision
-            canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'transparent')
+            canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
           end
           if (value == worst and not (best == worst) and min_x == nil) then
             min_x = end_x 
             min_rev = revision
-            canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'transparent')
+            canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
           end
-          canvas.line(start_x, start_y, end_x, end_y).styles(:stroke=>'black', :stroke_width => 1.00)
+          canvas.line(start_x, start_y, end_x, end_y).styles(:stroke=>'black', :stroke_width => 1.00, :stroke_linecap => 'round')
           if @large and (end_x + 3.0) < last_drawn then
             last_drawn = end_x
-            canvas.text(end_x + 1, 6).rotate(270) do |result|
-              result.tspan("r#{revision}").styles(:text_anchor=>'middle', :font_size=>2.00, :font_family=>font_small)
+            canvas.text(end_x + 1, 10).rotate(270) do |result|
+              result.tspan("r#{revision}").styles(:text_anchor=>'start', :font_size=>2.00, :font_family=>font_small)
             end
             canvas.text(end_x + 1, y_res + 2 * y_mar - 5.0).rotate(270) do |result|
-              result.tspan("#{score}").styles(:text_anchor=>'middle', :font_size=>2.00, :font_family=>font_small)
+              result.tspan("#{score}").styles(:text_anchor=>'start', :font_size=>2.00, :font_family=>font_small)
             end
           end
           start_x = end_x
