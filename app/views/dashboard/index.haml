@@ -23,12 +23,12 @@
 %h2 Full Listing
 %table.list
   %tr
+    %th Operations
     %th Host
     %th Variant
     %th Revision
     %th Time
     %th Success Rate
-    %th Operations
   - @test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
       %td
