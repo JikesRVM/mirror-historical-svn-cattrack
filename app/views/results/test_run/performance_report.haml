@@ -14,15 +14,19 @@
   %tr
     %th.benchmark jbb2005
     %td
-      %img{:src => "production/default/perf-jbb2005/jbb2005/jbb2005.png"}
+      %a{:href => "production/default/perf-jbb2005/jbb2005/jbb2005.large.png"}
+        %img{:src => "production/default/perf-jbb2005/jbb2005/jbb2005.png"}
     %td
-      %img{:src => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC.png"}
+      %a{:href => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC.large.png"}
+        %img{:src => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC.png"}
   %tr
     %th.benchmark jbb2000
     %td
-      %img{:src => "production/default/perf-jbb2000/jbb2000/jbb2000.png"}
+      %a{:href => "production/default/perf-jbb2000/jbb2000/jbb2000.large.png"}
+        %img{:src => "production/default/perf-jbb2000/jbb2000/jbb2000.png"}
     %td
-      %img{:src => "production/default/perf-jbb2000/jbb2000GC/jbb2000GC.png"}
+      %a{:href => "production/default/perf-jbb2000/jbb2000GC/jbb2000GC.large.png"}
+        %img{:src => "production/default/perf-jbb2000/jbb2000GC/jbb2000GC.png"}
 
 %h2 Performance for DaCapo/SPECjvm98
 %table.perf
@@ -35,20 +39,26 @@
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'1','time', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'1','time', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3','time', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3','time', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'10','time', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'10','time', false)}
   - spec_bm.each do |bm|
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'1','time', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'1','time', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3','time', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3','time', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'10','time', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'10','time', false)}
 %h2 Mutator Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
@@ -60,20 +70,26 @@
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.mu.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'1','time.mu', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'1','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.mu.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3','time.mu', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.mu.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'10','time.mu', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'10','time.mu', false)}
   - spec_bm.each do |bm|
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.mu.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'1','time.mu', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'1','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.mu.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3','time.mu', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.mu.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'10','time.mu', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'10','time.mu', false)}
 %h2 GC Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
@@ -85,20 +101,26 @@
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-1/#{bm}-1-time.gc.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'1','time.gc', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'1','time.gc', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3/#{bm}-3-time.gc.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3','time.gc', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3','time.gc', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-10/#{bm}-10-time.gc.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'10','time.gc', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'10','time.gc', false)}
   - spec_bm.each do |bm|
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-1/#{bm}-1-time.gc.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'1','time.gc', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'1','time.gc', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3/#{bm}-3-time.gc.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3','time.gc', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3','time.gc', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-10/#{bm}-10-time.gc.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'10','time.gc', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'10','time.gc', false)}
 %h2 GC Performance Numbers (Tight Heap)
 %table.perf
   %tr
@@ -110,17 +132,23 @@
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3GC','time', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3GC','time', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.mu.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3GC','time.mu', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3GC','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-dacapo/#{bm}-3GC/#{bm}-3GC-time.gc.png"}
+        %a{:href => perf_img('perf-dacapo',bm,'3GC','time.gc', true)}
+          %img{:src => perf_img('perf-dacapo',bm,'3GC','time.gc', false)}
   - spec_bm.each do |bm|
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3GC','time', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3GC','time', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.mu.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3GC','time.mu', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3GC','time.mu', false)}
       %td
-        %img{:src => "production/default/perf-jvm98/#{bm}-3GC/#{bm}-3GC-time.gc.png"}
+        %a{:href => perf_img('perf-jvm98',bm,'3GC','time.gc', true)}
+          %img{:src => perf_img('perf-jvm98',bm,'3GC','time.gc', false)}

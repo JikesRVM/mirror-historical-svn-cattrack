@@ -38,4 +38,5 @@
         - @report.test_runs.each do |tr|
           %td= perf_stat(tr.id, r)
         %td
-          %img{:src => stat_img(r)}
+          %a{:href => stat_img(r,true)}
+            %img{:src => stat_img(r,false)}

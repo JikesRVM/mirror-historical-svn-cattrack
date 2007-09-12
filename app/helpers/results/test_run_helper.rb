@@ -34,8 +34,14 @@ module Results::TestRunHelper
     link_to('Show', options)
   end
 
-  def stat_img(row)
-    "#{row['build_configuration_name']}/#{row['test_configuration_name']}/#{row['group_name']}/#{row['test_case_name']}/#{row['name']}.png"
+  def stat_img(row,large)
+    extension = if large then '.large' else '' end
+    "#{row['build_configuration_name']}/#{row['test_configuration_name']}/#{row['group_name']}/#{row['test_case_name']}/#{row['name']}#{extension}.png"
+  end
+
+  def perf_img(group, bm, set, stat, large)
+    extension = if large then '.large' else '' end
+    "production/default/#{group}/#{bm}-#{set}/#{bm}-#{set}-#{stat}#{extension}.png"
   end
 
   def perf_stat(test_run_id, row)
