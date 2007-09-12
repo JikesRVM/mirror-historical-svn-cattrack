@@ -177,6 +177,7 @@ SQL
         # print the most recent score
         moving_avg_length = 10
         moving_avg = 0.0
+        std_dev = 0.0
         if (failed) then
           canvas.text(210, 35) do |result|
             result.tspan("FAIL").styles(:text_anchor=>'middle', :font_size=>20, :font_family=>font, :fill=>'red', :font_weight => 'bold')
@@ -184,7 +185,7 @@ SQL
         else
           score_color = 'black'
           score_style = 'normal'
-          if (results.length >= (moving_avg_length + 1)) then
+          if results.length > moving_avg_length then
             for i in (1..moving_avg_length)
               moving_avg += (results[i]['value'].to_f / moving_avg_length)
             end
@@ -235,21 +236,20 @@ SQL
           last_avg_mid = y_off - (get_score(moving_avg, best, less_is_more) - worst_score) * y_scale
           last_avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
         end
-        last_avg = moving_avg
         last_drawn = 100000.0
-        average_index = moving_avg_length + 1
-        results[1..results.length-1].each do |r|
+        average_index = moving_avg_length
+        results.each do |r|
           end_x = x_off - get_x(r['age'].to_i, step) * x_scale
           value = r['value'].to_f
           score = get_score(value, best, less_is_more)
           end_y = y_off - (score - worst_score) * y_scale
           revision = r['revision']
-          if (average_index < results.length) then
+          if average_index > moving_avg_length and average_index < results.length then
             std_dev = get_stddev(results, average_index - moving_avg_length - 1, moving_avg_length, moving_avg)
             avg_high = y_off - (get_score(moving_avg + std_dev, best, less_is_more) - worst_score) * y_scale
             avg_mid = y_off - (get_score(moving_avg, best, less_is_more) - worst_score) * y_scale
             avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
-            canvas.polygon(start_x, last_avg_high, end_x, avg_high, end_x, avg_low, start_x, last_avg_low).styles(:fill=>'blue', :opacity => 0.1, :stroke_opacity => 0)
+            canvas.polygon(start_x, last_avg_high, end_x, avg_high, end_x, avg_low, start_x, last_avg_low).styles(:fill=>'#e0e0ff', :opacity => 1.0, :stroke => 'none')
             canvas.line(start_x, last_avg_mid, end_x, avg_mid).styles(:stroke=>'blue', :opacity => 0.0, :stroke_opacity => 0.2, :stroke_width => 1)
             last_avg_high = avg_high
             last_avg_mid = avg_mid
@@ -257,8 +257,8 @@ SQL
             last_avg = moving_avg
             moving_avg -= results[average_index - moving_avg_length]['value'].to_f / moving_avg_length.to_f
             moving_avg += results[average_index]['value'].to_f / moving_avg_length.to_f
-            average_index += 1
           end
+          average_index += 1
           if (value == best and max_x == nil) then
             max_x = end_x 
             max_rev = revision
