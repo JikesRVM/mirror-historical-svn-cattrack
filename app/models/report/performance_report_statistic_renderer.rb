@@ -178,18 +178,14 @@ SQL
         moving_avg_length = 10
         moving_avg = 0.0
         std_dev = 0.0
-        if (failed) then
-          canvas.text(210, 35) do |result|
-            result.tspan("FAIL").styles(:text_anchor=>'middle', :font_size=>20, :font_family=>font, :fill=>'red', :font_weight => 'bold')
+        score_color = 'black'
+        score_style = 'normal'
+        if results.length > moving_avg_length then
+          for i in (1..moving_avg_length)
+            moving_avg += (results[i]['value'].to_f / moving_avg_length)
           end
-        else
-          score_color = 'black'
-          score_style = 'normal'
-          if results.length > moving_avg_length then
-            for i in (1..moving_avg_length)
-              moving_avg += (results[i]['value'].to_f / moving_avg_length)
-            end
-            std_dev = get_stddev(results, 1, moving_avg_length, moving_avg)
+          std_dev = get_stddev(results, 1, moving_avg_length, moving_avg)
+          if not(failed) then
             if (less_is_more) then
               if latest > (moving_avg + 1 * std_dev) then
                 score_color = 'red'
@@ -214,8 +210,14 @@ SQL
                 canvas.line(190, 30, 230, 30).styles(:stroke=>'red', :stroke_width => 1.00)
                 canvas.line(190, 10, 230, 10).styles(:stroke=>'red', :stroke_width => 1.00)
               end
-            end
+              end
           end
+        end
+        if (failed) then
+          canvas.text(210, 35) do |result|
+            result.tspan("FAIL").styles(:text_anchor=>'middle', :font_size=>20, :font_family=>font, :fill=>'red', :font_weight => 'bold')
+          end
+        else
           canvas.text(210, 27) do |result|
             result.tspan("#{latest_score}").styles(:text_anchor=>'middle', :font_size=>20, :font_family=>font, :font_weight => score_style, :fill=>score_color)
           end
