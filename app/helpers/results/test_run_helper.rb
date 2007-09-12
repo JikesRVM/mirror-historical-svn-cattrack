@@ -34,6 +34,10 @@ module Results::TestRunHelper
     link_to('Show', options)
   end
 
+  def stat_img(row)
+    "#{row['build_configuration_name']}/#{row['test_configuration_name']}/#{row['group_name']}/#{row['test_case_name']}/#{row['name']}.png"
+  end
+
   def perf_stat(test_run_id, row)
     str_value = row["test_run_#{test_run_id}"]
     return '' unless str_value

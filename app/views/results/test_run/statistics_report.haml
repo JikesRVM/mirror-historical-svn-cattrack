@@ -26,12 +26,16 @@
       %th.pivot
       - @report.test_runs.each do |tr|
         %th.column= tr.label
+      %th.column chart
     %tr
       %th.row Success Rate
       - @report.test_runs.each do |tr|
         %td= h("#{tr.successes.size}/#{tr.test_case_executions.size}")
+      %td
     - @report.statistics.each do |r|
       %tr
         %th.row= h(r['name'])
         - @report.test_runs.each do |tr|
           %td= perf_stat(tr.id, r)
+        %td
+          %img{:src => stat_img(r)}

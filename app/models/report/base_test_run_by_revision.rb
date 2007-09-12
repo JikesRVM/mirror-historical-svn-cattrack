@@ -17,7 +17,7 @@ class Report::BaseTestRunByRevision
   # Output parameters
   attr_reader :test_runs
 
-  def initialize(test_run, window_size = 10)
+  def initialize(test_run, window_size = 7)
     @test_run = test_run
     @window_size = window_size
     perform
@@ -76,11 +76,19 @@ SQL
 SQL
     best_score_sql = <<SQL
 SELECT
+    build_configuration_name,
+    test_configuration_name,
+    group_name,
+    test_case_name,
     stat_name,
     less_is_more,
     case when less_is_more = true then min_score else max_score end as best_score
 FROM (
 SELECT
+  build_configurations.name as build_configuration_name,
+  test_configurations.name as test_configuration_name,
+  groups.name as group_name,
+  test_cases.name as test_case_name,
   statistics_map.label as stat_name,
   statistics_map.less_is_more as less_is_more,
   MAX(test_case_statistics.value) as max_score,
@@ -105,7 +113,7 @@ WHERE
     test_runs.variant = '#{@test_run.variant}' AND
     test_runs.start_time <= '#{@test_run.start_time}' AND
     #{filter}
-GROUP BY statistics_map.label, statistics_map.less_is_more
+GROUP BY statistics_map.label, statistics_map.less_is_more, build_configurations.name, test_configurations.name, groups.name, test_cases.name
 ) f
 SQL
 
@@ -136,6 +144,10 @@ SQL
 
     sql = <<SQL
     SELECT
+    build_configuration_name,
+    test_configuration_name,
+    group_name,
+    test_case_name,
     results.stat_name as name,
     #{rows_to_columns},
     case when less_is_more = true then 1 else 0 end as less_is_more,
@@ -145,7 +157,7 @@ FROM
   (#{results_sql}) results,
   (#{best_score_sql}) best_scores
 WHERE best_scores.stat_name = results.stat_name
-GROUP BY results.stat_name, less_is_more, best_score
+GROUP BY results.stat_name, less_is_more, best_score, build_configuration_name, test_configuration_name, group_name, test_case_name
 ORDER BY results.stat_name
 SQL
     ActiveRecord::Base.connection.select_all(sql)

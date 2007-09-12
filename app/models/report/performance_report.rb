@@ -17,7 +17,7 @@ class Report::PerformanceReport < Report::BaseTestRunByRevision
   # Output parameters
   attr_reader :test_runs, :statistics
 
-  def initialize(test_run, window_size = 10)
+  def initialize(test_run)
     super
   end
   
