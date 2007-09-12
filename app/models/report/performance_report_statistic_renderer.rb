@@ -30,13 +30,26 @@ WHERE
     test_runs.start_time <= '#{@test_run.start_time}' AND
     test_runs.host_id = hosts.id
 SQL
+    count_sql = <<SQL
+SELECT
+    COUNT(*) AS count
+FROM
+    test_runs,
+    hosts
+WHERE
+    hosts.name = '#{@test_run.host.name}' AND
+    test_runs.variant = '#{@test_run.variant}' AND
+    test_runs.start_time <= '#{@test_run.start_time}' AND
+    test_runs.host_id = hosts.id
+SQL
     limits_sql = <<SQL
 SELECT
     (CASE WHEN less_is_more = true THEN 1 ELSE 0 END) AS less_is_more,
     (CASE WHEN less_is_more = true THEN MAX(value) ELSE MIN(value) END) AS worst,
     (CASE WHEN less_is_more = true THEN MIN(value) ELSE MAX(value) END) AS best,
     stddev(value) AS std_dev,
-    (#{oldest_sql}) AS oldest
+    (#{oldest_sql}) AS oldest,
+    (#{count_sql}) AS count
 FROM
     test_cases,
     test_case_statistics,
@@ -115,6 +128,12 @@ SQL
     return (1000.0 * (value / best)).to_i / 10.0
   end
   
+  def get_x(val, step)
+    step * 10.0
+    n = (step * 10.0) / (0.5848932)
+    Math.log10(val.to_f + n) - Math.log10(n)
+  end
+
   def to_image
     require 'RMagick.rb'
     require 'rvg/rvg'
@@ -125,6 +144,8 @@ SQL
         oldest = limits['oldest'].to_i
         best = limits['best'].to_f
         worst = limits['worst'].to_f
+        count = limits['count'].to_i
+        step = oldest.to_f / count.to_f
         std_dev = limits['std_dev'].to_f
         less_is_more = limits['less_is_more'].to_i == 1
         worst_score = get_score(worst, best, less_is_more)
@@ -136,7 +157,7 @@ SQL
         y_mar = 15.0
         y_off = y_res + y_mar
         x_off = 180.0
-        x_scale = x_res / oldest.to_f
+        x_scale = x_res / get_x(oldest.to_i, step)
         y_scale = y_res / (100.0 - worst_score)
         # most recent score
         failed = results[0]['age'].to_i > 0
@@ -193,12 +214,12 @@ SQL
         min_rev = nil
         max_x = nil
         max_rev = nil
-        start_x = x_off - (results[0]['age'].to_i * x_scale)
+        start_x = x_off - get_x(results[0]['age'].to_i, step) * x_scale
         start_y = y_off - ((latest_score - worst_score) * y_scale)
         first_x = start_x
         first_y = start_y
         results.each do |r|
-          end_x = x_off - (r['age'].to_i * x_scale)
+          end_x = x_off - get_x(r['age'].to_i, step) * x_scale
           value = r['value'].to_f
           end_y = y_off - ((get_score(value, best, less_is_more) - worst_score) * y_scale)
           if (value == best and max_x == nil) then
