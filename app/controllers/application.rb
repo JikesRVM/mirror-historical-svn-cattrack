@@ -131,7 +131,7 @@ class ApplicationController < ActionController::Base
   def self.page_cache_file(path)
     name = ((path.empty? || path == "/") ? "/index" : URI.unescape(path))
     last_part = name.split('/').last || name
-    name << page_cache_extension unless (last_part =~ /\.txt$/)
+    name << page_cache_extension unless (last_part =~ /\.txt$/) or (last_part =~ /\.png$/)
     return name
   end
 end
