@@ -74,6 +74,7 @@ class RecreateStatisticsMap < ActiveRecord::Migration
       [nil, 'production', 'default', 'jBYTEmark', 'jBYTEmark', 'LUDecomposition.index', false, 'jBYTEmark: LU Decomposition','average'],
       [nil, 'production', 'default', 'jBYTEmark', 'jBYTEmark', 'Integer.index', false, 'jBYTEmark: Integer','average'],
       [nil, 'production', 'default', 'jBYTEmark', 'jBYTEmark', 'FP.index', false, 'jBYTEmark: FP','average'],
+      [nil, 'production', 'default', 'basic', 'ImageSizes', 'total.size', true, 'Boot Image Size: Total','average'],
       ].each do |r|
         StatisticsMap.create!(:test_run_name => r[0],
         :build_configuration_name => r[1],
