@@ -17,5 +17,7 @@ class DashboardController < ApplicationController
   def index
     @test_run_pages, @test_runs =
       paginate(Tdm::TestRun, :per_page => 20, :order => 'start_time DESC')
+
+    @most_recent = Tdm::TestRun.find_recent()
   end
 end

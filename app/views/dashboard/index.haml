@@ -1,6 +1,26 @@
 - @page_title = "Dashboard"
 %h1.page-title Recent Test Runs
 
+%h2 Most Recent
+%table.list
+  %tr
+    %th Operations
+    %th Host
+    %th Variant
+    %th Revision
+    %th Time
+    %th Success Rate
+  - @most_recent.each do |t|
+    %tr{:class => cycle('odd','even')}
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show", :action => 'show')
+      %td= link_for(t.host)
+      %td= h(t.variant)
+      %td= revision_link(t.revision)
+      %td= "#{time_ago_in_words(t.start_time)} ago"
+      %td= t.success_rate
+%h2 Full Listing
 %table.list
   %tr
     %th Host
@@ -11,12 +31,12 @@
     %th Operations
   - @test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Show", :action => 'show')
       %td= link_for(t.host)
       %td= h(t.variant)
       %td= revision_link(t.revision)
       %td= "#{time_ago_in_words(t.start_time)} ago"
       %td= t.success_rate
-      %td
-        %ul.actions
-          %li= link_for(t, :label => "Show", :action => 'show')
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
