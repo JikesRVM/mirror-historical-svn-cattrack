@@ -264,12 +264,10 @@ SQL
           if (value == best and max_x == nil) then
             max_x = end_x 
             max_rev = revision
-            canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
           end
           if (value == worst and not (best == worst) and min_x == nil) then
             min_x = end_x 
             min_rev = revision
-            canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
           end
           canvas.line(start_x, start_y, end_x, end_y).styles(:stroke=>'black', :stroke_width => 1.00, :stroke_linecap => 'round')
           if @large and (end_x + 3.0) < last_drawn then
@@ -286,16 +284,22 @@ SQL
         end
         canvas.circle(1.5, first_x, first_y).styles(:fill=>'black')
         canvas.circle(1.5, start_x, start_y).styles(:fill=>'black')
-        if min_x and not @large then
-          min_x = 35.0 if min_x < 35.0
-          canvas.text(min_x, y_res + 2 * y_mar - 2.0) do |result|
-            result.tspan("r#{min_rev} (#{worst_score})").styles(:text_anchor=>'middle', :font_size=>8, :font_family=>font_small, :fill=>'red')
+        if min_x then
+          canvas.circle(3, min_x, y_off).styles(:stroke=>'red', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
+          if not @large then
+            min_x = 35.0 if min_x < 35.0
+            canvas.text(min_x, y_res + 2 * y_mar - 2.0) do |result|
+              result.tspan("r#{min_rev} (#{worst_score})").styles(:text_anchor=>'middle', :font_size=>8, :font_family=>font_small, :fill=>'red')
+            end
           end
         end
-        if max_x and not @large then
-          max_x = 20.0 if max_x < 20.0
-          canvas.text(max_x, 10) do |result|
-            result.tspan("r#{max_rev}").styles(:text_anchor=>'middle', :font_size=>8, :font_family=>font_small, :fill=>'green')
+        if max_x then
+          canvas.circle(3, max_x, y_mar).styles(:stroke=>'green', :stroke_width => 1.5, :fill => 'transparent', :stroke_linecap => 'round')
+          if not @large then
+            max_x = 20.0 if max_x < 20.0
+            canvas.text(max_x, 10) do |result|
+              result.tspan("r#{max_rev}").styles(:text_anchor=>'middle', :font_size=>8, :font_family=>font_small, :fill=>'green')
+            end
           end
         end
       else

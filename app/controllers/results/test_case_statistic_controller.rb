@@ -22,6 +22,7 @@ class Results::TestCaseStatisticController < Results::BaseController
     large = (statistic =~ /.large$/)
     statistic = statistic[0, statistic.length-6] if large
     image = Report::PerformanceReportStatisticRenderer.new(test_run, statistic, large).to_image
+    headers['Content-type'] = 'image/png'
     send_data(image, :type => 'image/png', :filename => statistic, :disposition => 'inline')
   end
 end
