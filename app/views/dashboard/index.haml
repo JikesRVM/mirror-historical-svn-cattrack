@@ -4,39 +4,39 @@
 %h2 Most Recent
 %table.list
   %tr
-    %th Operations
-    %th Host
+    %th
     %th Variant
-    %th Revision
+    %th Host
     %th Time
     %th Success Rate
+    %th Revision
   - @most_recent.each do |t|
     %tr{:class => cycle('odd','even')}
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show", :action => 'show')
-      %td= link_for(t.host)
+          %li= link_for(t, :label => "Details", :action => 'show')
       %td= h(t.variant)
-      %td= revision_link(t.revision)
+      %td= link_for(t.host)
       %td= "#{time_ago_in_words(t.start_time)} ago"
       %td= t.success_rate
+      %td= revision_link(t.revision)
 %h2 Full Listing
 %table.list
   %tr
-    %th Operations
-    %th Host
+    %th
     %th Variant
-    %th Revision
+    %th Host
     %th Time
     %th Success Rate
+    %th Revision
   - @test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show", :action => 'show')
-      %td= link_for(t.host)
+          %li= link_for(t, :label => "Details", :action => 'show')
       %td= h(t.variant)
-      %td= revision_link(t.revision)
+      %td= link_for(t.host)
       %td= "#{time_ago_in_words(t.start_time)} ago"
       %td= t.success_rate
+      %td= revision_link(t.revision)
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
