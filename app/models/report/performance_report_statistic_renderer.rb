@@ -252,7 +252,7 @@ SQL
             avg_mid = y_off - (get_score(moving_avg, best, less_is_more) - worst_score) * y_scale
             avg_low = y_off - (get_score(moving_avg - std_dev, best, less_is_more) - worst_score) * y_scale
             canvas.polygon(start_x, last_avg_high, end_x, avg_high, end_x, avg_low, start_x, last_avg_low).styles(:fill=>'#e0e0ff', :opacity => 1.0, :stroke => 'none')
-            canvas.line(start_x, last_avg_mid, end_x, avg_mid).styles(:stroke=>'blue', :opacity => 0.0, :stroke_opacity => 0.2, :stroke_width => 1)
+            canvas.line(start_x, last_avg_mid, end_x, avg_mid).styles(:stroke=>'#c0c0ff', :stroke_width => 1)
             last_avg_high = avg_high
             last_avg_mid = avg_mid
             last_avg_low = avg_low
