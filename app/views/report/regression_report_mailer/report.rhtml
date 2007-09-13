@@ -5,7 +5,14 @@
 <body style="margin: 10px 10px 10px 10px; background-color: #FFFFFF; color: #000000; font-family: verdana, arial, helvetica, sans-serif;">
 <h2>Regression summary for <%= h(@test_run.variant) %> (r<%= h(@test_run.revision) %>) on <%= h(@host.name) %>, <%= h(@test_run.start_time) %></h2>
 <% report_url = url_for(:controller => 'results/test_run', :action => 'regression_report', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
-<p>See the <a href="<%= report_url %>">Full Report</a></p>
+<p>See the <a href="<%= report_url %>">Full Report</a>
+<% stats_url = url_for(:controller => 'results/test_run', :action => 'statistics_report', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
+ <a href="<%= report_url %>">Statistics Report</a>
+<% if @test_run.variant == 'perf' %>
+<% perf_url = url_for(:controller => 'results/test_run', :action => 'performance_report', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
+ <a href="<%= report_url %>">Performance Report</a>
+<% end %>
+</p>
 <% if @report.test_runs.size > 1 %>
 <% scm_url = SystemSetting['scm.url'] %>
 <p>Revisions covered by this test run: <%= ((@report.test_runs[@report.test_runs.size - 2].revision)..(@report.test_runs[@report.test_runs.size - 1].revision)).collect {|r| revision_link_for_url(scm_url, r)}.join(",\n") %></p>

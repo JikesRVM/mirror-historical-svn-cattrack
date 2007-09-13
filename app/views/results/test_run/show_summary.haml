@@ -8,6 +8,7 @@
   %h3 Unsuccessful Tests
   %table.list
     %tr
+      %th
       %th Build Configuration
       %th Test Configuration
       %th Group
@@ -15,9 +16,11 @@
       %th Name
       %th Result
       %th Reason
-      %th Operations
     - @record.non_successes.each do |t|
       %tr{:class => cycle('odd','even')}
+        %td
+          %ul.actions
+            %li= link_for(t.test_case, :label => 'Details')
         %td= link_for(t.test_case.group.test_configuration.build_configuration)
         %td= link_for(t.test_case.group.test_configuration)
         %td= link_for(t.test_case.group)
@@ -25,6 +28,3 @@
         %td= h(t.name)
         %td= h(t.result)
         %td= h(t.result_explanation)
-        %td
-          %ul.actions
-            %li= link_for(t.test_case, :label => 'Show')

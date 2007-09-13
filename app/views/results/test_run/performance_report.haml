@@ -5,6 +5,13 @@
 - scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title
 
+%ul.actions
+  %li= link_for(@report.test_run, :label => 'Summary', :action => 'show_summary')
+  %li= link_for(@report.test_run, :label => 'Regression Report', :controller => '/results/test_run', :action => 'regression_report')
+  %li= link_for(@report.test_run, :label => 'Statistics Report', :controller => '/results/test_run', :action => 'statistics_report')
+.clearer
+= legend_header()
+    
 %h2 Scores for SPECjbb2000/2005
 %table.perf
   %tr

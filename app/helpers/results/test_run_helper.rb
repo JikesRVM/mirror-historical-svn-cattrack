@@ -20,6 +20,10 @@ module Results::TestRunHelper
     "<a href=\"#\" id=\"#{name}_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_tests_javascript(name)}; return false;\">#{label}</a>"
   end
 
+  def legend_header()
+    "<a href=\"#\" id=\"legend_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_tests_javascript('legend')}; return false;\">Click for Image Legend</a><div id='legend' width='100%'><center><img src='#{image_path('legend.png')}'></center></div><script type='text/javascript'> #{hide_tests_javascript('legend')} </script>"
+  end
+
   def test_link(row, only_path = true)
     options = {:controller => "/results/test_case", :action => 'show'}
     options[:host_name] = @report.test_run.host.name
@@ -31,7 +35,7 @@ module Results::TestRunHelper
     options[:test_case_name] = row['test_case_name']
     options[:only_path] = only_path
 
-    link_to('Show', options)
+    link_to('Details', options)
   end
 
   def stat_img(row,large)

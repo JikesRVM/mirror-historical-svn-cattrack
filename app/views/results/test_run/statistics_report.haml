@@ -2,22 +2,29 @@
 - @page_title = "Statistics Report: #{h(@report.test_run.label)}"
 - scm_url = SystemSetting['scm.url']
 %h1.page-title= @page_title
+%ul.actions
+  %li= link_for(@report.test_run, :label => 'Summary', :action => 'show_summary')
+  %li= link_for(@report.test_run, :label => 'Statistics Report', :controller => '/results/test_run', :action => 'statistics_report')
+  - if @report.test_run.variant == 'perf'
+    %li= link_for(@report.test_run, :label => 'Performance Report', :controller => '/results/test_run', :action => 'performance_report')
+.clearer
+= legend_header()
 
 %h2 Test Runs Covered By Report
 %table.list
   %tr
+    %th
     %th Name
     %th Revision
     %th Time
-    %th Operations
   - @report.test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
+      %td
+        %ul.actions
+          %li= link_for(t, :label => "Details")
       %td= h(t.label)
       %td= revision_link_for_url(scm_url, t.revision)
       %td= t.start_time
-      %td
-        %ul.actions
-          %li= link_for(t, :label => "Show")
 
 - if @report.statistics.size > 0 or @report.test_runs.size > 1
   %h2 Statistics
