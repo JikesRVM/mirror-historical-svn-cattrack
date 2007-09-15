@@ -10,6 +10,9 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
+require 'RMagick.rb'
+require 'rvg/rvg'
+
 class Report::PerformanceReportStatisticRenderer
 
   def initialize(test_run, statistic_key, large)
@@ -144,8 +147,6 @@ SQL
   end
   
   def to_image
-    require 'RMagick.rb'
-    require 'rvg/rvg'
     limits = get_limits();
     results = get_results();
     x_size = if @large then 960.0 else 240.0 end
