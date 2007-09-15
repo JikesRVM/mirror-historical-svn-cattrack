@@ -11,11 +11,8 @@
 #  regarding copyright ownership.
 #
 class Report::RegressionReport < Report::BaseTestRunByRevision
-  # Input parameters
-  attr_reader :test_run, :window_size
-
   # Output parameters
-  attr_reader :test_runs, :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :statistics, :bc_by_tr, :tc_by_tr
+  attr_reader :new_failures, :new_successes, :intermittent_failures, :consistent_failures, :missing_tests, :statistics, :bc_by_tr, :tc_by_tr
 
   def initialize(test_run, window_size = 10)
     super
