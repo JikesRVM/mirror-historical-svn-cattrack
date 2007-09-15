@@ -11,7 +11,7 @@
     %td= "#{h(@record.time)} ms"
   %tr
     %th Output
-    %td= link_for(@record, :label => '...Output...', :action => 'show_output')
+    %td= link_for(@record, :label => 'Show Output', :action => 'show_output')
 
 %h3 Configuration Parameters
 %table.details
@@ -32,5 +32,5 @@
       %td= h(tc.success_rate)
       %td
         %ul.actions
-          %li= link_for(tc, :label => 'Show')
+          %li= link_for(tc, :label => 'Details')
 

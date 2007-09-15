@@ -128,7 +128,7 @@
     %tr{:class => cycle('odd','even')}
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show")
+          %li= link_for(t, :label => "Details")
       %td= h(t.label)
       %td= revision_link_for_url(scm_url, t.revision)
       %td= t.start_time

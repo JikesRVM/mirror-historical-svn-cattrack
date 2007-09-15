@@ -18,6 +18,6 @@
       %td= h(t.start_time)
       %td
         %ul.actions
-          %li= link_for(t, :label => "Show")
+          %li= link_for(t, :label => "Details")
           = test_run_delete_link(t)
 = render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
