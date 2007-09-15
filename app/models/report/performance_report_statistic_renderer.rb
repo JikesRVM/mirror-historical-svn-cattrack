@@ -21,7 +21,7 @@ class Report::PerformanceReportStatisticRenderer
     @large = large
   end
 
-  def get_limits()
+  def get_limits
     oldest_sql = <<SQL
 SELECT
     date_part('epoch', (select start_time from test_runs where id = '#{@test_run.id}') - MIN(test_runs.start_time)) AS oldest
@@ -87,7 +87,7 @@ SQL
     rows[0]
   end
 
-  def get_results()
+  def get_results
     results_sql = <<SQL
 SELECT
     test_runs.id AS test_run_id,
@@ -147,8 +147,8 @@ SQL
   end
   
   def to_image
-    limits = get_limits();
-    results = get_results();
+    limits = get_limits
+    results = get_results
     x_size = if @large then 960.0 else 240.0 end
     y_size = if @large then 200.0 else 50.0 end
     rvg = Magick::RVG.new(x_size, y_size).viewbox(0, 0, 240, 50) do |canvas|
