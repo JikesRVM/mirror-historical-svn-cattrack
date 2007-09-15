@@ -16,41 +16,45 @@ class Results::BaseController < ApplicationController
   protected
 
   def host
-    host = Tdm::Host.find_by_name(params[:host_name])
-    raise CatTrack::SecurityError unless host
-    host
+    ep(Tdm::Host.find_by_name(params[:host_name]))
   end
 
   def test_run
     h = host
     test_run = h.test_runs.find_by_id_and_variant(params[:test_run_id],params[:test_run_variant])
-    raise CatTrack::SecurityError unless test_run
+    ep(test_run)
     # reducing the number of database hits.
     test_run.host = h
     test_run
   end
 
   def build_target
-    test_run.build_target
+    ep(test_run.build_target)
   end
 
   def build_configuration
-    test_run.build_configurations.find_by_name(params[:build_configuration_name])
+    ep(test_run.build_configurations.find_by_name(params[:build_configuration_name]))
   end
 
   def test_configuration
-    build_configuration.test_configurations.find_by_name(params[:test_configuration_name])
+    ep(build_configuration.test_configurations.find_by_name(params[:test_configuration_name]))
   end
 
   def group
-    test_configuration.groups.find_by_name(params[:group_name])
+    ep(test_configuration.groups.find_by_name(params[:group_name]))
   end
 
   def test_case
-    group.test_cases.find_by_name(params[:test_case_name])
+    ep(group.test_cases.find_by_name(params[:test_case_name]))
   end
 
   def test_case_execution
-    test_case.test_case_executions.find_by_name(params[:test_case_execution_name])
+    ep(test_case.test_case_executions.find_by_name(params[:test_case_execution_name]))
+  end
+
+  # if specified object is nil then raise exception, else return object
+  def ep(object)
+    raise CatTrack::SecurityError unless object
+    object
   end
 end
