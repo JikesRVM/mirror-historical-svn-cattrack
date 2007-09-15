@@ -44,20 +44,20 @@ class Tdm::TestRun < ActiveRecord::Base
     has_many name, :class_name => 'Tdm::TestCaseExecution', :finder_sql => finder_sql, :counter_sql => counter_sql
   end
 
-  def self.find_recent()
+  def self.find_recent
     recent_sql = <<SQL
 SELECT
         test_runs.*
 FROM
         test_runs,
-        (SELECT
-                r.variant as run_variant, host_id, max(r.start_time) as most_recent
-        FROM
-                test_runs r where start_time > (now() - INTERVAL '10 days')
-        GROUP BY
-                run_variant, host_id) recent
+        (
+            SELECT variant, host_id, MAX(start_time) AS most_recent
+            FROM test_runs
+            WHERE start_time > (now() - INTERVAL '10 days')
+            GROUP BY variant, host_id
+        ) recent
 WHERE
-        test_runs.variant = recent.run_variant AND
+        test_runs.variant = recent.variant AND
         test_runs.host_id = recent.host_id AND
         test_runs.start_time = recent.most_recent
 ORDER BY
