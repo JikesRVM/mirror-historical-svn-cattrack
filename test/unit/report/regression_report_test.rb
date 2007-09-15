@@ -161,9 +161,9 @@ class Report::RegressionReportTest < Test::Unit::TestCase
     assert_equal([], report.consistent_failures.collect{|t| t['test_case_id']})
     assert_equal([test_run_1.id, test_run.id], report.test_runs.collect{|tr| tr.id})
     assert_equal([
-    {"name"=>"SPECjbb2005","best_score"=>"22","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"22","test_run_1"=>"22", "less_is_more"=>"0",},
-    {"name"=>"SPECjvm98","best_score"=>"412","std_deviation"=>"0","test_run_#{test_run_1.id}"=>"412","test_run_1"=>"412", "less_is_more"=>"0",}
-    ],report.statistics)
+            {"build_configuration_name"=>"production", "test_configuration_name"=>"Performance", "group_name"=>"SPECjbb2005", "test_case_name"=>"SPECjbb2005", "name"=>"SPECjbb2005", "best_score"=>"22", "std_deviation"=>"0", "test_run_#{test_run_1.id}"=>"22", "test_run_1"=>"22", "less_is_more"=>"0", },
+                    {"build_configuration_name"=>"production", "test_configuration_name"=>"Performance", "group_name"=>"SPECjvm98", "test_case_name"=>"SPECjvm98", "name"=>"SPECjvm98", "best_score"=>"412", "std_deviation"=>"0", "test_run_#{test_run_1.id}"=>"412", "test_run_1"=>"412", "less_is_more"=>"0", }
+    ], report.statistics)
     assert_equal([], report.tc_by_tr)
     assert_equal([], report.bc_by_tr)
   end
