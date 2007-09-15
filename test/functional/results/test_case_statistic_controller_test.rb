@@ -11,7 +11,7 @@
 #  regarding copyright ownership.
 #
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'results/test_case_execution_controller'
+require 'results/test_case_statistic_controller'
 
 class Results::TestCaseStatisticController
   # Re-raise errors caught by the controller.
@@ -32,11 +32,14 @@ class Results::TestCaseStatisticControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    get(:show, gen_params(Tdm::TestCaseStatistic.find(1), 'Insert some statistic here'), session_data)
+    test_run = create_test_run_for_perf_tests
+    test_case = test_run.build_configurations[0].test_configurations[0].groups[0].test_cases[0]
+    test_case.statistics['my_stat'] = '10'
+    test_case.save!
+    get(:show, gen_params(test_case, 'my_stat'), session_data)
     assert_response(:success)
     assert_template(nil)
     assert_equal('image/png',@response.headers['Content-Type'])
-    assert_equal([],@response.body)
     assert_assigns_count(0)
     assert_flash_count(0)
   end
