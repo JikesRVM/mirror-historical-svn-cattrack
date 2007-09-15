@@ -59,7 +59,7 @@ class ApplicationHelperTest < Test::Unit::TestCase
   end
 
   def test_test_run_delete_link
-    assert_equal("<li id=\"test_run_1_delete\"><a href=\"/results/skunk/core.1\" onclick=\"if (confirm('Are you sure you want to delete the core test-run?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\">Delete</a><script type='text/javascript'><!--\nif(!is_admin()) Element.hide('test_run_1_delete')\n//--></script></li>\n", MyClass.new.test_run_delete_link(Tdm::TestRun.find(1)))
+    assert_equal("<li id=\"test_run_1_delete\"><a href=\"/results/skunk/core/1\" onclick=\"if (confirm('Are you sure you want to delete the core test-run?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\">Delete</a><script type='text/javascript'><!--\nif(!is_admin()) Element.hide('test_run_1_delete')\n//--></script></li>\n", MyClass.new.test_run_delete_link(Tdm::TestRun.find(1)))
   end
 
   class FakeTestRun < Tdm::TestRun
@@ -100,8 +100,8 @@ class ApplicationHelperTest < Test::Unit::TestCase
     build_target = FakeBuildTarget.new
     build_target.name = 'ia32'
     build_target.parent_node = test_run
-    assert_equal("<a href=\"/results/MyHost/RunLikeWind.1\">RunLikeWind-1</a>", MyClass.new.link_for(test_run))
-    assert_equal("<a href=\"/results/MyHost/RunLikeWind.1/build_target\">ia32</a>", MyClass.new.link_for(build_target))
-    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind.1\">RunLikeWind-1</a> &gt; test_run", MyClass.new.draw_breadcrumbs(test_run, 'test_run'))
+    assert_equal("<a href=\"/results/MyHost/RunLikeWind/1\">RunLikeWind-1</a>", MyClass.new.link_for(test_run))
+    assert_equal("<a href=\"/results/MyHost/RunLikeWind/1/build_target\">ia32</a>", MyClass.new.link_for(build_target))
+    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind/1\">RunLikeWind-1</a> &gt; test_run", MyClass.new.draw_breadcrumbs(test_run, 'test_run'))
   end
 end

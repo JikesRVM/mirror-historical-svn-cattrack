@@ -68,7 +68,7 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     host_name = test_run.host.name
     purge_log
 
-    path = File.expand_path("#{RAILS_ROOT}/public/results/skunk/core.1")
+    path = File.expand_path("#{RAILS_ROOT}/public/results/skunk/core/1")
     file = "#{path}.html"
     FileUtils.mkdir_p(path)
     f = File.new(file,  "w+")
