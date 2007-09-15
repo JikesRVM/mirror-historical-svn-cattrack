@@ -66,4 +66,34 @@ class Tdm::TestRunTest < Test::Unit::TestCase
   end
 
   perform_basic_model_tests
+
+  def test_find_recent
+    assert_equal([], Tdm::TestRun.find_recent.collect{|tr| tr.id})
+
+    test_run1 = Tdm::TestRun.find(1)
+    test_run1.start_time = Time.now
+    test_run1.save!
+    test_run2 = Tdm::TestRun.find(2)
+    test_run2.start_time = Time.now
+    test_run2.save!
+    assert_equal([1, 2], Tdm::TestRun.find_recent.collect{|tr| tr.id})
+
+    # Same variant/host
+    test_run3 = clone_test_run(test_run1,3)
+    test_run3.save!
+
+    assert_equal([1, 2], Tdm::TestRun.find_recent.collect{|tr| tr.id})
+
+    test_run3.variant = 'Foo'
+    test_run3.save!
+
+    assert_equal([1, 3, 2], Tdm::TestRun.find_recent.collect{|tr| tr.id})
+
+    test_run3.variant = test_run1.variant
+    test_run3.host = Tdm::Host.find_or_create_by_name('foo')
+    test_run3.save!
+
+    assert_equal([1, 3, 2], Tdm::TestRun.find_recent.collect{|tr| tr.id})
+
+  end
 end
