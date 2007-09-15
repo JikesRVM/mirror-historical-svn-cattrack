@@ -3,7 +3,7 @@
 %table.list
   %tr
     %th Name
-    %th Operations
+    %th
   - @records.each do |h|
     %tr{:class => cycle('odd','even')}
       %td= h(h.name)

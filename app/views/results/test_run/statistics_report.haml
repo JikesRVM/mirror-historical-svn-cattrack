@@ -13,18 +13,18 @@
 %h2 Test Runs Covered By Report
 %table.list
   %tr
-    %th
     %th Name
     %th Revision
     %th Time
+    %th
   - @report.test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
-      %td
-        %ul.actions
-          %li= link_for(t, :label => "Details")
       %td= h(t.label)
       %td= revision_link_for_url(scm_url, t.revision)
       %td= t.start_time
+      %td
+        %ul.actions
+          %li= link_for(t, :label => 'Details')
 
 - if @report.statistics.size > 0 or @report.test_runs.size > 1
   %h2 Statistics

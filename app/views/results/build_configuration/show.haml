@@ -25,7 +25,7 @@
   %tr
     %th Name
     %th Success Rate
-    %th Operations
+    %th
   - @record.test_configurations.each do |tc|
     %tr{:class => cycle('odd','even')}
       %td= h(tc.name)

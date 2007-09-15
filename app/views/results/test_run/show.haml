@@ -34,26 +34,26 @@
 %h3 Build Runs
 %table.list
   %tr
-    %th
     %th Build
     %th Result
+    %th
   - @record.build_configurations.each do |bc|
     %tr{:class => cycle('odd','even')}
-      %td= link_for(bc, :label => 'Details')
       %td= h(bc.label)
       %td= h(bc.result)
+      %td= link_for(bc, :label => 'Details')
 
 %h3 Test Configurations
 %table.list
   %tr
-    %th
     %th Build Configuration
     %th Name
     %th Success Rate
+    %th
   - @record.build_configurations.each do |bc|
     - bc.test_configurations.each do |tc|
       %tr{:class => cycle('odd','even')}
-        %td= link_for(tc, :label => 'Details')
         %td= link_for(bc)
         %td= h(tc.label)
         %td= tc.success_rate
+        %td= link_for(tc, :label => 'Details')
