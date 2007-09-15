@@ -28,14 +28,16 @@ class DashboardControllerTest < Test::Unit::TestCase
   end
 
   def test_index
+    test_run = Tdm::TestRun.find(1)
+    test_run.start_time = Time.now
+    test_run.save!
+    test_run = Tdm::TestRun.find(2)
+    test_run.start_time = Time.now
+    test_run.save!
     get(:index, {}, {:user_id => 1})
-    assert_normal_response('index', 2)
+    assert_normal_response('index', 1)
     assert_assigned(:test_runs)
-    assert_assigned(:test_run_pages)
 
-    assert_equal([2, 1], assigns(:test_runs).collect {|r| r.id} )
-    assert_not_nil(assigns(:test_run_pages))
-    assert_equal(0, assigns(:test_run_pages).current.offset)
-    assert_equal(1, assigns(:test_run_pages).page_count)
+    assert_equal([1, 2], assigns(:test_runs).collect {|r| r.id} )
   end
 end

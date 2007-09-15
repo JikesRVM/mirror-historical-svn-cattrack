@@ -10,25 +10,6 @@
     %th Success Rate
     %th Revision
     %th
-  - @most_recent.each do |t|
-    %tr{:class => cycle('odd','even')}
-      %td= h(t.variant)
-      %td= link_for(t.host)
-      %td= "#{time_ago_in_words(t.start_time)} ago"
-      %td= t.success_rate
-      %td= revision_link(t.revision)
-      %td
-        %ul.actions
-          %li= link_for(t, :label => 'Details', :action => 'show')
-%h2 Full Listing
-%table.list
-  %tr
-    %th Variant
-    %th Host
-    %th Time
-    %th Success Rate
-    %th Revision
-    %th
   - @test_runs.each do |t|
     %tr{:class => cycle('odd','even')}
       %td= h(t.variant)
@@ -39,4 +20,3 @@
       %td
         %ul.actions
           %li= link_for(t, :label => 'Details', :action => 'show')
-= render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
