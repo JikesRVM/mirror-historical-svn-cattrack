@@ -55,6 +55,7 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time', false)}
   - spec_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -74,6 +75,7 @@
     %th 3rd Iteration
     %th 10th Iteration
   - dacapo_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -86,6 +88,7 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time.mu', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time.mu', false)}
   - spec_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -105,6 +108,7 @@
     %th 3rd Iteration
     %th 10th Iteration
   - dacapo_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -117,6 +121,7 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time.gc', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time.gc', false)}
   - spec_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -136,6 +141,7 @@
     %th Mutator
     %th GC
   - dacapo_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -148,6 +154,7 @@
         %a{:href => perf_img('perf-dacapo',bm,'3GC','time.gc', true)}
           %img{:src => perf_img('perf-dacapo',bm,'3GC','time.gc', false)}
   - spec_bm.each do |bm|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td

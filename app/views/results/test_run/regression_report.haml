@@ -37,6 +37,7 @@
       %th Test
       %th Result
     - @report.new_failures.each do |t|
+      - reset_cycle
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
@@ -57,6 +58,7 @@
       %th Group
       %th Test
     - @report.new_successes.each do |t|
+      - reset_cycle
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
@@ -77,6 +79,7 @@
       %th Test
       %th Result
     - @report.intermittent_failures.each do |t|
+      - reset_cycle
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
@@ -100,6 +103,7 @@
       %th Test
       %th Result
     - @report.consistent_failures.each do |t|
+      - reset_cycle
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
@@ -125,6 +129,7 @@
     %th Time
     %th
   - @report.test_runs.each do |t|
+    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %td= h(t.label)
       %td= revision_link_for_url(scm_url, t.revision)

@@ -52,6 +52,7 @@
     %th
   - @record.build_configurations.each do |bc|
     - bc.test_configurations.each do |tc|
+      - reset_cycle
       %tr{:class => cycle('odd','even')}
         %td= link_for(bc)
         %td= h(tc.label)

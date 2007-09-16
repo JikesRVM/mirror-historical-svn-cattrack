@@ -82,6 +82,7 @@
     <% end %>
   </tr>
   <tr style="text-align: center;">
+    <% reset_cycle %>
     <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;">Success Rate</td>
     <% @report.test_runs.each do |tr| %>
       <td style="background-color: silver;"><%= h("#{tr.successes.size}/#{tr.test_case_executions.size}") %></td>
@@ -90,6 +91,7 @@
   </tr>
   <% @report.statistics.each do |r| %>
     <tr style="text-align: center;">
+      <% reset_cycle %>
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <td style="background-color: silver;"><%= perf_stat(tr.id, r) %></td>
@@ -105,12 +107,14 @@
   <tr style="text-align: center;">
     <td></td>
     <% @report.test_runs.each do |test_run| %>
+      <% reset_cycle %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
   <% @report.bc_by_tr.each do |r| %>
     <tr style="text-align: center;">
+      <% reset_cycle %>
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['build_configuration_name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <%= cell(r["test_run_#{tr.id}"].to_i) %>
@@ -126,12 +130,14 @@
   <tr style="text-align: center;">
     <td></td>
     <% @report.test_runs.each do |test_run| %>
+      <% reset_cycle %>
       <td style="vertical-align: top; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'columns') -%>;"><%= test_run_label(test_run, @report.test_runs) %></td>
       <% reset_cycle('rows') %>
     <% end %>
   </tr>
   <% @report.tc_by_tr.each do |r| %>
     <tr style="text-align: center;">
+      <% reset_cycle %>
       <td style="text-align: right; padding: 0.3em; background-color: <%= cycle('rgb(230,230,230)', 'white', :name => 'rows') -%>;"><%= h(r['test_case_name']) %></td>
       <% @report.test_runs.each do |tr| %>
         <%= cell(r["test_run_#{tr.id}"].to_i) %>
