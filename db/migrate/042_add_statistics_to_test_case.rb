@@ -12,7 +12,7 @@
 #
 class AddStatisticsToTestCase < ActiveRecord::Migration
   def self.up
-    create_table :test_case_statistics, :id => false, :force => true do |t|
+    create_table :test_case_statistics, :id => false do |t|
       t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :float, :null => false

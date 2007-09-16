@@ -12,7 +12,7 @@
 #
 class CreateGroups < ActiveRecord::Migration
   def self.up
-    create_table :groups, :force => true do |t|
+    create_table :groups do |t|
       t.column :test_configuration_id, :integer, :null => false
       t.column :name, :string, :limit => 75, :null => false
     end

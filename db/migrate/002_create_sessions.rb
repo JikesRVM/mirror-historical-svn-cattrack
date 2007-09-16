@@ -12,7 +12,7 @@
 #
 class CreateSessions < ActiveRecord::Migration
    def self.up
-      create_table :sessions, :force => true do |t|
+      create_table :sessions do |t|
          t.column :sessid, :string, :limit => 32, :null => false
          t.column :data, :text
          t.column :created_on, :timestamp, :null => false

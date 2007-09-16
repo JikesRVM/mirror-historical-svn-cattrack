@@ -12,7 +12,7 @@
 #
 class CreateHosts < ActiveRecord::Migration
   def self.up
-    create_table :hosts, :force => true do |t|
+    create_table :hosts do |t|
       t.column :name, :string, :limit => 100, :null => false
     end
     add_index :hosts, [:id], :unique => true

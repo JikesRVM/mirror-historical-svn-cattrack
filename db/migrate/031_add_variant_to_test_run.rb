@@ -30,7 +30,7 @@ SQL
     end
 
     rename_table :test_runs, :old_test_runs
-    create_table :test_runs, :force => true do |t|
+    create_table :test_runs do |t|
       t.column :name, :string, :limit => 75, :null => false
       t.column :variant, :string, :limit => 75, :null => false
       t.column :host_id, :integer, :null => false

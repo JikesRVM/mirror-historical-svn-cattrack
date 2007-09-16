@@ -12,7 +12,7 @@
 #
 class CreateBuildConfigurations < ActiveRecord::Migration
   def self.up
-    create_table :build_configurations, :force => true do |t|
+    create_table :build_configurations do |t|
       t.column :test_run_id, :integer, :null => false
       t.column :name, :string, :limit => 75, :null => false
       t.column :result, :string, :limit => 15, :null => false
@@ -22,14 +22,14 @@ class CreateBuildConfigurations < ActiveRecord::Migration
     add_index :build_configurations, [:test_run_id, :name], :unique => true
     add_foreign_key :build_configurations, [:test_run_id], :test_runs, [:id], :on_delete => :cascade
 
-    create_table :build_configuration_outputs, :id => false, :force => true do |t|
+    create_table :build_configuration_outputs, :id => false do |t|
       t.column :build_configuration_id, :integer, :null => false
       t.column :output, :text, :null => false
     end
     add_index :build_configuration_outputs, [:build_configuration_id], :unique => true
     add_foreign_key :build_configuration_outputs, [:build_configuration_id], :build_configurations, [:id], :on_delete => :cascade
 
-    create_table :build_configuration_params, :id => false, :force => true do |t|
+    create_table :build_configuration_params, :id => false do |t|
       t.column :owner_id, :integer, :null => false
       t.column :key, :string, :limit => 50, :null => false
       t.column :value, :string, :limit => 256, :null => false
