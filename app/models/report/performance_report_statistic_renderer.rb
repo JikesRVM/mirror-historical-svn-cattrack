@@ -10,6 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
+require 'rubygems'
 require 'RMagick'
 require 'rvg/rvg'
 
