@@ -10,7 +10,7 @@
 #  See the COPYRIGHT.txt file distributed with this work for information
 #  regarding copyright ownership.
 #
-require 'RMagick.rb'
+require 'RMagick'
 require 'rvg/rvg'
 
 class Report::PerformanceReportStatisticRenderer
