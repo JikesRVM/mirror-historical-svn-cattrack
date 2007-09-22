@@ -14,6 +14,8 @@ class SecurityController < ApplicationController
   verify :method => :get, :only => [:administrators, :access_denied], :redirect_to => :access_denied_url
   verify :method => :post, :only => [:logout], :redirect_to => :access_denied_url
 
+  filter_parameter_logging :password
+
   def login
     if request.post?
       self.current_user = User.authenticate(params[:username], params[:password])
