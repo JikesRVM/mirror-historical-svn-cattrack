@@ -34,7 +34,7 @@ INSERT INTO test_runs
   FROM old_test_runs
 SQL
       drop_table :old_test_runs
-      ActiveRecord::Base.connection.execute("SELECT setval('test_runs_id_seq', 910)")
+      ActiveRecord::Base.connection.reset_pk_sequence!('test_runs')
       add_index :test_runs, [:id], :unique => true
       add_index :test_runs, [:host_id, :name, :start_time], :unique => true
       add_index :test_runs, [:name]
