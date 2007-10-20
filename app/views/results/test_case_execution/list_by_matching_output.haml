@@ -1,0 +1,28 @@
+- @page_title = "Search Test Case Output"
+%h1.page-title= @page_title
+
+.list_header
+  %form{:method => 'get', :action => url_for(:action => 'list_by_matching_output')}
+    %div
+      %input{:type => 'text', :name => 'q', :value => params[:q]}/
+      %button{:type => 'submit'} Search
+      %a{:href => url_for(:q => nil)} Reset
+- if @test_case_executions
+  %table.list
+    %tr
+      %th Date
+      %th Test Run
+      %th Build Configuration
+      %th Test Configuration
+      %th Group
+      %th Test Case
+      %th
+    - @test_case_executions.each do |tce|
+      %tr
+        %td= h(tce.test_case.group.test_configuration.build_configuration.test_run.start_time.strftime('%Y/%m/%d %H:%M'))
+        %td= link_for(tce.test_case.group.test_configuration.build_configuration.test_run)
+        %td= link_for(tce.test_case.group.test_configuration.build_configuration)
+        %td= link_for(tce.test_case.group.test_configuration)
+        %td= link_for(tce.test_case.group)
+        %td= link_for(tce.test_case)
+        %td= link_for(tce, :label => 'Show Output')

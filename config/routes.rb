@@ -28,6 +28,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/hosts', :controller => 'results/host', :action => 'list', :conditions => {:method => :get}
   map.connect 'results/:host_name', :controller => 'results/host', :action => 'show', :conditions => {:method => :get}
 
+  map.connect 'query', :controller => 'results/test_case_execution', :action => 'list_by_matching_output', :conditions => {:method => :get}
+
   map.connect 'admin', :controller => 'admin/dashboard', :conditions => {:method => :get}
   map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show', :conditions => {:method => :get}
 

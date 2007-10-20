@@ -15,6 +15,23 @@ class Results::TestCaseExecutionController < Results::BaseController
   caches_page :show
   session :off
 
+  def list_by_matching_output
+    return unless params[:q]
+    @test_case_executions = Tdm::TestCaseExecution.find_by_sql(<<SQL)
+SELECT test_case_executions.*
+FROM test_runs, hosts, build_configurations, test_configurations, groups, test_cases, test_case_executions
+WHERE
+  hosts.id = test_runs.host_id AND
+  build_configurations.test_run_id = test_runs.id AND
+  test_configurations.build_configuration_id = build_configurations.id AND
+  groups.test_configuration_id = test_configurations.id AND
+  test_cases.group_id = groups.id AND
+  test_case_executions.test_case_id = test_cases.id AND
+  test_case_executions.id IN (SELECT owner_id FROM test_case_execution_outputs WHERE output LIKE #{ActiveRecord::Base.connection.quote("%#{params[:q]}%")})
+ORDER BY test_runs.start_time DESC
+SQL
+  end
+
   def show
     headers['Content-Type'] = 'text/plain'
     render(:text => test_case_execution.output, :layout => false)

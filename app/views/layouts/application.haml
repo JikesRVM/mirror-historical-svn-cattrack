@@ -30,6 +30,8 @@
             = link_to( 'Home', :controller => '/dashboard', :action => 'index' )
             |
             = link_to( 'Hosts', :controller => '/results/host', :action => 'list' )
+            |
+            = link_to( 'Search', :controller => 'results/test_case_execution', :action => 'list_by_matching_output' )
             %span#admin_link
               |
               = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index')

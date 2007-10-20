@@ -31,6 +31,19 @@ class Results::TestCaseExecutionControllerTest < Test::Unit::TestCase
     {:user_id => 1}
   end
 
+  def test_list_by_matching_output
+    get(:list_by_matching_output, {:q => nil}, session_data)
+    assert_normal_response('list_by_matching_output', 0)
+  end
+
+  def test_list_by_matching_output_with_query
+    get(:list_by_matching_output, {:q => '21 times around'}, session_data)
+    assert_normal_response('list_by_matching_output', 1)
+    assert_assigned(:test_case_executions)
+    assert_equal(1, assigns(:test_case_executions).size)
+    assert_equal(21, assigns(:test_case_executions)[0].id)
+  end
+
   def test_show
     get(:show, gen_params(Tdm::TestCaseExecution.find(1)), session_data)
     assert_response(:success)

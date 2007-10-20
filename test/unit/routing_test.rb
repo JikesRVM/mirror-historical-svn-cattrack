@@ -28,6 +28,9 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/results/excalibur.watson.ibm.com/core/36', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'show')
     assert_routing('/results/excalibur.watson.ibm.com', :host_name => 'excalibur.watson.ibm.com', :controller => 'results/host', :action => 'show')
     assert_routing('/results/hosts', :controller => 'results/host', :action => 'list')
+
+    assert_routing('/query', :controller => 'results/test_case_execution', :action => 'list_by_matching_output')
+
     assert_routing('/admin', :controller => 'admin/dashboard', :action => 'index')
     assert_routing('/admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show')
     assert_routing('/admin/audit_log', :controller => 'admin/audit_log', :action => 'list')
