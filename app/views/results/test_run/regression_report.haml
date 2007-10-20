@@ -6,8 +6,6 @@
 %ul.actions
   %li= link_for(@report.test_run, :label => 'Summary', :action => 'show_summary')
   %li= link_for(@report.test_run, :label => 'Statistics Report', :controller => '/results/test_run', :action => 'statistics_report')
-  - if @report.test_run.variant == 'perf'
-    %li= link_for(@report.test_run, :label => 'Performance Report', :controller => '/results/test_run', :action => 'performance_report')
 .clearer
 
 - if @report.missing_tests.size > 0
