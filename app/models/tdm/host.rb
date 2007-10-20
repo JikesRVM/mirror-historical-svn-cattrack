@@ -17,6 +17,10 @@ class Tdm::Host < ActiveRecord::Base
 
   has_many :test_runs, :order => 'start_time DESC', :dependent => :destroy
 
+  def short_name
+    name.gsub(/^([^.]*)(\.[^.]*)*$/, '\1') 
+  end
+
   def parent_node
     nil
   end

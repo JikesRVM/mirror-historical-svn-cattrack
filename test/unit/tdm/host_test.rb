@@ -13,6 +13,15 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Tdm::HostTest < Test::Unit::TestCase
+
+  def test_short_name
+    h = Tdm::Host.new
+    h.name = "rvm.realityforge.org"
+    assert_equal( "rvm", h.short_name )
+    h.name = "rvm"
+    assert_equal( "rvm", h.short_name )
+  end
+
   def test_label
     assert_equal( Tdm::Host.find(1).name, Tdm::Host.find(1).label )
   end
