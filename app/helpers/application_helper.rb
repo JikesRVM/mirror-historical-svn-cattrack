@@ -35,7 +35,16 @@ module ApplicationHelper
 
   def draw_breadcrumbs(object, current_page)
     bc = breadcrumbs(object).reverse
-    bc = bc.collect {|o| "#{link_for(o)}"}
+    bc = bc.collect do |o|
+      if o.is_a? Tdm::TestRun
+        [
+          link_to(o.variant, :controller => 'results/test_run', :action => 'list_by_variant', :host_name => o.host.name, :test_run_variant => o.variant), 
+          "#{link_for(o)}"
+        ]
+      else
+        "#{link_for(o)}"
+      end
+    end.flatten
     bc << current_page
     bc.join(' &gt; ')
   end

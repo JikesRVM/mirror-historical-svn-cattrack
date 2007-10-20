@@ -14,9 +14,10 @@ class Results::HostController < Results::BaseController
   verify :method => :get, :redirect_to => :access_denied_url
 
   def show
-    @record = host
-    @test_run_pages, @test_runs =
-      paginate(Tdm::TestRun, :per_page => 20, :order => 'start_time DESC', :conditions => ['host_id = ?', @record.id])
+    @host = host
+    @variants = ActiveRecord::Base.connection.select_values(<<SQL)
+SELECT DISTINCT variant FROM test_runs WHERE host_id = #{@host.id} ORDER BY variant
+SQL
   end
 
   def list

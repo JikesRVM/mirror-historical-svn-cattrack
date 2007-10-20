@@ -1,4 +1,4 @@
-- @content_for_breadcrumbs = draw_breadcrumbs(@record.parent_node, h(@record.label))
+- @content_for_breadcrumbs = draw_breadcrumbs(@record.parent_node, "#{link_to(@record.variant, :controller => 'results/test_run', :action => 'list_by_variant', :host_name => @record.host.name, :test_run_variant => @record.variant)} &gt; #{h(@record.label)}")
 - @page_title = "Test Run: #{h(@record.label)}"
 %h1.page-title= @page_title
 

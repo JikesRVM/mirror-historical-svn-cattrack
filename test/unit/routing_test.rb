@@ -26,6 +26,7 @@ class RoutingTest < Test::Unit::TestCase
     assert_routing('/results/excalibur.watson.ibm.com/core/36/performance_report', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'performance_report')
     assert_routing('/results/excalibur.watson.ibm.com/core/36/build_target', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/build_target', :action => 'show')
     assert_routing('/results/excalibur.watson.ibm.com/core/36', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :test_run_id => '36', :controller => 'results/test_run', :action => 'show')
+    assert_routing('/results/excalibur.watson.ibm.com/core', :host_name => 'excalibur.watson.ibm.com', :test_run_variant => 'core', :controller => 'results/test_run', :action => 'list_by_variant')
     assert_routing('/results/excalibur.watson.ibm.com', :host_name => 'excalibur.watson.ibm.com', :controller => 'results/host', :action => 'show')
     assert_routing('/results/hosts', :controller => 'results/host', :action => 'list')
 

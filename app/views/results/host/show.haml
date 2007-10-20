@@ -1,23 +1,15 @@
-- @page_title = "Host: #{h(@record.name)}"
+- @page_title = "Host: #{h(@host.name)}"
 %h1.page-title= @page_title
+
+%h2 Variants
 
 %table.list
   %tr
-    %th Name
     %th Variant
-    %th Success Rate
-    %th Revision
-    %th Time
     %th
-  - @test_runs.each do |t|
+  - @variants.each do |v|
     %tr{:class => cycle('odd','even')}
-      %td= h(t.name)
-      %td= h(t.variant)
-      %td= h(t.success_rate)
-      %td= revision_link(t.revision)
-      %td= h(t.start_time)
+      %td= h(v)
       %td
         %ul.actions
-          %li= link_for(t, :label => 'Details')
-          = test_run_delete_link(t)
-= render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})
+          %li= link_to('Details', :controller => 'results/test_run', :action => 'list_by_variant', :host_name => @host.name, :test_run_variant => v)

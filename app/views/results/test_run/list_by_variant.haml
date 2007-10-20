@@ -1,0 +1,20 @@
+- @content_for_breadcrumbs = draw_breadcrumbs(@host, @variant)
+- @page_title = "Variant: #{h(@variant)}"
+%h1.page-title= @page_title
+
+%table.list
+  %tr
+    %th Success Rate
+    %th Revision
+    %th Time
+    %th
+  - @test_runs.each do |t|
+    %tr{:class => cycle('odd','even')}
+      %td= h(t.success_rate)
+      %td= revision_link(t.revision)
+      %td= h(t.start_time)
+      %td
+        %ul.actions
+          %li= link_for(t, :label => 'Details')
+          = test_run_delete_link(t)
+= render(:partial => '/common/pagination', :locals => {:record_pages => @test_run_pages})

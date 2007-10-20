@@ -32,14 +32,14 @@ class Results::HostControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    id = 1
-    get(:show, {:host_name => 'skunk'}, session_data)
-    assert_normal_response('show', 3)
-    assert_assigned(:record)
-    assert_assigned(:test_runs)
-    assert_assigned(:test_run_pages)
-    assert_equal([1], assigns(:test_runs).collect {|r| r.id} )
-    assert_equal(id, assigns(:record).id)
+    host = Tdm::Host.find(1)
+    get(:show, {:host_name => host.name}, session_data)
+    assert_normal_response('show', 2)
+    assert_assigned(:host)
+    assert_assigned(:variants)
+    assert_equal( host.id, assigns(:host).id )
+    assert_equal( 1, assigns(:variants).size )
+    assert_equal( "core", assigns(:variants)[0])
   end
 
   def test_list

@@ -63,7 +63,7 @@ class ApplicationHelperTest < Test::Unit::TestCase
   end
 
   class FakeTestRun < Tdm::TestRun
-    attr_accessor :label, :id, :name, :parent_node, :variant
+    attr_accessor :label, :id, :name, :host, :parent_node, :variant
     def self.table_name
       'test_run'
     end
@@ -97,11 +97,12 @@ class ApplicationHelperTest < Test::Unit::TestCase
     test_run.name = "RunLikeWind"
     test_run.variant = "RunLikeWind"
     test_run.parent_node = host
+    test_run.host = host
     build_target = FakeBuildTarget.new
     build_target.name = 'ia32'
     build_target.parent_node = test_run
     assert_equal("<a href=\"/results/MyHost/RunLikeWind/1\">RunLikeWind-1</a>", MyClass.new.link_for(test_run))
     assert_equal("<a href=\"/results/MyHost/RunLikeWind/1/build_target\">ia32</a>", MyClass.new.link_for(build_target))
-    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind/1\">RunLikeWind-1</a> &gt; test_run", MyClass.new.draw_breadcrumbs(test_run, 'test_run'))
+    assert_equal("<a href=\"/results/MyHost\">MyHost</a> &gt; <a href=\"/results/MyHost/RunLikeWind\">RunLikeWind</a> &gt; <a href=\"/results/MyHost/RunLikeWind/1\">RunLikeWind-1</a> &gt; test_run", MyClass.new.draw_breadcrumbs(test_run, 'test_run'))
   end
 end

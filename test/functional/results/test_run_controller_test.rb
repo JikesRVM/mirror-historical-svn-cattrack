@@ -31,6 +31,19 @@ class Results::TestRunControllerTest < Test::Unit::TestCase
     {:user_id => 1}
   end
 
+  def test_list_by_variant
+    get(:list_by_variant, {:host_name => Tdm::Host.find(1).name, :test_run_variant => "core"}, session_data)
+    assert_normal_response('list_by_variant', 4)
+    assert_assigned(:host)
+    assert_assigned(:variant)
+    assert_assigned(:test_runs)
+    assert_assigned(:test_run_pages)
+
+    assert_equal(1, assigns(:host).id)
+    assert_equal('core', assigns(:variant))
+    assert_equal([1], assigns(:test_runs).collect {|r| r.id} )
+  end
+
   def test_show
     id = 1
     test_run = Tdm::TestRun.find(id)

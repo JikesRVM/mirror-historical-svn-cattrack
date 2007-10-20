@@ -25,6 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/:build_configuration_name', :controller => 'results/build_configuration', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id', :controller => 'results/test_run', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id', :controller => 'results/test_run', :action => 'destroy', :conditions => {:method => :delete}
+  map.connect 'results/:host_name/:test_run_variant', :controller => 'results/test_run', :action => 'list_by_variant', :conditions => {:method => :get}
   map.connect 'results/hosts', :controller => 'results/host', :action => 'list', :conditions => {:method => :get}
   map.connect 'results/:host_name', :controller => 'results/host', :action => 'show', :conditions => {:method => :get}
 

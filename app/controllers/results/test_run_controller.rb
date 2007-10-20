@@ -16,6 +16,13 @@ class Results::TestRunController < Results::BaseController
   caches_page :show, :show_summary
   session :off, :except => [:destroy]
 
+  def list_by_variant
+    @host = host
+    @variant = params[:test_run_variant]
+    @test_run_pages, @test_runs =
+      paginate(Tdm::TestRun, :per_page => 20, :order => 'start_time DESC', :conditions => ['host_id = ? AND variant = ?', @host.id, @variant])
+  end
+
   def show
     @record = test_run
   end
