@@ -8,6 +8,10 @@
 <p>See the <a href="<%= report_url %>">Full Report</a>
 <% stats_url = url_for(:controller => 'results/test_run', :action => 'statistics_report', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
  <a href="<%= stats_url %>">Statistics Report</a>
+<% if @test_run.variant == 'perf' %>
+<% perf_url = url_for(:controller => 'results/test_run', :action => 'performance_report', :host_name => @host.name, :test_run_variant => @test_run.variant, :test_run_id => @test_run.id, :only_path => false) %>
+ <a href="<%= perf_url %>">Performance Report</a>
+<% end %>
 </p>
 <% if @report.test_runs.size > 1 %>
 <% scm_url = SystemSetting['scm.url'] %>

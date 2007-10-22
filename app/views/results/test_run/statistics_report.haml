@@ -5,6 +5,8 @@
 %ul.actions
   %li= link_for(@report.test_run, :label => 'Summary', :action => 'show_summary')
   %li= link_for(@report.test_run, :label => 'Regression Report', :controller => '/results/test_run', :action => 'regression_report')
+  - if @report.test_run.variant == 'perf'
+    %li= link_for(@report.test_run, :label => 'Performance Report', :controller => '/results/test_run', :action => 'performance_report')
 .clearer
 = legend_header()
 
