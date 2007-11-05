@@ -18,7 +18,7 @@
     %th
     %th Large Heap
     %th Small Heap
-  %tr
+  %tr{:class => "odd"}
     %th.benchmark jbb2005
     %td
       %a{:href => "production/default/perf-jbb2005/jbb2005/jbb2005.large.png"}
@@ -26,7 +26,7 @@
     %td
       %a{:href => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC.large.png"}
         %img{:src => "production/default/perf-jbb2005/jbb2005GC/jbb2005GC.png"}
-  %tr
+  %tr{:class => "even"}
     %th.benchmark jbb2000
     %td
       %a{:href => "production/default/perf-jbb2000/jbb2000/jbb2000.large.png"}
@@ -55,7 +55,6 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time', false)}
   - spec_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -67,6 +66,7 @@
       %td
         %a{:href => perf_img('perf-jvm98',bm,'10','time', true)}
           %img{:src => perf_img('perf-jvm98',bm,'10','time', false)}
+- reset_cycle
 %h2 Mutator Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
@@ -75,7 +75,6 @@
     %th 3rd Iteration
     %th 10th Iteration
   - dacapo_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -88,7 +87,6 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time.mu', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time.mu', false)}
   - spec_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -100,6 +98,7 @@
       %td
         %a{:href => perf_img('perf-jvm98',bm,'10','time.mu', true)}
           %img{:src => perf_img('perf-jvm98',bm,'10','time.mu', false)}
+- reset_cycle
 %h2 GC Performance for DaCapo/SPECjvm98
 %table.perf
   %tr
@@ -108,7 +107,6 @@
     %th 3rd Iteration
     %th 10th Iteration
   - dacapo_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -121,7 +119,6 @@
         %a{:href => perf_img('perf-dacapo',bm,'10','time.gc', true)}
           %img{:src => perf_img('perf-dacapo',bm,'10','time.gc', false)}
   - spec_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -133,6 +130,7 @@
       %td
         %a{:href => perf_img('perf-jvm98',bm,'10','time.gc', true)}
           %img{:src => perf_img('perf-jvm98',bm,'10','time.gc', false)}
+- reset_cycle
 %h2 GC Performance Numbers (Tight Heap)
 %table.perf
   %tr
@@ -141,7 +139,6 @@
     %th Mutator
     %th GC
   - dacapo_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
@@ -154,7 +151,6 @@
         %a{:href => perf_img('perf-dacapo',bm,'3GC','time.gc', true)}
           %img{:src => perf_img('perf-dacapo',bm,'3GC','time.gc', false)}
   - spec_bm.each do |bm|
-    - reset_cycle
     %tr{:class => cycle('odd','even')}
       %th.benchmark=bm
       %td
