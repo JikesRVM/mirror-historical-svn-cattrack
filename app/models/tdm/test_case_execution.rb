@@ -25,7 +25,7 @@ class Tdm::TestCaseExecution < ActiveRecord::Base
 
   belongs_to :test_case
   has_params :statistics
-  has_params :numerical_statistics
+  has_params :num_stats
 
   after_save :update_output
 

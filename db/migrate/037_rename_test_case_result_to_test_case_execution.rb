@@ -15,7 +15,7 @@ class RenameTestCaseResultToTestCaseExecution < ActiveRecord::Migration
     rename_table :test_case_results, :test_case_executions
     rename_table :test_case_result_outputs, :test_case_execution_outputs
     rename_table :test_case_result_statistics, :test_case_execution_statistics
-    rename_table :test_case_result_numerical_statistics, :test_case_execution_numerical_statistics
+    rename_table :test_case_result_num_stats, :test_case_execution_num_stats
   end
   def self.down
   end

@@ -36,10 +36,10 @@
       %td= h(r.exit_code)
       %td= "#{h(r.time)} ms"
       %td
-        - if r.statistics.size > 0 or r.numerical_statistics.size > 0
+        - if r.statistics.size > 0 or r.num_stats.size > 0
           %ul
             - r.statistics.each_pair do |k,v|
               %li= "#{h(k)}=#{h(v)}"
-            - r.numerical_statistics.each_pair do |k,v|
+            - r.num_stats.each_pair do |k,v|
               %li= "#{h(k)}=#{h(v)}"
       %td= link_for(r, :label => 'Show Output')

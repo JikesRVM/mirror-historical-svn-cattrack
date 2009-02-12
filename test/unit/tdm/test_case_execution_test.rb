@@ -29,7 +29,7 @@ class Tdm::TestCaseExecutionTest < Test::Unit::TestCase
     assert_equal( 1, tc.test_case_id )
     assert_equal( 1, tc.test_case.id )
     assert_equal( 0, tc.statistics.size )
-    assert_equal( 0, tc.numerical_statistics.size )
+    assert_equal( 0, tc.num_stats.size )
   end
 
   def test_load_with_statistics
@@ -37,7 +37,7 @@ class Tdm::TestCaseExecutionTest < Test::Unit::TestCase
     assert_equal( 17, tc.id )
     assert_equal( 1, tc.statistics.size )
     assert_equal( '54', tc.statistics['caffeinemark'] )
-    assert_equal( '54', tc.numerical_statistics['caffeinemark_numerical'] )
+    assert_equal( '54', tc.num_stats['caffeinemark_numerical'] )
   end
 
   def test_new_with_output

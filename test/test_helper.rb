@@ -100,8 +100,8 @@ class Test::Unit::TestCase
               tcr = Tdm::TestCaseExecution.new(_tcr.attributes)
               tcr.test_case_id = t.id
               tcr.output = 'X'
-              _tcr.numerical_statistics.each_pair do |k, v|
-                tcr.numerical_statistics[k] = v
+              _tcr.num_stats.each_pair do |k, v|
+                tcr.num_stats[k] = v
               end
               _tcr.statistics.each_pair do |k, v|
                 tcr.statistics[k] = v

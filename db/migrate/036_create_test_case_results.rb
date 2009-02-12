@@ -73,22 +73,22 @@ SQL
       add_foreign_key :test_case_result_statistics, [:owner_id], :test_case_results, [:id], :on_delete => :cascade
 
       # Copy old numerical statistics to new table linking to results
-      create_table :test_case_result_numerical_statistics, :id => false do |t|
+      create_table :test_case_result_num_stats, :id => false do |t|
         t.column :owner_id, :integer, :null => false
         t.column :key, :string, :limit => 50, :null => false
         t.column :value, :float, :null => false
       end
 
       ActiveRecord::Base.connection.execute(<<SQL)
-INSERT INTO test_case_result_numerical_statistics
+INSERT INTO test_case_result_num_stats
   SELECT owner_id, key, value
-  FROM test_case_numerical_statistics
+  FROM test_case_num_stats
 SQL
-      drop_table :test_case_numerical_statistics
-      add_index :test_case_result_numerical_statistics, [:owner_id, :key], :unique => true
-      add_index :test_case_result_numerical_statistics, [:owner_id]
-      add_index :test_case_result_numerical_statistics, [:owner_id, :key, :value]
-      add_foreign_key :test_case_result_numerical_statistics, [:owner_id], :test_case_results, [:id], :on_delete => :cascade
+      drop_table :test_case_num_stats
+      add_index :test_case_result_num_stats, [:owner_id, :key], :unique => true
+      add_index :test_case_result_num_stats, [:owner_id]
+      add_index :test_case_result_num_stats, [:owner_id, :key, :value]
+      add_foreign_key :test_case_result_num_stats, [:owner_id], :test_case_results, [:id], :on_delete => :cascade
     end
   end
 
