@@ -131,9 +131,26 @@ class TestRunBuilder
     logger.debug("Processing test #{test_case.name}.")
     save!(test_case)
 
+    test_compilation_xml = xml.elements['test-compilation']
+    if (test_compilation_xml != nil)
+      build_test_case_compilation(test_compilation_xml, test_case.id)
+    end
+
     xml.elements.each('test-execution') do |t_xml|
       build_test_case_execution(t_xml, test_case.id)
     end
+  end
+
+  def self.build_test_case_compilation(xml, test_case_id)
+    test_case_compilation = Tdm::TestCaseCompilation.new
+
+    test_case_compilation.test_case_id = test_case_id
+    test_case_compilation.exit_code = xml.elements['exit-code'].text.to_i
+    test_case_compilation.time = xml.elements['duration'].text.to_i
+    test_case_compilation.result = xml.elements['result'].text
+    test_case_compilation.output = xml.elements['output'].text || ""
+
+    save!(test_case_compilation)
   end
 
   def self.build_test_case_execution(xml, test_case_id)

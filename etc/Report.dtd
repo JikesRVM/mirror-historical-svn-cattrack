@@ -25,7 +25,8 @@
 <!ELEMENT build-configuration (name, parameters, duration, result, output, test-configuration*)>
 <!ELEMENT test-configuration (name, parameters, group*)>
 <!ELEMENT group (name, test*)>
-<!ELEMENT test (name, command, parameters, test-execution*)>
+<!ELEMENT test (name, command, parameters, test-compilation? test-execution*)>
+<!ELEMENT test-compilation (exit-code, duration, result, output)>
 <!ELEMENT test-execution (name, exit-code, duration, result, result-explanation, statistics, output)>
 
 <!-- Elements appear as children of build-configuration or test elements -->

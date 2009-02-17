@@ -127,7 +127,19 @@
         <xs:element name="name" type="xs:string"/>
         <xs:element name="command" type="xs:string"/>
         <xs:element ref="parameters"/>
+        <xs:element ref="test-compilation" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="test-execution" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="test-compilation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="exit-code" type="xs:integer"/>
+        <xs:element name="duration" type="xs:decimal"/>
+        <xs:element name="result" type="xs:string"/>
+        <xs:element name="output" type="xs:string"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -48,6 +48,10 @@ class Results::BaseController < ApplicationController
     ep(group.test_cases.find_by_name(params[:test_case_name]))
   end
 
+  def test_case_compilation
+    ep(test_case.test_case_compilation)
+  end
+
   def test_case_execution
     ep(test_case.test_case_executions.find_by_name(params[:test_case_execution_name]))
   end

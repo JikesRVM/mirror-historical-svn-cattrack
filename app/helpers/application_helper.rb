@@ -26,6 +26,7 @@ module ApplicationHelper
       if o.is_a? Tdm::TestRun
         options[:test_run_id] = o.id
         options[:test_run_variant] = o.variant
+      elsif o.is_a? Tdm::TestCaseCompilation
       elsif not o.is_a? Tdm::BuildTarget
         options["#{o.class.table_name.singularize}_name".to_sym] = o.name
       end
