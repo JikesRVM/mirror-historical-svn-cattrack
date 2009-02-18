@@ -12,7 +12,7 @@
  -->
 
  <!-- Report is the top level element -->
-<!ELEMENT report (name, variant, revision, start-time, end-time, parameters?, host, build-target) >
+<!ELEMENT report (name, variant, revision, start-time, end-time, parameters?, host, build-target)>
 <!ATTLIST report version CDATA #FIXED "1.1" >
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT variant (#PCDATA)>
@@ -25,7 +25,7 @@
 <!ELEMENT build-configuration (name, parameters, duration, result, output, test-configuration*)>
 <!ELEMENT test-configuration (name, parameters, group*)>
 <!ELEMENT group (name, test*)>
-<!ELEMENT test (name, command, parameters, test-compilation? test-execution*)>
+<!ELEMENT test (name, command, parameters, test-compilation?, test-execution*)>
 <!ELEMENT test-compilation (exit-code, duration, result, output)>
 <!ELEMENT test-execution (name, exit-code, duration, result, result-explanation, statistics, output)>
 
