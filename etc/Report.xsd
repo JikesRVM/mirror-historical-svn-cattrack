@@ -136,9 +136,7 @@
   <xs:element name="test-compilation">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="exit-code" type="xs:integer"/>
         <xs:element name="duration" type="xs:decimal"/>
-        <xs:element name="result" type="xs:string"/>
         <xs:element name="output" type="xs:string"/>
       </xs:sequence>
     </xs:complexType>

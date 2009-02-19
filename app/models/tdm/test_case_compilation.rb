@@ -13,9 +13,7 @@
 class Tdm::TestCaseCompilation < ActiveRecord::Base
   validates_presence_of :test_case_id
   validates_reference_exists :test_case_id, Tdm::TestCase
-  validates_numericality_of :exit_code, :only_integer => true
   validates_numericality_of :time, :only_integer => true
-  validates_inclusion_of :result, :in => %w( SUCCESS FAILURE )
   validates_not_null :output
   validates_positiveness_of :time
 

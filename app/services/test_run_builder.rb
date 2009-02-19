@@ -145,9 +145,7 @@ class TestRunBuilder
     test_case_compilation = Tdm::TestCaseCompilation.new
 
     test_case_compilation.test_case_id = test_case_id
-    test_case_compilation.exit_code = xml.elements['exit-code'].text.to_i
     test_case_compilation.time = xml.elements['duration'].text.to_i
-    test_case_compilation.result = xml.elements['result'].text
     test_case_compilation.output = xml.elements['output'].text || ""
 
     save!(test_case_compilation)
