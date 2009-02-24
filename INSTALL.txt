@@ -12,7 +12,7 @@ Database Setup
    the database settings for production environment.
 2. Run "rake db:migrate RAILS_ENV=production" to initialize the database
    structure and populate it with required values.
-3. Run "script/console -e production" and create a user that will have
+3. Run "script/console production" and create a user that will have
    access to the administration section of CatTrack. Simple transcript
    follows;
 
@@ -28,7 +28,7 @@ Mailer Setup
 
 1. Copy "config/local.example.rb" to "config/local.rb" and edit the mail
    settings.
-2. Run "script/console -e production" so to setup system configuration defining
+2. Run "script/console production" so to setup system configuration defining
    who the email comes from and where error mails will be sent. This can be
    achieved via;
 
