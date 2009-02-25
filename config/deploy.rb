@@ -4,7 +4,7 @@ set :repository,  "https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm/cattrac
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "/webapps/cattrack"
+set :deploy_to, "/webapps/#{application}"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
@@ -17,5 +17,9 @@ role :db,  "legato.watson.ibm.com", :primary => true
 set :user, "cattrack"
 set :use_sudo, false
 
-
-
+task :after_update_app_code, :roles => :app do
+  db_config = "#{shared_path}/config/database.yml"
+  rb_local =  "#{shared_path}/config/local.rb"
+  run "cp #{db_config} #{release_path}/config/database.yml"  
+  run "cp #{rb_local} #{release_path}/config/local.rb"
+end
