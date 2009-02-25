@@ -1,3 +1,5 @@
+require 'mongrel_cluster/recipes'
+
 set :application, "cattrack"
 set :repository,  "https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm/cattrack/branches/upgrade-to-rails-2.2"
 
@@ -17,9 +19,11 @@ role :db,  "legato.watson.ibm.com", :primary => true
 set :user, "cattrack"
 set :use_sudo, false
 
+set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
+
 task :after_update_app_code, :roles => :app do
   db_config = "#{shared_path}/config/database.yml"
   rb_local =  "#{shared_path}/config/local.rb"
-  run "cp #{db_config} #{release_path}/config/database.yml"  
-  run "cp #{rb_local} #{release_path}/config/local.rb"
+  run "cp #{db_config} #{current_path}/config/database.yml"  
+  run "cp #{rb_local} #{current_path}/config/local.rb"
 end
