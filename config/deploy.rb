@@ -21,6 +21,10 @@ set :use_sudo, false
 
 set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
+desc <<-DESC
+  "Copies non-version controlled configuration files into the
+   current directory"
+DESC
 task :after_update_app_code, :roles => :app do
   db_config = "#{shared_path}/config/database.yml"
   rb_local =  "#{shared_path}/config/local.rb"
