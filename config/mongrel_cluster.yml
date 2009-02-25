@@ -1,4 +1,5 @@
 --- 
+prefix: /cattrack
 cwd: /webapps/cattrack/current
 log_file: log/mongrel.log
 port: "8000"
