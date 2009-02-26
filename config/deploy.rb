@@ -21,14 +21,10 @@ set :use_sudo, false
 
 set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
-desc <<-DESC
-  Copies non-version controlled files from shared into current;
-  run automatically as an after action of deploy:update_code
-DESC
 task :copy_external_resources, :roles => :app do
-  run "cp #{shared_path}/config/database.yml #{current_path}/config/database.yml"  
-  run "cp #{shared_path}/config/local.rb #{current_path}/config/local.rb"
-  run "cp #{shared_path}/resources/favicon.ico #{current_path}/public/favicon.ico"  
+  run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"  
+  run "cp #{shared_path}/config/local.rb #{release_path}/config/local.rb"
+  run "cp #{shared_path}/resources/favicon.ico #{release_path}/public/favicon.ico"  
 end
 
 after "deploy:update_code", :copy_external_resources
