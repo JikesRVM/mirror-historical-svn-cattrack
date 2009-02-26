@@ -23,19 +23,22 @@ Database Setup
  > u.admin = true
  > u.save!
 
-Mailer Setup
+SystemSettings and Local Configuration
 ------------
 
 1. Copy "config/local.example.rb" to "config/local.rb" and edit the mail
    settings.
-2. Run "script/console production" so to setup system configuration defining
-   who the email comes from and where error mails will be sent. This can be
-   achieved via;
 
- > SystemSetting.create!(:name => 'mail.from', :value => 'rvm-regression@cs.anu.edu.au')
- > SystemSetting.create!(:name => 'mail.on.error', :value => 'cattrack.admin@example.com')
- > SystemSetting.create!(:name => 'report.mail.to', :value => 'jikesrvm-regression@lists.sourceforge.net')
- > SystemSetting.create!(:name => 'report.reply.to', :value => 'jikesrvm-core@lists.sourceforge.net')
+2. Customize SystemSettings.  
+   Run "script/console production" and make the following changes:
+ a) email
+   > SystemSetting['mail.from'] = 'rvm-regression@cs.anu.edu.au'
+   > SystemSetting['mail.on.error'] = 'cattrack.admin@example.com'
+   > SystemSetting['report.mail.to'] = 'jikesrvm-regression@lists.sourceforge.net'
+   > SystemSetting['report.reply.to'] = 'jikesrvm-core@lists.sourceforge.net'
+ b) installation/project customization
+   > SystemSetting['installation_name'] = 'a pretty name of your installation'
+   > SystemSetting['scm.url'] = 'base URL for ViewVC for your project'
 
 Web Setup
 ---------

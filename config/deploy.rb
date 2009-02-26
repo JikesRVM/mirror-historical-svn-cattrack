@@ -22,12 +22,10 @@ set :use_sudo, false
 set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
 desc <<-DESC
-  "Copies non-version controlled configuration files into the
-   current directory"
+  "Copies non-version controlled files from shared into current"
 DESC
-task :after_update_app_code, :roles => :app do
-  db_config = "#{shared_path}/config/database.yml"
-  rb_local =  "#{shared_path}/config/local.rb"
-  run "cp #{db_config} #{current_path}/config/database.yml"  
-  run "cp #{rb_local} #{current_path}/config/local.rb"
+task :copy_external_resources, :roles => :app do
+  run "cp #{shared_path}/config/database.yml #{current_path}/config/database.yml"  
+  run "cp #{shared_path}/config/local.rb #{current_path}/config/local.rb"
+  run "cp #{shared_path}/resources/favicon.ico #{current_path}/public/favicon.ico"  
 end

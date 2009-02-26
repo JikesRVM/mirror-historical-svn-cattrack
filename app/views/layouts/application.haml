@@ -16,7 +16,7 @@
   %body{ :id => "#{controller.controller_name}__#{@action_name}" }
     #doc
       #hd
-        .headerTitle= link_to( 'Jikes<span>RVM</span>', :controller => '/dashboard')
+        .headerTitle= link_to('<span>'+SystemSetting["installation_name"]+'</span>', :controller => '/dashboard')
         .headerUserControls
           %span
             %script{ :type => 'text/javascript' } if(is_authenticated()) document.write('User: ' + get_username())
