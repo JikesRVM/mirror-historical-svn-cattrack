@@ -13,45 +13,48 @@ you want to compare in the form below.</p>
       %input{:type => 'int', :name => 'secondRun', :value => params[:secondRun]}/
       %button{:type => 'submit'} Compare
 
+<hr>
+
 - if !@report.nil?
   - if @report.first_run.nil?
-    %h3 First test run does not exist; Please try again.
+    %h3 First test run does not exist. Please try again.
 
   - if @report.second_run.nil?
-    %h3 Second test run does not exist; Please try again.
+    %h3 Second test run does not exist. Please try again.
 
 - if !@report.nil? && !@report.first_run.nil? && !@report.second_run.nil?
-  <hr>
-  %h3="First Run (#{@report.first_run.id}) is: "+link_for(@report.first_run, :label => "#{@report.first_run.host.name} #{@report.first_run.variant}.#{@report.first_run.id}")
-  %h3="Second Run (#{@report.second_run.id}) is: "+link_for(@report.second_run, :label => "#{@report.second_run.host.name} #{@report.second_run.variant}.#{@report.second_run.id}")
-
   %h2 Summary
   %table.report
+    %tr
+      %th= "First Run was performed on #{@report.first_run.host.name} with variant #{@report.first_run.variant} using revision r#{@report.first_run.revision}"
+      %td= link_for(@report.first_run, :label => "Test Run #{@report.first_run.id}")
     %tr
       %th First Run success rate
       %td= h(@report.first_run.success_rate)
     %tr
+      %th= "Second Run was performed on #{@report.second_run.host.name} with variant #{@report.second_run.variant} using revision r#{@report.second_run.revision}"
+      %td= link_for(@report.second_run, :label => "Test Run #{@report.second_run.id}")
+    %tr
       %th Second Run success rate
       %td= h(@report.second_run.success_rate)
     %tr
-      %th Passed only in First Run 
+      %th Number of test cases that passed only in First Run 
       %td= h(@report.first_only_pass.size)
     %tr
-      %th Passed only in Second Run 
+      %th Number of test cases that passed only in Second Run 
       %td= h(@report.second_only_pass.size)
     %tr
-      %th Only present in First Run 
+      %th Number of test cases that were only present in First Run 
       %td= h(@report.only_in_first.size)
     %tr
-      %th Only present in Second Run 
+      %th Number of test cases that were only present in Second Run 
       %td= h(@report.only_in_second.size)
     %tr
-      %th Passed in both runs
-      %td= h(@report.both_pass.size)
-    %tr
-      %th Failed in both runs
+      %th Number of test cases that failed in both runs
       %td= h(@report.neither_pass.size)
-
+    %tr
+      %th Number of test cases that passed in both runs
+      %td= h(@report.both_pass.size)
 
   %h2 Details
 
@@ -143,33 +146,6 @@ you want to compare in the form below.</p>
           %td= h(t['test_configuration_name'])
           %td= h(t['group_name'])
 
-  - if @report.both_pass.size > 0
-    = tests_header('both_pass', pluralize(@report.both_pass.size, "Test") + " passed in both.")
-    %table#both_pass.list
-      %tr
-      %tr
-        %th Test
-        %th First Run Details
-        %th Second Run Details
-        %th Build Configuration
-        %th Test Configuration
-        %th Group
-      - @report.both_pass.each do |t|
-        - reset_cycle
-        %tr{:class => cycle('odd','even')}
-          %td= h(t['test_case_name'])
-          %td
-            %ul.actions
-              %li= test_link(@report.first_run, t)
-          %td
-            %ul.actions
-              %li= test_link(@report.second_run, t)
-          %td= h(t['build_configuration_name'])
-          %td= h(t['test_configuration_name'])
-          %td= h(t['test_case_execution'])
-    %script{ :type => 'text/javascript' }
-      = hide_tests_javascript('both_pass');
-
   - if @report.neither_pass.size > 0
     = tests_header('neither_pass', pluralize(@report.neither_pass.size, "Test") + " failed in both.")
     %table#neither_pass.list
@@ -197,4 +173,29 @@ you want to compare in the form below.</p>
     %script{ :type => 'text/javascript' }
       = hide_tests_javascript('neither_pass');
 
-
+  - if @report.both_pass.size > 0
+    = tests_header('both_pass', pluralize(@report.both_pass.size, "Test") + " passed in both.")
+    %table#both_pass.list
+      %tr
+      %tr
+        %th Test
+        %th First Run Details
+        %th Second Run Details
+        %th Build Configuration
+        %th Test Configuration
+        %th Group
+      - @report.both_pass.each do |t|
+        - reset_cycle
+        %tr{:class => cycle('odd','even')}
+          %td= h(t['test_case_name'])
+          %td
+            %ul.actions
+              %li= test_link(@report.first_run, t)
+          %td
+            %ul.actions
+              %li= test_link(@report.second_run, t)
+          %td= h(t['build_configuration_name'])
+          %td= h(t['test_configuration_name'])
+          %td= h(t['test_case_execution'])
+    %script{ :type => 'text/javascript' }
+      = hide_tests_javascript('both_pass');
