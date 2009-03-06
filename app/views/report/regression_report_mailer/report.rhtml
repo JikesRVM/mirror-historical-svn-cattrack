@@ -33,7 +33,7 @@
     <td style="padding-right: 0.2em;"><%= h(t['group_name']) %></td>
     <td style="padding-right: 0.2em;"><%= h(t['test_case_name']) %></td>
     <td style="padding-right: 0.2em;"><%= h(t['test_case_execution']) %></td>
-    <td><%= test_link(t, false) %></td>
+    <td><%= test_link(@report, t, false) %></td>
   </tr>
 <% end %>
 </table>
@@ -62,7 +62,7 @@
     <td style="padding-right: 0.2em;"><%= h(t['test_configuration_name']) %></td>
     <td style="padding-right: 0.2em;"><%= h(t['group_name']) %></td>
     <td style="padding-right: 0.2em;"><%= h(t['test_case_name']) %></td>
-    <td><%= test_link(t, false) %></td>
+    <td><%= test_link(@report, t, false) %></td>
   </tr>
 <% end %>
 </table>

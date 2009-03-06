@@ -24,11 +24,11 @@ module Results::TestRunHelper
     "<a href=\"#\" id=\"legend_toggle\" class=\"toggle_visibility open\" onclick=\"#{hide_tests_javascript('legend')}; return false;\">Click for Image Legend</a><div id='legend' width='100%'><center><img src='#{image_path('legend.png')}'></center></div><script type='text/javascript'> #{hide_tests_javascript('legend')} </script>"
   end
 
-  def test_link(row, only_path = true)
+  def test_link(test_run, row, only_path = true)
     options = {:controller => "/results/test_case", :action => 'show'}
-    options[:host_name] = @report.test_run.host.name
-    options[:test_run_variant] = @report.test_run.variant
-    options[:test_run_id] = @report.test_run.id
+    options[:host_name] = test_run.host.name
+    options[:test_run_variant] = test_run.variant
+    options[:test_run_id] = test_run.id
     options[:build_configuration_name] = row['build_configuration_name']
     options[:test_configuration_name] = row['test_configuration_name']
     options[:group_name] = row['group_name']

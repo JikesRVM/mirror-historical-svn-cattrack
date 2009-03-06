@@ -32,6 +32,8 @@
             = link_to( 'Hosts', :controller => '/results/host', :action => 'list' )
             |
             = link_to( 'Search', :controller => 'results/test_case_execution', :action => 'list_by_matching_output' )
+            |
+            = link_to( 'Compare', :controller => 'results/compare_runs', :action => 'compare_two_runs' )
             %span#admin_link
               |
               = link_to( 'Administration', :controller => '/admin/dashboard', :action => 'index')

@@ -32,6 +32,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'query', :controller => 'results/test_case_execution', :action => 'list_by_matching_output', :conditions => {:method => :get}
 
+  map.connect 'compare', :controller => 'results/compare_runs', :action => 'compare_two_runs', :conditions => {:method => :get}
+  map.connect 'compare/:firstRun/:secondRun', :controller => 'results/compare_runs', :action => 'compare_two_runs', :conditions => {:method => :get}
+
+
   map.connect 'admin', :controller => 'admin/dashboard', :conditions => {:method => :get}
   map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show', :conditions => {:method => :get}
 
