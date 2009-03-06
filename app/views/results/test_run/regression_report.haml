@@ -128,7 +128,7 @@
     %th Revision
     %th Time
     %th
-  - @report.test_runs.each do |t|
+  - @report.test_runs.reverse_each do |t|
     - reset_cycle
     %tr{:class => cycle('odd','even')}
       %td= h(t.label)
