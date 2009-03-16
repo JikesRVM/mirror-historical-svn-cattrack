@@ -25,7 +25,7 @@ class TestRunAnalysisTest < Test::Unit::TestCase
     execution.result = 'SUCCESS'
     execution.result_explanation = ''
     execution.output = '...'
-    execution.numerical_statistics['score'] = '24'
+    execution.num_stats['score'] = '24'
     execution.save!
 
     execution = Tdm::TestCaseExecution.new
@@ -36,7 +36,7 @@ class TestRunAnalysisTest < Test::Unit::TestCase
     execution.result = 'SUCCESS'
     execution.result_explanation = ''
     execution.output = '...'
-    execution.numerical_statistics['score'] = '22'
+    execution.num_stats['score'] = '22'
     execution.save!
 
     execution = Tdm::TestCaseExecution.new

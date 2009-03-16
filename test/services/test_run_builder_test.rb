@@ -103,11 +103,11 @@ class TestRunBuilderTest < Test::Unit::TestCase
 
     assert_equal( 1, test_case_execution.statistics.size)
     assert_equal( 'Boo!', test_case_execution.statistics['myTextStatistic'] )
-    assert_equal( 4, test_case_execution.numerical_statistics.size)
-    assert_equal( '7100184', test_case_execution.numerical_statistics['code.size'].to_s )
-    assert_equal( '23482080', test_case_execution.numerical_statistics['data.size'].to_s )
-    assert_equal( '565623', test_case_execution.numerical_statistics['rmap.size'].to_s )
-    assert_equal( '31147887', test_case_execution.numerical_statistics['total.size'].to_s )
+    assert_equal( 4, test_case_execution.num_stats.size)
+    assert_equal( '7100184', test_case_execution.num_stats['code.size'].to_s )
+    assert_equal( '23482080', test_case_execution.num_stats['data.size'].to_s )
+    assert_equal( '565623', test_case_execution.num_stats['rmap.size'].to_s )
+    assert_equal( '31147887', test_case_execution.num_stats['total.size'].to_s )
 
     test_case_execution = test_case.test_case_executions[1]
     assert_equal( 'default_not', test_case_execution.name )
@@ -118,6 +118,6 @@ class TestRunBuilderTest < Test::Unit::TestCase
     assert_equal( "Oh no! Beta!", test_case_execution.output )
 
     assert_equal( 0, test_case_execution.statistics.size)
-    assert_equal( 0, test_case_execution.numerical_statistics.size)
+    assert_equal( 0, test_case_execution.num_stats.size)
   end
 end

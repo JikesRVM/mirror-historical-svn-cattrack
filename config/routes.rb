@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/regression_report', :controller => 'results/test_run', :action => 'regression_report', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/performance_report', :controller => 'results/test_run', :action => 'performance_report', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/statistics_report', :controller => 'results/test_run', :action => 'statistics_report', :conditions => {:method => :get}
+  map.connect 'results/:host_name/:test_run_variant/:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/Compilation.txt', :controller => 'results/test_case_compilation', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/:statistic_key', :controller => 'results/test_case_statistic', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name/:test_case_execution_name/Output.txt', :controller => 'results/test_case_execution', :action => 'show', :conditions => {:method => :get}
   map.connect 'results/:host_name/:test_run_variant/:test_run_id/:build_configuration_name/:test_configuration_name/:group_name/:test_case_name', :controller => 'results/test_case', :action => 'show', :conditions => {:method => :get}
@@ -30,6 +31,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'results/:host_name', :controller => 'results/host', :action => 'show', :conditions => {:method => :get}
 
   map.connect 'query', :controller => 'results/test_case_execution', :action => 'list_by_matching_output', :conditions => {:method => :get}
+
+  map.connect 'compare', :controller => 'results/compare_runs', :action => 'compare_two_runs', :conditions => {:method => :get}
+  map.connect 'compare/:firstRun/:secondRun', :controller => 'results/compare_runs', :action => 'compare_two_runs', :conditions => {:method => :get}
+
 
   map.connect 'admin', :controller => 'admin/dashboard', :conditions => {:method => :get}
   map.connect 'admin/sysinfo', :controller => 'admin/sysinfo', :action => 'show', :conditions => {:method => :get}

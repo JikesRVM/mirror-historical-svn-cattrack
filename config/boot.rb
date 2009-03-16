@@ -35,10 +35,10 @@ unless defined?(Rails::Initializer)
 
     if version = defined?(RAILS_GEM_VERSION) ? RAILS_GEM_VERSION : rails_gem_version
       # Asking for 1.1.6 will give you 1.1.6.5206, if available -- makes it easier to use beta gems
-      rails_gem = Gem.cache.search('rails', "~>#{version}.0").sort_by { |g| g.version.version }.last
+      rails_gem = Gem.cache.search(Gem::Dependency.new('rails', "~>#{version}.0")).sort_by { |g| g.version.version }.last
 
       if rails_gem
-        require_gem "rails", "=#{rails_gem.version.version}"
+        gem "rails", "=#{rails_gem.version.version}"
         require rails_gem.full_gem_path + '/lib/initializer'
       else
         STDERR.puts %(Cannot find gem for Rails ~>#{version}.0:
@@ -48,7 +48,7 @@ unless defined?(Rails::Initializer)
         exit 1
       end
     else
-      require_gem "rails"
+      gem "rails"
       require 'initializer'
     end
   end

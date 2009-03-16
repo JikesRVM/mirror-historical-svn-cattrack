@@ -20,6 +20,16 @@
         %th= h(k)
         %td= h(v)
 
+- if @record.test_case_compilation != nil
+  %h3 Test Compilation
+  %table.details
+    %tr  
+      %th Running Time
+      %td= "#{h(@record.test_case_compilation.time)} ms"
+    %tr  
+      %th Details
+      %td= link_for(@record.test_case_compilation, :label => 'Compilation Output')
+
 %h3 Test Executions
 %table.list
   %tr
@@ -36,10 +46,10 @@
       %td= h(r.exit_code)
       %td= "#{h(r.time)} ms"
       %td
-        - if r.statistics.size > 0 or r.numerical_statistics.size > 0
+        - if r.statistics.size > 0 or r.num_stats.size > 0
           %ul
             - r.statistics.each_pair do |k,v|
               %li= "#{h(k)}=#{h(v)}"
-            - r.numerical_statistics.each_pair do |k,v|
+            - r.num_stats.each_pair do |k,v|
               %li= "#{h(k)}=#{h(v)}"
       %td= link_for(r, :label => 'Show Output')

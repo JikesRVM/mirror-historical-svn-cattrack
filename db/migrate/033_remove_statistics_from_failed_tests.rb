@@ -16,7 +16,7 @@ class RemoveStatisticsFromFailedTests < ActiveRecord::Migration
   end
 
   def self.up
-    ActiveRecord::Base.connection.execute("DELETE FROM test_case_numerical_statistics USING test_cases WHERE test_cases.result != 'SUCCESS' AND test_case_numerical_statistics.owner_id = test_cases.id")
+    ActiveRecord::Base.connection.execute("DELETE FROM test_case_num_stats USING test_cases WHERE test_cases.result != 'SUCCESS' AND test_case_num_stats.owner_id = test_cases.id")
     ActiveRecord::Base.connection.execute("DELETE FROM test_case_statistics USING test_cases WHERE test_cases.result != 'SUCCESS' AND test_case_statistics.owner_id = test_cases.id")
 
     result = ResultDimension.find_by_name('SUCCESS')

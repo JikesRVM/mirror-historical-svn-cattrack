@@ -50,8 +50,8 @@ SELECT
   statistics_map.name AS name,
   statistics_map.statistic_key AS statistic_key,
   statistics_map.statistic_function AS statistic_function
-FROM test_case_execution_numerical_statistics
-LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+FROM test_case_execution_num_stats
+LEFT JOIN test_case_executions ON test_case_execution_num_stats.owner_id = test_case_executions.id
 LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
 LEFT JOIN groups ON test_cases.group_id = groups.id
 LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
@@ -63,7 +63,7 @@ LEFT JOIN statistics_map ON (
   (test_configurations.name = statistics_map.test_configuration_name OR statistics_map.test_configuration_name IS NULL) AND
   groups.name = statistics_map.group_name AND
   test_cases.name = statistics_map.test_case_name AND
-  test_case_execution_numerical_statistics.key = statistics_map.statistic_key
+  test_case_execution_num_stats.key = statistics_map.statistic_key
   )
 WHERE
   test_runs.id = '#{test_run.id}' AND statistics_map.statistic_key IS NOT NULL
@@ -84,8 +84,8 @@ SQL
   def self.do_average(test_case_id, statistic_key, name)
     value = ActiveRecord::Base.connection.select_value(<<SQL)
     SELECT AVG(value)
-    FROM test_case_execution_numerical_statistics
-    LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+    FROM test_case_execution_num_stats
+    LEFT JOIN test_case_executions ON test_case_execution_num_stats.owner_id = test_case_executions.id
     WHERE
       test_case_id = #{test_case_id} AND
       key = '#{statistic_key}' AND
@@ -101,8 +101,8 @@ SQL
   def self.do_average_middle(test_case_id, statistic_key, name)
     rawvalues = ActiveRecord::Base.connection.select_all(<<SQL)
     SELECT value
-    FROM test_case_execution_numerical_statistics
-    LEFT JOIN test_case_executions ON test_case_execution_numerical_statistics.owner_id = test_case_executions.id
+    FROM test_case_execution_num_stats
+    LEFT JOIN test_case_executions ON test_case_execution_num_stats.owner_id = test_case_executions.id
     WHERE
       test_case_id = #{test_case_id} AND
       key = '#{statistic_key}' AND

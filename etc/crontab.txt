@@ -1,0 +1,2 @@
+ */15 * * * * cd /webapps/cattrack/current && rake db:sessions:remove_stale RAILS_ENV=production > /dev/null
+ */5 * * * * cd /webapps/cattrack/current && ./script/runner -e production "TestRunImporter.process_incoming_test_runs(true)"

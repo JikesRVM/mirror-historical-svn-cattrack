@@ -41,7 +41,7 @@
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
-            %li= test_link(t)
+            %li= test_link(@report.test_run, t)
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -62,7 +62,7 @@
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
-            %li= test_link(t)
+            %li= test_link(@report.test_run, t)
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -83,7 +83,7 @@
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
-            %li= test_link(t)
+            %li= test_link(@report.test_run, t)
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -107,7 +107,7 @@
       %tr{:class => cycle('odd','even')}
         %td
           %ul.actions
-            %li= test_link(t)
+            %li= test_link(@report.test_run, t)
         %td= h(t['build_configuration_name'])
         %td= h(t['test_configuration_name'])
         %td= h(t['group_name'])
@@ -128,7 +128,7 @@
     %th Revision
     %th Time
     %th
-  - @report.test_runs.each do |t|
+  - @report.test_runs.reverse_each do |t|
     - reset_cycle
     %tr{:class => cycle('odd','even')}
       %td= h(t.label)
