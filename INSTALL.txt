@@ -24,7 +24,7 @@ Database Setup
  > u.save!
 
 SystemSettings and Local Configuration
-------------
+--------------------------------------
 
 1. Copy "config/local.example.rb" to "config/local.rb" and edit the mail
    settings.
