@@ -1,7 +1,7 @@
 require 'mongrel_cluster/recipes'
 
 set :application, "cattrack"
-set :repository,  "https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm/cattrack/branches/upgrade-to-rails-2.2"
+set :repository,  "https://jikesrvm.svn.sourceforge.net/svnroot/jikesrvm/cattrack/trunk"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
