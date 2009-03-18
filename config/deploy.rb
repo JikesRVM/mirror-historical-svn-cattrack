@@ -12,9 +12,9 @@ set :deploy_to, "/home/cattrack/#{application}"
 # your SCM below:
 # set :scm, :subversion
 
-role :app, "rocoto.anu.edu.au"
-role :web, "rocoto.anu.edu.au"
-role :db,  "rocoto.anu.edu.au", :primary => true
+role :app, "jikesrvm.anu.edu.au"
+role :web, "jikesrvm.anu.edu.au"
+role :db,  "jikesrvm.anu.edu.au", :primary => true
 
 set :user, "cattrack"
 set :use_sudo, false
