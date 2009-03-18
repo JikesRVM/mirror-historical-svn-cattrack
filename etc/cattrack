@@ -1,20 +1,20 @@
 # config file to be put in /etc/logrotate.d
 
-/webapps/cattrack/shared/log/mongrel.*.log {
+/home/cattrack/cattrack/shared/log/mongrel.*.log {
   missingok
   copytruncate
   daily
   rotate 5
 }
 
-/webapps/cattrack/shared/log/importer.log {
+/home/cattrack/cattrack/shared/log/importer.log {
   missingok
   copytruncate
   daily
   rotate 5
 }
 
-/webapps/cattrack/shared/log/production.log {
+/home/cattrack/cattrack/shared/log/production.log {
   missingok
   copytruncate
   daily
