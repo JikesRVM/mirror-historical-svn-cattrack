@@ -5,6 +5,11 @@ This document assumes you know how to install a standard rails
 application and only documents the features that are unique to
 the CatTrack application.
 
+We're using Capistrano to manage the deployment of the cattrack
+application to the production machines. The default configuration
+files can be used to setup a mongrel_cluster fronted by an apache
+proxy load balancer. Some hints below.
+
 Database Setup
 --------------
 
@@ -43,30 +48,45 @@ SystemSettings and Local Configuration
 Web Setup
 ---------
 
-1. Start the web app via
-
- > cd path/to/cattrack && /var/lib/gems/1.8/bin/mongrel_rails start -e production -d
-
-2. Stop the web app via
-
- > cd path/to/cattrack && /var/lib/gems/1.8/bin/mongrel_rails stop
-
-3. If you are not hosting cattrack at the root level of your web application
+1. If you are not hosting cattrack at the root level of your web application
    then you will need to edit "config/local.rb" so that contains code such as
 
    ActionController::AbstractRequest.relative_url_root = "/cattrack"
 
-4. To frontend it with apache the easiest approach is to set it up as pass through proxy.
+2. You will need to edit config/deploy.rb to tell it basic facts about your setup.
+   Other configuration files should be usable without change as long as you deploy the
+   application to /home/cattrack/cattrack.  If you want to put it somewhere else, then
+   you will need to edit additional configuration files.
+
+3. You will need to configure apache and possibly the mongrel cluster.  There is a snippet
+   of an httpd.conf file in /etc that can be used as a template.  You will need to do OS
+   level configuration to make the mongrel-cluster into an init.d service. 
 
 Cron Setup
 ----------
 
-1. Edit crontab so that stale sessions are removed every five minutes. Add a line such
-   as following to crontab to do this.
+1. There is a sample crontab in etc.  At a minimum the crontab should be flushing 
+stale sessions and running the import jobs. You may want to restart the mongrel_cluster
+as well.
 
- */5 * * * * cd path/to/cattrack && rake db:sessions:remove_stale RAILS_ENV=production
+Misc Setup
+----------
 
-2. Edit crontab so that imports occur every 12 or so hours. Cron tab line follows;
+1. If your system uses logrotate, there is a sample conf file in etc.
 
- 0 */12 * * * cd path/to/cattrack && ./script/runner -e production "TestRunImporter.process_incoming_test_runs(true)"
+Capistrano Hints
+----------------
 
+config/deploy.rb is written to support deploying to multiple sets of servers (anu for JikesRVM,
+watson for X10).  When invoking cap, you must specify which deployment you are targeting on the 
+command line:
+  cap -S where=anu <...rest of command...>
+or
+  cap -S where=watson <...rest of command...>
+
+The most common command is 
+  cap -S where=anu deploy
+which will deploy a new version of the application.
+
+Documentation for all of the task is available via:
+  cap -T -S where=anu
