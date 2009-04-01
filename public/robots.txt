@@ -12,6 +12,7 @@
 #
 # See http://www.robotstxt.org/wc/norobots.html for documentation on how to use the robots.txt file
 User-agent: *
+Disallow: /  # Disable all robots; robots crawling old email archives are following links that have been invalidated by application changes
 Disallow: /admin/ # Authenticated access
 Disallow: /reports/ # Some are expensive to generate, most are access time sensitive
 Disallow: /explorer/ # Authenticated access
