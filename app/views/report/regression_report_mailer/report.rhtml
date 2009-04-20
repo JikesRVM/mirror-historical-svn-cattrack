@@ -21,7 +21,11 @@
   link_to("#{t.label} (r#{t.revision})", :controller => '/results/test_run', :action => 'show', :host_name => t.host.name, :test_run_variant => t.variant, :test_run_id => t.id, :only_path => false)
   end.join(",\n") %></p>
 
+<% if @test_run.test_case_executions.size == 0 %>
+<h2>No test cases were executed!</h2>
+<% else %>
 <h2>Failed <%= h(@test_run.non_successes.size) %>/<%= h(@test_run.test_case_executions.size) %> (<%= (@test_run.non_successes.size.to_f / @test_run.test_case_executions.size.to_f * 100.0).to_i %>%)</h2>
+<% end %>
 
 <h3 style="color: #FF0000;"><%= h(@report.new_failures.size) %> new failures this run</h3>
 <% if @report.new_failures.size > 0 %>
