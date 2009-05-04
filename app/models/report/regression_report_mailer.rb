@@ -7,13 +7,18 @@ class Report::RegressionReportMailer < ActionMailer::Base
 
   def report(test_run)
     report = Report::RegressionReport.new(test_run)
+    executed_count = report.test_run.test_case_executions.size
     error_count = report.test_run.test_case_executions.size - report.test_run.successes.size
     missing_count =  report.missing_tests.size
-    
-    if missing_count == 0 then
-      error_description = (error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
+
+    if executed_count == 0 then
+      error_description = "NO TESTS WERE EXECUTED"
     else
-      error_description = (error_count == 0) ? "#{missing_count} MISSING; no other failures" : "#{missing_count} MISSING; #{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
+      if missing_count == 0 then
+        error_description = (error_count == 0) ? 'SUCCESS' : "#{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
+      else
+        error_description = (error_count == 0) ? "#{missing_count} MISSING; no other failures" : "#{missing_count} MISSING; #{error_count} FAILURE#{(error_count == 1) ? '' : 'S'}"
+      end
     end
     s = "[#{test_run.label}] #{error_description}"
     subject(s)
