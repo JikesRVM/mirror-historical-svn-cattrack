@@ -84,7 +84,7 @@ class TestRunBuilder
     build_configuration.test_run_id = test_run_id
     build_configuration.time = xml.elements['duration'].text.to_i
     build_configuration.result = xml.elements['result'].text
-    build_configuration.output = xml.elements['output'].text
+    build_configuration.output = REXML::Text.unnormalize(xml.elements['output'].text)
     logger.debug("Processing build configuration '#{build_configuration.name}'.")
     save!(build_configuration)
 
@@ -146,7 +146,7 @@ class TestRunBuilder
 
     test_case_compilation.test_case_id = test_case_id
     test_case_compilation.time = xml.elements['duration'].text.to_i
-    test_case_compilation.output = xml.elements['output'].text || ""
+    test_case_compilation.output = REXML::Text.unnormalize(xml.elements['output'].text) || ""
 
     save!(test_case_compilation)
   end
@@ -160,7 +160,7 @@ class TestRunBuilder
     test_case_execution.time = xml.elements['duration'].text.to_i
     test_case_execution.result = xml.elements['result'].text
     test_case_execution.result_explanation = xml.elements['result-explanation'].text || ""
-    test_case_execution.output = xml.elements['output'].text || ""
+    test_case_execution.output = REXML::Text.unnormalize(xml.elements['output'].text) || ""
 
     xml.elements.each("statistics/statistic") do |p_xml|
       v = p_xml.attributes['value']
