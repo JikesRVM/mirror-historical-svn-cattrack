@@ -40,7 +40,7 @@ class TestRunImporter
         end
         logger.info("Unzipped file to #{temp_filename}. Size= #{File.size(temp_filename)}")
 
-        raise ImportException.new("Unzipping #{f} produced too large a file #{File.size(temp_filename)}") unless File.size(temp_filename) < (1024 * 1024 * 30)
+        raise ImportException.new("Unzipping #{f} produced too large a file #{File.size(temp_filename)}") unless File.size(temp_filename) < (1024 * 1024 * 40)
 
         test_run = TestRunBuilder.create_from(temp_filename)
         TestRunAnalysis.perform_analysis(test_run)
