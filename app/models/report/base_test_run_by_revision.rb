@@ -31,7 +31,7 @@ class Report::BaseTestRunByRevision
     options[:conditions] = [ sql, @test_run.host.id, @test_run.start_time, @test_run.variant]
     options[:limit] = @window_size
     options[:order] = 'start_time DESC'
-    @test_runs = Tdm::TestRun.find(:all, options).reverse
+    @test_runs = Tdm::TestRun.find(:all, options).reverse.select {|tr| tr.test_case_executions.size > 0}
   end
 
   def rows_to_columns
