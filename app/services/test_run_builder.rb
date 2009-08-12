@@ -160,7 +160,12 @@ class TestRunBuilder
     test_case_execution.time = xml.elements['duration'].text.to_i
     test_case_execution.result = xml.elements['result'].text
     test_case_execution.result_explanation = xml.elements['result-explanation'].text || ""
-    test_case_execution.output = REXML::Text.unnormalize(xml.elements['output'].text) || ""
+    test_output = xml.elements['output'].text;
+    if (test_output != nil)
+      test_case_execution.output = REXML::Text.unnormalize(test_output)
+    else
+      test_case_execution.output = ""
+    end
 
     xml.elements.each("statistics/statistic") do |p_xml|
       v = p_xml.attributes['value']
