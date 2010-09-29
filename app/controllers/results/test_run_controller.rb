@@ -13,7 +13,7 @@
 class Results::TestRunController < Results::BaseController
   verify :method => :get, :except => [:destroy], :redirect_to => :access_denied_url
   verify :method => :delete, :only => [:destroy], :redirect_to => :access_denied_url
-  caches_page :show, :show_summary
+  caches_page :show, :show_summary, :regression_report, :performance_report, :statistics_report
   session :off, :except => [:destroy]
 
   def list_by_variant

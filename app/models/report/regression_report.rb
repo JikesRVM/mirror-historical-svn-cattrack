@@ -25,27 +25,46 @@ class Report::RegressionReport < Report::BaseTestRunByRevision
 
     previous_id = (@test_runs.size > 1) ? @test_runs[@test_runs.size - 2].id : 0
 
+    innersqlparts = Array.new
+
+    for trid in @test_runs.collect {|tr| tr.id} do
+      innersqlparts << <<SQL
+SELECT
+     build_configurations.test_run_id,
+     build_configurations.name AS build_configuration_name,
+     test_configurations.name AS test_configuration_name,
+     groups.name AS group_name,
+     test_cases.name AS test_case_name,
+     test_cases.id as test_case_id,
+     test_case_executions.name AS test_case_execution_name,
+     test_case_executions.result as result
+FROM test_case_executions
+     LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
+     LEFT JOIN groups ON test_cases.group_id = groups.id
+     LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
+     LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
+WHERE
+    build_configurations.test_run_id = #{trid} 
+SQL
+    end
+    
+    innersql = innersqlparts.join(' UNION ALL ') 
+    
     sql = <<SQL
 SELECT
-    build_configurations.name AS build_configuration_name,
-    test_configurations.name AS test_configuration_name,
-    groups.name AS group_name,
-    test_cases.name AS test_case_name,
-    test_case_executions.name AS test_case_execution_name,
-    count(case when build_configurations.test_run_id = #{@test_run.id} then 1 else NULL end) AS current_run,
-    count(case when build_configurations.test_run_id = #{previous_id} then 1 else NULL end) AS in_last_run,
-    count(*) AS total_runs,
-    count(case when build_configurations.test_run_id = #{@test_run.id} AND test_case_executions.result = 'SUCCESS' then 1 else NULL end) AS current_success,
-    count(case when test_case_executions.result = 'SUCCESS' then 1 else NULL end) AS total_successes,
-    max(case when build_configurations.test_run_id = #{@test_run.id} then test_cases.id else NULL end) AS test_case_id,
-    max(case when build_configurations.test_run_id = #{@test_run.id} then test_case_executions.result else NULL end) AS test_case_execution
-FROM test_case_executions
-    LEFT JOIN test_cases ON test_case_executions.test_case_id = test_cases.id
-    LEFT JOIN groups ON test_cases.group_id = groups.id
-    LEFT JOIN test_configurations ON groups.test_configuration_id = test_configurations.id
-    LEFT JOIN build_configurations ON test_configurations.build_configuration_id = build_configurations.id
-WHERE
-    build_configurations.test_run_id IN (#{@test_runs.collect {|tr| tr.id}.join(', ')})
+     build_configuration_name,
+     test_configuration_name,
+     group_name,
+     test_case_name,
+     test_case_execution_name,
+     count(case when test_run_id = #{@test_run.id} then 1 else NULL end) AS current_run,
+     count(case when test_run_id = #{previous_id} then 1 else NULL end) AS in_last_run,
+     count(*) AS total_runs,
+     count(case when test_run_id = #{@test_run.id}  AND result = 'SUCCESS' then 1 else NULL end) AS current_success,
+     count(case when result = 'SUCCESS' then 1 else NULL end) AS total_successes,
+     max(case when test_run_id = #{@test_run.id} then test_case_id else NULL end) AS test_case_id,
+     max(case when test_run_id = #{@test_run.id} then result else NULL end) AS test_case_execution
+FROM (#{innersql}) innersql
 GROUP BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_execution_name
 SQL
 
