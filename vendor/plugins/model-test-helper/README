@@ -1,0 +1,13 @@
+= model-test-helper plugin for Rails
+
+
+
+== Details
+
+License: Released under the MIT license.
+Latest Version: http://www.realityforge.org/svn/public/code/model-test-helper/trunk/
+
+== Credits
+
+Peter Donald <peter at realityforge dot org>.
+James Walker for addition of optional ModelData construct.

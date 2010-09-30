@@ -1,0 +1,6 @@
+assert-valid-asset            -r 1614 http://www.realityforge.org/svn/code/assert-valid-asset/trunk
+debug-view-helper             -r 1614 http://www.realityforge.org/svn/code/debug-view-helper/trunk
+system-settings               -r 1621 http://www.realityforge.org/svn/code/system-settings/trunk
+model-test-helper             -r 1619 http://www.realityforge.org/svn/code/model-test-helper/trunk
+redhillonrails_core           -r 260 svn://rubyforge.org/var/svn/redhillonrails/branches/stable-1.2/vendor/plugins/redhillonrails_core
+haml                          -r 550 svn://hamptoncatlin.com/haml/tags/stable
