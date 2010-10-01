@@ -1,0 +1,33 @@
+- @content_for_breadcrumbs = draw_breadcrumbs(@record, 'history')
+- @page_title = "Test Case History: #{h(@record.name)}"
+%h1.page-title= @page_title
+
+%h3 History
+%table.list
+  %tr
+    %th Test Run
+    %th Date
+    %th Name
+    %th Result
+    %th Exit Code
+    %th Running Time
+    %th Statistics
+    %th Operations
+  - @history.each do |r|
+    %tr{:class => cycle('odd','even')}
+      - breadcrumbs(r).each do |o|
+        - if o.is_a? Tdm::TestRun
+          %td= link_for(o, :label => o.id)
+          %td= o.start_time
+      %td= h(r.name)
+      %td= "#{h(r.result)} #{h(r.result_explanation)}"
+      %td= h(r.exit_code)
+      %td= "#{h(r.time)} ms"
+      %td
+        - if r.statistics.size > 0 or r.num_stats.size > 0
+          %ul
+            - r.statistics.each_pair do |k,v|
+              %li= "#{h(k)}=#{h(v)}"
+            - r.num_stats.each_pair do |k,v|
+              %li= "#{h(k)}=#{h(v)}"
+      %td= link_for(r, :label => 'Show Output')

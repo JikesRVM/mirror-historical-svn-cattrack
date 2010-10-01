@@ -31,6 +31,9 @@
       %td= link_for(@record.test_case_compilation, :label => 'Compilation Output')
 
 %h3 Test Executions
+%ul.actions
+  %li= link_for(@record, :label => 'History', :action => 'show_history')
+.clearer
 %table.list
   %tr
     %th Name
