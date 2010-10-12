@@ -63,8 +63,8 @@ you want to compare in the form below.</p>
     %table#first_only_pass.list
       %tr
         %th Test
-        %th First Run Details
-        %th Second Run Details
+        %th Failing Run Details
+        %th Passing Run Details
         %th Build Configuration
         %th Test Configuration
         %th Group
@@ -74,10 +74,10 @@ you want to compare in the form below.</p>
           %td= h(t['test_case_name'])
           %td
             %ul.actions
-              %li= test_link(@report.first_run, t)
+              %li= test_link(@report.second_run, t)
           %td
             %ul.actions
-              %li= test_link(@report.second_run, t)
+              %li= test_link(@report.first_run, t)
           %td= h(t['build_configuration_name'])
           %td= h(t['test_configuration_name'])
           %td= h(t['group_name'])
@@ -87,8 +87,8 @@ you want to compare in the form below.</p>
     %table#second_only_pass.list
       %tr
         %th Test
-        %th First Run Details
-        %th Second Run Details
+        %th Failing Run Details
+        %th Passing Run Details
         %th Build Configuration
         %th Test Configuration
         %th Group
