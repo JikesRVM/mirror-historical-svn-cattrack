@@ -125,6 +125,8 @@ you want to compare in the form below.</p>
           %td= h(t['build_configuration_name'])
           %td= h(t['test_configuration_name'])
           %td= h(t['group_name'])
+    %script{ :type => 'text/javascript' }
+      = hide_tests_javascript('only_in_first');
 
   - if @report.only_in_second.size > 0
     = tests_header('only_in_second', pluralize(@report.only_in_second.size, "Test") + " were only present in Second Run.")
@@ -145,6 +147,8 @@ you want to compare in the form below.</p>
           %td= h(t['build_configuration_name'])
           %td= h(t['test_configuration_name'])
           %td= h(t['group_name'])
+    %script{ :type => 'text/javascript' }
+      = hide_tests_javascript('only_in_second');
 
   - if @report.neither_pass.size > 0
     = tests_header('neither_pass', pluralize(@report.neither_pass.size, "Test") + " failed in both.")

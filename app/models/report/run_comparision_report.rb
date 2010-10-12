@@ -48,13 +48,13 @@ SQL
 
     first_only_pass_sql = <<SQL
 SELECT * FROM (#{sql}) f
-WHERE first_run_success = 1 AND second_run_success != 1
+WHERE first_run_success = 1 AND second_run_success != 1 AND in_second_run = 1
 ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_execution_name
 SQL
 
     second_only_pass_sql = <<SQL
 SELECT * FROM (#{sql}) f
-WHERE first_run_success != 1 AND second_run_success = 1
+WHERE first_run_success != 1 AND in_first_run = 1 AND second_run_success = 1
 ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_execution_name
 SQL
 
@@ -66,7 +66,7 @@ SQL
 
     neither_pass_sql = <<SQL
 SELECT * FROM (#{sql}) f
-WHERE first_run_success != 1 AND second_run_success != 1
+WHERE first_run_success != 1 AND second_run_success != 1 AND in_first_run = 1 AND in_second_run = 1
 ORDER BY build_configuration_name, test_configuration_name, group_name, test_case_name, test_case_execution_name
 SQL
 
